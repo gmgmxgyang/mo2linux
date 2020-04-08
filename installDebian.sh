@@ -1175,7 +1175,7 @@ apt install -y apt-utils
 apt install -y ca-certificates wget
 echo "Replacing http software source list with https."
 echo "正在将http源替换为https..."
-sed -i 's/http/https/' /etc/apt/sources.list
+sed -i 's@http:@https:@g' /etc/apt/sources.list
 
 if grep -q 'Funtoo GNU/Linux' '/etc/os-release'; then
     GNULINUXOSRELEASE=FUNTOO

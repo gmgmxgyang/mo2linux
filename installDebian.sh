@@ -1094,7 +1094,7 @@ if [ "$(uname -m)" = "mips" ]; then
   sed -i 's:# en_US.UTF-8 UTF-8:en_US.UTF-8 UTF-8:' /etc/locale.gen
 fi
 
-if ! grep -Eqi 'debian|ubuntu|kali' "/etc/issue"; then
+if ! grep -Eqi 'debian|ubuntu|kali|raspbian' "/etc/issue"; then
   chattr +i /etc/apt/sources.list 2>/dev/null
 fi
 #stable-backports会出错，需改为buster-backports
@@ -1285,7 +1285,7 @@ EOF
     exit 0
 elif [ "$(uname -m)" = "mips" ]; then
   chattr -i /etc/apt/sources.list    
-elif ! grep -Eqi 'debian|ubuntu|kali' "/etc/issue"; then
+elif ! grep -Eqi 'debian|ubuntu|kali|raspbian' "/etc/issue"; then
   chattr -i /etc/apt/sources.list 2>/dev/null
 fi
 apt update

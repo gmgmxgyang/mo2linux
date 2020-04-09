@@ -171,7 +171,7 @@ fi
 if [ "$(uname -v | cut -c 1-3)" = "iSH" ]; then
   LINUXDISTRO='iSH'
   echo "检测到您使用的是iOS系统"
-elif grep -Eqi "Fedora|CentOS|Red Hat|redhat" '/etc/os-release'; then
+elif grep -Eqi "Fedora|CentOS|Red Hat|redhat" '/etc/os-release' 2>/dev/null; then
   LINUXDISTRO='redhat'
   if [ "$(cat /etc/os-release | grep 'ID=' | head -n 1 | cut -d '"' -f 2)" = "centos" ]; then
     REDHATDISTRO='centos'
@@ -588,6 +588,7 @@ if [ -f "${HOME}/.RASPBIANARMHFDetectionFILE" ]; then
   rm -f "raspbian-sources-gpg.tar.xz"
 elif [ -f "${HOME}/.REDHATDetectionFILE" ]; then
   rm -f "${HOME}/.REDHATDetectionFILE"
+  chmod u+w "${DebianCHROOT}/root"
   rm -f ../etc/resolv.conf
   #使用相对路径
   cat >../etc/resolv.conf <<-'EndOfFile'

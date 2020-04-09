@@ -123,6 +123,13 @@ GNULINUX() {
 		LINUXDISTRO='gentoo'
 	fi
 
+	if [ "$(LINUXDISTRO)" = 'redhat' ]; then
+		if [ "$(cat /etc/os-release | grep 'ID=' | head -n 1 | cut -d '"' -f 2)" = "centos" ]; then
+			REDHATDISTRO='centos'
+		elif grep -q 'Fedora' "/etc/os-release"; then
+			REDHATDISTRO='fedora'
+		fi
+	fi
 	dependencies=""
 
 	if [ ! -e /bin/tar ]; then
@@ -144,6 +151,10 @@ GNULINUX() {
 	if [ ! -e /usr/bin/pv ]; then
 		if [ "${LINUXDISTRO}" = "gentoo" ]; then
 			dependencies="${dependencies} sys-apps/pv"
+		elif [ "${LINUXDISTRO}" = 'redhat' ]; then
+			if [ "${REDHATDISTRO}" = 'fedora' ]; then
+				dependencies="${dependencies} pv"
+			fi
 		else
 			dependencies="${dependencies} pv"
 		fi
@@ -2217,7 +2228,7 @@ INSTALLotherSystems() {
 	fi
 	####################
 	if [ "${BETASYSTEM}" == '6' ]; then
-	touch ~/.ALPINELINUXDetectionFILE
+		touch ~/.ALPINELINUXDetectionFILE
 		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
 			sed 's/debian系统/alpine系统/g' |
 			sed 's/debian system/alpine system/g' |

@@ -256,7 +256,7 @@ elif [ "${archtype}" = "mipsel" ]; then
   cd ~
   pv ${DebianTarXz} | tar -pJx
 elif [ "${LINUXDISTRO}" = "redhat" ]; then
-  if [ "${LINUXDISTRO}" != "fedora" ]; then
+  if [ "${REDHATDISTRO}" != "fedora" ]; then
     tar -pJxvf ${cur}/${DebianTarXz}
   fi
 else

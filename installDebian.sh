@@ -568,7 +568,7 @@ cd ~/${DebianFolder}/root
 ########################
 if [ -f "${HOME}/.RASPBIANARMHFDetectionFILE" ]; then
   echo "检测到您选择的是raspbian树莓派系统，将通过debian buster来间接安装raspbian buster"
-  rm -f "${HOME}/.RASPBIANARMHFDetectionFILE"
+  mv -f "${HOME}/.RASPBIANARMHFDetectionFILE" "{DebianCHROOT}/tmp/"
   #树莓派换源
   wget -O "raspbian-sources-gpg.tar.xz" 'https://gitee.com/mo2/patch/raw/raspbian/raspbian-sources-gpg.tar.xz'
   tar -Jxvf "raspbian-sources-gpg.tar.xz" -C ~/${DebianFolder}/etc/apt/
@@ -1216,10 +1216,12 @@ echo "    S  7Z  Qvr:.iK55SqS1PX  Xq7u2 :7     "
 echo "           .            i   7            "
 apt install -y apt-utils
 apt install -y ca-certificates wget
-if ! grep -qi 'Raspbian' "/etc/issue"; then 
+if [ ! -f "/tmp/.RASPBIANARMHFDetectionFILE" ]; then
   echo "Replacing http software source list with https."
   echo "正在将http源替换为https..."
   sed -i 's@http:@https:@g' /etc/apt/sources.list
+else
+   rm -f "/tmp/.RASPBIANARMHFDetectionFILE"  
 fi
 
 if grep -q 'Funtoo GNU/Linux' '/etc/os-release'; then

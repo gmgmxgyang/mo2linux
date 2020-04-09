@@ -2160,7 +2160,7 @@ INSTALLotherSystems() {
 	fi
 	####################
 	if [ "${BETASYSTEM}" == '2' ]; then
-	touch ~/.REDHATDetectionFILE
+		touch ~/.REDHATDetectionFILE
 		if [ "${archtype}" = 'armhf' ]; then
 			echo "检测到您使用的是armhf架构，将为您降级至Fedora 29"
 			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
@@ -2182,7 +2182,7 @@ INSTALLotherSystems() {
 	fi
 	####################
 	if [ "${BETASYSTEM}" == '3' ]; then
-	touch ~/.REDHATDetectionFILE
+		touch ~/.REDHATDetectionFILE
 		if [ "${archtype}" = 'armhf' ] || [ "${archtype}" = 'i386' ]; then
 			echo "检测到CentOS 8不支持您当前的架构，将为您降级至CentOS 7"
 			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
@@ -2282,7 +2282,7 @@ INSTALLotherSystems() {
 				sed 's:debian/sid:openwrt/snapshot:g' |
 				sed 's:Debian GNU/Linux:OpenWRT Linux:g')"
 		else
-			echo "开发者和清华源镜像站都没有构建${archtype}架构的容器镜像呢！"
+			echo "开发者暂时还没有构建${archtype}架构的容器镜像呢！"
 			echo "您可以换用x86_64架构的设备进行安装"
 		fi
 	fi

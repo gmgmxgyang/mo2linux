@@ -171,6 +171,13 @@ fi
 if [ "$(uname -v | cut -c 1-3)" = "iSH" ]; then
   LINUXDISTRO='iSH'
   echo "检测到您使用的是iOS系统"
+elif grep -Eqi "Fedora|CentOS|Red Hat|redhat" '/etc/os-release'; then
+  LINUXDISTRO='redhat'
+  if [ "$(cat /etc/os-release | grep 'ID=' | head -n 1 | cut -d '"' -f 2)" = "centos" ]; then
+    REDHATDISTRO='centos'
+  elif grep -q 'Fedora' "/etc/os-release"; then
+    REDHATDISTRO='fedora'
+  fi
 fi
 
 #创建必要文件夹，防止挂载失败
@@ -248,6 +255,10 @@ elif [ "${LINUXDISTRO}" = "iSH" ]; then
 elif [ "${archtype}" = "mipsel" ]; then
   cd ~
   pv ${DebianTarXz} | tar -pJx
+elif [ "${LINUXDISTRO}" = "redhat" ]; then
+  if [ "${LINUXDISTRO}" != "fedora" ]; then
+    tar -pJxvf ${cur}/${DebianTarXz}
+  fi
 else
   pv ${cur}/${DebianTarXz} | tar -pJx
 fi

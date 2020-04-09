@@ -570,7 +570,7 @@ chmod +x remove-debian.sh
 cd ~/${DebianFolder}/root
 ########################
 if [ -f "${HOME}/.RASPBIANARMHFDetectionFILE" ]; then
-  mv -f "${HOME}/.RASPBIANARMHFDetectionFILE" "{DebianCHROOT}/tmp/"
+  mv -f "${HOME}/.RASPBIANARMHFDetectionFILE" "${DebianCHROOT}/tmp/"
   #树莓派换源
   wget -O "raspbian-sources-gpg.tar.xz" 'https://gitee.com/mo2/patch/raw/raspbian/raspbian-sources-gpg.tar.xz'
   tar -Jxvf "raspbian-sources-gpg.tar.xz" -C ~/${DebianFolder}/etc/apt/

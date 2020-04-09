@@ -1185,6 +1185,16 @@ if [ -f "/tmp/.ALPINELINUXDetectionFILE" ]; then
   ash -c "$(wget --no-check-certificate -O- 'https://gitee.com/mo2/zsh/raw/master/zsh.sh')"
 fi
 
+if grep -q 'openSUSE' "/etc/issue"; then
+  LINUXDISTRO='opensuse'
+  zypper mr -da
+  zypper addrepo -fcg https://mirrors.tuna.tsinghua.edu.cn/opensuse/tumbleweed/repo/oss/ tuna-mirrors-oss
+  zypper addrepo -fcg https://mirrors.tuna.tsinghua.edu.cn/opensuse/tumbleweed/repo/non-oss/ tuna-mirrors-non-oss
+  zypper addrepo -fcg https://mirrors.tuna.tsinghua.edu.cn/packman/suse/openSUSE_Tumbleweed/ tuna-mirrors_Tumbleweed
+  zypper ref
+  zypper install wget
+fi
+
 apt update
 apt install -y locales
 if grep -q 'ubuntu' /etc/os-release; then

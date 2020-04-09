@@ -586,7 +586,14 @@ if [ -f "${HOME}/.RASPBIANARMHFDetectionFILE" ]; then
   wget -O "raspbian-sources-gpg.tar.xz" 'https://gitee.com/mo2/patch/raw/raspbian/raspbian-sources-gpg.tar.xz'
   tar -Jxvf "raspbian-sources-gpg.tar.xz" -C ~/${DebianFolder}/etc/apt/
   rm -f "raspbian-sources-gpg.tar.xz"
-
+elif [ -f "${HOME}/.REDHATDetectionFILE" ]; then
+  rm -f "${HOME}/.REDHATDetectionFILE"
+  rm -f ../etc/resolv.conf
+  #使用相对路径
+  cat >../etc/resolv.conf <<-'EndOfFile'
+nameserver 114.114.114.114
+nameserver 240c::6666
+EndOfFile
 elif [ -f "${HOME}/.ALPINELINUXDetectionFILE" ]; then
   #sed -i '/DEFAULTZSHLOGIN/d' $(which debian)
   #sed -i '/DEFAULTZSHLOGIN/d' $(which debian)

@@ -2160,6 +2160,7 @@ INSTALLotherSystems() {
 	fi
 	####################
 	if [ "${BETASYSTEM}" == '2' ]; then
+	touch ~/.REDHATDetectionFILE
 		if [ "${archtype}" = 'armhf' ]; then
 			echo "检测到您使用的是armhf架构，将为您降级至Fedora 29"
 			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
@@ -2181,6 +2182,7 @@ INSTALLotherSystems() {
 	fi
 	####################
 	if [ "${BETASYSTEM}" == '3' ]; then
+	touch ~/.REDHATDetectionFILE
 		if [ "${archtype}" = 'armhf' ] || [ "${archtype}" = 'i386' ]; then
 			echo "检测到CentOS 8不支持您当前的架构，将为您降级至CentOS 7"
 			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |

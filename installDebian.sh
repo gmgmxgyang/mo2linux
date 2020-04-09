@@ -570,8 +570,9 @@ if [ -f "${HOME}/.RASPBIANARMHFDetectionFILE" ]; then
   echo "检测到您选择的是raspbian树莓派系统，将通过debian buster间接安装raspbian buster"
   mv -f "${HOME}/.RASPBIANARMHFDetectionFILE" ${DebianCHROOT}/tmp
 elif [ -f "${HOME}/.ALPINELINUXDetectionFILE" ]; then
-  sed -i '/DEFAULTZSHLOGIN/d' $(which debian)
-  sed -i '/DEFAULTZSHLOGIN/d' $(which debian)
+  #sed -i '/DEFAULTZSHLOGIN/d' $(which debian)
+  #sed -i '/DEFAULTZSHLOGIN/d' $(which debian)
+  sed 's@sed -i \"s:\${DE@#&@g' $(which debian)
   sed -i 's/bash --login/ash --login/g' $(which debian)
   sed -i 's/zsh --login/ash --login/g' $(which debian)
   mv -f "${HOME}/.ALPINELINUXDetectionFILE " ${DebianCHROOT}/tmp

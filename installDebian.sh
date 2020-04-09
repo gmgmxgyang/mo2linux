@@ -1146,8 +1146,7 @@ if [ -f "/tmp/.ALPINELINUXDetectionFILE" ] || [ "$(sed -n 2p /etc/os-release | c
     mkdir -p /var/lock/
     touch /var/lock/opkg.lock
     opkg update
-    opkg install ca-certificates
-    opkg install libustream-ssl libustream-tls
+    opkg install libustream-openssl  ca-bundle ca-certificates
   fi
   ash -c "$(wget --no-check-certificate -O- 'https://gitee.com/mo2/zsh/raw/master/zsh.sh')"
 fi

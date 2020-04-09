@@ -74,7 +74,7 @@ wsl --set-default-version 2
 _**精简命令**_
 
 ```shell
-    bash -c "$(wget -qO- l.tmoe.me)"
+    bash -c "$(wget -qO- gitee.com/mo2/linux/raw/master/debian.sh)"
 ```
 
 > 注：精简命令和长命令调用的内容是一样的，二选一即可。  
@@ -125,7 +125,7 @@ _**长命令**_
 _**精简命令**_
 
 ```shell
-    curl -sL l.tmoe.me | bash -
+    curl -sL gitee.com/mo2/linux/raw/master/debian.sh | bash -
 ```
 
 > 注：精简命令和长命令调用的内容是一样的，二选一即可。
@@ -145,7 +145,7 @@ _**长命令**_
 _**精简命令**_
 
 ```shell
-    bash -c "$(wget -qO- l.tmoe.me)"
+    bash -c "$(wget -qO- gitee.com/mo2/linux/raw/master/debian.sh)"
 ```
 
 > 注：精简命令和长命令调用的内容是一样的，二选一即可。  

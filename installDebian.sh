@@ -1612,6 +1612,23 @@ echo "2s后将自动开始配置zsh，您可以按Ctrl+C取消，这将不会继
 wget -qcO /usr/local/bin/neofetch 'https://gitee.com/mirrors/neofetch/raw/master/neofetch' || curl -sLo /usr/local/bin/neofetch 'https://gitee.com/mirrors/neofetch/raw/master/neofetch'
 chmod +x /usr/local/bin/neofetch
 neofetch
+
+if [ "$(cat /etc/issue | cut -c 1-4)" = "Arch" ]; then
+  grep -q '^LANG=' /etc/locale.conf || echo 'LANG="zh_CN.UTF-8"' >> /etc/locale.conf
+  if [ "$(uname -m)" = "aarch64" ] || [ "$(uname -m)" = "armv7l" ]; then
+    cat >/etc/pacman.d/mirrorlist <<-'EndOfArchMirrors'
+#Server = https://mirror.archlinuxarm.org/$arch/$repo
+Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/$arch/$repo
+EndOfArchMirrors
+  else
+    cat >/etc/pacman.d/mirrorlist <<-'EndOfArchMirrors'
+#Server = http://mirrors.kernel.org/archlinux/$repo/os/$arch
+Server = https://mirrors.tuna.tsinghua.edu.cn/archlinux/$repo/os/$arch
+EndOfArchMirrors
+  fi
+  pacman -Syy --noconfirm
+fi
+
 if grep -q 'debian' '/etc/os-release'; then
   bash zsh.sh
 else

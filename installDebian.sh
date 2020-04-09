@@ -1137,11 +1137,19 @@ nameserver 240c::6666
 EndOfFile
 
 if [ -f "/tmp/.ALPINELINUXDetectionFILE" ] || [ "$(sed -n 2p /etc/os-release | cut -d '=' -f 2)" = "alpine"  ]; then
-  echo "检测到您使用的是alpine系统，将不会为您配置额外优化步骤"
+  echo "检测到您使用的不是deb系linux，将不会为您配置额外优化步骤"
   sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
   rm -f "/tmp/.ALPINELINUXDetectionFILE"
+  rm -f ~/.profile
+  mv -f ~/.profile.bak ~/.profile 2>/dev/null
+  if grep -q 'OpenWrt' "/etc/os-release"; then
+    mkdir -p /var/lock/
+    touch /var/lock/opkg.lock
+    opkg update
+    opkg install ca-certificates
+    opkg install libustream-ssl libustream-tls
+  fi
   ash -c "$(wget --no-check-certificate -O- 'https://gitee.com/mo2/zsh/raw/master/zsh.sh')"
-  exit 0
 fi
 
 apt update

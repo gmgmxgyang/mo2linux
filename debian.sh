@@ -546,7 +546,7 @@ ANDROIDTERMUX() {
 
 MainMenu() {
 	OPTION=$(
-		whiptail --title "Tmoe-Debian GNU/Linux manager(20200408-10)" --backtitle "$(
+		whiptail --title "Tmoe-Debian GNU/Linux manager(20200409-21)" --backtitle "$(
 			base64 -d <<-'DoYouWantToSeeWhatIsInside'
 				6L6TZGViaWFuLWnlkK/liqjmnKznqIvluo8sVHlwZSBkZWJpYW4taSB0byBzdGFydCB0aGUgdG9v
 				bCzokIzns7vnlJ/niannoJTnqbblkZgK
@@ -2273,7 +2273,7 @@ INSTALLotherSystems() {
 				sed 's/debian system/openwrt system/g' |
 				sed 's:debian-sid:openwrt-snapshot:g' |
 				sed 's:debian/sid:openwrt/snapshot:g' |
-				sed 's:Debian GNU/Linux:OpenWRT GNU/Linux:g')"
+				sed 's:Debian GNU/Linux:OpenWRT Linux:g')"
 		else
 			echo "开发者和清华源镜像站都没有构建${archtype}架构的容器镜像呢！"
 			echo "您可以换用x86_64架构的设备进行安装"
@@ -2293,12 +2293,13 @@ INSTALLotherSystems() {
 		if [ "${archtype}" = 'armhf' ] || [ "${archtype}" = 'i386' ]; then
 			echo "检测到apertis不支持您当前的架构"
 		else
+			touch ~/.ALPINELINUXDetectionFILE
 			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
 				sed 's/debian系统/apertis系统/g' |
 				sed 's/debian system/apertis system/g' |
 				sed 's:debian-sid:apertis-18.12:g' |
 				sed 's:debian/sid:apertis/18.12:g' |
-				sed 's:Debian GNU/Linux:Arch GNU/Linux:g')"
+				sed 's:Debian GNU/Linux:Arch Linux:g')"
 		fi
 	fi
 	####################

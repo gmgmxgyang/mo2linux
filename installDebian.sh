@@ -1088,13 +1088,6 @@ cat >.profile <<-'EDITBASHPROFILE'
 YELLOW=$(printf '\033[33m')
 RESET=$(printf '\033[m')
 cd ~
-if [ -f "/tmp/.ALPINELINUXDetectionFILE" ] || [ "$(sed -n 2p /etc/os-release | cut -d '=' -f 2)" = "alpine"  ]; then
-  echo "检测到您使用的是alpine系统，将不会为您配置额外优化步骤"
-  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
-  rm -f "/tmp/.ALPINELINUXDetectionFILE"
-  ash -c "$(wget --no-check-certificate -O- 'https://gitee.com/mo2/zsh/raw/master/zsh.sh')"
-  exit 0
-fi
 #配置清华源
 if [ "$(uname -m)" = "mips" ]; then
   chattr +i /etc/apt/sources.list
@@ -1142,6 +1135,14 @@ cat > /etc/resolv.conf <<-'EndOfFile'
 nameserver 114.114.114.114
 nameserver 240c::6666
 EndOfFile
+
+if [ -f "/tmp/.ALPINELINUXDetectionFILE" ] || [ "$(sed -n 2p /etc/os-release | cut -d '=' -f 2)" = "alpine"  ]; then
+  echo "检测到您使用的是alpine系统，将不会为您配置额外优化步骤"
+  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
+  rm -f "/tmp/.ALPINELINUXDetectionFILE"
+  ash -c "$(wget --no-check-certificate -O- 'https://gitee.com/mo2/zsh/raw/master/zsh.sh')"
+  exit 0
+fi
 
 apt update
 apt install -y locales

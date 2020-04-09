@@ -838,7 +838,12 @@ It is recommended that you back up the entire system before removal. If the data
 	read
 
 	chmod 777 -R ${DebianFolder}
-	rm -rf "${DebianFolder}" ${PREFIX}/bin/debian ${PREFIX}/bin/startvnc ${PREFIX}/bin/stopvnc ${PREFIX}/bin/startxsdl ${PREFIX}/bin/debian-rm ${PREFIX}/bin/code 2>/dev/null || tsudo rm -rf "${DebianFolder}" ${PREFIX}/bin/debian ${PREFIX}/bin/startvnc ${PREFIX}/bin/stopvnc ${PREFIX}/bin/startxsdl ${PREFIX}/bin/debian-rm ${PREFIX}/bin/code 2>/dev/null
+	rm -rfv "${DebianFolder}" ${PREFIX}/bin/debian ${PREFIX}/bin/startvnc ${PREFIX}/bin/stopvnc ${PREFIX}/bin/startxsdl ${PREFIX}/bin/debian-rm ${PREFIX}/bin/code 2>/dev/null || tsudo rm -rfv "${DebianFolder}" ${PREFIX}/bin/debian ${PREFIX}/bin/startvnc ${PREFIX}/bin/stopvnc ${PREFIX}/bin/startxsdl ${PREFIX}/bin/debian-rm ${PREFIX}/bin/code 2>/dev/null
+	if [ -d "${HOME}/debian_armhf" ]; then
+		echo "疑似检测到存在树莓派armhf系统，正在移除..."
+		chmod 777 -R "${HOME}/debian_armhf"
+		rm -rf "${HOME}/debian_armhf" 2>/dev/null || tsudo rm -rfv "${HOME}/debian_armhf"
+	fi
 	sed -i '/alias debian=/d' ${PREFIX}/etc/profile
 	sed -i '/alias debian-rm=/d' ${PREFIX}/etc/profile
 	source profile >/dev/null 2>&1

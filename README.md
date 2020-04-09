@@ -182,7 +182,7 @@ bash -c "$(wget -qO- 'https://gitee.com/mo2/linux/raw/master/debian.sh')"
 
 ```shell
     opkg update
-    opkg install libustream-openssl  ca-bundle ca-certificates wget bash
+    opkg install libustream-openssl ca-bundle ca-certificates wget bash
     bash -c "$(wget --no-check-certificate -qO- 'https://gitee.com/mo2/linux/raw/master/debian.sh')"
 ```
 

@@ -203,7 +203,10 @@ echo "   QB  .:5.71Si..........  .sr7ivi:U    "
 echo "   7BJ .7: i2. ........:..  sJ7Lvr7s    "
 echo "    jBBdD. :. ........:r... YB  Bi      "
 echo "       :7j1.                 :  :       "
-
+if [ -f "${HOME}/.RASPBIANARMHFDetectionFILE" ]; then
+  echo "检测到您选择的是raspbian树莓派系统，将通过debian buster来间接安装raspbian buster"
+  echo "已将您的架构临时识别为armhf"
+fi
 echo "Detected that your current architecture is ${archtype}"
 echo "检测到您当前的架构为${archtype} ，GNU/Linux系统将安装至~/${DebianFolder}"
 
@@ -567,7 +570,6 @@ chmod +x remove-debian.sh
 cd ~/${DebianFolder}/root
 ########################
 if [ -f "${HOME}/.RASPBIANARMHFDetectionFILE" ]; then
-  echo "检测到您选择的是raspbian树莓派系统，将通过debian buster来间接安装raspbian buster"
   mv -f "${HOME}/.RASPBIANARMHFDetectionFILE" "{DebianCHROOT}/tmp/"
   #树莓派换源
   wget -O "raspbian-sources-gpg.tar.xz" 'https://gitee.com/mo2/patch/raw/raspbian/raspbian-sources-gpg.tar.xz'
@@ -1103,15 +1105,17 @@ if ! grep -Eqi 'debian|ubuntu|kali|raspbian' "/etc/issue"; then
   chattr +i /etc/apt/sources.list 2>/dev/null
 fi
 
-	if grep -q 'Debian' "/etc/issue"; then
-#stable-backports会出错，需改为buster-backports
-cat >/etc/apt/sources.list <<-'EndOfFile'
+if [ ! -f "/tmp/.RASPBIANARMHFDetectionFILE" ]; then
+    if grep -q 'Debian' "/etc/issue"; then
+        #stable-backports会出错，需改为buster-backports
+        cat >/etc/apt/sources.list <<-'EndOfFile'
 #deb http://mirrors.tuna.tsinghua.edu.cn/debian/ stable main contrib non-free
 #deb http://mirrors.tuna.tsinghua.edu.cn/debian/ stable-updates main contrib non-free
 #deb http://mirrors.tuna.tsinghua.edu.cn/debian/ buster-backports main contrib non-free
 #deb http://mirrors.tuna.tsinghua.edu.cn/debian-security stable/updates main contrib non-free
 deb http://mirrors.tuna.tsinghua.edu.cn/debian/ sid main contrib non-free
 EndOfFile
+    fi
 fi
 	if grep -q 'Kali' "/etc/issue"; then
 echo "检测到您使用的是Kali系统"

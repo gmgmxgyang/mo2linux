@@ -2267,6 +2267,7 @@ INSTALLotherSystems() {
 	####################
 	if [ "${BETASYSTEM}" == '9' ]; then
 		if [ "${archtype}" = 'amd64' ]; then
+			touch ~/.ALPINELINUXDetectionFILE
 			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
 				sed 's/debian系统/openwrt系统/g' |
 				sed 's/debian system/openwrt system/g' |

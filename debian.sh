@@ -2077,7 +2077,7 @@ CHOOSEWHICHGNULINUX() {
 		"1" "Debian:最早的发行版之一" \
 		"2" "Ubuntu 20.04:我的存在是因為大家的存在" \
 		"3" "Kali Rolling:设计用于数字取证和渗透测试" \
-		"4" "Other其它系统(绝赞测试中):Mint,CentOS等" \
+		"4" "Other其它系统(绝赞测试中):Mint,arch,centos等" \
 		"5" "Funtoo:专注于改进Gentoo" \
 		"6" "Void:基于xbps包管理器的独立发行版" \
 		"0" "Back to the main menu 返回主菜单" \

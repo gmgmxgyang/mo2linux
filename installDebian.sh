@@ -575,7 +575,7 @@ elif [ -f "${HOME}/.ALPINELINUXDetectionFILE" ]; then
   sed 's@sed -i \"s:\${DE@#&@g' $(which debian)
   sed -i 's/bash --login/ash --login/g' $(which debian)
   sed -i 's/zsh --login/ash --login/g' $(which debian)
-  mv -f "${HOME}/.ALPINELINUXDetectionFILE " ${DebianCHROOT}/tmp
+  mv -f "${HOME}/.ALPINELINUXDetectionFILE" ${DebianCHROOT}/tmp
 fi
 
 #配置zsh

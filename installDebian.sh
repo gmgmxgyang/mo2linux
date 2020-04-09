@@ -1088,6 +1088,13 @@ cat >.profile <<-'EDITBASHPROFILE'
 YELLOW=$(printf '\033[33m')
 RESET=$(printf '\033[m')
 cd ~
+if [ -f "/tmp/.ALPINELINUXDetectionFILE" ] || [ "$(sed -n 2p /etc/os-release | cut -d '=' -f 2)" = "alpine"  ]; then
+  echo "检测到您使用的是alpine系统，将不会为您配置额外优化步骤"
+  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
+  rm -f "/tmp/.ALPINELINUXDetectionFILE"
+  ash -c "$(wget --no-check-certificate -O- 'https://gitee.com/mo2/zsh/raw/master/zsh.sh')"
+  exit 0
+fi
 #配置清华源
 if [ "$(uname -m)" = "mips" ]; then
   chattr +i /etc/apt/sources.list
@@ -1193,15 +1200,12 @@ apt install -y ca-certificates wget
 echo "Replacing http software source list with https."
 echo "正在将http源替换为https..."
 sed -i 's@http:@https:@g' /etc/apt/sources.list
-#树莓派和alpine换源
+#树莓派换源
 if [ -f "/tmp/.RASPBIANARMHFDetectionFILE" ]; then
   apt install -y xz-utils
   cd /etc/apt
   wget -O "raspbian-sources-gpg.tar.xz" 'https://gitee.com/mo2/patch/raw/raspbian/raspbian-sources-gpg.tar.xz'
   tar -Jxvf "raspbian-sources-gpg.tar.xz"
-  rm -f "raspbian-sources-gpg.tar.xz" "/tmp/.RASPBIANARMHFDetectionFILE"
-elif [ -f "/tmp/.ALPINELINUXDetectionFILE" ] || [ "$(sed -n 2p /etc/os-release | cut -d '=' -f 2)" = "alpine"  ]; then
-  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
   rm -f "raspbian-sources-gpg.tar.xz" "/tmp/.RASPBIANARMHFDetectionFILE"
 fi
 

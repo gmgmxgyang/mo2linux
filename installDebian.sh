@@ -572,7 +572,7 @@ if [ -f "${HOME}/.RASPBIANARMHFDetectionFILE" ]; then
 elif [ -f "${HOME}/.ALPINELINUXDetectionFILE" ]; then
   #sed -i '/DEFAULTZSHLOGIN/d' $(which debian)
   #sed -i '/DEFAULTZSHLOGIN/d' $(which debian)
-  sed 's@sed -i \"s:\${DE@#&@g' $(which debian)
+  #sed -i 's@sed -i \"s:\${DE@#&@g' $(which debian)
   sed -i 's/bash --login/ash --login/g' $(which debian)
   sed -i 's/zsh --login/ash --login/g' $(which debian)
   mv -f "${HOME}/.ALPINELINUXDetectionFILE" ${DebianCHROOT}/tmp
@@ -1136,9 +1136,13 @@ nameserver 114.114.114.114
 nameserver 240c::6666
 EndOfFile
 
-if [ -f "/tmp/.ALPINELINUXDetectionFILE" ] || [ "$(sed -n 2p /etc/os-release | cut -d '=' -f 2)" = "alpine"  ]; then
+if [ -f "/tmp/.ALPINELINUXDetectionFILE" ]; then
   echo "检测到您使用的不是deb系linux，将不会为您配置额外优化步骤"
-  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
+  if [ "$(sed -n 2p /etc/os-release | cut -d '=' -f 2)" = "alpine"  ]; then
+    sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
+    apk update 
+    apk add bash
+  fi
   rm -f "/tmp/.ALPINELINUXDetectionFILE"
   rm -f ~/.profile
   mv -f ~/.profile.bak ~/.profile 2>/dev/null

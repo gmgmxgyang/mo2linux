@@ -278,10 +278,6 @@ echo "      i7LUJv.   . .     .:   YI7bIr :ur "
 echo "     Y rLXJL7.:jvi:i:::rvU:.7PP XQ. 7r7 "
 echo "    ir iJgL:uRB5UPjriirqKJ2PQMP :Yi17.v "
 echo "         :   r. ..      .. .:i  ...     "
-if [ -f "${HOME}/.RASPBIANARMHFDetectionFILE" ]; then
-  echo "检测到您选择的是raspbian树莓派系统，将通过debian buster间接安装raspbian buster"
-  mv -f "${HOME}/.RASPBIANARMHFDetectionFILE" ${DebianCHROOT}/tmp
-fi
 
 if [ -f "${HOME}/.ChrootInstallationDetectionFile" ]; then
   rm -f ${HOME}/.ChrootInstallationDetectionFile
@@ -569,6 +565,17 @@ EOF
 chmod +x remove-debian.sh
 
 cd ~/${DebianFolder}/root
+########################
+if [ -f "${HOME}/.RASPBIANARMHFDetectionFILE" ]; then
+  echo "检测到您选择的是raspbian树莓派系统，将通过debian buster间接安装raspbian buster"
+  mv -f "${HOME}/.RASPBIANARMHFDetectionFILE" ${DebianCHROOT}/tmp
+elif [ -f "${HOME}/.ALPINELINUXDetectionFILE" ]; then
+  sed -i '/DEFAULTZSHLOGIN/d' $(which debian)
+  sed -i '/DEFAULTZSHLOGIN/d' $(which debian)
+  sed -i 's/bash --login/ash --login/g' $(which debian)
+  sed -i 's/zsh --login/ash --login/g' $(which debian)
+  mv -f "${HOME}/.ALPINELINUXDetectionFILE " ${DebianCHROOT}/tmp
+fi
 
 #配置zsh
 cat >zsh.sh <<-'ADDZSHSHELL'
@@ -1185,13 +1192,16 @@ apt install -y ca-certificates wget
 echo "Replacing http software source list with https."
 echo "正在将http源替换为https..."
 sed -i 's@http:@https:@g' /etc/apt/sources.list
-#树莓派换源
+#树莓派和alpine换源
 if [ -f "/tmp/.RASPBIANARMHFDetectionFILE" ]; then
   apt install -y xz-utils
   cd /etc/apt
   wget -O "raspbian-sources-gpg.tar.xz" 'https://gitee.com/mo2/patch/raw/raspbian/raspbian-sources-gpg.tar.xz'
   tar -Jxvf "raspbian-sources-gpg.tar.xz"
-  rm -f "raspbian-sources-gpg.tar.xz"
+  rm -f "raspbian-sources-gpg.tar.xz" "/tmp/.RASPBIANARMHFDetectionFILE"
+elif [ -f "/tmp/.ALPINELINUXDetectionFILE" ] || [ "$(sed -n 2p /etc/os-release | cut -d '=' -f 2)" = "alpine"  ]; then
+  sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
+  rm -f "raspbian-sources-gpg.tar.xz" "/tmp/.RASPBIANARMHFDetectionFILE"
 fi
 
 if grep -q 'Funtoo GNU/Linux' '/etc/os-release'; then

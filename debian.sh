@@ -2217,6 +2217,7 @@ INSTALLotherSystems() {
 	fi
 	####################
 	if [ "${BETASYSTEM}" == '6' ]; then
+	touch ~/.ALPINELINUXDetectionFILE
 		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
 			sed 's/debian系统/alpine系统/g' |
 			sed 's/debian system/alpine system/g' |

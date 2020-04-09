@@ -2066,8 +2066,9 @@ CHOOSEWHICHGNULINUX() {
 		"1" "Debian:最早的发行版之一" \
 		"2" "Ubuntu 20.04:我的存在是因為大家的存在" \
 		"3" "Kali Rolling:设计用于数字取证和渗透测试" \
-		"4" "Funtoo:专注于改进Gentoo" \
-		"5" "Void:基于xbps包管理器的独立发行版" \
+		"4" "Other其它系统(绝赞测试中):Mint,CentOS等" \
+		"5" "Funtoo:专注于改进Gentoo" \
+		"6" "Void:基于xbps包管理器的独立发行版" \
 		"0" "Back to the main menu 返回主菜单" \
 		3>&1 1>&2 2>&3)
 
@@ -2090,10 +2091,14 @@ CHOOSEWHICHGNULINUX() {
 	fi
 	##############################
 	if [ "${SELECTGNULINUX}" == '4' ]; then
+		INSTALLotherSystems
+	fi
+	##############################
+	if [ "${SELECTGNULINUX}" == '5' ]; then
 		INSTALLFuntooDISTRO
 	fi
 	#############################
-	if [ "${SELECTGNULINUX}" == '5' ]; then
+	if [ "${SELECTGNULINUX}" == '6' ]; then
 		INSTALLVOIDLINUXDISTRO
 	fi
 	##############################
@@ -2102,8 +2107,208 @@ CHOOSEWHICHGNULINUX() {
 	read
 	MainMenu
 }
-
 ##############################
+INSTALLotherSystems() {
+	BETASYSTEM=$(whiptail --title "Beta features" --menu \
+		"本功能仍处于测试阶段，可能无法正常运行，且未进行任何优化\nBeta features may not work properly." 15 60 5 \
+		"1" "mint tricia(x86,x64)" \
+		"2" "fedora 31" \
+		"3" "centos 8" \
+		"4" "gentoo (armhf,x86,x64)" \
+		"5" "arch" \
+		"6" "alpine edge" \
+		"7" "樹莓派raspbian buster(armhf)" \
+		"8" "opensuse tumbleweed" \
+		"9" "openwrt (x64)" \
+		"10" "devuan ascii" \
+		"11" "apertis 18.12" \
+		"12" "alt p9" \
+		"0" "Back to the main menu 返回主菜单" \
+		3>&1 1>&2 2>&3)
+	##############################
+	if [ "${BETASYSTEM}" == '0' ]; then
+		MainMenu
+	fi
+	####################
+	if [ "${BETASYSTEM}" == '1' ]; then
+		if [ "${archtype}" = 'amd64' ] || [ "${archtype}" = 'i386' ]; then
+			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+				sed 's/debian系统/mint系统/g' |
+				sed 's/debian system/mint system/g' |
+				sed 's:debian-sid:mint-tricia:g' |
+				sed 's:debian/sid:mint/tricia:g' |
+				sed 's:Debian GNU/Linux:Mint GNU/Linux:g')"
+		else
+			echo "Linux Mint不支持您的架构"
+		fi
+	fi
+	####################
+	if [ "${BETASYSTEM}" == '2' ]; then
+		if [ "${archtype}" = 'armhf' ]; then
+			echo "检测到您使用的是armhf架构，将为您降级至Fedora 29"
+			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+				sed 's/debian系统/fedora系统/g' |
+				sed 's/debian system/fedora system/g' |
+				sed 's:debian-sid:fedora-29:g' |
+				sed 's:debian/sid:fedora/29:g' |
+				sed 's:Debian GNU/Linux:Fedora GNU/Linux:g')"
+		elif [ "${archtype}" = 'i386' ]; then
+			echo "Fedora不支持您的架构"
+		else
+			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+				sed 's/debian系统/fedora系统/g' |
+				sed 's/debian system/fedora system/g' |
+				sed 's:debian-sid:fedora-31:g' |
+				sed 's:debian/sid:fedora/31:g' |
+				sed 's:Debian GNU/Linux:Fedora GNU/Linux:g')"
+		fi
+	fi
+	####################
+	if [ "${BETASYSTEM}" == '3' ]; then
+		if [ "${archtype}" = 'armhf' ] || [ "${archtype}" = 'i386' ]; then
+			echo "检测到CentOS 8不支持您当前的架构，将为您降级至CentOS 7"
+			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+				sed 's/debian系统/centos系统/g' |
+				sed 's/debian system/centos system/g' |
+				sed 's:debian-sid:centos-7:g' |
+				sed 's:debian/sid:centos/7:g' |
+				sed 's:Debian GNU/Linux:CentOS GNU/Linux:g')"
+		else
+			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+				sed 's/debian系统/centos系统/g' |
+				sed 's/debian system/centos system/g' |
+				sed 's:debian-sid:centos-8:g' |
+				sed 's:debian/sid:centos/8:g' |
+				sed 's:Debian GNU/Linux:CentOS GNU/Linux:g')"
+		fi
+	fi
+	####################
+	if [ "${BETASYSTEM}" == '4' ]; then
+		if [ "${archtype}" = 'arm64' ]; then
+			echo "检测到您当前使用的是arm64架构，将为您下载armhf版容器"
+			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+				sed '72 a\archtype="armhf"' |
+				sed 's/debian系统/gentoo系统/g' |
+				sed 's/debian system/gentoo system/g' |
+				sed 's:debian-sid:gentoo-current:g' |
+				sed 's:debian/sid:gentoo/current:g' |
+				sed 's:Debian GNU/Linux:Gentoo GNU/Linux:g')"
+		else
+			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+				sed 's/debian系统/gentoo系统/g' |
+				sed 's/debian system/gentoo system/g' |
+				sed 's:debian-sid:gentoo-current:g' |
+				sed 's:debian/sid:gentoo/current:g' |
+				sed 's:Debian GNU/Linux:Gentoo GNU/Linux:g')"
+		fi
+	fi
+	####################
+	if [ "${BETASYSTEM}" == '5' ]; then
+		if [ "${archtype}" = 'armhf' ] || [ "${archtype}" = 'i386' ]; then
+			echo "检测到Arch Linux不支持您当前的架构"
+		else
+			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+				sed 's/debian系统/arch系统/g' |
+				sed 's/debian system/arch system/g' |
+				sed 's:debian-sid:archlinux-current:g' |
+				sed 's:debian/sid:archlinux/current:g' |
+				sed 's:Debian GNU/Linux:Arch GNU/Linux:g')"
+		fi
+	fi
+	####################
+	if [ "${BETASYSTEM}" == '6' ]; then
+		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+			sed 's/debian系统/alpine系统/g' |
+			sed 's/debian system/alpine system/g' |
+			sed 's:debian-sid:alpine-edge:g' |
+			sed 's:debian/sid:alpine/edge:g' |
+			sed 's:Debian GNU/Linux:Alpine Linux:g')"
+	fi
+	####################
+	if [ "${BETASYSTEM}" == '7' ]; then
+		if [ "${archtype}" != 'arm64' ] && [ "${archtype}" != 'armhf' ]; then
+			apt install -y qemu qemu-user-static debootstrap
+		fi
+		touch ~/.RASPBIANARMHFDetectionFILE
+		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+			sed '72 a\archtype="armhf"' |
+			sed 's:/sid:/buster:g' |
+			sed 's:extract z:extract:' |
+			sed 's@#deb http@deb http@g' |
+			sed 's/.*sid main/#&/' |
+			sed 's/debian系统/raspbian系统/g' |
+			sed 's/debian system/raspbian system/g' |
+			sed 's:debian-sid:raspbian-buster:g' |
+			sed 's:debian/sid:debian/buster:g' |
+			sed 's:Debian GNU/Linux:Raspbian GNU/Linux:g')"
+	fi
+	#先下载debian buster容器镜像，再换源成树莓派。
+	####################
+	if [ "${BETASYSTEM}" == '8' ]; then
+		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+			sed 's/debian系统/opensuse系统/g' |
+			sed 's/debian system/opensuse system/g' |
+			sed 's:debian-sid:opensuse-tumbleweed:g' |
+			sed 's:debian/sid:opensuse/tumbleweed:g' |
+			sed 's:Debian GNU/Linux:Opensuse GNU/Linux:g')"
+	fi
+	####################
+	if [ "${BETASYSTEM}" == '9' ]; then
+		if [ "${archtype}" = 'amd64' ]; then
+			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+				sed 's/debian系统/openwrt系统/g' |
+				sed 's/debian system/openwrt system/g' |
+				sed 's:debian-sid:openwrt-snapshot:g' |
+				sed 's:debian/sid:openwrt/snapshot:g' |
+				sed 's:Debian GNU/Linux:OpenWRT GNU/Linux:g')"
+		else
+			echo "开发者和清华源镜像站都没有构建${archtype}架构的容器镜像呢！"
+			echo "您可以换用x86_64架构的设备进行安装"
+		fi
+	fi
+	####################
+	if [ "${BETASYSTEM}" == '10' ]; then
+		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+			sed 's/debian系统/devuan系统/g' |
+			sed 's/debian system/devuan system/g' |
+			sed 's:debian-sid:devuan-ascii:g' |
+			sed 's:debian/sid:devuan/ascii:g' |
+			sed 's:Debian GNU/Linux:Devuan GNU/Linux:g')"
+	fi
+	####################
+	if [ "${BETASYSTEM}" == '11' ]; then
+		if [ "${archtype}" = 'armhf' ] || [ "${archtype}" = 'i386' ]; then
+			echo "检测到apertis不支持您当前的架构"
+		else
+			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+				sed 's/debian系统/apertis系统/g' |
+				sed 's/debian system/apertis system/g' |
+				sed 's:debian-sid:apertis-18.12:g' |
+				sed 's:debian/sid:apertis/18.12:g' |
+				sed 's:Debian GNU/Linux:Arch GNU/Linux:g')"
+		fi
+	fi
+	####################
+	if [ "${BETASYSTEM}" == '12' ]; then
+		if [ "${archtype}" = 'armhf' ]; then
+			echo "检测到alt不支持您当前的架构"
+		else
+			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+				sed 's/debian系统/alt系统/g' |
+				sed 's/debian system/alt system/g' |
+				sed 's:debian-sid:alt-p9:g' |
+				sed 's:debian/sid:alt/p9:g' |
+				sed 's:Debian GNU/Linux:Alt GNU/Linux:g')"
+		fi
+	fi
+	####################
+	echo 'Press Enter to return.'
+	echo "${YELLOW}按回车键返回。${RESET}"
+	read
+	MainMenu
+}
+
+#########################
 INSTALLDEBIANGNULINUXDISTRO() {
 	if (whiptail --title "Install GNU/Linux" --yes-button 'Software source' --no-button 'Download Rec pkg' --yesno "Do you want to install via Tsinghua University open source mirror station, or download the recovery package (debian-xfce.tar.xz) to install?The latter only supports arm64.您想要通过软件源镜像站来安装，还是在线下载恢复包来安装？软件源获取的是最新版镜像，且支持arm64,armhf,x86,x64等架构，安装基础系统速度很快，但安装gui速度较慢。恢复包非最新版,仅支持aarch(arm64)架构,但安装gui速度较快，且更加方便。若您无使用GUI的需求，建议选择前者。" 15 50); then
 		BUSTERORSID

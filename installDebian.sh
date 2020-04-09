@@ -69,6 +69,7 @@ esac
 #安装必要依赖
 #apt update
 #apt install -y curl openssl proot aria2 procps
+#gentoo在下一行修改archtype的变量
 
 #requirements and dependencies.
 
@@ -277,6 +278,10 @@ echo "      i7LUJv.   . .     .:   YI7bIr :ur "
 echo "     Y rLXJL7.:jvi:i:::rvU:.7PP XQ. 7r7 "
 echo "    ir iJgL:uRB5UPjriirqKJ2PQMP :Yi17.v "
 echo "         :   r. ..      .. .:i  ...     "
+if [ -f "${HOME}/.RASPBIANARMHFDetectionFILE" ]; then
+  echo "检测到您选择的是raspbian树莓派系统，将通过debian buster间接安装raspbian buster"
+  mv -f "${HOME}/.RASPBIANARMHFDetectionFILE" ${DebianCHROOT}/tmp
+fi
 
 if [ -f "${HOME}/.ChrootInstallationDetectionFile" ]; then
   rm -f ${HOME}/.ChrootInstallationDetectionFile
@@ -348,6 +353,8 @@ if [ -f "${HOME}/.ChrootInstallationDetectionFile" ]; then
   mount -o rw,nosuid,nodev,mode=1777 -t tmpfs tmpfs /dev/shm >/dev/null 2>&1
 
   #mount -t tmpfs tmpfs ${DebianCHROOT}/tmp  >/dev/null 2>&1
+
+  mount --rbind ${DebianCHROOT} ${DebianCHROOT}/ >/dev/null 2>&1
 
   if [ -d "/sdcard" ]; then
     mount -o bind /sdcard ${DebianCHROOT}/root/sd >/dev/null 2>&1
@@ -475,7 +482,7 @@ It is recommended that you back up the entire system before removal. If the data
   ps -e | grep proot
   ps -e | grep startvnc
   pgrep proot &> /dev/null
-if [ ! $? -ne 0 ]; then
+if [ ! \$? -ne 0 ]; then
     echo '检测到proot容器正在运行，请先输stopvnc停止运行'
 fi
  #echo '检测到chroot容器正在运行，您可以输pkill -u $(whoami) 来终止所有进程'    
@@ -1069,16 +1076,18 @@ if [ ! -f ".profile" ]; then
 else
   mv -f .profile .profile.bak
 fi
-
 cat >.profile <<-'EDITBASHPROFILE'
 YELLOW=$(printf '\033[33m')
 RESET=$(printf '\033[m')
 cd ~
-
 #配置清华源
 if [ "$(uname -m)" = "mips" ]; then
   chattr +i /etc/apt/sources.list
   sed -i 's:# en_US.UTF-8 UTF-8:en_US.UTF-8 UTF-8:' /etc/locale.gen
+fi
+
+if ! grep -Eqi 'debian|ubuntu|kali' "/etc/issue"; then
+  chattr +i /etc/apt/sources.list 2>/dev/null
 fi
 #stable-backports会出错，需改为buster-backports
 cat >/etc/apt/sources.list <<-'EndOfFile'
@@ -1176,6 +1185,14 @@ apt install -y ca-certificates wget
 echo "Replacing http software source list with https."
 echo "正在将http源替换为https..."
 sed -i 's@http:@https:@g' /etc/apt/sources.list
+#树莓派换源
+if [ -f "/tmp/.RASPBIANARMHFDetectionFILE" ]; then
+  apt install -y xz-utils
+  cd /etc/apt
+  wget -O "raspbian-sources-gpg.tar.xz" 'https://gitee.com/mo2/patch/raw/raspbian/raspbian-sources-gpg.tar.xz'
+  tar -Jxvf "raspbian-sources-gpg.tar.xz"
+  rm -f "raspbian-sources-gpg.tar.xz"
+fi
 
 if grep -q 'Funtoo GNU/Linux' '/etc/os-release'; then
     GNULINUXOSRELEASE=FUNTOO
@@ -1241,8 +1258,9 @@ EOF
     exit 0
 elif [ "$(uname -m)" = "mips" ]; then
   chattr -i /etc/apt/sources.list    
+elif ! grep -Eqi 'debian|ubuntu|kali' "/etc/issue"; then
+  chattr -i /etc/apt/sources.list 2>/dev/null
 fi
-
 apt update
 apt list --upgradable
 echo "正在升级所有软件包..."
@@ -1591,11 +1609,17 @@ fi
 echo "Automatically configure zsh after 2 seconds,you can press Ctrl + C to cancel."
 echo "2s后将自动开始配置zsh，您可以按Ctrl+C取消，这将不会继续配置其它步骤，同时也不会启动Tmoe-debian工具。"
 #wget -qO- 'https://gitee.com/mirrors/neofetch/raw/master/neofetch' | bash -
-wget -qcO /usr/local/bin/neofetch 'https://gitee.com/mirrors/neofetch/raw/master/neofetch'
+wget -qcO /usr/local/bin/neofetch 'https://gitee.com/mirrors/neofetch/raw/master/neofetch' || curl -sLo /usr/local/bin/neofetch 'https://gitee.com/mirrors/neofetch/raw/master/neofetch'
 chmod +x /usr/local/bin/neofetch
 neofetch
-bash zsh.sh
+if grep -q 'debian' '/etc/os-release'; then
+  bash zsh.sh
+else
+  echo "检测到您使用的不是deb系linux，将不会为您配置额外的优化步骤"
+  bash -c "$(curl -LfsS 'https://gitee.com/mo2/zsh/raw/master/zsh.sh')" || bash -c "$(wget -qO- 'https://gitee.com/mo2/zsh/raw/master/zsh.sh')"
+fi
 EDITBASHPROFILE
+
 if [ "${LINUXDISTRO}" != 'Android' ]; then
   sed -i 's:#!/data/data/com.termux/files/usr/bin/bash:#!/bin/bash:g' $(grep -rl 'com.termux' "${PREFIX}/bin")
   sed -i 's:#!/data/data/com.termux/files/usr/bin/bash:#!/bin/bash:' ${DebianFolder}/remove-debian.sh

@@ -123,7 +123,7 @@ GNULINUX() {
 		LINUXDISTRO='gentoo'
 	fi
 
-	if [ "$(LINUXDISTRO)" = 'redhat' ]; then
+	if [ "${LINUXDISTRO}" = 'redhat' ]; then
 		if [ "$(cat /etc/os-release | grep 'ID=' | head -n 1 | cut -d '"' -f 2)" = "centos" ]; then
 			REDHATDISTRO='centos'
 		elif grep -q 'Fedora' "/etc/os-release"; then

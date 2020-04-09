@@ -1661,7 +1661,7 @@ chmod +x /usr/local/bin/neofetch
 neofetch
 
 if [ "$(cat /etc/issue | cut -c 1-4)" = "Arch" ]; then
-  grep -q '^LANG=' /etc/locale.conf || echo 'LANG="zh_CN.UTF-8"' >> /etc/locale.conf
+  grep -q '^LANG=' /etc/locale.conf 2>/dev/null || echo 'LANG="zh_CN.UTF-8"' >> /etc/locale.conf
   if [ "$(uname -m)" = "aarch64" ] || [ "$(uname -m)" = "armv7l" ]; then
     cat >/etc/pacman.d/mirrorlist <<-'EndOfArchMirrors'
 #Server = https://mirror.archlinuxarm.org/$arch/$repo

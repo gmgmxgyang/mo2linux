@@ -1102,6 +1102,8 @@ fi
 if ! grep -Eqi 'debian|ubuntu|kali|raspbian' "/etc/issue"; then
   chattr +i /etc/apt/sources.list 2>/dev/null
 fi
+
+	if grep -q 'Debian' "/etc/issue"; then
 #stable-backports会出错，需改为buster-backports
 cat >/etc/apt/sources.list <<-'EndOfFile'
 #deb http://mirrors.tuna.tsinghua.edu.cn/debian/ stable main contrib non-free
@@ -1110,7 +1112,7 @@ cat >/etc/apt/sources.list <<-'EndOfFile'
 #deb http://mirrors.tuna.tsinghua.edu.cn/debian-security stable/updates main contrib non-free
 deb http://mirrors.tuna.tsinghua.edu.cn/debian/ sid main contrib non-free
 EndOfFile
-
+fi
 	if grep -q 'Kali' "/etc/issue"; then
 echo "检测到您使用的是Kali系统"
 cat >/etc/apt/sources.list <<-"EndOfSourcesList"
@@ -1213,11 +1215,12 @@ echo "    5  Ivr:QJ7JYvi....ir1dq vYv.7L.Y     "
 echo "    S  7Z  Qvr:.iK55SqS1PX  Xq7u2 :7     "
 echo "           .            i   7            "
 apt install -y apt-utils
-apt install -y ca-certificates wget 
-echo "Replacing http software source list with https."
-echo "正在将http源替换为https..."
-sed -i 's@http:@https:@g' /etc/apt/sources.list
-
+apt install -y ca-certificates wget
+if ! grep -qi 'Raspbian' "/etc/issue"; then 
+  echo "Replacing http software source list with https."
+  echo "正在将http源替换为https..."
+  sed -i 's@http:@https:@g' /etc/apt/sources.list
+fi
 
 if grep -q 'Funtoo GNU/Linux' '/etc/os-release'; then
     GNULINUXOSRELEASE=FUNTOO

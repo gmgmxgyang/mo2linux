@@ -2082,7 +2082,7 @@ CHOOSEWHICHGNULINUX() {
 		"1" "Debian:最早的发行版之一" \
 		"2" "Ubuntu 20.04:我的存在是因為大家的存在" \
 		"3" "Kali Rolling:设计用于数字取证和渗透测试" \
-		"4" "Other其它系统(绝赞测试中):Mint,arch,cent" \
+		"4" "Other其它系统(绝赞测试中):suse,arch,centos" \
 		"5" "Funtoo:专注于改进Gentoo" \
 		"6" "Void:基于xbps包管理器的独立发行版" \
 		"0" "Back to the main menu 返回主菜单" \
@@ -2127,14 +2127,14 @@ CHOOSEWHICHGNULINUX() {
 INSTALLotherSystems() {
 	BETASYSTEM=$(whiptail --title "Beta features" --menu \
 		"本功能仍处于测试阶段，可能无法正常运行，且未进行任何优化\nBeta features may not work properly." 15 60 5 \
-		"1" "mint tricia(x86,x64)" \
+		"1" "opensuse tumbleweed" \
 		"2" "fedora 31" \
 		"3" "centos 8" \
 		"4" "gentoo (armhf,x86,x64)" \
 		"5" "arch" \
 		"6" "alpine edge" \
 		"7" "樹莓派raspbian buster(armhf)" \
-		"8" "opensuse tumbleweed" \
+		"8" "mint tricia(x86,x64)" \
 		"9" "openwrt (x64)" \
 		"10" "devuan ascii" \
 		"11" "apertis 18.12" \
@@ -2147,17 +2147,14 @@ INSTALLotherSystems() {
 	fi
 	####################
 	if [ "${BETASYSTEM}" == '1' ]; then
-		if [ "${archtype}" = 'amd64' ] || [ "${archtype}" = 'i386' ]; then
-			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
-				sed 's/debian系统/mint系统/g' |
-				sed 's/debian system/mint system/g' |
-				sed 's:debian-sid:mint-tricia:g' |
-				sed 's:debian/sid:mint/tricia:g' |
-				sed 's:Debian GNU/Linux:Mint GNU/Linux:g')"
-		else
-			echo "Linux Mint不支持您的架构"
-		fi
+		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+			sed 's/debian系统/opensuse系统/g' |
+			sed 's/debian system/opensuse system/g' |
+			sed 's:debian-sid:opensuse-tumbleweed:g' |
+			sed 's:debian/sid:opensuse/tumbleweed:g' |
+			sed 's:Debian GNU/Linux:Opensuse GNU/Linux:g')"
 	fi
+
 	####################
 	if [ "${BETASYSTEM}" == '2' ]; then
 		touch ~/.REDHATDetectionFILE
@@ -2264,13 +2261,18 @@ INSTALLotherSystems() {
 	#先下载debian buster容器镜像，再换源成树莓派。
 	####################
 	if [ "${BETASYSTEM}" == '8' ]; then
-		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
-			sed 's/debian系统/opensuse系统/g' |
-			sed 's/debian system/opensuse system/g' |
-			sed 's:debian-sid:opensuse-tumbleweed:g' |
-			sed 's:debian/sid:opensuse/tumbleweed:g' |
-			sed 's:Debian GNU/Linux:Opensuse GNU/Linux:g')"
+		if [ "${archtype}" = 'amd64' ] || [ "${archtype}" = 'i386' ]; then
+			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+				sed 's/debian系统/mint系统/g' |
+				sed 's/debian system/mint system/g' |
+				sed 's:debian-sid:mint-tricia:g' |
+				sed 's:debian/sid:mint/tricia:g' |
+				sed 's:Debian GNU/Linux:Mint GNU/Linux:g')"
+		else
+			echo "Linux Mint不支持您的架构"
+		fi
 	fi
+
 	####################
 	if [ "${BETASYSTEM}" == '9' ]; then
 		if [ "${archtype}" = 'amd64' ]; then

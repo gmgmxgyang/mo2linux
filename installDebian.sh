@@ -578,10 +578,22 @@ echo '如需删除镜像文件，请输rm -f ~/debian-sid-rootfs.tar.xz'
 EOF
 chmod +x remove-debian.sh
 
-cd ~/${DebianFolder}/root
 ########################
-curl -sLo "${DebianCHROOT}/usr/local/bin/neofetch" 'https://gitee.com/mirrors/neofetch/raw/master/neofetch'
-chmod +x "${DebianCHROOT}/usr/local/bin/neofetch"
+
+if [ -d "${DebianCHROOT}/usr/local/bin" ]; then
+  mkdir -p ${DebianCHROOT}/usr/local/bin
+fi
+
+cd ${DebianCHROOT}/usr/local/bin
+
+curl -sLo "neofetch" 'https://gitee.com/mirrors/neofetch/raw/master/neofetch'
+curl -sLo "debian-i" 'https://gitee.com/mo2/linux/raw/master/debian-gui-install.bash'
+chmod +x neofetch debian-i
+
+cd ${DebianCHROOT}/root
+curl -sLo zsh-i.sh 'https://gitee.com/mo2/zsh/raw/master/zsh.sh'
+chmod +x zsh-i.sh
+#zsh-i和zsh是不同的
 
 if [ -f "${HOME}/.RASPBIANARMHFDetectionFILE" ]; then
   mv -f "${HOME}/.RASPBIANARMHFDetectionFILE" "${DebianCHROOT}/tmp/"
@@ -968,7 +980,7 @@ else
     # sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="agnosterzak"/g' ~/.zshrc
     echo '检测到您选择的是powerlevel 10k主题,若无法弹出配置面板，则请拉宽屏幕显示大小，然后输p10k configure'
     if ! grep -q '.p10k.zsh' "${HOME}/.zshrc"; then
-        wget -qO /root/.p10k.zsh 'https://gitee.com/mo2/Termux-zsh/raw/p10k/.p10k.zsh'
+        wget -qO /root/.p10k.zsh 'https://gitee.com/mo2/Termux-zsh/raw/p10k/.p10k.zsh' || curl -sLo /root/.p10k.zsh 'https://gitee.com/mo2/Termux-zsh/raw/p10k/.p10k.zsh'
         cat >>${HOME}/.zshrc <<-"ENDOFPOWERLEVEL"
   [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh 
 ENDOFPOWERLEVEL
@@ -983,7 +995,10 @@ fi
   fi
 
   cd ~
-  sed -i '1 r vnc-autostartup-zsh' ~/.zshrc
+  if [ ! -f ~/.zlogin ]; then 
+     echo '' > ~/.zlogin
+  fi
+  sed -i '1 r vnc-autostartup-zsh' ~/.zlogin
 
   rm -f vnc-autostartup-zsh
 
@@ -1083,7 +1098,7 @@ EndOfFile
 cat >vnc-autostartup-zsh <<-'EndOfFile'
 cat /etc/issue
 
-grep  'cat /etc/issue' ~/.zshrc >/dev/null 2>&1 || sed -i '1 a\cat /etc/issue' ~/.zshrc
+grep -q 'cat /etc/issue' ~/.zshrc 2>&1 || sed -i '1 a\cat /etc/issue' ~/.zshrc
 if [ -f "/root/.vnc/startvnc" ]; then
 	/usr/local/bin/startvnc
 	echo "已为您启动vnc服务 Vnc service has been started, enjoy it!"
@@ -1381,12 +1396,15 @@ EndOfArchMirrors
   pacman -Syy --noconfirm
 fi
 
-if grep -q 'debian' '/etc/os-release'; then
+if ! grep -q 'debian' '/etc/os-release'; then
+  echo "检测到您使用的不是deb系linux，优化步骤可能会出现错误"
+  echo "在脚本执行完成后，您可以手动输./zsh-i.sh来配置zsh，输debian-i打开软件安装工具"
   bash zsh.sh
+  debian-i
+  #bash -c "$(curl -LfsS 'https://gitee.com/mo2/zsh/raw/master/zsh.sh')" || bash -c "$(wget -qO- 'https://gitee.com/mo2/zsh/raw/master/zsh.sh')"
 else
-  echo "检测到您使用的不是deb系linux，将不会为您配置额外的优化步骤"
-  bash -c "$(curl -LfsS 'https://gitee.com/mo2/zsh/raw/master/zsh.sh')" || bash -c "$(wget -qO- 'https://gitee.com/mo2/zsh/raw/master/zsh.sh')"
-fi
+  bash zsh.sh
+fi  
 EDITBASHPROFILE
 
 if [ "${LINUXDISTRO}" != 'Android' ]; then

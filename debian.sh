@@ -1656,7 +1656,7 @@ INSTALLDEBIANORDOWNLOADRECOVERYTARXZ() {
 			同时希望您能注意在信息网络上不存在“绝对完善的安全措施”。
 
 			7.其它说明
-			(a)若您需要在开源项目中引用本脚本，建议您先于原开发者联系,并附上本git-repo的原链接https://gitee.com/mo2/linux
+			(a)若您需要在开源项目中引用本脚本，建议您先与原开发者联系,并附上本git-repo的原链接https://gitee.com/mo2/linux
 			If you want to reference this script in an open source project, please indicate the original link of this repo and suggest that you contact the original developer before that.
 
 			8.最终用户许可协议的更改
@@ -2132,17 +2132,17 @@ CHOOSEWHICHGNULINUX() {
 ##############################
 INSTALLotherSystems() {
 	BETASYSTEM=$(whiptail --title "Beta features" --menu \
-		"WARNNING！本功能仍处于测试阶段，可能无法正常运行，且未进行任何优化\nBeta features may not work properly." 15 60 5 \
-		"1" "opensuse tumbleweed" \
-		"2" "fedora 31" \
-		"3" "centos 8" \
-		"4" "gentoo (armhf,x86,x64)" \
-		"5" "arch" \
-		"6" "alpine edge" \
+		"WARNNING！本功能仍处于测试阶段，可能无法正常运行，且未进行任何优化\nBeta features may not work properly." 17 55 7 \
+		"1" "arch(系统设计以KISS为总体指导原则)" \
+		"2" "fedora 31(红帽社区版,新技术试验场)" \
+		"3" "centos 8(基于红帽的社区企业操作系统)" \
+		"4" "gentoo(追求极限配置和极高自由armhf,x86,x64)" \
+		"5" "alpine edge(非glibc的精简系统)" \
+		"6" "opensuse tumbleweed(小蜥蜴风滚草)" \
 		"7" "樹莓派raspbian buster(armhf)" \
-		"8" "mint tricia(x86,x64)" \
-		"9" "openwrt (x64)" \
-		"10" "devuan ascii" \
+		"8" "mint tricia(简单易用的系统x86,x64)" \
+		"9" "openwrt(常见于路由器x64)" \
+		"10" "devuan ascii(不使用systemd,基于debian)" \
 		"11" "apertis 18.12" \
 		"12" "alt p9" \
 		"0" "Back to the main menu 返回主菜单" \
@@ -2153,15 +2153,19 @@ INSTALLotherSystems() {
 	fi
 	####################
 	if [ "${BETASYSTEM}" == '1' ]; then
-		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
-			sed 's/debian系统/opensuse系统/g' |
-			sed 's/debian system/opensuse system/g' |
-			sed 's:debian-sid:opensuse-tumbleweed:g' |
-			sed 's:debian/sid:opensuse/tumbleweed:g' |
-			sed 's:Debian GNU/Linux:Opensuse GNU/Linux:g')"
+		if [ "${archtype}" = 'armhf' ] || [ "${archtype}" = 'i386' ]; then
+			echo "检测到Arch Linux不支持您当前的架构"
+		else
+			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+				sed 's/debian系统/arch系统/g' |
+				sed 's/debian system/arch system/g' |
+				sed 's:debian-sid:archlinux-current:g' |
+				sed 's:debian/sid:archlinux/current:g' |
+				sed 's:Debian GNU/Linux:Arch GNU/Linux:g')"
+		fi
 	fi
-
 	####################
+
 	if [ "${BETASYSTEM}" == '2' ]; then
 		touch ~/.REDHATDetectionFILE
 		if [ "${archtype}" = 'armhf' ]; then
@@ -2223,21 +2227,9 @@ INSTALLotherSystems() {
 				sed 's:Debian GNU/Linux:Gentoo GNU/Linux:g')"
 		fi
 	fi
+
 	####################
 	if [ "${BETASYSTEM}" == '5' ]; then
-		if [ "${archtype}" = 'armhf' ] || [ "${archtype}" = 'i386' ]; then
-			echo "检测到Arch Linux不支持您当前的架构"
-		else
-			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
-				sed 's/debian系统/arch系统/g' |
-				sed 's/debian system/arch system/g' |
-				sed 's:debian-sid:archlinux-current:g' |
-				sed 's:debian/sid:archlinux/current:g' |
-				sed 's:Debian GNU/Linux:Arch GNU/Linux:g')"
-		fi
-	fi
-	####################
-	if [ "${BETASYSTEM}" == '6' ]; then
 		touch ~/.ALPINELINUXDetectionFILE
 		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
 			sed 's/debian系统/alpine系统/g' |
@@ -2246,6 +2238,16 @@ INSTALLotherSystems() {
 			sed 's:debian/sid:alpine/edge:g' |
 			sed 's:Debian GNU/Linux:Alpine Linux:g')"
 	fi
+	####################
+	if [ "${BETASYSTEM}" == '6' ]; then
+		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+			sed 's/debian系统/opensuse系统/g' |
+			sed 's/debian system/opensuse system/g' |
+			sed 's:debian-sid:opensuse-tumbleweed:g' |
+			sed 's:debian/sid:opensuse/tumbleweed:g' |
+			sed 's:Debian GNU/Linux:Opensuse GNU/Linux:g')"
+	fi
+
 	####################
 	if [ "${BETASYSTEM}" == '7' ]; then
 		if [ "${archtype}" != 'arm64' ] && [ "${archtype}" != 'armhf' ]; then

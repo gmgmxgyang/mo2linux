@@ -1344,3 +1344,19 @@ function main()
 main "$@"
 Matryoshka
 chmod +x gnome.sh
+##########################
+mkdir -p /usr/local/bin
+cat >/usr/local/bin/xsdl-4712 <<-'EndOfFile'
+#!/bin/bash
+stopvnc >/dev/null 2>&1
+sed -i 's/4713/4712/g' /usr/local/bin/startxsdl
+EndOfFile
+
+cat >/usr/local/bin/xsdl-4713 <<-'EndOfFile'
+#!/bin/bash
+stopvnc >/dev/null 2>&1
+sed -i 's/4712/4713/g' /usr/local/bin/startxsdl
+EndOfFile
+
+chmod +x /usr/local/bin/xsdl-4712 /usr/local/bin/xsdl-4713
+##############

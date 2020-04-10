@@ -2074,7 +2074,7 @@ STARTVNCANDSTOPVNC() {
 		cp -rpf ~/.vnc /root/ &
 		chown -R root:root /root/.vnc &
 	fi
-	echo '若xsdl音频端口不是4713，而是4712，则请输xsdl-4712进行修复。'
+
 	if [ "${WINDOWSDISTRO}" = 'WSL' ]; then
 		echo "若无法自动打开X服务，则请手动在资源管理器中打开C:\Users\Public\Downloads\VcXsrv\vcxsrv.exe"
 		cd "/mnt/c/Users/Public/Downloads"

@@ -1191,8 +1191,13 @@ if grep -q 'openSUSE' "/etc/issue"; then
   zypper addrepo -fcg https://mirrors.tuna.tsinghua.edu.cn/opensuse/tumbleweed/repo/oss/ tuna-mirrors-oss
   zypper addrepo -fcg https://mirrors.tuna.tsinghua.edu.cn/opensuse/tumbleweed/repo/non-oss/ tuna-mirrors-non-oss
   zypper addrepo -fcg https://mirrors.tuna.tsinghua.edu.cn/packman/suse/openSUSE_Tumbleweed/ tuna-mirrors_Tumbleweed
-  zypper ref
-  zypper install wget
+  zypper --gpg-auto-import-keys refresh
+  zypper dup --no-allow-vendor-change -y
+  zypper install -y wget
+  sed -i 's@RC_LANG=.*@RC_LANG="zh_CN.UTF8"@' /etc/sysconfig/language
+  sed -i 's@RC_LC_ALL=.*@RC_LC_ALL="zh_CN.UTF8"@' /etc/sysconfig/language
+  sed -i 's@INSTALLED_LANGUAGES=@INSTALLED_LANGUAGES="zh_CN"@' /etc/sysconfig/language
+  zypper install -y glibc-locale glibc-i18ndata translation-update-zh_CN
 fi
 
 apt update

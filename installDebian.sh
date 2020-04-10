@@ -1399,9 +1399,9 @@ fi
 if ! grep -q 'debian' '/etc/os-release'; then
   echo "检测到您使用的不是deb系linux，优化步骤可能会出现错误"
   echo "在脚本执行完成后，您可以手动输./zsh-i.sh来配置zsh，输debian-i打开软件安装工具"
-  bash zsh-i.sh
   bash zsh.sh
   debian-i
+  bash zsh-i.sh
   #bash -c "$(curl -LfsS 'https://gitee.com/mo2/zsh/raw/master/zsh.sh')" || bash -c "$(wget -qO- 'https://gitee.com/mo2/zsh/raw/master/zsh.sh')"
 else
   bash zsh.sh

@@ -2132,7 +2132,7 @@ CHOOSEWHICHGNULINUX() {
 ##############################
 INSTALLotherSystems() {
 	BETASYSTEM=$(whiptail --title "Beta features" --menu \
-		"WARNNING！本功能仍处于测试阶段，可能无法正常运行，且未进行任何优化\nBeta features may not work properly." 17 55 7 \
+		"WARNNING！本功能仍处于测试阶段，可能无法正常运行\nBeta features may not work properly." 17 55 7 \
 		"1" "arch(系统设计以KISS为总体指导原则)" \
 		"2" "fedora 31(红帽社区版,新技术试验场)" \
 		"3" "centos 8(基于红帽的社区企业操作系统)" \

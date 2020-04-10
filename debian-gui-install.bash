@@ -796,7 +796,7 @@ INSTALLGUI() {
 #######################
 OTHERDESKTOP() {
 	BETADESKTOP=$(whiptail --title "Beta features" --menu \
-		"WARNNING！本功能仍处于测试阶段，可能无法正常运行，且未进行任何优化，部分桌面依赖systemd,无法在chroot环境中运行\nBeta features may not work properly." 15 60 6 \
+		"WARNNING！本功能仍处于测试阶段,可能无法正常运行。部分桌面依赖systemd,无法在chroot环境中运行\nBeta features may not work properly." 15 60 6 \
 		"1" "lxqt" \
 		"2" "kde plasma 5" \
 		"3" "gnome 3" \

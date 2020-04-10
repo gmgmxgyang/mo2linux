@@ -595,6 +595,10 @@ elif [ -f "${HOME}/.REDHATDetectionFILE" ]; then
 nameserver 114.114.114.114
 nameserver 240c::6666
 EndOfFile
+elif [ -f "${HOME}/.SUSEDetectionFILE" ]; then
+  rm -f "${HOME}/.SUSEDetectionFILE"
+  curl -sLo "${DebianCHROOT}/usr/local/bin/neofetch" 'https://gitee.com/mirrors/neofetch/raw/master/neofetch'
+  chmod +x "${DebianCHROOT}/usr/local/bin/neofetch"
 elif [ -f "${HOME}/.ALPINELINUXDetectionFILE" ]; then
   #sed -i '/DEFAULTZSHLOGIN/d' $(which debian)
   #sed -i '/DEFAULTZSHLOGIN/d' $(which debian)

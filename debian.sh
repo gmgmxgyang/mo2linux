@@ -2082,7 +2082,7 @@ CHOOSEWHICHGNULINUX() {
 		"1" "Debian:最早的发行版之一" \
 		"2" "Ubuntu 20.04:我的存在是因為大家的存在" \
 		"3" "Kali Rolling:设计用于数字取证和渗透测试" \
-		"4" "Other其它系统(绝赞测试中):suse,arch,centos" \
+		"4" "Other其它系统(绝赞测试中):mint,arch,centos" \
 		"5" "Funtoo:专注于改进Gentoo" \
 		"6" "Void:基于xbps包管理器的独立发行版" \
 		"0" "Back to the main menu 返回主菜单" \
@@ -2147,6 +2147,7 @@ INSTALLotherSystems() {
 	fi
 	####################
 	if [ "${BETASYSTEM}" == '1' ]; then
+		touch ~/.SUSEDetectionFILE
 		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
 			sed 's/debian系统/opensuse系统/g' |
 			sed 's/debian system/opensuse system/g' |

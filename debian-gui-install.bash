@@ -1720,6 +1720,7 @@ FrequentlyAskedQuestions() {
 		"您有哪些疑问？\nWhat questions do you have?" 15 60 4 \
 		"1" "Cannot open Baidu Netdisk" \
 		"2" "udisks2/gvfs配置失败" \
+		"3" "linuxQQ闪退" \
 		"0" "Back to the main menu 返回主菜单" \
 		3>&1 1>&2 2>&3)
 	##############################
@@ -1729,7 +1730,7 @@ FrequentlyAskedQuestions() {
 	############################
 	if [ "${TMOEFAQ}" == '1' ]; then
 		echo "若无法打开，则请手动输rm -f ~/baidunetdisk/baidunetdiskdata.db"
-		echo "${YELLOW}按回车键自动执行，按Ctrl+C取消${RESET}"
+		echo "${YELLOW}按回车键自动执行上述命令，按Ctrl+C取消${RESET}"
 		read
 		rm -vf ~/baidunetdisk/baidunetdiskdata.db
 		echo 'Press Enter to return.'
@@ -1742,6 +1743,17 @@ FrequentlyAskedQuestions() {
 		echo "${YELLOW}按回车键卸载gvfs和udisks2，按Ctrl+C取消${RESET}"
 		read
 		apt purge -y --allow-change-held-packages ^udisks2 ^gvfs
+		DEBIANMENU
+	fi
+	############################
+	if [ "${TMOEFAQ}" == '3' ]; then
+		echo "如果版本更新后登录出现闪退的情况，那么您可以输rm -rf ~/.config/tencent-qq/ 后重新登录。"
+		echo "${YELLOW}按回车键自动执行上述命令，按Ctrl+C取消${RESET}"
+		read
+		rm -rf ~/.config/tencent-qq/
+		echo 'Press Enter to return.'
+		echo "${YELLOW}按回车键返回。${RESET}"
+		read
 		DEBIANMENU
 	fi
 	#############################

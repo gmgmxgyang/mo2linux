@@ -1750,7 +1750,7 @@ FrequentlyAskedQuestions() {
 		echo "如果版本更新后登录出现闪退的情况，那么您可以输rm -rf ~/.config/tencent-qq/ 后重新登录。"
 		echo "${YELLOW}按回车键自动执行上述命令，按Ctrl+C取消${RESET}"
 		read
-		rm -rf ~/.config/tencent-qq/
+		rm -rvf ~/.config/tencent-qq/
 		echo 'Press Enter to return.'
 		echo "${YELLOW}按回车键返回。${RESET}"
 		read

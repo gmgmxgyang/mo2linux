@@ -28,6 +28,7 @@ CHECKdependencies() {
 		LINUXDISTRO='openwrt'
 
 	elif grep -Eqi "Fedora|CentOS|Red Hat|redhat" "/etc/os-release"; then
+		LINUXDISTRO='redhat'
 		if [ "$(cat /etc/os-release | grep 'ID=' | head -n 1 | cut -d '"' -f 2)" = "centos" ]; then
 			REDHATDISTRO='centos'
 		elif grep -q 'Fedora' "/etc/os-release"; then

@@ -599,11 +599,11 @@ nameserver 114.114.114.114
 nameserver 240c::6666
 EndOfFile
 elif [ -f "${HOME}/.ALPINELINUXDetectionFILE" ]; then
-  #sed -i '/DEFAULTZSHLOGIN/d' $(which debian)
-  #sed -i '/DEFAULTZSHLOGIN/d' $(which debian)
-  #sed -i 's@sed -i \"s:\${DE@#&@g' $(which debian)
-  sed -i 's/bash --login/ash --login/g' $(which debian)
-  sed -i 's/zsh --login/ash --login/g' $(which debian)
+  #sed -i '/DEFAULTZSHLOGIN/d' $(command -v debian)
+  #sed -i '/DEFAULTZSHLOGIN/d' $(command -v debian)
+  #sed -i 's@sed -i \"s:\${DE@#&@g' $(command -v debian)
+  sed -i 's/bash --login/ash --login/g' $(command -v debian)
+  sed -i 's/zsh --login/ash --login/g' $(command -v debian)
   mv -f "${HOME}/.ALPINELINUXDetectionFILE" ${DebianCHROOT}/tmp
 fi
 
@@ -639,7 +639,7 @@ if [ ! -e /usr/bin/wget ]; then
   dependencies="${dependencies} wget"
 fi
 
-if [ ! -z "$dependencies" ]; then
+if [ ! -z "${dependencies}" ]; then
   echo "正在安装相关依赖..."
   apt install -y ${dependencies}
 fi
@@ -841,7 +841,7 @@ setup_shell() {
     # Get the path to the right zsh binary
     # 1. Use the most preceding one based on $PATH, then check that it's in the shells file
     # 2. If that fails, get a zsh path from the shells file, then check it actually exists
-    if ! zsh=$(which zsh) || ! grep -qx "$zsh" "$shells_file"; then
+    if ! zsh=$(command -v zsh) || ! grep -qx "$zsh" "$shells_file"; then
       if ! zsh=$(grep '^/.*/zsh$' "$shells_file" | tail -1) || [ ! -f "$zsh" ]; then
         error "no zsh binary found or not present in '$shells_file'"
         error "change your default shell manually."
@@ -1359,313 +1359,6 @@ EndOfFile
 
 chmod +x /usr/local/bin/xsdl-4712 /usr/local/bin/xsdl-4713
 #############################
-#桌面环境安装脚本
-cat >lxqt.sh <<-'Matryoshka'
-#!/bin/bash
-function install()
-{
-apt-mark hold udisks2
-apt update
-echo '即将为您安装思源黑体(中文字体)、tightvncserver、lxqt-core、lxqt-config和qterminal  '
-apt install -y fonts-noto-cjk tightvncserver lxqt-core lxqt-config qterminal
-apt clean
-
-mkdir -p ~/.vnc
-cd ~/.vnc
-cat >xstartup<<-'EndOfFile'
-#!/bin/bash
-xrdb ${HOME}/.Xresources
-export PULSE_SERVER=127.0.0.1
-startlxqt &
-EndOfFile
-chmod +x ./xstartup
-
-cd /usr/local/bin
-cat >startvnc<<-'EndOfFile'
-#!/bin/bash
-stopvnc >/dev/null 2>&1
-export USER=root
-export HOME=/root
-vncserver -geometry 720x1440 -depth 24 -name remote-desktop :1
-echo "正在启动vnc服务,本机默认vnc地址localhost:5901"
-echo The LAN VNC address 局域网地址 $(ip -4 -br -c a |tail -n 1 |cut -d '/' -f 1 |cut -d 'P' -f 2):5901
-EndOfFile
-#############
-cat >startxsdl<<-'EndOfFile'
-#!/bin/bash
-stopvnc >/dev/null 2>&1
-export DISPLAY=127.0.0.1:0
-export PULSE_SERVER=tcp:127.0.0.1:4713
-echo '正在为您启动xsdl,请将display number改为0'
-echo 'Starting xsdl, please change display number to 0'
-echo '默认为前台运行，您可以按Ctrl+C终止，或者在termux原系统内输stopvnc'
-echo 'The default is to run in the foreground, you can press Ctrl + C to terminate, or type "stopvnc" in the original termux system.'
-startlxqt
-EndOfFile
-##############
-
-cat >stopvnc<<-'EndOfFile'
-#!/bin/bash
-export USER=root
-export HOME=/root
-vncserver -kill :1
-rm -rf /tmp/.X1-lock
-rm -rf /tmp/.X11-unix/X1
-pkill Xtightvnc
-EndOfFile
-chmod +x startvnc stopvnc startxsdl
-echo 'The vnc service is about to start for you. The password you entered is hidden.'
-echo '即将为您启动vnc服务，您需要输两遍（不可见的）密码。'
-echo "When prompted for a view-only password, it is recommended that you enter 'n'"
-echo '如果提示view-only,那么建议您输n,选择权在您自己的手上。'
-
-echo '请输入6至8位密码'
-startvnc
-echo '您之后可以输startvnc来启动vnc服务，输stopvnc停止'
-echo '您还可以在termux原系统里输startxsdl来启动xsdl，按Ctrl+C或在termux原系统里输stopvnc停止进程'
-echo '若xsdl音频端口不是4713，而是4712，则请输xsdl-4712进行修复。'
-}
-
-function remove()
-{
-apt install -y lxqt-core lxqt-config qterminal tightvncserver
-}
-function main()
-{
-                case "$1" in
-                install|in|i)
-                        install
-                            ;;
-                remove|rm|uninstall|un|purge)
-                         remove
-                        ;;
-                   *)
-			        install
-			         ;;
-
-
-        esac
-}
-main "$@"
-Matryoshka
-chmod +x lxqt.sh
-
-cat >gnome.sh <<-'Matryoshka'
-#!/bin/bash
-function install()
-{
-apt-mark hold udisks2
-apt-mark hold gvfs
-apt update
-echo "Gnome测试失败，请自行解决软件依赖和其它相关问题。"
-echo '即将为您安装思源黑体(中文字体)、aptitude、tightvncserver和task-gnome-desktop'
-apt install -y fonts-noto-cjk aptitude tightvncserver
-mkdir -p /run/lock
-touch /var/lib/aptitude/pkgstates
-#aptitude install -y task-gnome-desktop || apt install -y task-gnome-desktop
-apt-get install --no-install-recommends xorg gnome-session gnome-menus gnome-tweak-tool gnome-shell || aptitude install -y gnome-core
-apt install -y xinit dbus-x11
-apt clean
-
-mkdir -p ~/.vnc
-cd ~/.vnc
-cat >xstartup<<-'EndOfFile'
-#!/bin/bash
-xrdb ${HOME}/.Xresources
-export PULSE_SERVER=127.0.0.1
-#xsetroot -solid grey
-#x-terminal-emulator -geometry  80×24+10+10 -ls -title "$VNCDESKTOP Desktop" &
-#x-window-manager &
-# Fix to make GNOME work
-#export XKL_XMODMAP_DISABLE=1
-#/etc/X11/Xsession
-dbus-launch gnome-session &
-EndOfFile
-chmod +x ./xstartup
-
-
-cd /usr/local/bin
-
-cat >startvnc<<-'EndOfFile'
-#!/bin/bash
-stopvnc >/dev/null 2>&1
-export USER=root
-export HOME=/root
-vncserver -geometry 720x1440 -depth 24 -name remote-desktop :1
-echo "正在启动vnc服务,本机默认vnc地址localhost:5901"
-echo The LAN VNC address 局域网地址 $(ip -4 -br -c a |tail -n 1 |cut -d '/' -f 1 |cut -d 'P' -f 2):5901
-EndOfFile
-#############
-cat >startxsdl<<-'EndOfFile'
-#!/bin/bash
-stopvnc >/dev/null 2>&1
-export DISPLAY=127.0.0.1:0
-export PULSE_SERVER=tcp:127.0.0.1:4713
-echo '正在为您启动xsdl,请将display number改为0'
-echo 'Starting xsdl, please change display number to 0'
-echo '默认为前台运行，您可以按Ctrl+C终止，或者在termux原系统内输stopvnc'
-echo 'The default is to run in the foreground, you can press Ctrl + C to terminate, or type "stopvnc" in the original termux system.'
-dbus-launch gnome-session
-EndOfFile
-
-
-##############
-
-cat >stopvnc<<-'EndOfFile'
-#!/bin/bash
-export USER=root
-export HOME=/root
-vncserver -kill :1
-rm -rf /tmp/.X1-lock
-rm -rf /tmp/.X11-unix/X1
-pkill Xtightvnc
-EndOfFile
-chmod +x startvnc stopvnc startxsdl
-echo 'The vnc service is about to start for you. The password you entered is hidden.'
-echo '即将为您启动vnc服务，您需要输两遍（不可见的）密码。'
-echo "When prompted for a view-only password, it is recommended that you enter 'n'"
-echo '如果提示view-only,那么建议您输n,选择权在您自己的手上。'
-echo '请输入6至8位密码'
-startvnc
-echo '您之后可以输startvnc来启动vnc服务，输stopvnc停止'
-echo '您还可以在termux原系统里输startxsdl来启动xsdl，按Ctrl+C或在termux原系统里输stopvnc停止进程'
-echo '若xsdl音频端口不是4713，而是4712，则请输xsdl-4712进行修复。'
-}
-function remove()
-{
-apt purge -y tightvncserver
-apt autopurge
-aptitude purge -y task-gnome-desktop
-apt purge -y task-gnome-desktop
-apt purge -y ^gnome
-apt autopurge
-}
-
-function main()
-{
-                case "$1" in
-                install|in|i)
-                        install
-                            ;;
-                remove|rm|uninstall|un|purge)
-                         remove
-                        ;;
-                   *)
-			        install
-			         ;;
-
-
-        esac
-}
-main "$@"
-Matryoshka
-chmod +x gnome.sh
-
-cat >kde.sh <<-'Matryoshka'
-#!/bin/bash
-function install()
-{
-apt-mark hold udisks2
-apt update
-#echo "KDE测试失败，请自行解决软件依赖和其它相关问题。"
-#后期注：测试成功，但存在bug。
-echo '即将为您安装思源黑体(中文字体)、aptitude、tightvncserver、kde-plasma-desktop等软件包'
-apt install -y aptitude
-mkdir -p /run/lock
-touch /var/lib/aptitude/pkgstates
-aptitude install -y kde-plasma-desktop || apt install -y kde-plasma-desktop
-apt install -y fonts-noto-cjk tightvncserver 
-#task-kde-desktop
-
-
-apt clean
-
-mkdir -p ~/.vnc
-cd ~/.vnc
-cat >xstartup<<-'EndOfFile'
-#!/bin/bash
-xrdb ${HOME}/.Xresources
-export PULSE_SERVER=127.0.0.1
-#plasma_session &
-dbus-launch startkde || dbus-launch startplasma-x11 &
-EndOfFile
-chmod +x ./xstartup
-
-
-cd /usr/local/bin
-cat >startvnc<<-'EndOfFile'
-#!/bin/bash
-stopvnc >/dev/null 2>&1
-export USER=root
-export HOME=/root
-vncserver -geometry 720x1440 -depth 24 -name remote-desktop :1
-echo "正在启动vnc服务,本机默认vnc地址localhost:5901"
-echo The LAN VNC address 局域网地址 $(ip -4 -br -c a |tail -n 1 |cut -d '/' -f 1 |cut -d 'P' -f 2):5901
-EndOfFile
-#############
-cat >startxsdl<<-'EndOfFile'
-#!/bin/bash
-stopvnc >/dev/null 2>&1
-export DISPLAY=127.0.0.1:0
-export PULSE_SERVER=tcp:127.0.0.1:4713
-echo '正在为您启动xsdl,请将display number改为0'
-echo 'Starting xsdl, please change display number to 0'
-echo '默认为前台运行，您可以按Ctrl+C终止，或者在termux原系统内输stopvnc'
-echo 'The default is to run in the foreground, you can press Ctrl + C to terminate, or type "stopvnc" in the original termux system.'
-#plasma_session &
-dbus-launch startkde  || dbus-launch startplasma-x11 
-EndOfFile
-
-
-##############
-cat >stopvnc<<-'EndOfFile'
-#!/bin/bash
-export USER=root
-export HOME=/root
-vncserver -kill :1
-rm -rf /tmp/.X1-lock
-rm -rf /tmp/.X11-unix/X1
-pkill Xtightvnc
-EndOfFile
-chmod +x startvnc stopvnc startxsdl
-echo 'The vnc service is about to start for you. The password you entered is hidden.'
-echo '即将为您启动vnc服务，您需要输两遍（不可见的）密码。'
-echo "When prompted for a view-only password, it is recommended that you enter 'n'"
-echo '如果提示view-only,那么建议您输n,选择权在您自己的手上。'
-echo '请输入6至8位密码'
-startvnc
-echo '您之后可以输startvnc来启动vnc服务，输stopvnc停止'
-echo '您还可以在termux原系统里输startxsdl来启动xsdl，按Ctrl+C或在termux原系统里输stopvnc停止进程'
-echo '若xsdl音频端口不是4713，而是4712，则请输xsdl-4712进行修复。'
-}
-function remove()
-{
-apt purge -y tightvncserver kde-plasma-desktop
-aptitude purge -y  kde-plasma-desktop
-apt purge -y  plasma-desktop
-apt purge -y ^plasma
-apt autopurge
-}
-
-function main()
-{
-                case "$1" in
-                install|in|i)
-                        install
-                            ;;
-                remove|rm|uninstall|un|purge)
-                         remove
-                        ;;
-                   *)
-			        install
-			         ;;
-
-
-        esac
-}
-main "$@"
-Matryoshka
-chmod +x kde.sh
 grep -q 'export DISPLAY' /etc/profile || echo "export DISPLAY=":1"" >>/etc/profile
 
 echo "Welcome to Debian GNU/Linux."

@@ -94,6 +94,18 @@ autoCheck() {
 }
 ########################################
 GNULINUX() {
+
+	if [ "$(id -u)" != "0" ]; then
+		if [ -e "/usr/bin/curl" ]; then
+			sudo bash -c "$(curl -LfsS https://gitee.com/mo2/linux/raw/master/debian.sh)" ||
+				su -c "$(curl -LfsS https://gitee.com/mo2/linux/raw/master/debian.sh)"
+		else
+			sudo bash -c "$(wget -qO- https://gitee.com/mo2/linux/raw/master/debian.sh)" ||
+				su -c "$(wget -qO- https://gitee.com/mo2/linux/raw/master/debian.sh)"
+		fi
+		exit 0
+	fi
+	##############
 	if grep -q 'debian' '/etc/os-release'; then
 		LINUXDISTRO='debian'
 
@@ -112,6 +124,11 @@ GNULINUX() {
 
 	elif grep -Eqi "Fedora|CentOS|Red Hat|redhat" '/etc/os-release'; then
 		LINUXDISTRO='redhat'
+		if [ "$(cat /etc/os-release | grep 'ID=' | head -n 1 | cut -d '"' -f 2)" = "centos" ]; then
+			REDHATDISTRO='centos'
+		elif grep -q 'Fedora' "/etc/os-release"; then
+			REDHATDISTRO='fedora'
+		fi
 
 	elif grep -q "Alpine" '/etc/issue' || grep -q "Alpine" '/etc/os-release'; then
 		LINUXDISTRO='alpine'
@@ -123,20 +140,40 @@ GNULINUX() {
 		LINUXDISTRO='gentoo'
 	fi
 
-	if [ "${LINUXDISTRO}" = 'redhat' ]; then
-		if [ "$(cat /etc/os-release | grep 'ID=' | head -n 1 | cut -d '"' -f 2)" = "centos" ]; then
-			REDHATDISTRO='centos'
-		elif grep -q 'Fedora' "/etc/os-release"; then
-			REDHATDISTRO='fedora'
-		fi
-	fi
+	######################################
 	dependencies=""
 
-	if [ ! -e /bin/tar ]; then
+	if [ ! -e /usr/bin/aria2c ]; then
 		if [ "${LINUXDISTRO}" = "gentoo" ]; then
-			dependencies="${dependencies} app-arch/tar"
+			dependencies="${dependencies} net-misc/aria2"
 		else
-			dependencies="${dependencies} tar"
+			dependencies="${dependencies} aria2"
+		fi
+	fi
+
+	if [ ! -e /bin/bash ]; then
+		if [ "${LINUXDISTRO}" = "alpine" ] || [ "${LINUXDISTRO}" = "openwrt" ]; then
+			dependencies="${dependencies} bash"
+		fi
+	fi
+
+	if [ ! -e /usr/bin/curl ]; then
+		if [ "${LINUXDISTRO}" = "gentoo" ]; then
+			dependencies="${dependencies} net-misc/curl"
+		else
+			dependencies="${dependencies} curl"
+		fi
+	fi
+
+	#####################
+
+	if [ ! -e /usr/bin/git ]; then
+		if [ "${LINUXDISTRO}" = "openwrt" ]; then
+			dependencies="${dependencies} git git-http"
+		elif [ "${LINUXDISTRO}" = "gentoo" ]; then
+			dependencies="${dependencies} dev-vcs/git"
+		else
+			dependencies="${dependencies} git"
 		fi
 	fi
 
@@ -147,6 +184,21 @@ GNULINUX() {
 			dependencies="${dependencies} grep"
 		fi
 	fi
+	########################
+	if [ ! -e "/usr/bin/less" ]; then
+		if [ "${LINUXDISTRO}" = "gentoo" ]; then
+			dependencies="${dependencies} sys-apps/less"
+		else
+			dependencies="${dependencies} less"
+		fi
+	fi
+
+	if [ -L "/usr/bin/less" ]; then
+		if [ "${LINUXDISTRO}" = "openwrt" ]; then
+			dependencies="${dependencies} less"
+		fi
+	fi
+	####################
 
 	if [ ! -e /usr/bin/pv ]; then
 		if [ "${LINUXDISTRO}" = "gentoo" ]; then
@@ -165,17 +217,7 @@ GNULINUX() {
 			dependencies="${dependencies} proot"
 		fi
 	fi
-
-	if [ ! -e /usr/bin/git ]; then
-		if [ "${LINUXDISTRO}" = "openwrt" ]; then
-			dependencies="${dependencies} git git-http"
-		elif [ "${LINUXDISTRO}" = "gentoo" ]; then
-			dependencies="${dependencies} dev-vcs/git"
-		else
-			dependencies="${dependencies} git"
-		fi
-	fi
-
+	#####################
 	if [ ! -e /usr/bin/xz ]; then
 		if [ "${LINUXDISTRO}" = "debian" ]; then
 			dependencies="${dependencies} xz-utils"
@@ -186,6 +228,28 @@ GNULINUX() {
 		fi
 	fi
 
+	if [ ! -e /usr/bin/pkill ]; then
+		if [ "${LINUXDISTRO}" = "gentoo" ]; then
+			dependencies="${dependencies} sys-process/procps"
+		elif [ "${LINUXDISTRO}" != "openwrt" ]; then
+			dependencies="${dependencies} procps"
+		fi
+	fi
+	#####################
+	if [ ! -e /usr/bin/sudo ]; then
+		if [ "${LINUXDISTRO}" = "debian" ]; then
+			dependencies="${dependencies} sudo"
+		fi
+	fi
+	#####################
+	if [ ! -e /bin/tar ]; then
+		if [ "${LINUXDISTRO}" = "gentoo" ]; then
+			dependencies="${dependencies} app-arch/tar"
+		else
+			dependencies="${dependencies} tar"
+		fi
+	fi
+	#####################
 	if [ ! -e /usr/bin/whiptail ] && [ ! -e /bin/whiptail ]; then
 		if [ "${LINUXDISTRO}" = "debian" ]; then
 			dependencies="${dependencies} whiptail"
@@ -199,70 +263,13 @@ GNULINUX() {
 			dependencies="${dependencies} newt"
 		fi
 	fi
-
-	if [ ! -e /usr/bin/pkill ]; then
-
-		if [ "${LINUXDISTRO}" = "gentoo" ]; then
-			dependencies="${dependencies} sys-process/procps"
-		elif [ "${LINUXDISTRO}" != "openwrt" ]; then
-			dependencies="${dependencies} procps"
-		fi
-	fi
-
-	if [ ! -e /usr/bin/curl ]; then
-		if [ "${LINUXDISTRO}" = "gentoo" ]; then
-			dependencies="${dependencies} net-misc/curl"
-		else
-			dependencies="${dependencies} curl"
-		fi
-	fi
-
-	if [ ! -e /usr/bin/aria2c ]; then
-		if [ "${LINUXDISTRO}" = "gentoo" ]; then
-			dependencies="${dependencies} net-misc/aria2"
-		else
-			dependencies="${dependencies} aria2"
-		fi
-	fi
-
-	if [ ! -e "/usr/bin/less" ]; then
-		if [ "${LINUXDISTRO}" = "gentoo" ]; then
-			dependencies="${dependencies} sys-apps/less"
-		else
-			dependencies="${dependencies} less"
-		fi
-	fi
-
-	if [ -L "/usr/bin/less" ]; then
-		if [ "${LINUXDISTRO}" = "openwrt" ]; then
-			dependencies="${dependencies} less"
-		fi
-	fi
-
-	if [ ! -e /bin/bash ]; then
-		if [ "${LINUXDISTRO}" = "alpine" ] || [ "${LINUXDISTRO}" = "openwrt" ]; then
-			dependencies="${dependencies} bash"
-		fi
-	fi
-
-	if [ ! -e /usr/bin/sudo ]; then
-		if [ "${LINUXDISTRO}" = "debian" ]; then
-			dependencies="${dependencies} sudo"
-		fi
-	fi
-
+	##############
 	if [ "${archtype}" = "riscv" ]; then
 		dependencies="${dependencies} qemu qemu-user-static debootstrap"
 	fi
+	##############
 
-	if [ "$(id -u)" != "0" ]; then
-		sudo bash -c "$(wget -qO- https://gitee.com/mo2/linux/raw/master/debian.sh)" ||
-			sudo bash -c "$(curl -LfsS https://gitee.com/mo2/linux/raw/master/debian.sh)" ||
-			su -c "$(wget -qO- https://gitee.com/mo2/linux/raw/master/debian.sh)"
-		exit 0
-	fi
-
-	if [ ! -z "$dependencies" ]; then
+	if [ ! -z "${dependencies}" ]; then
 		if [ "${LINUXDISTRO}" = "debian" ]; then
 			if ! grep -q '^deb.*edu.cn' "/etc/apt/sources.list"; then
 				echo "${YELLOW}检测到您当前使用的sources.list不是清华源,是否需要更换为清华源[Y/n]${RESET} "
@@ -307,7 +314,7 @@ GNULINUX() {
 		fi
 
 	fi
-
+	########################
 	if [ "${LINUXDISTRO}" = "openwrt" ]; then
 		if [ -d "/opt/bin" ]; then
 			PREFIX="/opt"
@@ -434,9 +441,10 @@ GNULINUX() {
 		WSL=""
 	fi
 
-	if [ "${LINUXDISTRO}" = "debian" ]; then
-		if (whiptail --title "您想要对这个小可爱做什么 " --yes-button "安装工具" --no-button "管理工具" --yesno "检测到您使用的是deb系linux ${WSL}您是想要启动software安装工具，还是system管理工具？ ♪(^∇^*) " 9 50); then
-			bash -c "$(wget -qO- https://gitee.com/mo2/linux/raw/master/debian-gui-install.bash)"
+	if [ ! -z "${LINUXDISTRO}" ]; then
+		OSRELEASE="$(cat /etc/os-release | grep 'ID=' | head -n 1 | cut -d '=' -f 2)"
+		if (whiptail --title "您想要对这个小可爱做什么 " --yes-button "安装工具" --no-button "管理工具" --yesno "检测到您使用的是${OSRELEASE} ${WSL}您是想要启动software安装工具，还是system管理工具？ ♪(^∇^*) " 9 50); then
+			bash -c "$(curl -LfsS 'https://gitee.com/mo2/linux/raw/master/debian-gui-install.bash')"
 			exit 0
 		fi
 	fi
@@ -495,7 +503,7 @@ ANDROIDTERMUX() {
 		dependencies="${dependencies} curl"
 	fi
 
-	if [ ! -z "$dependencies" ]; then
+	if [ ! -z "${dependencies}" ]; then
 		if (("${ANDROIDVERSION}" >= '7')); then
 			if ! grep -q '^deb.*edu.cn.*termux-packages-24' '/data/data/com.termux/files/usr/etc/apt/sources.list'; then
 				echo "${YELLOW}检测到您当前使用的sources.list不是清华源,是否需要更换为清华源[Y/n]${RESET} "
@@ -690,8 +698,6 @@ installDebian() {
 				sed -i '/alias debian-rm=/d' ${PREFIX}/etc/profile 2>/dev/null
 				source ${PREFIX}/etc/profile >/dev/null 2>&1
 				INSTALLDEBIANORDOWNLOADRECOVERYTARXZ
-				#bash -c "$(curl -fLsS 'https://gitee.com/mo2/linux/raw/master/installDebian.sh')"
-				#bash -c "$(wget -qO- 'https://gitee.com/mo2/linux/raw/master/installDebian.sh')"
 				;;
 			n* | N*)
 				echo "skipped."
@@ -1395,7 +1401,7 @@ SpaceOccupation() {
 ########################################################################
 UPDATEMANAGER() {
 	#curl -L -o ${PREFIX}/bin/debian-i 'https://gitee.com/mo2/linux/raw/master/debian.sh'
-	aria2c --allow-overwrite=true -d ${PREFIX}/bin -o debian-i 'https://gitee.com/mo2/linux/raw/master/debian.sh' || wget -O ${PREFIX}/bin/debian-i 'https://gitee.com/mo2/linux/raw/master/debian.sh' || sudo aria2c --allow-overwrite=true -d ${PREFIX}/bin -o debian-i 'https://gitee.com/mo2/linux/raw/master/debian.sh'
+	aria2c --allow-overwrite=true -d ${PREFIX}/bin -o debian-i 'https://gitee.com/mo2/linux/raw/master/debian.sh' || curl -Lo ${PREFIX}/bin/debian-i 'https://gitee.com/mo2/linux/raw/master/debian.sh' || sudo aria2c --allow-overwrite=true -d ${PREFIX}/bin -o debian-i 'https://gitee.com/mo2/linux/raw/master/debian.sh'
 	if [ "${LINUXDISTRO}" != "Android" ]; then
 		sed -i '1 c\#!/bin/bash' ${PREFIX}/bin/debian-i
 	fi
@@ -1584,7 +1590,7 @@ DownloadVideoTutorial() {
 
 ##########################
 DOWNLOADVideoTutorialAGAIN() {
-	aria2c -x 16 -k 1M --split=16 --allow-overwrite=true -o "20200229vnc教程06.mp4" 'https://cdn.tmoe.me/Tmoe-Debian-Tool/20200229VNC%E6%95%99%E7%A8%8B06.mp4' || aria2c -x 16 -k 1M --split=16 --allow-overwrite=true -o "20200229vnc教程06.mp4" 'https://m.tmoe.me/down/share/videos/20200229vnc%E6%95%99%E7%A8%8B06.mp4' || wget -O "20200229vnc教程06.mp4" 'https://cdn.tmoe.me/Tmoe-Debian-Tool/20200229VNC%E6%95%99%E7%A8%8B06.mp4'
+	aria2c -x 16 -k 1M --split=16 --allow-overwrite=true -o "20200229vnc教程06.mp4" 'https://cdn.tmoe.me/Tmoe-Debian-Tool/20200229VNC%E6%95%99%E7%A8%8B06.mp4' || aria2c -x 16 -k 1M --split=16 --allow-overwrite=true -o "20200229vnc教程06.mp4" 'https://m.tmoe.me/down/share/videos/20200229vnc%E6%95%99%E7%A8%8B06.mp4' || curl -Lo "20200229vnc教程06.mp4" 'https://cdn.tmoe.me/Tmoe-Debian-Tool/20200229VNC%E6%95%99%E7%A8%8B06.mp4'
 	PLAYVideoTutorial
 }
 PLAYVideoTutorial() {
@@ -1766,7 +1772,7 @@ TERMUXINSTALLXFCE() {
 	#####################################
 	if [ "${OPTION}" == '1' ]; then
 		if [ "${LINUXDISTRO}" != 'Android' ]; then
-			bash -c "$(wget -qO- https://gitee.com/mo2/linux/raw/master/debian-gui-install.bash)"
+			bash -c "$(curl -LfsS https://gitee.com/mo2/linux/raw/master/debian-gui-install.bash)"
 			exit 0
 		fi
 
@@ -1806,7 +1812,7 @@ TERMUXINSTALLXFCE() {
 	#######################
 	if [ "${OPTION}" == '2' ]; then
 		if [ "${LINUXDISTRO}" != 'Android' ]; then
-			bash -c "$(wget -qO- https://gitee.com/mo2/linux/raw/master/debian-gui-install.bash)"
+			bash -c "$(curl -LfsS https://gitee.com/mo2/linux/raw/master/debian-gui-install.bash)"
 			exit 0
 		fi
 		MODIFYANDROIDTERMUXVNCCONF
@@ -1818,7 +1824,7 @@ TERMUXINSTALLXFCE() {
 	##################
 	if [ "${OPTION}" == '6' ]; then
 		if [ "${LINUXDISTRO}" != 'Android' ]; then
-			bash -c "$(wget -qO- https://gitee.com/mo2/linux/raw/master/debian-gui-install.bash)"
+			bash -c "$(curl -LfsS https://gitee.com/mo2/linux/raw/master/debian-gui-install.bash)"
 			exit 0
 		fi
 		REMOVEANDROIDTERMUXXFCE
@@ -1947,7 +1953,7 @@ STARTWEBNOVNC() {
 	elif [ "${WINDOWSDISTRO}" = "WSL" ]; then
 		/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe "start http://localhost:6080/vnc.html"
 	else
-		firefox 'http://localhost:6080/vnc.html'
+		firefox 'http://localhost:6080/vnc.html' 2>/dev/null
 	fi
 	echo "本机默认novnc地址${YELLOW}http://localhost:6080/vnc.html${RESET}"
 	echo The LAN VNC address 局域网地址$(ip -4 -br -c a | tail -n 1 | cut -d '/' -f 1 | cut -d 'P' -f 2):6080/vnc.html
@@ -1961,7 +1967,7 @@ STARTWEBNOVNC() {
 		if [ "${LINUXDISTRO}" = 'Android' ]; then
 			${PREFIX}/bin/startvnc
 		else
-			bash -c "$(sed 's:^export HOME=.*:export HOME=/root:' $(which startvnc))"
+			bash -c "$(sed 's:^export HOME=.*:export HOME=/root:' $(command -v startvnc))"
 		fi
 	fi
 	#注：必须要先启动novnc后，才能接着启动VNC。
@@ -1977,9 +1983,9 @@ MODIFYANDROIDTERMUXVNCCONF() {
 		echo "${YELLOW}按回车键确认编辑。${RESET}"
 		read
 	fi
-	CURRENTTERMUXVNCRES=$(sed -n 7p "$(which startvnc)" | cut -d 'y' -f 2 | cut -d '-' -f 1)
+	CURRENTTERMUXVNCRES=$(sed -n 7p "$(command -v startvnc)" | cut -d 'y' -f 2 | cut -d '-' -f 1)
 	if (whiptail --title "modify vnc configuration" --yes-button '分辨率resolution' --no-button '其它other' --yesno "您想要修改哪些配置信息？What configuration do you want to modify?" 9 50); then
-		if grep -q 'debian_' "$(which startvnc)"; then
+		if grep -q 'debian_' "$(command -v startvnc)"; then
 			echo "您当前使用的startvnc配置为debian系统专用版，请进入debian系统后输debian-i修改"
 			echo "本选项仅适用于termux原系统。"
 			echo 'Press Enter to return.'
@@ -1991,11 +1997,11 @@ MODIFYANDROIDTERMUXVNCCONF() {
 		#此处termux的whiptail跟debian不同，必须截取Error前的字符。
 		TRUETARGET="$(echo ${TARGET} | cut -d 'E' -f 1)"
 		#下面那条变量TRUETARGETTARGET前加空格
-		#sed -i "s#${CURRENTTERMUXVNCRES}# ${TRUETARGETTARGET}#" "$(which startvnc)"
-		sed -i "7 c Xvnc -geometry ${TRUETARGET} -depth 24 --SecurityTypes=None \$DISPLAY \&" "$(which startvnc)"
+		#sed -i "s#${CURRENTTERMUXVNCRES}# ${TRUETARGETTARGET}#" "$(command -v startvnc)"
+		sed -i "7 c Xvnc -geometry ${TRUETARGET} -depth 24 --SecurityTypes=None \$DISPLAY \&" "$(command -v startvnc)"
 		echo 'Your current resolution has been modified.'
 		echo '您当前的分辨率已经修改为'
-		echo $(sed -n 7p "$(which startvnc)" | cut -d 'y' -f 2 | cut -d '-' -f 1)
+		echo $(sed -n 7p "$(command -v startvnc)" | cut -d 'y' -f 2 | cut -d '-' -f 1)
 	else
 		echo '您可以手动修改vnc的配置信息'
 		echo 'If you want to modify the resolution, please change the 720x1440 (default resolution , vertical screen) to another resolution, such as 1920x1080 (landscape).'
@@ -2005,8 +2011,8 @@ MODIFYANDROIDTERMUXVNCCONF() {
 		echo "Press Enter to confirm."
 		echo "${YELLOW}按回车键确认编辑。${RESET}"
 		read
-		nano ${PREFIX}/bin/startvnc || nano $(which startvnc)
-		echo "您当前分辨率为$(sed -n 7p "$(which startvnc)" | cut -d 'y' -f 2 | cut -d '-' -f 1)"
+		nano ${PREFIX}/bin/startvnc || nano $(command -v startvnc)
+		echo "您当前分辨率为$(sed -n 7p "$(command -v startvnc)" | cut -d 'y' -f 2 | cut -d '-' -f 1)"
 	fi
 	echo 'Press Enter to return.'
 	echo "${YELLOW}按回车键返回。${RESET}"
@@ -2126,7 +2132,7 @@ CHOOSEWHICHGNULINUX() {
 ##############################
 INSTALLotherSystems() {
 	BETASYSTEM=$(whiptail --title "Beta features" --menu \
-		"本功能仍处于测试阶段，可能无法正常运行，且未进行任何优化\nBeta features may not work properly." 15 60 5 \
+		"WARNNING！本功能仍处于测试阶段，可能无法正常运行，且未进行任何优化\nBeta features may not work properly." 15 60 5 \
 		"1" "opensuse tumbleweed" \
 		"2" "fedora 31" \
 		"3" "centos 8" \
@@ -2360,7 +2366,7 @@ BUSTERORSID() {
 		if [ "${LINUXDISTRO}" != 'iSH' ]; then
 			bash -c "$(curl -fLsS 'https://gitee.com/mo2/linux/raw/master/installDebian.sh')"
 		else
-			wget -qO- 'https://gitee.com/mo2/linux/raw/master/installDebian.sh' | bash
+			curl -LfsS 'https://gitee.com/mo2/linux/raw/master/installDebian.sh' | bash
 		fi
 	else
 		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh | sed 's:/sid:/buster:g' | sed 's:extract z:extract:' | sed 's:-sid:-buster:g' | sed 's@#deb http@deb http@g' | sed 's/.*sid main/#&/')"

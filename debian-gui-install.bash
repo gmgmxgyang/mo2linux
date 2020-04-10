@@ -1,60 +1,191 @@
 #!/bin/bash
-
 ########################################################################
-#-- 自动检测相关依赖
+#-- 自动检测相关依赖和发行版
 
 CHECKdependencies() {
 
 	if [ "$(id -u)" != "0" ]; then
-		sudo bash -c "$(wget -qO- https://gitee.com/mo2/linux/raw/master/debian-gui-install.bash)" ||
-			sudo bash -c "$(curl -LfsS https://gitee.com/mo2/linux/raw/master/debian-gui-install.bash)" ||
-			su -c "$(wget -qO- https://gitee.com/mo2/linux/raw/master/debian-gui-install.bash)"
+		if [ -e "/usr/bin/curl" ]; then
+			sudo bash -c "$(curl -LfsS https://gitee.com/mo2/linux/raw/master/debian.sh)" ||
+				su -c "$(curl -LfsS https://gitee.com/mo2/linux/raw/master/debian.sh)"
+		else
+			sudo bash -c "$(wget -qO- https://gitee.com/mo2/linux/raw/master/debian.sh)" ||
+				su -c "$(wget -qO- https://gitee.com/mo2/linux/raw/master/debian.sh)"
+		fi
 		exit 0
 	fi
+	#############################
 
+	if grep -q 'debian' "/etc/os-release"; then
+		LINUXDISTRO='debian'
+		if grep -q 'ubuntu' /etc/os-release; then
+			DEBIANDISTRO='ubuntu'
+		elif [ "$(cat /etc/issue | cut -c 1-4)" = "Kali" ]; then
+			DEBIANDISTRO='kali'
+		fi
+
+	elif grep -Eq "opkg|entware" '/opt/etc/opkg.conf' 2>/dev/null || grep -q 'openwrt' "/etc/os-release"; then
+		LINUXDISTRO='openwrt'
+
+	elif grep -Eqi "Fedora|CentOS|Red Hat|redhat" "/etc/os-release"; then
+		if [ "$(cat /etc/os-release | grep 'ID=' | head -n 1 | cut -d '"' -f 2)" = "centos" ]; then
+			REDHATDISTRO='centos'
+		elif grep -q 'Fedora' "/etc/os-release"; then
+			REDHATDISTRO='fedora'
+		fi
+
+	elif grep -q "Alpine" '/etc/issue' || grep -q "Alpine" "/etc/os-release"; then
+		LINUXDISTRO='alpine'
+
+	elif grep -Eq "Arch|Manjaro" "/etc/os-release"; then
+		LINUXDISTRO='arch'
+
+	elif grep -Eq "gentoo|funtoo" "/etc/os-release"; then
+		LINUXDISTRO='gentoo'
+
+	elif [ "$(cat /etc/issue | cut -c 1-4)" = "Void" ]; then
+		LINUXDISTRO='void'
+	fi
+
+	#####################
 	dependencies=""
 
-	if [ ! -e /usr/bin/whiptail ] && [ ! -e /bin/whiptail ]; then
-		dependencies="${dependencies} whiptail"
+	if [ "${LINUXDISTRO}" = "debian" ]; then
+		if [ ! -e /usr/bin/aptitude ]; then
+			dependencies="${dependencies} aptitude"
+		fi
 	fi
 
-	if [ ! -e /usr/bin/xz ]; then
-		dependencies="${dependencies} xz-utils"
+	if [ ! -e /bin/bash ]; then
+		dependencies="${dependencies} bash"
 	fi
-
-	if [ ! -e /usr/bin/mkfontscale ]; then
-		dependencies="${dependencies} xfonts-utils"
-	fi
-
-	if [ ! -e /usr/bin/fc-cache ]; then
-		dependencies="${dependencies} fontconfig"
-	fi
-
+	#####################
 	if [ ! -e /usr/bin/catimg ]; then
-		if grep -q 'VERSION_ID' "/etc/os-release"; then
-			DEBIANVERSION="$(grep 'VERSION_ID' "/etc/os-release" | cut -d '"' -f 2 | cut -d '.' -f 1)"
-		else
-			DEBIANVERSION="10"
-		fi
-		if ((${DEBIANVERSION} <= 9)); then
-			echo "检测到您的系统版本低于debian10，跳过安装catimg"
-		else
-			dependencies="${dependencies} catimg"
+		if [ "${LINUXDISTRO}" = "debian" ]; then
+			if grep -q 'VERSION_ID' "/etc/os-release"; then
+				DEBIANVERSION="$(grep 'VERSION_ID' "/etc/os-release" | cut -d '"' -f 2 | cut -d '.' -f 1)"
+			else
+				DEBIANVERSION="10"
+			fi
+			if ((${DEBIANVERSION} <= 9)); then
+				echo "检测到您的系统版本低于debian10，跳过安装catimg"
+			else
+				dependencies="${dependencies} catimg"
+			fi
 		fi
 	fi
 
+	if [ ! -e /usr/bin/curl ]; then
+		if [ "${LINUXDISTRO}" = "gentoo" ]; then
+			dependencies="${dependencies} net-misc/curl"
+		else
+			dependencies="${dependencies} curl"
+		fi
+	fi
+	######################
+	if [ ! -e /usr/bin/fc-cache ]; then
+		if [ "${LINUXDISTRO}" = "debian" ]; then
+			dependencies="${dependencies} fontconfig"
+		fi
+	fi
+	###################
+
+	if [ ! -e /usr/bin/git ]; then
+		if [ "${LINUXDISTRO}" = "openwrt" ]; then
+			dependencies="${dependencies} git git-http"
+		elif [ "${LINUXDISTRO}" = "gentoo" ]; then
+			dependencies="${dependencies} dev-vcs/git"
+		else
+			dependencies="${dependencies} git"
+		fi
+	fi
+	####################
+	if [ ! -e /usr/bin/mkfontscale ]; then
+		if [ "${LINUXDISTRO}" = "debian" ]; then
+			dependencies="${dependencies} xfonts-utils"
+		fi
+	fi
+	#####################
+	if [ ! -e /usr/bin/xz ]; then
+		if [ "${LINUXDISTRO}" = "debian" ]; then
+			dependencies="${dependencies} xz-utils"
+		elif [ "${LINUXDISTRO}" = "gentoo" ]; then
+			dependencies="${dependencies} app-arch/xz-utils"
+		else
+			dependencies="${dependencies} xz"
+		fi
+	fi
+
+	if [ ! -e /usr/bin/pkill ]; then
+		if [ "${LINUXDISTRO}" = "gentoo" ]; then
+			dependencies="${dependencies} sys-process/procps"
+		elif [ "${LINUXDISTRO}" != "openwrt" ]; then
+			dependencies="${dependencies} procps"
+		fi
+	fi
+	#####################
 	if [ ! -e /usr/bin/sudo ]; then
-		dependencies="${dependencies} sudo"
+		if [ "${LINUXDISTRO}" = "debian" ]; then
+			dependencies="${dependencies} sudo"
+		fi
 	fi
-
+	#####################
+	if [ ! -e /usr/bin/whiptail ] && [ ! -e /bin/whiptail ]; then
+		if [ "${LINUXDISTRO}" = "debian" ]; then
+			dependencies="${dependencies} whiptail"
+		elif [ "${LINUXDISTRO}" = "arch" ]; then
+			dependencies="${dependencies} libnewt"
+		elif [ "${LINUXDISTRO}" = "openwrt" ]; then
+			dependencies="${dependencies} dialog"
+		elif [ "${LINUXDISTRO}" = "gentoo" ]; then
+			dependencies="${dependencies} dev-libs/newt"
+		else
+			dependencies="${dependencies} newt"
+		fi
+	fi
+	##############
 	if [ ! -e /usr/bin/wget ]; then
-		dependencies="${dependencies} wget"
+		if [ "${LINUXDISTRO}" = "gentoo" ]; then
+			dependencies="${dependencies} net-misc/wget"
+		else
+			dependencies="${dependencies} wget"
+		fi
 	fi
+	##############
 
-	if [ ! -z "$dependencies" ]; then
+	if [ ! -z "${dependencies}" ]; then
 		echo "正在安装相关依赖..."
-		apt update
-		apt install -y ${dependencies}
+
+		if [ "${LINUXDISTRO}" = "debian" ]; then
+			apt update
+			apt install -y ${dependencies}
+			#创建文件夹防止aptitude报错
+			mkdir -p /run/lock /var/lib/aptitude
+			touch /var/lib/aptitude/pkgstates
+
+		elif [ "${LINUXDISTRO}" = "alpine" ]; then
+			apk update
+			apk add -q ${dependencies}
+
+		elif [ "${LINUXDISTRO}" = "arch" ]; then
+			pacman -Syu --noconfirm ${dependencies}
+
+		elif [ "${LINUXDISTRO}" = "redhat" ]; then
+			if [ "${REDHATDISTRO}" != "fedora" ]; then
+				dnf install -y epel-release || yum install -y epel-release
+			fi
+			dnf install -y ${dependencies} || yum install -y ${dependencies}
+
+		elif [ "${LINUXDISTRO}" = "openwrt" ]; then
+			#opkg update
+			opkg install ${dependencies} || opkg install whiptail
+
+		elif [ "${LINUXDISTRO}" = "gentoo" ]; then
+			emerge -av ${dependencies}
+		else
+			apt update
+			apt install -y ${dependencies} || port install ${dependencies} || zypper in ${dependencies} || guix package -i ${dependencies} || pkg install ${dependencies} || pkg_add ${dependencies} || pkgutil -i ${dependencies}
+		fi
 	fi
 	################
 	case $(uname -m) in
@@ -92,15 +223,16 @@ CHECKdependencies() {
 	################
 
 	if [ ! -e /usr/bin/catimg ]; then
-		CATIMGlatestVersion="$(wget -qO- 'https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/c/catimg/' | grep arm64 | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2 | cut -d '_' -f 2)"
-		cd /tmp
-		wget -O 'catimg.deb' "https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/c/catimg/catimg_${CATIMGlatestVersion}_${archtype}.deb"
-		apt install -y ./catimg.deb
-		rm -f catimg.deb
+		if [ "${LINUXDISTRO}" = "debian" ]; then
+			CATIMGlatestVersion="$(curl -LfsS 'https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/c/catimg/' | grep arm64 | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2 | cut -d '_' -f 2)"
+			cd /tmp
+			wget -O 'catimg.deb' "https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/c/catimg/catimg_${CATIMGlatestVersion}_${archtype}.deb"
+			apt install -y ./catimg.deb
+			rm -f catimg.deb
+		fi
 	fi
 
-	if grep -q 'ubuntu' /etc/os-release; then
-		LINUXDISTRO='ubuntu'
+	if [ "${DEBIANDISTRO}" = "ubuntu" ]; then
 		if [ ! -e "/bin/add-apt-repository" ] && [ ! -e "/usr/bin/add-apt-repository" ]; then
 			apt install -y software-properties-common
 		fi
@@ -128,7 +260,7 @@ CHECKdependencies() {
 DEBIANMENU() {
 	cd ${cur}
 	OPTION=$(
-		whiptail --title "Tmoe-linux Tool输debian-i启动(20200408-10)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.当前主菜单有十几个选项，请使用方向键或触屏上下滑动，按回车键确认。0326本次更新在软件商店中加入了度盘和云音乐。0331优化WSL2" 19 50 7 \
+		whiptail --title "Tmoe-linux Tool输debian-i启动(20200411-02)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.当前主菜单有十几个选项，请使用方向键或触屏上下滑动，按回车键确认。0331优化WSL2.0411适配其它系统。" 19 50 7 \
 			"1" "Install GUI 安装图形界面" \
 			"2" "Install browser 安装浏览器" \
 			"3" "Download theme 下载主题" \
@@ -146,7 +278,10 @@ DEBIANMENU() {
 			"0" "Exit 退出" \
 			3>&1 1>&2 2>&3
 	)
-
+	###############################
+	if [ "${OPTION}" == '0' ]; then
+		exit 0
+	fi
 	##############################
 	if [ "${OPTION}" == '1' ]; then
 
@@ -158,7 +293,6 @@ DEBIANMENU() {
 		installBROWSER
 
 	fi
-
 	###################################
 	if [ "${OPTION}" == '3' ]; then
 
@@ -175,7 +309,6 @@ DEBIANMENU() {
 	if [ "${OPTION}" == '5' ]; then
 		MODIFYREMOTEDESKTOP
 		#MODIFYVNCORXSDLCONF
-
 	fi
 	############
 
@@ -206,7 +339,7 @@ DEBIANMENU() {
 	#################################
 	if [ "${OPTION}" == '9' ]; then
 
-		bash -c "$(wget -qO- 'https://gitee.com/mo2/zsh/raw/master/zsh.sh')"
+		bash -c "$(curl -LfsS 'https://gitee.com/mo2/zsh/raw/master/zsh.sh')"
 
 	fi
 	###################################
@@ -247,12 +380,6 @@ DEBIANMENU() {
 		BetaFeatures
 
 	fi
-	###############################
-	if [ "${OPTION}" == '0' ]; then
-
-		exit 0
-
-	fi
 }
 
 ############################
@@ -271,15 +398,15 @@ MODIFYVNCCONF() {
 		read
 	fi
 	if (whiptail --title "modify vnc configuration" --yes-button '分辨率resolution' --no-button '其它other' --yesno "您想要修改哪些配置信息？What configuration do you want to modify?" 9 50); then
-		TARGET=$(whiptail --inputbox "Please enter a resolution,请输入分辨率,例如2880x1440,2400x1200,1920x1080,1920x960,1440x720,1280x1024,1280x960,1280x720,1024x768,800x680等等,默认为720x1440,当前为$(grep '\-geometry' "$(which startvnc)" | cut -d 'y' -f 2 | cut -d '-' -f 1) 。分辨率可自定义，但建议您根据屏幕比例来调整，输入完成后按回车键确认，修改完成后将自动停止VNC服务。注意：x为英文小写，不是乘号。Press Enter after the input is completed." 16 50 --title "请在方框内输入 水平像素x垂直像素 (数字x数字) " 3>&1 1>&2 2>&3)
+		TARGET=$(whiptail --inputbox "Please enter a resolution,请输入分辨率,例如2880x1440,2400x1200,1920x1080,1920x960,1440x720,1280x1024,1280x960,1280x720,1024x768,800x680等等,默认为720x1440,当前为$(grep '\-geometry' "$(command -v startvnc)" | cut -d 'y' -f 2 | cut -d '-' -f 1) 。分辨率可自定义，但建议您根据屏幕比例来调整，输入完成后按回车键确认，修改完成后将自动停止VNC服务。注意：x为英文小写，不是乘号。Press Enter after the input is completed." 16 50 --title "请在方框内输入 水平像素x垂直像素 (数字x数字) " 3>&1 1>&2 2>&3)
 		exitstatus=$?
 		if [ $exitstatus = 0 ]; then
-			sed -i '/vncserver -geometry/d' "$(which startvnc)"
-			sed -i "$ a\vncserver -geometry $TARGET -depth 24 -name remote-desktop :1" "$(which startvnc)"
+			sed -i '/vncserver -geometry/d' "$(command -v startvnc)"
+			sed -i "$ a\vncserver -geometry $TARGET -depth 24 -name remote-desktop :1" "$(command -v startvnc)"
 			echo 'Your current resolution has been modified.'
 			echo '您当前的分辨率已经修改为'
-			echo $(grep '\-geometry' "$(which startvnc)" | cut -d 'y' -f 2 | cut -d '-' -f 1)
-			#echo $(sed -n \$p "$(which startvnc)" | cut -d 'y' -f 2 | cut -d '-' -f 1)
+			echo $(grep '\-geometry' "$(command -v startvnc)" | cut -d 'y' -f 2 | cut -d '-' -f 1)
+			#echo $(sed -n \$p "$(command -v startvnc)" | cut -d 'y' -f 2 | cut -d '-' -f 1)
 			#$p表示最后一行，必须用反斜杠转义。
 			stopvnc 2>/dev/null
 			echo 'Press Enter to return.'
@@ -289,7 +416,7 @@ MODIFYVNCCONF() {
 
 		else
 			echo '您当前的分辨率为'
-			echo $(grep '\-geometry' "$(which startvnc)" | cut -d 'y' -f 2 | cut -d '-' -f 1)
+			echo $(grep '\-geometry' "$(command -v startvnc)" | cut -d 'y' -f 2 | cut -d '-' -f 1)
 		fi
 
 	else
@@ -351,8 +478,13 @@ EDITVNCPULSEAUDIO() {
 	TARGET=$(whiptail --inputbox "若您需要转发音频到其它设备,那么您可在此处修改。linux默认为127.0.0.1,WSL2默认为宿主机ip,当前为$(grep 'PULSE_SERVER' ~/.vnc/xstartup | cut -d '=' -f 2) \n本功能适用于局域网传输，本机操作无需任何修改。若您曾在音频服务端（接收音频的设备）上运行过Tmoe-linux(仅限Android和win10),并配置允许局域网连接,则只需输入该设备ip,无需加端口号。注：您需要手动启动音频服务端,Android-Termux需输pulseaudio --start,win10需手动打开'C:\Users\Public\Downloads\pulseaudio\pulseaudio.bat' \n至于其它第三方app,例如安卓XSDL,若其显示的PULSE_SERVER地址为192.168.1.3:4713,那么您需要输入192.168.1.3:4713" 20 50 --title "MODIFY PULSE SERVER ADDRESS" 3>&1 1>&2 2>&3)
 	exitstatus=$?
 	if [ $exitstatus = 0 ]; then
-		sed -i '/PULSE_SERVER/d' ~/.vnc/xstartup
-		sed -i "2 a\export PULSE_SERVER=$TARGET" ~/.vnc/xstartup
+		#sed -i '/PULSE_SERVER/d' ~/.vnc/xstartup
+		#sed -i "2 a\export PULSE_SERVER=$TARGET" ~/.vnc/xstartup
+		if grep '^export.*PULSE_SERVER' "${HOME}/.vnc/xstartup"; then
+			sed -i "s@export.*PULSE_SERVER=.*@export PULSE_SERVER=$TARGET" ~/.vnc/xstartup
+		else
+			sed -i "4 a\export PULSE_SERVER=$TARGET" ~/.vnc/xstartup
+		fi
 		echo 'Your current PULSEAUDIO SERVER address has been modified.'
 		echo '您当前的音频地址已修改为'
 		echo $(grep 'PULSE_SERVER' ~/.vnc/xstartup | cut -d '=' -f 2)
@@ -369,20 +501,19 @@ NANOSTARTVNCMANUALLY() {
 	echo '您可以手动修改vnc的配置信息'
 	echo 'If you want to modify the resolution, please change the 720x1440 (default resolution , vertical screen) to another resolution, such as 1920x1080 (landscape).'
 	echo '若您想要修改分辨率，请将默认的720x1440（竖屏）改为其它您想要的分辨率，例如1920x1080（横屏）。'
-	echo "您当前分辨率为$(grep '\-geometry' "$(which startvnc)" | cut -d 'y' -f 2 | cut -d '-' -f 1)"
+	echo "您当前分辨率为$(grep '\-geometry' "$(command -v startvnc)" | cut -d 'y' -f 2 | cut -d '-' -f 1)"
 	echo '改完后按Ctrl+S保存，Ctrl+X退出。'
 	echo "Press Enter to confirm."
 	echo "${YELLOW}按回车键确认编辑。${RESET}"
 	read
-	nano /usr/local/bin/startvnc || nano $(which startvnc)
-	echo "您当前分辨率为$(grep '\-geometry' "$(which startvnc)" | cut -d 'y' -f 2 | cut -d '-' -f 1)"
+	nano /usr/local/bin/startvnc || nano $(command -v startvnc)
+	echo "您当前分辨率为$(grep '\-geometry' "$(command -v startvnc)" | cut -d 'y' -f 2 | cut -d '-' -f 1)"
 
 	stopvnc 2>/dev/null
 	echo 'Press Enter to return.'
 	echo "${YELLOW}按回车键返回。${RESET}"
 	read
 	MODIFYOTHERCONF
-
 }
 
 ############################
@@ -429,16 +560,16 @@ NANOMANUALLYMODIFY() {
 		apt update
 		apt install -y nano
 	fi
-	nano /usr/local/bin/startxsdl || nano $(which startxsdl)
+	nano /usr/local/bin/startxsdl || nano $(command -v startxsdl)
 	echo 'See your current xsdl configuration information below.'
 	echo '您当前的ip地址为'
-	echo $(sed -n 3p $(which startxsdl) | cut -d '=' -f 2 | cut -d ':' -f 1)
+	echo $(sed -n 3p $(command -v startxsdl) | cut -d '=' -f 2 | cut -d ':' -f 1)
 
 	echo '您当前的显示端口为'
-	echo $(sed -n 3p $(which startxsdl) | cut -d '=' -f 2 | cut -d ':' -f 2)
+	echo $(sed -n 3p $(command -v startxsdl) | cut -d '=' -f 2 | cut -d ':' -f 2)
 
 	echo '您当前的音频端口为'
-	echo $(sed -n 4p $(which startxsdl) | cut -d 'c' -f 2 | cut -c 1-2 --complement | cut -d ':' -f 2)
+	echo $(sed -n 4p $(command -v startxsdl) | cut -d 'c' -f 2 | cut -c 1-2 --complement | cut -d ':' -f 2)
 	echo 'Press Enter to return.'
 	echo "${YELLOW}按回车键返回。${RESET}"
 	read
@@ -448,13 +579,13 @@ NANOMANUALLYMODIFY() {
 ######################
 CHANGEPULSESERVERPORT() {
 
-	TARGET=$(whiptail --inputbox "若xsdl app显示的端口非4713，则您可在此处修改。默认为4713，当前为$(sed -n 4p $(which startxsdl) | cut -d 'c' -f 2 | cut -c 1-2 --complement | cut -d ':' -f 2) \n请以xsdl app显示的pulse server地址的最后几位数字为准，输入完成后按回车键确认。" 20 50 --title "MODIFY PULSE SERVER PORT " 3>&1 1>&2 2>&3)
+	TARGET=$(whiptail --inputbox "若xsdl app显示的端口非4713，则您可在此处修改。默认为4713，当前为$(sed -n 4p $(command -v startxsdl) | cut -d 'c' -f 2 | cut -c 1-2 --complement | cut -d ':' -f 2) \n请以xsdl app显示的pulse server地址的最后几位数字为准，输入完成后按回车键确认。" 20 50 --title "MODIFY PULSE SERVER PORT " 3>&1 1>&2 2>&3)
 	exitstatus=$?
 	if [ $exitstatus = 0 ]; then
-		sed -i "4 c export PULSE_SERVER=tcp:127.0.0.1:$TARGET" "$(which startxsdl)"
+		sed -i "4 c export PULSE_SERVER=tcp:127.0.0.1:$TARGET" "$(command -v startxsdl)"
 		echo 'Your current PULSE SERVER port has been modified.'
 		echo '您当前的音频端口已修改为'
-		echo $(sed -n 4p $(which startxsdl) | cut -d 'c' -f 2 | cut -c 1-2 --complement | cut -d ':' -f 2)
+		echo $(sed -n 4p $(command -v startxsdl) | cut -d 'c' -f 2 | cut -c 1-2 --complement | cut -d ':' -f 2)
 		echo "${YELLOW}按回车键返回。${RESET}"
 		read
 		MODIFYXSDLCONF
@@ -466,13 +597,13 @@ CHANGEPULSESERVERPORT() {
 ########################################################
 CHANGEDISPLAYPORT() {
 
-	TARGET=$(whiptail --inputbox "若xsdl app显示的Display number(输出显示的端口数字) 非0，则您可在此处修改。默认为0，当前为$(sed -n 3p $(which startxsdl) | cut -d '=' -f 2 | cut -d ':' -f 2) \n请以xsdl app显示的DISPLAY=:的数字为准，输入完成后按回车键确认。" 20 50 --title "MODIFY DISPLAY PORT " 3>&1 1>&2 2>&3)
+	TARGET=$(whiptail --inputbox "若xsdl app显示的Display number(输出显示的端口数字) 非0，则您可在此处修改。默认为0，当前为$(sed -n 3p $(command -v startxsdl) | cut -d '=' -f 2 | cut -d ':' -f 2) \n请以xsdl app显示的DISPLAY=:的数字为准，输入完成后按回车键确认。" 20 50 --title "MODIFY DISPLAY PORT " 3>&1 1>&2 2>&3)
 	exitstatus=$?
 	if [ $exitstatus = 0 ]; then
-		sed -i "3 c export DISPLAY=127.0.0.1:$TARGET" "$(which startxsdl)"
+		sed -i "3 c export DISPLAY=127.0.0.1:$TARGET" "$(command -v startxsdl)"
 		echo 'Your current DISPLAY port has been modified.'
 		echo '您当前的显示端口已修改为'
-		echo $(sed -n 3p $(which startxsdl) | cut -d '=' -f 2 | cut -d ':' -f 2)
+		echo $(sed -n 3p $(command -v startxsdl) | cut -d '=' -f 2 | cut -d ':' -f 2)
 		echo "${YELLOW}按回车键返回。${RESET}"
 		read
 		MODIFYXSDLCONF
@@ -484,14 +615,14 @@ CHANGEDISPLAYPORT() {
 ###############################################
 CHANGEIPADDRESS() {
 
-	XSDLIP=$(sed -n 3p $(which startxsdl) | cut -d '=' -f 2 | cut -d ':' -f 1)
+	XSDLIP=$(sed -n 3p $(command -v startxsdl) | cut -d '=' -f 2 | cut -d ':' -f 1)
 	TARGET=$(whiptail --inputbox "若您需要用局域网其它设备来连接，则您可在下方输入该设备的IP地址。本机连接请勿修改，默认为127.0.0.1 ,当前为${XSDLIP} \n 请在修改完其它信息后，再来修改此项，否则将被重置为127.0.0.1。windows设备输 ipconfig，linux设备输ip -4 -br -c addr获取ip address，获取到的地址格式类似于192.168.123.234，输入获取到的地址后按回车键确认。" 20 50 --title "MODIFY DISPLAY PORT " 3>&1 1>&2 2>&3)
 	exitstatus=$?
 	if [ $exitstatus = 0 ]; then
-		sed -i "s/${XSDLIP}/${TARGET}/g" "$(which startxsdl)"
+		sed -i "s/${XSDLIP}/${TARGET}/g" "$(command -v startxsdl)"
 		echo 'Your current ip address has been modified.'
 		echo '您当前的ip地址已修改为'
-		echo $(sed -n 3p $(which startxsdl) | cut -d '=' -f 2 | cut -d ':' -f 1)
+		echo $(sed -n 3p $(command -v startxsdl) | cut -d '=' -f 2 | cut -d ':' -f 1)
 		echo "${YELLOW}按回车键返回。${RESET}"
 		read
 		MODIFYXSDLCONF
@@ -511,7 +642,7 @@ installBROWSER() {
 			echo "1s后将自动开始安装"
 			sleep 1
 			echo
-			if [ "${LINUXDISTRO}" = 'ubuntu' ]; then
+			if [ "${DEBIANDISTRO}" = "ubuntu" ]; then
 				add-apt-repository -y ppa:mozillateam/ppa
 			fi
 			apt update
@@ -540,7 +671,7 @@ installBROWSER() {
 		echo "1s后将自动开始安装"
 		sleep 1
 		#新版Ubuntu是从snap商店下载chromium的，为解决这一问题，将临时换源成ubuntu 18.04LTS.
-		if [ "${LINUXDISTRO}" = 'ubuntu' ]; then
+		if [ "${DEBIANDISTRO}" = "ubuntu" ]; then
 			if ! grep -q '^deb.*bionic-update' "/etc/apt/sources.list"; then
 				if [ $(uname -m) = "aarch64" ] || [ $(uname -m) = "armv7l" ] || [ $(uname -m) = "armv6l" ]; then
 					sed -i '$ a\deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ bionic-updates main restricted universe multiverse' "/etc/apt/sources.list"
@@ -575,14 +706,14 @@ installBROWSER() {
 INSTALLGUI() {
 	cd /tmp
 	echo 'lxde预览截图'
-	#wget -qO- 'https://gitee.com/mo2/pic_api/raw/test/2020/03/15/BUSYeSLZRqq3i3oM.png' | catimg -
+	#curl -LfsS 'https://gitee.com/mo2/pic_api/raw/test/2020/03/15/BUSYeSLZRqq3i3oM.png' | catimg -
 	if [ ! -f 'LXDE_BUSYeSLZRqq3i3oM.png' ]; then
 		wget -qO 'LXDE_BUSYeSLZRqq3i3oM.png' 'https://gitee.com/mo2/pic_api/raw/test/2020/03/15/BUSYeSLZRqq3i3oM.png'
 	fi
 	catimg 'LXDE_BUSYeSLZRqq3i3oM.png'
 
 	echo 'mate预览截图'
-	#wget -qO- 'https://gitee.com/mo2/pic_api/raw/test/2020/03/15/1frRp1lpOXLPz6mO.jpg' | catimg -
+	#curl -LfsS 'https://gitee.com/mo2/pic_api/raw/test/2020/03/15/1frRp1lpOXLPz6mO.jpg' | catimg -
 	if [ ! -f 'MATE_1frRp1lpOXLPz6mO.jpg' ]; then
 		wget -qO 'MATE_1frRp1lpOXLPz6mO.jpg' 'https://gitee.com/mo2/pic_api/raw/test/2020/03/15/1frRp1lpOXLPz6mO.jpg'
 	fi
@@ -618,17 +749,18 @@ INSTALLGUI() {
 		mkfontdir
 		fc-cache
 	fi
-	#wget -qO- 'https://gitee.com/mo2/pic_api/raw/test/2020/03/15/a7IQ9NnfgPckuqRt.jpg' | catimg -
+	#curl -LfsS 'https://gitee.com/mo2/pic_api/raw/test/2020/03/15/a7IQ9NnfgPckuqRt.jpg' | catimg -
 	echo "建议缩小屏幕字体，并重新加载图片，以获得更优的显示效果。"
 	echo "按回车键选择您需要安装的图形桌面环境"
 	echo "${YELLOW}Press enter to continue.${RESET}"
 	read
 	INSTALLDESKTOP=$(whiptail --title "单项选择题" --menu \
-		"您想要安装哪个桌面？按方向键选择，回车键确认，一次只可以装一个桌面哦！仅xfce桌面支持在本工具内便捷下载主题。 \n Which desktop environment do you want to install? " 15 60 4 \
-		"0" "我一个都不要 =￣ω￣=" \
+		"您想要安装哪个桌面？按方向键选择，回车键确认，一次只可以装一个桌面哦！仅xfce桌面支持在本工具内便捷下载主题。 \n Which desktop environment do you want to install? " 15 60 5 \
 		"1" "xfce：兼容性高" \
 		"2" "lxde：轻量化桌面" \
 		"3" "mate：基于GNOME 2" \
+		"4" "Other其它桌面(绝赞测试中):lxqt,kde" \
+		"0" "我一个都不要 =￣ω￣=" \
 		3>&1 1>&2 2>&3)
 
 	##########################
@@ -646,19 +778,322 @@ INSTALLGUI() {
 		INSTALLMATEDESKTOP
 	fi
 
+	if [ "$INSTALLDESKTOP" == '4' ]; then
+		OTHERDESKTOP
+	fi
+
 	if [ "$INSTALLDESKTOP" == '0' ]; then
 		DEBIANMENU
 	fi
 	echo 'Press Enter to return.'
 	echo "${YELLOW}按回车键返回。${RESET}"
 	read
-
 	DEBIANMENU
-
+}
+#######################
+OTHERDESKTOP() {
+	BETADESKTOP=$(whiptail --title "Beta features" --menu \
+		"WARNNING！本功能仍处于测试阶段，可能无法正常运行，且未进行任何优化\nBeta features may not work properly." 15 60 6 \
+		"1" "lxqt" \
+		"2" "kde plasma 5" \
+		"3" "gnome 3" \
+		"4" "cinnamon" \
+		"5" "dde (deepin desktop)" \
+		"0" "Back to the main menu 返回主菜单" \
+		3>&1 1>&2 2>&3)
+	##############################
+	if [ "${BETADESKTOP}" == '0' ]; then
+		DEBIANMENU
+	fi
+	##############################
+	if [ "${BETADESKTOP}" == '1' ]; then
+		INSTALL-lXQT-DESKTOP
+	fi
+	##############################
+	if [ "${BETADESKTOP}" == '2' ]; then
+		INSTALL-KDE-PLASMA5-DESKTOP
+	fi
+	##############################
+	if [ "${BETADESKTOP}" == '3' ]; then
+		INSTALL-GNOME3-DESKTOP
+	fi
+	##############################
+	if [ "${BETADESKTOP}" == '4' ]; then
+		INSTALL-cinnamon-DESKTOP
+	fi
+	##############################
+	if [ "${BETADESKTOP}" == '5' ]; then
+		INSTALL-DEEPIN-DESKTOP
+	fi
+	##############################
 }
 
+####################
+INSTALL-lXQT-DESKTOP() {
+	if [ "${LINUXDISTRO}" = "debian" ]; then
+		#apt-mark hold gvfs
+		apt update
+		apt-mark hold udisks2
+		echo '即将为您安装思源黑体(中文字体)、lxqt-core、lxqt-config、qterminal和tightvncserver等软件包。'
+		dpkg --configure -a
+		echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+		echo "keyboard-configuration keyboard-configuration/layout select 'English (US)'" | debconf-set-selections
+		echo keyboard-configuration keyboard-configuration/layoutcode select 'us' | debconf-set-selections
+
+		apt install -y fonts-noto-cjk lxqt-core lxqt-config qterminal
+		apt install -y dbus-x11
+		apt install -y tightvncserver
+		apt autopurge -y ^libfprint || apt purge -y ^libfprint
+		apt clean
+
+	elif [ "${LINUXDISTRO}" = "redhat" ]; then
+		dnf groupinstall -y lxqt || yum groupinstall -y lxqt
+		dnf install -y tigervnc-server || yum install -y tigervnc-server
+
+	elif [ "${LINUXDISTRO}" = "arch" ]; then
+		pacman -Syu --noconfirm lxqt xorg
+		pacman -S --noconfirm tigervnc
+	elif [ "${LINUXDISTRO}" = "void" ]; then
+		xbps-install -S -y lxqt tigervnc
+
+	fi
+
+	mkdir -p ~/.vnc
+	cd ~/.vnc
+	cat >xstartup <<-'EndOfFile'
+		#!/bin/bash
+		unset SESSION_MANAGER
+		unset DBUS_SESSION_BUS_ADDRESS
+		xrdb ${HOME}/.Xresources
+		export PULSE_SERVER=127.0.0.1
+		dbus-launch startlxqt &
+	EndOfFile
+	chmod +x ./xstartup
+	rm -f /tmp/.Tmoe-*Desktop-Detection-FILE 2>/dev/null 2>/dev/null
+	touch /tmp/.Tmoe-LXQT-Desktop-Detection-FILE
+	STARTVNCANDSTOPVNC
+}
+####################
+INSTALL-KDE-PLASMA5-DESKTOP() {
+	if [ "${LINUXDISTRO}" = "debian" ]; then
+		#apt-mark hold gvfs
+		apt update
+		apt-mark hold udisks2
+		echo '即将为您安装思源黑体(中文字体)、kde-plasma-desktop和tightvncserver等软件包。'
+		dpkg --configure -a
+		echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+		echo "keyboard-configuration keyboard-configuration/layout select 'English (US)'" | debconf-set-selections
+		echo keyboard-configuration keyboard-configuration/layoutcode select 'us' | debconf-set-selections
+		aptitude install -y kde-plasma-desktop || apt install -y kde-plasma-desktop
+		apt install -y fonts-noto-cjk dbus-x11
+		apt install -y tightvncserver
+		apt autopurge -y ^libfprint || apt purge -y ^libfprint
+		apt clean
+
+	elif [ "${LINUXDISTRO}" = "redhat" ]; then
+		#yum groupinstall kde-desktop
+		dnf groupinstall -y "KDE" || yum groupinstall -y "KDE"
+		dnf install -y sddm || yum install -y sddm
+		dnf install -y tigervnc-server || yum install -y tigervnc-server
+
+	elif [ "${LINUXDISTRO}" = "arch" ]; then
+		pacman -Syu --noconfirm plasma-desktop xorg
+		pacman -S --noconfirm sddm sddm-kcm
+		#中文输入法
+		#pacman -S fcitx fcitx-rime fcitx-im kcm-fcitx fcitx-sogoupinyin
+		pacman -S --noconfirm kdebase
+		pacman -S pamac-aur
+		pacman -S --noconfirm tigervnc
+	elif [ "${LINUXDISTRO}" = "void" ]; then
+		xbps-install -S -y kde tigervnc
+
+	fi
+
+	mkdir -p ~/.vnc
+	cd ~/.vnc
+	cat >xstartup <<-'EndOfFile'
+		#!/bin/bash
+		unset SESSION_MANAGER
+		unset DBUS_SESSION_BUS_ADDRESS
+		xrdb ${HOME}/.Xresources
+		export PULSE_SERVER=127.0.0.1
+		if command -v startkde >/dev/null; then
+			dbus-launch startkde &
+		else
+			dbus-launch startplasma-x11 &
+		fi
+	EndOfFile
+	#plasma_session
+	chmod +x ./xstartup
+	rm -f /tmp/.Tmoe-*Desktop-Detection-FILE 2>/dev/null 2>/dev/null
+	touch /tmp/.Tmoe-KDE-PLASMA5-Desktop-Detection-FILE
+	STARTVNCANDSTOPVNC
+}
+####################
+INSTALL-GNOME3-DESKTOP() {
+	if [ "${LINUXDISTRO}" = "debian" ]; then
+		#apt-mark hold gvfs
+		apt update
+		apt-mark hold udisks2
+		echo '即将为您安装思源黑体(中文字体)、gnome-session、gnome-menus、gnome-tweak-tool、gnome-shell和tightvncserver等软件包。'
+		dpkg --configure -a
+		echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+		echo "keyboard-configuration keyboard-configuration/layout select 'English (US)'" | debconf-set-selections
+		echo keyboard-configuration keyboard-configuration/layoutcode select 'us' | debconf-set-selections
+		#aptitude install -y task-gnome-desktop || apt install -y task-gnome-desktop
+		apt install --no-install-recommends xorg gnome-session gnome-menus gnome-tweak-tool gnome-shell || aptitude install -y gnome-core
+		apt install -y fonts-noto-cjk
+		apt install -y dbus-x11 xinit
+		apt install -y tightvncserver
+		apt autopurge -y ^libfprint || apt purge -y ^libfprint
+		apt clean
+
+	elif [ "${LINUXDISTRO}" = "redhat" ]; then
+		#yum groupremove "GNOME Desktop Environment"
+		#yum groupinstall "GNOME Desktop Environment"
+		dnf groupinstall -y "GNOME" || yum groupinstall -y "GNOME"
+		dnf install -y tigervnc-server || yum install -y tigervnc-server
+
+	elif [ "${LINUXDISTRO}" = "arch" ]; then
+		pacman -Syu --noconfirm gnome gnome-extra
+		pacman -S --noconfirm tigervnc
+	elif [ "${LINUXDISTRO}" = "void" ]; then
+		xbps-install -S -y gnome tigervnc
+
+	fi
+
+	mkdir -p ~/.vnc
+	cd ~/.vnc
+	cat >xstartup <<-'EndOfFile'
+		#!/bin/bash
+		unset SESSION_MANAGER
+		unset DBUS_SESSION_BUS_ADDRESS
+		xrdb ${HOME}/.Xresources
+		export PULSE_SERVER=127.0.0.1
+		dbus-launch gnome-session &
+	EndOfFile
+	chmod +x ./xstartup
+	rm -f /tmp/.Tmoe-*Desktop-Detection-FILE 2>/dev/null 2>/dev/null
+	touch /tmp/.Tmoe-GNOME3-Desktop-Detection-FILE
+	STARTVNCANDSTOPVNC
+}
+####################
+INSTALL-cinnamon-DESKTOP() {
+	if [ "${LINUXDISTRO}" = "debian" ]; then
+		#apt-mark hold gvfs
+		apt update
+		apt-mark hold udisks2
+		echo '即将为您安装思源黑体(中文字体)、cinnamon和tightvncserver等软件包。'
+		dpkg --configure -a
+		echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+		echo "keyboard-configuration keyboard-configuration/layout select 'English (US)'" | debconf-set-selections
+		echo keyboard-configuration keyboard-configuration/layoutcode select 'us' | debconf-set-selections
+		#task-cinnamon-desktop
+		aptitude install -y cinnamon
+		apt install -y fonts-noto-cjk
+		apt install -y dbus-x11
+		apt install -y tightvncserver
+		apt autopurge -y ^libfprint || apt purge -y ^libfprint
+		apt clean
+
+	elif [ "${LINUXDISTRO}" = "redhat" ]; then
+		dnf groupinstall -y "Cinnamon Desktop" || yum groupinstall -y "Cinnamon Desktop"
+		dnf install -y tigervnc-server || yum install -y tigervnc-server
+
+	elif [ "${LINUXDISTRO}" = "arch" ]; then
+		pacman -Syu --noconfirm sddm cinnamon xorg
+		pacman -S deepin deepin-screenshot
+		pacman -S --noconfirm tigervnc
+	fi
+
+	mkdir -p ~/.vnc
+	cd ~/.vnc
+	cat >xstartup <<-'EndOfFile'
+		#!/bin/bash
+		unset SESSION_MANAGER
+		unset DBUS_SESSION_BUS_ADDRESS
+		xrdb ${HOME}/.Xresources
+		export PULSE_SERVER=127.0.0.1
+		dbus-launch cinnamon-session &
+	EndOfFile
+	chmod +x ./xstartup
+	rm -f /tmp/.Tmoe-*Desktop-Detection-FILE 2>/dev/null 2>/dev/null
+	touch /tmp/.Tmoe-cinnamon-Desktop-Detection-FILE
+	STARTVNCANDSTOPVNC
+}
+####################
+INSTALL-DEEPIN-DESKTOP() {
+	if [ "${archtype}" != "i386" ] && [ "${archtype}" != "amd64" ]; then
+		echo "非常抱歉，深度桌面不支持您当前的架构。"
+		echo "建议您在换用x86_64或i386架构的设备后，再来尝试。"
+		echo "${YELLOW}按回车键返回。${RESET}"
+		echo "Press enter to return."
+		read
+		DEBIANMENU
+	fi
+
+	if [ "${LINUXDISTRO}" = "debian" ]; then
+		#apt-mark hold gvfs
+		if [ "${DEBIANDISTRO}" = "ubuntu" ]; then
+			add-apt-repository ppa:leaeasy/dde
+		else
+			cd /etc/apt/
+			if ! grep -q '^deb.*deepin' sources.list.d/deepin.list 2>/dev/null; then
+				cat >/etc/apt/sources.list.d/deepin.list <<-'EOF'
+					   #如需使用apt upgrade命令，请禁用deepin软件源,否则将有可能导致系统崩溃。
+						deb [by-hash=force] https://mirrors.tuna.tsinghua.edu.cn/deepin unstable main contrib non-free
+				EOF
+			fi
+		fi
+		wget https://mirrors.tuna.tsinghua.edu.cn/deepin/project/deepin-keyring.gpg
+		gpg --import deepin-keyring.gpg
+		gpg --export --armor 209088E7 | apt-key add -
+		apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 425956BB3E31DF51
+
+		apt update
+		echo '即将为您安装思源黑体(中文字体)、和tightvncserver等软件包。'
+		dpkg --configure -a
+		echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+		echo "keyboard-configuration keyboard-configuration/layout select 'English (US)'" | debconf-set-selections
+		echo keyboard-configuration keyboard-configuration/layoutcode select 'us' | debconf-set-selections
+		aptitude install -y dde
+		sed -i 's/^deb/#&/g' /etc/apt/sources.list.d/deepin.list
+		apt update
+		apt install -y fonts-noto-cjk
+		apt install -y dbus-x11
+		apt install -y tightvncserver
+		apt autopurge -y ^libfprint || apt purge -y ^libfprint
+		apt clean
+
+	elif [ "${LINUXDISTRO}" = "redhat" ]; then
+		dnf install -y deepin-desktop || yum install -y deepin-desktop
+		dnf install -y tigervnc-server || yum install -y tigervnc-server
+
+	elif [ "${LINUXDISTRO}" = "arch" ]; then
+		pacman -Syu --noconfirm deepin deepin-extra lightdm lightdm-deepin-greeter xorg
+		pacman -S --noconfirm file-roller evince gedit thunderbird gpicview
+		pacman -S --noconfirm tigervnc
+		rm ~/.pam_environment
+	fi
+
+	mkdir -p ~/.vnc
+	cd ~/.vnc
+	cat >xstartup <<-'EndOfFile'
+		#!/bin/bash
+		unset SESSION_MANAGER
+		unset DBUS_SESSION_BUS_ADDRESS
+		xrdb ${HOME}/.Xresources
+		export PULSE_SERVER=127.0.0.1
+		dbus-launch startdde &
+	EndOfFile
+	chmod +x ./xstartup
+	rm -f /tmp/.Tmoe-*Desktop-Detection-FILE 2>/dev/null 2>/dev/null
+	touch /tmp/.Tmoe-DEEPIN-Desktop-Detection-FILE
+	STARTVNCANDSTOPVNC
+}
+
+############################
 REMOVEGUI() {
-	####################
 	echo '"xfce" "呜呜，(≧﹏ ≦)您真的要离开我么"  '
 	echo '"lxde" "很庆幸能与阁下相遇（；´д｀）ゞ "  '
 	echo '"mate" "喔...喔呜...我不舍得你走/(ㄒoㄒ)/~~"  '
@@ -667,6 +1102,7 @@ REMOVEGUI() {
 	echo 'Press enter to confirm ,press Ctrl + C to cancel'
 	read
 	apt purge -y xfce4 xfce4-terminal tightvncserver xfce4-goodies
+	apt purge -y dbus-x11
 	apt purge -y ^xfce
 	apt purge -y xfwm4-theme-breeze xcursor-themes
 	apt purge -y lxde-core lxterminal
@@ -807,7 +1243,7 @@ CONFIGTHEMES() {
 
 		if [ ! -e '/usr/share/icons/ukui-icon-theme-default' ] && [ ! -e '/usr/share/icons/ukui-icon-theme' ]; then
 			cd /tmp
-			UKUITHEME="$(wget -qO- 'https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/u/ukui-themes/' | grep all.deb | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
+			UKUITHEME="$(curl -LfsS 'https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/u/ukui-themes/' | grep all.deb | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
 			wget -O 'ukui-themes.deb' "https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/u/ukui-themes/${UKUITHEME}"
 			apt install -y ./ukui-themes.deb
 			rm -f ukui-themes.deb
@@ -882,7 +1318,7 @@ Installkaliundercover() {
 			apt install -y kali-undercover
 		else
 			cd /tmp
-			UNDERCOVERlatestLINK="$(wget -qO- 'https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-undercover/' | grep all.deb | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
+			UNDERCOVERlatestLINK="$(curl -LfsS 'https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-undercover/' | grep all.deb | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
 			wget -O kali-undercover.deb "https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-undercover/${UNDERCOVERlatestLINK}"
 			apt install -y ./kali-undercover.deb
 			rm -f ./kali-undercover.deb
@@ -922,7 +1358,7 @@ INSTALLORREMOVEVSCODE() {
 }
 ############################################
 MODIFYTOKALISourcesList() {
-	if grep -q 'ubuntu' /etc/os-release; then
+	if [ "${DEBIANDISTRO}" = "ubuntu" ]; then
 		echo "${YELLOW}非常抱歉，暂不支持Ubuntu，按回车键返回。${RESET}"
 		echo "Press enter to return."
 		read
@@ -1214,42 +1650,56 @@ OTHERSOFTWARE() {
 
 ####################################
 INSTALLXFCE4DESKTOP() {
-	#apt-mark hold gvfs
-	apt update
-	apt-mark hold udisks2
-	echo '即将为您安装思源黑体(中文字体)、xfce4、xfce4-terminal、xfce4-goodies和tightvncserver等软件包。'
-	dpkg --configure -a
-	echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
-	echo "keyboard-configuration keyboard-configuration/layout select 'English (US)'" | debconf-set-selections
-	echo keyboard-configuration keyboard-configuration/layoutcode select 'us' | debconf-set-selections
-	apt install -y fonts-noto-cjk xfce4 xfce4-terminal xfce4-goodies
-	apt install -y tightvncserver
-	apt autopurge -y ^libfprint || apt purge -y ^libfprint
-	#apt install -y xfwm4-theme-breeze xcursor-themes
-	if [ "$(cat /etc/issue | cut -c 1-4)" = "Kali" ]; then
-		apt install -y kali-linux
-		apt install -y kali-menu
-		apt install -y kali-undercover
-		apt install -y kali-linux-top10
-		apt install -y kali-themes-common
-		if [ "$(uname -m)" = "aarch64" ] || [ "$(uname -m)" = "armv7l" ]; then
-			apt install -y kali-linux-arm
+	if [ "${LINUXDISTRO}" = "debian" ]; then
+		#apt-mark hold gvfs
+		apt update
+		apt-mark hold udisks2
+		echo '即将为您安装思源黑体(中文字体)、xfce4、xfce4-terminal、xfce4-goodies和tightvncserver等软件包。'
+		dpkg --configure -a
+		echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+		echo "keyboard-configuration keyboard-configuration/layout select 'English (US)'" | debconf-set-selections
+		echo keyboard-configuration keyboard-configuration/layoutcode select 'us' | debconf-set-selections
+
+		apt install -y fonts-noto-cjk xfce4 xfce4-terminal xfce4-goodies
+		apt install -y dbus-x11
+		apt install -y tightvncserver
+		apt autopurge -y ^libfprint || apt purge -y ^libfprint
+		#apt install -y xfwm4-theme-breeze xcursor-themes
+		if [ "${DEBIANDISTRO}" = "kali" ]; then
+			apt install -y kali-linux
+			apt install -y kali-menu
+			apt install -y kali-undercover
+			apt install -y kali-linux-top10
+			apt install -y kali-themes-common
+			if [ "$(uname -m)" = "aarch64" ] || [ "$(uname -m)" = "armv7l" ]; then
+				apt install -y kali-linux-arm
+			fi
+			apt install -y chromium-l10n
+			sed -i 's/chromium %U/chromium --no-sandbox %U/g' /usr/share/applications/chromium.desktop
+			grep 'chromium' /etc/profile || sed -i '$ a\alias chromium="chromium --no-sandbox"' /etc/profile
+			apt search kali-linux
+		else
+			if [ ! -e "/usr/share/desktop-base/kali-theme" ]; then
+				cd /tmp
+				rm -f ./kali-themes-common.deb 2>/dev/null
+				KaliTHEMElatestLINK="$(wget -O- 'https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-themes/' | grep kali-themes-common | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
+				wget -O 'kali-themes-common.deb' "https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-themes/${KaliTHEMElatestLINK}"
+				apt install -y ./kali-themes-common.deb
+				rm -f ./kali-themes-common.deb
+			fi
 		fi
-		apt install -y chromium-l10n
-		sed -i 's/chromium %U/chromium --no-sandbox %U/g' /usr/share/applications/chromium.desktop
-		grep 'chromium' /etc/profile || sed -i '$ a\alias chromium="chromium --no-sandbox"' /etc/profile
-		apt search kali-linux
-	else
-		if [ ! -e "/usr/share/desktop-base/kali-theme" ]; then
-			cd /tmp
-			rm -f ./kali-themes-common.deb 2>/dev/null
-			KaliTHEMElatestLINK="$(wget -qO- 'https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-themes/' | grep kali-themes-common | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
-			wget -O 'kali-themes-common.deb' "https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-themes/${KaliTHEMElatestLINK}"
-			apt install -y ./kali-themes-common.deb
-			rm -f ./kali-themes-common.deb
-		fi
+		apt clean
+	elif [ "${LINUXDISTRO}" = "redhat" ]; then
+		dnf groupinstall -y xfce || yum groupinstall -y xfce
+		dnf install -y tigervnc-server || yum install -y tigervnc-server
+		rm -rf /etc/xdg/autostart/xfce-polkit.desktop
+	elif [ "${LINUXDISTRO}" = "arch" ]; then
+		pacman -Syu --noconfirm xfce4 xfce4-goodies
+		pacman -S --noconfirm tigervnc
+	elif [ "${LINUXDISTRO}" = "void" ]; then
+		xbps-install -S -y xfce4 tigervnc
+
 	fi
-	apt clean
 	cd /usr/share/xfce4/terminal
 	echo "正在配置xfce4终端配色..."
 	wget -qO "colorschemes.tar.xz" 'https://gitee.com/mo2/xfce-themes/raw/terminal/colorschemes.tar.xz'
@@ -1259,71 +1709,16 @@ INSTALLXFCE4DESKTOP() {
 	cd ~/.vnc
 	cat >xstartup <<-'EndOfFile'
 		#!/bin/bash
+		unset SESSION_MANAGER
+		unset DBUS_SESSION_BUS_ADDRESS
 		xrdb ${HOME}/.Xresources
 		export PULSE_SERVER=127.0.0.1
-		startxfce4 &
+		dbus-launch startxfce4 &
 	EndOfFile
 	chmod +x ./xstartup
-
-	cd /usr/local/bin
-	cat >startxsdl <<-'EndOfFile'
-		#!/bin/bash
-		stopvnc >/dev/null 2>&1
-		export DISPLAY=127.0.0.1:0
-		export PULSE_SERVER=tcp:127.0.0.1:4713
-		echo '正在为您启动xsdl,请将display number改为0'
-		echo 'Starting xsdl, please change display number to 0'
-		echo '默认为前台运行，您可以按Ctrl+C终止，或者在termux原系统内输stopvnc'
-		echo 'The default is to run in the foreground, you can press Ctrl + C to terminate, or type "stopvnc" in the original termux system.'
-		if [ "$(uname -r | cut -d '-' -f 3)" = "Microsoft" ] || [ "$(uname -r | cut -d '-' -f 2)" = "microsoft" ]; then
-			echo '检测到您使用的是WSL,正在为您打开音频服务'
-			export PULSE_SERVER=tcp:127.0.0.1
-			cd "/mnt/c/Users/Public/Downloads/pulseaudio"
-			/mnt/c/WINDOWS/system32/cmd.exe /c "start .\pulseaudio.bat"
-			echo "若无法自动打开音频服务，则请手动在资源管理器中打开C:\Users\Public\Downloads\pulseaudio\pulseaudio.bat"
-			cd "/mnt/c/Users/Public/Downloads/VcXsrv/"
-			#/mnt/c/WINDOWS/system32/cmd.exe /c "start .\config.xlaunch"
-			/mnt/c/WINDOWS/system32/taskkill.exe /f /im vcxsrv.exe 2>/dev/null
-			/mnt/c/WINDOWS/system32/cmd.exe /c "start .\vcxsrv.exe :0 -multiwindow -clipboard -wgl -ac"
-			echo "若无法自动打开X服务，则请手动在资源管理器中打开C:\Users\Public\Downloads\VcXsrv\vcxsrv.exe"
-			if grep -q '172..*1' "/etc/resolv.conf"; then
-				echo "检测到您当前使用的可能是WSL2，如需手动启动，请在xlaunch.exe中勾选Disable access control"
-				WSL2IP=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}' | head -n 1)
-				export PULSE_SERVER=${WSL2IP}
-				export DISPLAY=${WSL2IP}:0
-				echo "已将您的显示和音频服务ip修改为${WSL2IP}"
-			fi
-			sleep 2
-		fi
-		#不要将上面uname -r的检测修改为WINDOWSDISTRO
-		#sudo下无法用whoami检测用户
-		CURRENTuser=$(ls -lt /home | grep ^d | head -n 1 | awk -F ' ' '$0=$NF')
-		if [ ! -z "${CURRENTuser}" ] && [ "${HOME}" != "/root" ]; then
-			if [ -e "${HOME}/.profile" ]; then
-				CURRENTuser=$(ls -l ${HOME}/.profile | cut -d ' ' -f 3)
-				CURRENTgroup=$(ls -l ${HOME}/.profile | cut -d ' ' -f 4)
-			elif [ -e "${HOME}/.bashrc" ]; then
-				CURRENTuser=$(ls -l ${HOME}/.bashrc | cut -d ' ' -f 3)
-				CURRENTgroup=$(ls -l ${HOME}/.bashrc | cut -d ' ' -f 4)
-			elif [ -e "${HOME}/.zshrc" ]; then
-				CURRENTuser=$(ls -l ${HOME}/.zshrc | cut -d ' ' -f 3)
-				CURRENTgroup=$(ls -l ${HOME}/.zshrc | cut -d ' ' -f 4)
-			fi
-			echo "检测到/home目录不为空，为避免权限问题，正在将${HOME}目录下的.ICEauthority、.Xauthority以及.vnc 的权限归属修改为${CURRENTuser}用户和${CURRENTgroup}用户组"
-			cd ${HOME}
-			chown -R ${CURRENTuser}:${CURRENTgroup} ".ICEauthority" ".ICEauthority" ".vnc" 2>/dev/null || sudo chown -R ${CURRENTuser}:${CURRENTgroup} ".ICEauthority" ".ICEauthority" ".vnc" 2>/dev/null
-		fi
-
-		export LANG="zh_CN.UTF-8"
-		startxfce4
-	EndOfFile
-	if [ -e "/etc/tmp/.ChrootInstallationDetectionFile" ]; then
-		grep -q 'dbus-launch' ~/.vnc/xstartup || sed -i 's:startxfce4:dbus-launch /usr/bin/startxfce4:' ~/.vnc/xstartup
-		grep -q 'dbus-launch' /usr/local/bin/startxsdl || sed -i 's:startxfce4:dbus-launch /usr/bin/startxfce4:' /usr/local/bin/startxsdl
-	fi
-
+	rm -f /tmp/.Tmoe-*Desktop-Detection-FILE 2>/dev/null 2>/dev/null
+	#touch /tmp/.Tmoe-XFCE4-Desktop-Detection-FILE
 	STARTVNCANDSTOPVNC
-
 }
 
 #############################
@@ -1409,167 +1804,83 @@ MODIFYXRDPCONF() {
 }
 ############################
 INSTALLMATEDESKTOP() {
-	apt-mark hold gvfs
-	apt update
-	apt install -y udisks2 2>/dev/null
-	if [ ! -e "/etc/tmp/.ChrootInstallationDetectionFile" ] && [ "$(uname -m)" != "x86_64" ] && [ "$(uname -m)" != "i686" ]; then
-		echo "" >/var/lib/dpkg/info/udisks2.postinst
+	if [ "${LINUXDISTRO}" = "debian" ]; then
+		apt-mark hold gvfs
+		apt update
+		apt install -y udisks2 2>/dev/null
+		if [ ! -e "/etc/tmp/.ChrootInstallationDetectionFile" ] && [ "$(uname -m)" != "x86_64" ] && [ "$(uname -m)" != "i686" ]; then
+			echo "" >/var/lib/dpkg/info/udisks2.postinst
+		fi
+		apt-mark hold udisks2
+		echo '即将为您安装思源黑体(中文字体)、tightvncserver、mate-desktop-environment和mate-terminal等软件包'
+		dpkg --configure -a
+		aptitude install -y mate-desktop-environment mate-terminal 2>/dev/null || apt install -y mate-desktop-environment-core mate-terminal
+		apt autopurge -y ^libfprint
+		apt install -y fonts-noto-cjk tightvncserver
+		apt install -y dbus-x11
+		apt clean
+	elif [ "${LINUXDISTRO}" = "redhat" ]; then
+		dnf groupinstall -y mate-desktop || yum groupinstall -y mate-desktop
+		dnf install -y tigervnc-server || yum install -y tigervnc-server
+	elif [ "${LINUXDISTRO}" = "arch" ]; then
+		pacman -Syu --noconfirm mate mate-extra
+		pacman -S --noconfirm tigervnc
+	elif [ "${LINUXDISTRO}" = "void" ]; then
+		xbps-install -S -y mate tigervnc
 	fi
-	apt-mark hold udisks2
-	echo '即将为您安装思源黑体(中文字体)、tightvncserver、mate-desktop-environment和mate-terminal等软件包'
-	dpkg --configure -a
-	apt install -y aptitude
-	mkdir -p /run/lock /var/lib/aptitude
-	touch /var/lib/aptitude/pkgstates
-	aptitude install -y mate-desktop-environment mate-terminal 2>/dev/null || apt install -y mate-desktop-environment-core mate-terminal
-	apt autopurge -y ^libfprint
-	apt install -y fonts-noto-cjk tightvncserver
-	apt clean
-
 	mkdir -p ~/.vnc
 	cd ~/.vnc
 	cat >xstartup <<-'EndOfFile'
 		#!/bin/bash
+		unset SESSION_MANAGER
+		unset DBUS_SESSION_BUS_ADDRESS
 		xrdb ${HOME}/.Xresources
 		export PULSE_SERVER=127.0.0.1
-		mate-session &
+		dbus-launch mate-session &
 	EndOfFile
 	chmod +x ./xstartup
-
-	cd /usr/local/bin
-	cat >startxsdl <<-'EndOfFile'
-		#!/bin/bash
-		stopvnc >/dev/null 2>&1
-		export DISPLAY=127.0.0.1:0
-		export PULSE_SERVER=tcp:127.0.0.1:4713
-		echo '正在为您启动xsdl,请将display number改为0'
-		echo 'Starting xsdl, please change display number to 0'
-		echo '默认为前台运行，您可以按Ctrl+C终止，或者在termux原系统内输stopvnc'
-		echo 'The default is to run in the foreground, you can press Ctrl + C to terminate, or type "stopvnc" in the original termux system.'
-		if [ "$(uname -r | cut -d '-' -f 3)" = "Microsoft" ] || [ "$(uname -r | cut -d '-' -f 2)" = "microsoft" ]; then
-			echo '检测到您使用的是WSL,正在为您打开音频服务'
-			export PULSE_SERVER=tcp:127.0.0.1
-			cd "/mnt/c/Users/Public/Downloads/pulseaudio"
-			/mnt/c/WINDOWS/system32/taskkill.exe /f /im vcxsrv.exe 2>/dev/null
-			/mnt/c/WINDOWS/system32/cmd.exe /c "start .\pulseaudio.bat"
-			echo "若无法自动打开音频服务，则请手动在资源管理器中打开C:\Users\Public\Downloads\pulseaudio\pulseaudio.bat"
-			cd "/mnt/c/Users/Public/Downloads/VcXsrv/"
-			#/mnt/c/WINDOWS/system32/cmd.exe /c "start .\config.xlaunch"
-			/mnt/c/WINDOWS/system32/cmd.exe /c "start .\vcxsrv.exe :0 -multiwindow -clipboard -wgl -ac"
-			echo "若无法自动打开X服务，则请手动在资源管理器中打开C:\Users\Public\Downloads\VcXsrv\vcxsrv.exe"
-			if grep -q '172..*1' "/etc/resolv.conf"; then
-				echo "检测到您当前使用的可能是WSL2，如需手动启动，请在xlaunch.exe中勾选Disable access control"
-				WSL2IP=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}' | head -n 1)
-				export PULSE_SERVER=${WSL2IP}
-				export DISPLAY=${WSL2IP}:0
-				echo "已将您的显示和音频服务ip修改为${WSL2IP}"
-			fi
-			sleep 2
-		fi
-		#不要将上面uname -r的检测修改为WINDOWSDISTRO
-		CURRENTuser=$(ls -lt /home | grep ^d | head -n 1 | awk -F ' ' '$0=$NF')
-		if [ ! -z "${CURRENTuser}" ] && [ "${HOME}" != "/root" ]; then
-			if [ -e "${HOME}/.profile" ]; then
-				CURRENTuser=$(ls -l ${HOME}/.profile | cut -d ' ' -f 3)
-				CURRENTgroup=$(ls -l ${HOME}/.profile | cut -d ' ' -f 4)
-			elif [ -e "${HOME}/.bashrc" ]; then
-				CURRENTuser=$(ls -l ${HOME}/.bashrc | cut -d ' ' -f 3)
-				CURRENTgroup=$(ls -l ${HOME}/.bashrc | cut -d ' ' -f 4)
-			elif [ -e "${HOME}/.zshrc" ]; then
-				CURRENTuser=$(ls -l ${HOME}/.zshrc | cut -d ' ' -f 3)
-				CURRENTgroup=$(ls -l ${HOME}/.zshrc | cut -d ' ' -f 4)
-			fi
-			echo "检测到/home目录不为空，为避免权限问题，正在将${HOME}目录下的.ICEauthority、.Xauthority以及.vnc 的权限归属修改为${CURRENTuser}用户和${CURRENTgroup}用户组"
-			cd ${HOME}
-			chown -R ${CURRENTuser}:${CURRENTgroup} ".ICEauthority" ".ICEauthority" ".vnc" 2>/dev/null || sudo chown -R ${CURRENTuser}:${CURRENTgroup} ".ICEauthority" ".ICEauthority" ".vnc" 2>/dev/null
-		fi
-		export LANG="zh_CN.UTF-8"
-		mate-session
-	EndOfFile
-	if [ -e "/etc/tmp/.ChrootInstallationDetectionFile" ]; then
-		grep -q 'dbus-launch' ~/.vnc/xstartup || sed -i 's:mate-session:dbus-launch /usr/bin/mate-session:' ~/.vnc/xstartup
-		grep -q 'dbus-launch' /usr/local/bin/startxsdl || sed -i 's:mate-session:dbus-launch /usr/bin/mate-session:' /usr/local/bin/startxsdl
-	fi
-
-	echo "mate桌面可能存在gvfs和udisks2配置出错的问题，请直接无视"
-	echo "您可以输umount .gvfs ; apt purge -y ^gvfs ^udisks来卸载出错的软件包，但这将破坏mate桌面的依赖关系。若在卸载后不慎输入apt autopurge -y将有可能导致mate桌面崩溃。"
+	rm -f /tmp/.Tmoe-*Desktop-Detection-FILE 2>/dev/null
+	touch /tmp/.Tmoe-MATE-Desktop-Detection-FILE
 	STARTVNCANDSTOPVNC
 
 }
 #################################
 INSTALLLXDEDESKTOP() {
-	apt update
-	apt-mark hold udisks2
-	echo '即将为您安装思源黑体(中文字体)、lxde-core、lxterminal、tightvncserver。'
-	dpkg --configure -a
-	echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
-	echo "keyboard-configuration keyboard-configuration/layout select 'English (US)'" | debconf-set-selections
-	echo keyboard-configuration keyboard-configuration/layoutcode select 'us' | debconf-set-selections
-	apt install -y fonts-noto-cjk lxde-core lxterminal tightvncserver
-	apt clean
+	if [ "${LINUXDISTRO}" = "debian" ]; then
+		apt update
+		apt-mark hold udisks2
+		echo '即将为您安装思源黑体(中文字体)、lxde-core、lxterminal、tightvncserver。'
+		dpkg --configure -a
+		echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+		echo "keyboard-configuration keyboard-configuration/layout select 'English (US)'" | debconf-set-selections
+		echo keyboard-configuration keyboard-configuration/layoutcode select 'us' | debconf-set-selections
+		apt install -y fonts-noto-cjk lxde-core lxterminal tightvncserver
+		apt install -y dbus-x11
+		apt clean
+	elif [ "${LINUXDISTRO}" = "redhat" ]; then
+		dnf groupinstall -y lxde-desktop || yum groupinstall -y lxde-desktop
+		dnf install -y tigervnc-server || yum install -y tigervnc-server
+	elif [ "${LINUXDISTRO}" = "arch" ]; then
+		pacman -Syu --noconfirm lxde
+		pacman -S --noconfirm tigervnc
+	elif [ "${LINUXDISTRO}" = "void" ]; then
+		xbps-install -S -y lxde tigervnc
+	fi
 
 	mkdir -p ~/.vnc
 	cd ~/.vnc
 	cat >xstartup <<-'EndOfFile'
 		#!/bin/bash
+		unset SESSION_MANAGER
+		unset DBUS_SESSION_BUS_ADDRESS
 		xrdb ${HOME}/.Xresources
 		export PULSE_SERVER=127.0.0.1
-		startlxde &
+		dbus-launch startlxde &
 	EndOfFile
 	chmod +x ./xstartup
-
-	cd /usr/local/bin
-	cat >startxsdl <<-'EndOfFile'
-		#!/bin/bash
-		stopvnc >/dev/null 2>&1
-		export DISPLAY=127.0.0.1:0
-		export PULSE_SERVER=tcp:127.0.0.1:4713
-		echo '正在为您启动xsdl,请将display number改为0'
-		echo 'Starting xsdl, please change display number to 0'
-		echo '默认为前台运行，您可以按Ctrl+C终止，或者在termux原系统内输stopvnc'
-		echo 'The default is to run in the foreground, you can press Ctrl + C to terminate, or type "stopvnc" in the original termux system.'
-		if [ "$(uname -r | cut -d '-' -f 3)" = "Microsoft" ] || [ "$(uname -r | cut -d '-' -f 2)" = "microsoft" ]; then
-			echo '检测到您使用的是WSL,正在为您打开音频服务'
-			export PULSE_SERVER=tcp:127.0.0.1   
-			cd "/mnt/c/Users/Public/Downloads/pulseaudio"
-			/mnt/c/WINDOWS/system32/cmd.exe /c "start .\pulseaudio.bat"
-			echo "若无法自动打开音频服务，则请手动在资源管理器中打开C:\Users\Public\Downloads\pulseaudio\pulseaudio.bat"
-			cd "/mnt/c/Users/Public/Downloads/VcXsrv/"
-			#/mnt/c/WINDOWS/system32/cmd.exe /c "start .\config.xlaunch"
-			/mnt/c/WINDOWS/system32/taskkill.exe /f /im vcxsrv.exe 2>/dev/null
-			/mnt/c/WINDOWS/system32/cmd.exe /c "start .\vcxsrv.exe :0 -multiwindow -clipboard -wgl -ac"
-			echo "若无法自动打开X服务，则请手动在资源管理器中打开C:\Users\Public\Downloads\VcXsrv\vcxsrv.exe"
-			if grep -q '172..*1' "/etc/resolv.conf"; then
-		        echo "检测到您当前使用的可能是WSL2，如需手动启动，请在xlaunch.exe中勾选Disable access control"
-				WSL2IP=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}' | head -n 1)
-				export PULSE_SERVER=${WSL2IP}
-				export DISPLAY=${WSL2IP}:0
-				echo "已将您的显示和音频服务ip修改为${WSL2IP}"
-			fi
-			sleep 2
-		fi
-		#不要将上面uname -r的检测修改为WINDOWSDISTRO
-		CURRENTuser=$(ls -lt /home | grep ^d | head -n 1 | awk -F ' ' '$0=$NF')
-		if [ ! -z "${CURRENTuser}" ] && [ "${HOME}" != "/root" ]; then
-		if [ -e "${HOME}/.profile" ]; then
-			CURRENTuser=$(ls -l ${HOME}/.profile | cut -d ' ' -f 3)
-			CURRENTgroup=$(ls -l ${HOME}/.profile | cut -d ' ' -f 4)
-		elif [ -e "${HOME}/.bashrc" ]; then
-			CURRENTuser=$(ls -l ${HOME}/.bashrc | cut -d ' ' -f 3)
-			CURRENTgroup=$(ls -l ${HOME}/.bashrc | cut -d ' ' -f 4)
-		elif [ -e "${HOME}/.zshrc" ]; then
-			CURRENTuser=$(ls -l ${HOME}/.zshrc | cut -d ' ' -f 3)
-			CURRENTgroup=$(ls -l ${HOME}/.zshrc | cut -d ' ' -f 4)
-		fi
-		echo "检测到/home目录不为空，为避免权限问题，正在将${HOME}目录下的.ICEauthority、.Xauthority以及.vnc 的权限归属修改为${CURRENTuser}用户和${CURRENTgroup}用户组"
-			cd ${HOME}
-		chown -R ${CURRENTuser}:${CURRENTgroup} ".ICEauthority" ".ICEauthority" ".vnc" 2>/dev/null || sudo chown -R ${CURRENTuser}:${CURRENTgroup} ".ICEauthority" ".ICEauthority" ".vnc" 2>/dev/null
-		fi
-		export LANG="zh_CN.UTF-8"
-		startlxde
-	EndOfFile
+	rm -f /tmp/.Tmoe-*Desktop-Detection-FILE 2>/dev/null
+	touch /tmp/.Tmoe-LXDE-Desktop-Detection-FILE
 	STARTVNCANDSTOPVNC
-
 }
 
 #################################################
@@ -1631,6 +1942,98 @@ STARTVNCANDSTOPVNC() {
 		pkill Xtightvnc
 	EndOfFile
 	###############################
+	cat >startxsdl <<-'EndOfFile'
+		#!/bin/bash
+		stopvnc >/dev/null 2>&1
+		export DISPLAY=127.0.0.1:0
+		export PULSE_SERVER=tcp:127.0.0.1:4713
+		echo '正在为您启动xsdl,请将display number改为0'
+		echo 'Starting xsdl, please change display number to 0'
+		echo '默认为前台运行，您可以按Ctrl+C终止，或者在termux原系统内输stopvnc'
+		echo 'The default is to run in the foreground, you can press Ctrl + C to terminate, or type "stopvnc" in the original termux system.'
+		if [ "$(uname -r | cut -d '-' -f 3)" = "Microsoft" ] || [ "$(uname -r | cut -d '-' -f 2)" = "microsoft" ]; then
+			echo '检测到您使用的是WSL,正在为您打开音频服务'
+			export PULSE_SERVER=tcp:127.0.0.1
+			cd "/mnt/c/Users/Public/Downloads/pulseaudio"
+			/mnt/c/WINDOWS/system32/cmd.exe /c "start .\pulseaudio.bat"
+			echo "若无法自动打开音频服务，则请手动在资源管理器中打开C:\Users\Public\Downloads\pulseaudio\pulseaudio.bat"
+			cd "/mnt/c/Users/Public/Downloads/VcXsrv/"
+			#/mnt/c/WINDOWS/system32/cmd.exe /c "start .\config.xlaunch"
+			/mnt/c/WINDOWS/system32/taskkill.exe /f /im vcxsrv.exe 2>/dev/null
+			/mnt/c/WINDOWS/system32/cmd.exe /c "start .\vcxsrv.exe :0 -multiwindow -clipboard -wgl -ac"
+			echo "若无法自动打开X服务，则请手动在资源管理器中打开C:\Users\Public\Downloads\VcXsrv\vcxsrv.exe"
+			if grep -q '172..*1' "/etc/resolv.conf"; then
+				echo "检测到您当前使用的可能是WSL2，如需手动启动，请在xlaunch.exe中勾选Disable access control"
+				WSL2IP=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}' | head -n 1)
+				export PULSE_SERVER=${WSL2IP}
+				export DISPLAY=${WSL2IP}:0
+				echo "已将您的显示和音频服务ip修改为${WSL2IP}"
+			fi
+			sleep 2
+		fi
+		#不要将上面uname -r的检测修改为WINDOWSDISTRO
+		#sudo下无法用whoami检测用户
+		CURRENTuser=$(ls -lt /home | grep ^d | head -n 1 | awk -F ' ' '$0=$NF')
+		if [ ! -z "${CURRENTuser}" ] && [ "${HOME}" != "/root" ]; then
+			if [ -e "${HOME}/.profile" ]; then
+				CURRENTuser=$(ls -l ${HOME}/.profile | cut -d ' ' -f 3)
+				CURRENTgroup=$(ls -l ${HOME}/.profile | cut -d ' ' -f 4)
+			elif [ -e "${HOME}/.bashrc" ]; then
+				CURRENTuser=$(ls -l ${HOME}/.bashrc | cut -d ' ' -f 3)
+				CURRENTgroup=$(ls -l ${HOME}/.bashrc | cut -d ' ' -f 4)
+			elif [ -e "${HOME}/.zshrc" ]; then
+				CURRENTuser=$(ls -l ${HOME}/.zshrc | cut -d ' ' -f 3)
+				CURRENTgroup=$(ls -l ${HOME}/.zshrc | cut -d ' ' -f 4)
+			fi
+			echo "检测到/home目录不为空，为避免权限问题，正在将${HOME}目录下的.ICEauthority、.Xauthority以及.vnc 的权限归属修改为${CURRENTuser}用户和${CURRENTgroup}用户组"
+			cd ${HOME}
+			chown -R ${CURRENTuser}:${CURRENTgroup} ".ICEauthority" ".ICEauthority" ".vnc" 2>/dev/null || sudo chown -R ${CURRENTuser}:${CURRENTgroup} ".ICEauthority" ".ICEauthority" ".vnc" 2>/dev/null
+		fi
+
+		export LANG="zh_CN.UTF-8"
+		dbus-launch startxfce4 
+	EndOfFile
+
+	if [ -f "/tmp/.Tmoe-MATE-Desktop-Detection-FILE" ]; then
+		rm -f /tmp/.Tmoe-MATE-Desktop-Detection-FILE
+		sed -i '/dbus-launch/d' startxsdl
+		sed -i '$ a\dbus-launch mate-session' startxsdl
+	elif [ -f "/tmp/.Tmoe-LXDE-Desktop-Detection-FILE" ]; then
+		rm -f /tmp/.Tmoe-MATE-Desktop-Detection-FILE
+		sed -i '/dbus-launch/d' startxsdl
+		sed -i '$ a\dbus-launch startlxde' startxsdl
+	elif [ -f "/tmp/.Tmoe-LXQT-Desktop-Detection-FILE" ]; then
+		rm -f /tmp/.Tmoe-LXQT-Desktop-Detection-FILE
+		sed -i '/dbus-launch/d' startxsdl
+		sed -i '$ a\dbus-launch startlxde' startxsdl
+	elif [ -f "/tmp/.Tmoe-KDE-PLASMA5-DESKTOP" ]; then
+		rm -f /tmp/.Tmoe-KDE-PLASMA5-DESKTOP
+		sed -i '/dbus-launch/d' startxsdl
+		cat >>startxsdl <<-'EOF'
+			if command -v startkde >/dev/null; then
+				dbus-launch startkde &
+			else
+				dbus-launch startplasma-x11 &
+			fi
+		EOF
+	elif [ -f "/tmp/.Tmoe-GNOME3-Detection-FILE" ]; then
+		rm -f /tmp/.Tmoe-GNOME3-Desktop-Detection-FILE
+		sed -i '/dbus-launch/d' startxsdl
+		sed -i '$ a\dbus-launch gnome-session' startxsdl
+	elif [ -f "/tmp/.Tmoe-cinnamon-Desktop-Detection-FILE" ]; then
+		rm -f /tmp/.Tmoe-cinnamon-Desktop-Detection-FILE
+		sed -i '/dbus-launch/d' startxsdl
+		sed -i '$ a\dbus-launch cinnamon-session' startxsdl
+	elif [ -f "/tmp/.Tmoe-DEEPIN-Desktop-Detection-FILE" ]; then
+		rm -f /tmp/.Tmoe-DEEPIN-Desktop-Detection-FILE
+		sed -i '/dbus-launch/d' startxsdl
+		sed -i '$ a\dbus-launch startdde' startxsdl
+	fi
+
+	#下面那行需放在检测完成之后才执行
+	rm -f /tmp/.Tmoe-*Desktop-Detection-FILE 2>/dev/null
+
+	######################
 	chmod +x startvnc stopvnc startxsdl
 	dpkg --configure -a
 	#暂不卸载。若卸载则将破坏其依赖关系。

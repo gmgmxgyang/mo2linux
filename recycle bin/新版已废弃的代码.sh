@@ -922,3 +922,425 @@ if [ -e ${PREFIX}/bin/tsu ]; then
         tsudo hostname ${DEVICENAME}
     fi
 fi
+#############################
+if [ -e "/etc/tmp/.ChrootInstallationDetectionFile" ]; then
+    grep -q 'dbus-launch' ~/.vnc/xstartup || sed -i 's:startxfce4:dbus-launch /usr/bin/startxfce4:' ~/.vnc/xstartup
+    grep -q 'dbus-launch' /usr/local/bin/startxsdl || sed -i 's:startxfce4:dbus-launch /usr/bin/startxfce4:' /usr/local/bin/startxsdl
+fi
+
+cd /usr/local/bin
+cat >startxsdl <<-'EndOfFile'
+		#!/bin/bash
+		stopvnc >/dev/null 2>&1
+		export DISPLAY=127.0.0.1:0
+		export PULSE_SERVER=tcp:127.0.0.1:4713
+		echo '正在为您启动xsdl,请将display number改为0'
+		echo 'Starting xsdl, please change display number to 0'
+		echo '默认为前台运行，您可以按Ctrl+C终止，或者在termux原系统内输stopvnc'
+		echo 'The default is to run in the foreground, you can press Ctrl + C to terminate, or type "stopvnc" in the original termux system.'
+		if [ "$(uname -r | cut -d '-' -f 3)" = "Microsoft" ] || [ "$(uname -r | cut -d '-' -f 2)" = "microsoft" ]; then
+			echo '检测到您使用的是WSL,正在为您打开音频服务'
+			export PULSE_SERVER=tcp:127.0.0.1
+			cd "/mnt/c/Users/Public/Downloads/pulseaudio"
+			/mnt/c/WINDOWS/system32/taskkill.exe /f /im vcxsrv.exe 2>/dev/null
+			/mnt/c/WINDOWS/system32/cmd.exe /c "start .\pulseaudio.bat"
+			echo "若无法自动打开音频服务，则请手动在资源管理器中打开C:\Users\Public\Downloads\pulseaudio\pulseaudio.bat"
+			cd "/mnt/c/Users/Public/Downloads/VcXsrv/"
+			#/mnt/c/WINDOWS/system32/cmd.exe /c "start .\config.xlaunch"
+			/mnt/c/WINDOWS/system32/cmd.exe /c "start .\vcxsrv.exe :0 -multiwindow -clipboard -wgl -ac"
+			echo "若无法自动打开X服务，则请手动在资源管理器中打开C:\Users\Public\Downloads\VcXsrv\vcxsrv.exe"
+			if grep -q '172..*1' "/etc/resolv.conf"; then
+				echo "检测到您当前使用的可能是WSL2，如需手动启动，请在xlaunch.exe中勾选Disable access control"
+				WSL2IP=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}' | head -n 1)
+				export PULSE_SERVER=${WSL2IP}
+				export DISPLAY=${WSL2IP}:0
+				echo "已将您的显示和音频服务ip修改为${WSL2IP}"
+			fi
+			sleep 2
+		fi
+		#不要将上面uname -r的检测修改为WINDOWSDISTRO
+		CURRENTuser=$(ls -lt /home | grep ^d | head -n 1 | awk -F ' ' '$0=$NF')
+		if [ ! -z "${CURRENTuser}" ] && [ "${HOME}" != "/root" ]; then
+			if [ -e "${HOME}/.profile" ]; then
+				CURRENTuser=$(ls -l ${HOME}/.profile | cut -d ' ' -f 3)
+				CURRENTgroup=$(ls -l ${HOME}/.profile | cut -d ' ' -f 4)
+			elif [ -e "${HOME}/.bashrc" ]; then
+				CURRENTuser=$(ls -l ${HOME}/.bashrc | cut -d ' ' -f 3)
+				CURRENTgroup=$(ls -l ${HOME}/.bashrc | cut -d ' ' -f 4)
+			elif [ -e "${HOME}/.zshrc" ]; then
+				CURRENTuser=$(ls -l ${HOME}/.zshrc | cut -d ' ' -f 3)
+				CURRENTgroup=$(ls -l ${HOME}/.zshrc | cut -d ' ' -f 4)
+			fi
+			echo "检测到/home目录不为空，为避免权限问题，正在将${HOME}目录下的.ICEauthority、.Xauthority以及.vnc 的权限归属修改为${CURRENTuser}用户和${CURRENTgroup}用户组"
+			cd ${HOME}
+			chown -R ${CURRENTuser}:${CURRENTgroup} ".ICEauthority" ".ICEauthority" ".vnc" 2>/dev/null || sudo chown -R ${CURRENTuser}:${CURRENTgroup} ".ICEauthority" ".ICEauthority" ".vnc" 2>/dev/null
+		fi
+		export LANG="zh_CN.UTF-8"
+		mate-session
+	EndOfFile
+if [ -e "/etc/tmp/.ChrootInstallationDetectionFile" ]; then
+    grep -q 'dbus-launch' ~/.vnc/xstartup || sed -i 's:mate-session:dbus-launch /usr/bin/mate-session:' ~/.vnc/xstartup
+    grep -q 'dbus-launch' /usr/local/bin/startxsdl || sed -i 's:mate-session:dbus-launch /usr/bin/mate-session:' /usr/local/bin/startxsdl
+fi
+
+echo "mate桌面可能存在gvfs和udisks2配置出错的问题，请直接无视"
+echo "您可以输umount .gvfs ; apt purge -y ^gvfs ^udisks来卸载出错的软件包，但这将破坏mate桌面的依赖关系。若在卸载后不慎输入apt autopurge -y将有可能导致mate桌面崩溃。"
+
+###################
+cd /usr/local/bin
+cat >startxsdl <<-'EndOfFile'
+		#!/bin/bash
+		stopvnc >/dev/null 2>&1
+		export DISPLAY=127.0.0.1:0
+		export PULSE_SERVER=tcp:127.0.0.1:4713
+		echo '正在为您启动xsdl,请将display number改为0'
+		echo 'Starting xsdl, please change display number to 0'
+		echo '默认为前台运行，您可以按Ctrl+C终止，或者在termux原系统内输stopvnc'
+		echo 'The default is to run in the foreground, you can press Ctrl + C to terminate, or type "stopvnc" in the original termux system.'
+		if [ "$(uname -r | cut -d '-' -f 3)" = "Microsoft" ] || [ "$(uname -r | cut -d '-' -f 2)" = "microsoft" ]; then
+			echo '检测到您使用的是WSL,正在为您打开音频服务'
+			export PULSE_SERVER=tcp:127.0.0.1   
+			cd "/mnt/c/Users/Public/Downloads/pulseaudio"
+			/mnt/c/WINDOWS/system32/cmd.exe /c "start .\pulseaudio.bat"
+			echo "若无法自动打开音频服务，则请手动在资源管理器中打开C:\Users\Public\Downloads\pulseaudio\pulseaudio.bat"
+			cd "/mnt/c/Users/Public/Downloads/VcXsrv/"
+			#/mnt/c/WINDOWS/system32/cmd.exe /c "start .\config.xlaunch"
+			/mnt/c/WINDOWS/system32/taskkill.exe /f /im vcxsrv.exe 2>/dev/null
+			/mnt/c/WINDOWS/system32/cmd.exe /c "start .\vcxsrv.exe :0 -multiwindow -clipboard -wgl -ac"
+			echo "若无法自动打开X服务，则请手动在资源管理器中打开C:\Users\Public\Downloads\VcXsrv\vcxsrv.exe"
+			if grep -q '172..*1' "/etc/resolv.conf"; then
+		        echo "检测到您当前使用的可能是WSL2，如需手动启动，请在xlaunch.exe中勾选Disable access control"
+				WSL2IP=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}' | head -n 1)
+				export PULSE_SERVER=${WSL2IP}
+				export DISPLAY=${WSL2IP}:0
+				echo "已将您的显示和音频服务ip修改为${WSL2IP}"
+			fi
+			sleep 2
+		fi
+		#不要将上面uname -r的检测修改为WINDOWSDISTRO
+		CURRENTuser=$(ls -lt /home | grep ^d | head -n 1 | awk -F ' ' '$0=$NF')
+		if [ ! -z "${CURRENTuser}" ] && [ "${HOME}" != "/root" ]; then
+		if [ -e "${HOME}/.profile" ]; then
+			CURRENTuser=$(ls -l ${HOME}/.profile | cut -d ' ' -f 3)
+			CURRENTgroup=$(ls -l ${HOME}/.profile | cut -d ' ' -f 4)
+		elif [ -e "${HOME}/.bashrc" ]; then
+			CURRENTuser=$(ls -l ${HOME}/.bashrc | cut -d ' ' -f 3)
+			CURRENTgroup=$(ls -l ${HOME}/.bashrc | cut -d ' ' -f 4)
+		elif [ -e "${HOME}/.zshrc" ]; then
+			CURRENTuser=$(ls -l ${HOME}/.zshrc | cut -d ' ' -f 3)
+			CURRENTgroup=$(ls -l ${HOME}/.zshrc | cut -d ' ' -f 4)
+		fi
+		echo "检测到/home目录不为空，为避免权限问题，正在将${HOME}目录下的.ICEauthority、.Xauthority以及.vnc 的权限归属修改为${CURRENTuser}用户和${CURRENTgroup}用户组"
+			cd ${HOME}
+		chown -R ${CURRENTuser}:${CURRENTgroup} ".ICEauthority" ".ICEauthority" ".vnc" 2>/dev/null || sudo chown -R ${CURRENTuser}:${CURRENTgroup} ".ICEauthority" ".ICEauthority" ".vnc" 2>/dev/null
+		fi
+		export LANG="zh_CN.UTF-8"
+		startlxde
+	EndOfFile
+#######################################
+cat >kde.sh <<-'Matryoshka'
+#!/bin/bash
+function install()
+{
+apt-mark hold udisks2
+apt update
+#echo "KDE测试失败，请自行解决软件依赖和其它相关问题。"
+#后期注：测试成功，但存在bug。
+echo '即将为您安装思源黑体(中文字体)、aptitude、tightvncserver、kde-plasma-desktop等软件包'
+apt install -y aptitude
+mkdir -p /run/lock
+touch /var/lib/aptitude/pkgstates
+aptitude install -y kde-plasma-desktop || apt install -y kde-plasma-desktop
+apt install -y fonts-noto-cjk tightvncserver 
+#task-kde-desktop
+
+
+apt clean
+
+mkdir -p ~/.vnc
+cd ~/.vnc
+cat >xstartup<<-'EndOfFile'
+#!/bin/bash
+xrdb ${HOME}/.Xresources
+export PULSE_SERVER=127.0.0.1
+#plasma_session &
+dbus-launch startkde || dbus-launch startplasma-x11 &
+EndOfFile
+chmod +x ./xstartup
+
+
+cd /usr/local/bin
+cat >startvnc<<-'EndOfFile'
+#!/bin/bash
+stopvnc >/dev/null 2>&1
+export USER=root
+export HOME=/root
+vncserver -geometry 720x1440 -depth 24 -name remote-desktop :1
+echo "正在启动vnc服务,本机默认vnc地址localhost:5901"
+echo The LAN VNC address 局域网地址 $(ip -4 -br -c a |tail -n 1 |cut -d '/' -f 1 |cut -d 'P' -f 2):5901
+EndOfFile
+#############
+cat >startxsdl<<-'EndOfFile'
+#!/bin/bash
+stopvnc >/dev/null 2>&1
+export DISPLAY=127.0.0.1:0
+export PULSE_SERVER=tcp:127.0.0.1:4713
+echo '正在为您启动xsdl,请将display number改为0'
+echo 'Starting xsdl, please change display number to 0'
+echo '默认为前台运行，您可以按Ctrl+C终止，或者在termux原系统内输stopvnc'
+echo 'The default is to run in the foreground, you can press Ctrl + C to terminate, or type "stopvnc" in the original termux system.'
+#plasma_session &
+dbus-launch startkde  || dbus-launch startplasma-x11 
+EndOfFile
+
+
+##############
+cat >stopvnc<<-'EndOfFile'
+#!/bin/bash
+export USER=root
+export HOME=/root
+vncserver -kill :1
+rm -rf /tmp/.X1-lock
+rm -rf /tmp/.X11-unix/X1
+pkill Xtightvnc
+EndOfFile
+chmod +x startvnc stopvnc startxsdl
+echo 'The vnc service is about to start for you. The password you entered is hidden.'
+echo '即将为您启动vnc服务，您需要输两遍（不可见的）密码。'
+echo "When prompted for a view-only password, it is recommended that you enter 'n'"
+echo '如果提示view-only,那么建议您输n,选择权在您自己的手上。'
+echo '请输入6至8位密码'
+startvnc
+echo '您之后可以输startvnc来启动vnc服务，输stopvnc停止'
+echo '您还可以在termux原系统里输startxsdl来启动xsdl，按Ctrl+C或在termux原系统里输stopvnc停止进程'
+echo '若xsdl音频端口不是4713，而是4712，则请输xsdl-4712进行修复。'
+}
+function remove()
+{
+apt purge -y tightvncserver kde-plasma-desktop
+aptitude purge -y  kde-plasma-desktop
+apt purge -y  plasma-desktop
+apt purge -y ^plasma
+apt autopurge
+}
+
+function main()
+{
+                case "$1" in
+                install|in|i)
+                        install
+                            ;;
+                remove|rm|uninstall|un|purge)
+                         remove
+                        ;;
+                   *)
+			        install
+			         ;;
+
+
+        esac
+}
+main "$@"
+Matryoshka
+chmod +x kde.sh
+#桌面环境安装脚本
+cat >lxqt.sh <<-'Matryoshka'
+#!/bin/bash
+function install()
+{
+apt-mark hold udisks2
+apt update
+echo '即将为您安装思源黑体(中文字体)、tightvncserver、lxqt-core、lxqt-config和qterminal  '
+apt install -y fonts-noto-cjk tightvncserver lxqt-core lxqt-config qterminal
+apt clean
+
+mkdir -p ~/.vnc
+cd ~/.vnc
+cat >xstartup<<-'EndOfFile'
+#!/bin/bash
+xrdb ${HOME}/.Xresources
+export PULSE_SERVER=127.0.0.1
+startlxqt &
+EndOfFile
+chmod +x ./xstartup
+
+cd /usr/local/bin
+cat >startvnc<<-'EndOfFile'
+#!/bin/bash
+stopvnc >/dev/null 2>&1
+export USER=root
+export HOME=/root
+vncserver -geometry 720x1440 -depth 24 -name remote-desktop :1
+echo "正在启动vnc服务,本机默认vnc地址localhost:5901"
+echo The LAN VNC address 局域网地址 $(ip -4 -br -c a |tail -n 1 |cut -d '/' -f 1 |cut -d 'P' -f 2):5901
+EndOfFile
+#############
+cat >startxsdl<<-'EndOfFile'
+#!/bin/bash
+stopvnc >/dev/null 2>&1
+export DISPLAY=127.0.0.1:0
+export PULSE_SERVER=tcp:127.0.0.1:4713
+echo '正在为您启动xsdl,请将display number改为0'
+echo 'Starting xsdl, please change display number to 0'
+echo '默认为前台运行，您可以按Ctrl+C终止，或者在termux原系统内输stopvnc'
+echo 'The default is to run in the foreground, you can press Ctrl + C to terminate, or type "stopvnc" in the original termux system.'
+startlxqt
+EndOfFile
+##############
+
+cat >stopvnc<<-'EndOfFile'
+#!/bin/bash
+export USER=root
+export HOME=/root
+vncserver -kill :1
+rm -rf /tmp/.X1-lock
+rm -rf /tmp/.X11-unix/X1
+pkill Xtightvnc
+EndOfFile
+chmod +x startvnc stopvnc startxsdl
+echo 'The vnc service is about to start for you. The password you entered is hidden.'
+echo '即将为您启动vnc服务，您需要输两遍（不可见的）密码。'
+echo "When prompted for a view-only password, it is recommended that you enter 'n'"
+echo '如果提示view-only,那么建议您输n,选择权在您自己的手上。'
+
+echo '请输入6至8位密码'
+startvnc
+echo '您之后可以输startvnc来启动vnc服务，输stopvnc停止'
+echo '您还可以在termux原系统里输startxsdl来启动xsdl，按Ctrl+C或在termux原系统里输stopvnc停止进程'
+echo '若xsdl音频端口不是4713，而是4712，则请输xsdl-4712进行修复。'
+}
+
+function remove()
+{
+apt install -y lxqt-core lxqt-config qterminal tightvncserver
+}
+function main()
+{
+                case "$1" in
+                install|in|i)
+                        install
+                            ;;
+                remove|rm|uninstall|un|purge)
+                         remove
+                        ;;
+                   *)
+			        install
+			         ;;
+
+
+        esac
+}
+main "$@"
+Matryoshka
+chmod +x lxqt.sh
+
+cat >gnome.sh <<-'Matryoshka'
+#!/bin/bash
+function install()
+{
+apt-mark hold udisks2
+apt-mark hold gvfs
+apt update
+echo "Gnome测试失败，请自行解决软件依赖和其它相关问题。"
+echo '即将为您安装思源黑体(中文字体)、aptitude、tightvncserver和task-gnome-desktop'
+apt install -y fonts-noto-cjk aptitude tightvncserver
+mkdir -p /run/lock
+touch /var/lib/aptitude/pkgstates
+#aptitude install -y task-gnome-desktop || apt install -y task-gnome-desktop
+apt-get install --no-install-recommends xorg gnome-session gnome-menus gnome-tweak-tool gnome-shell || aptitude install -y gnome-core
+apt install -y xinit dbus-x11
+apt clean
+
+mkdir -p ~/.vnc
+cd ~/.vnc
+cat >xstartup<<-'EndOfFile'
+#!/bin/bash
+xrdb ${HOME}/.Xresources
+export PULSE_SERVER=127.0.0.1
+#xsetroot -solid grey
+#x-terminal-emulator -geometry  80×24+10+10 -ls -title "$VNCDESKTOP Desktop" &
+#x-window-manager &
+# Fix to make GNOME work
+#export XKL_XMODMAP_DISABLE=1
+#/etc/X11/Xsession
+dbus-launch gnome-session &
+EndOfFile
+chmod +x ./xstartup
+
+
+cd /usr/local/bin
+
+cat >startvnc<<-'EndOfFile'
+#!/bin/bash
+stopvnc >/dev/null 2>&1
+export USER=root
+export HOME=/root
+vncserver -geometry 720x1440 -depth 24 -name remote-desktop :1
+echo "正在启动vnc服务,本机默认vnc地址localhost:5901"
+echo The LAN VNC address 局域网地址 $(ip -4 -br -c a |tail -n 1 |cut -d '/' -f 1 |cut -d 'P' -f 2):5901
+EndOfFile
+#############
+cat >startxsdl<<-'EndOfFile'
+#!/bin/bash
+stopvnc >/dev/null 2>&1
+export DISPLAY=127.0.0.1:0
+export PULSE_SERVER=tcp:127.0.0.1:4713
+echo '正在为您启动xsdl,请将display number改为0'
+echo 'Starting xsdl, please change display number to 0'
+echo '默认为前台运行，您可以按Ctrl+C终止，或者在termux原系统内输stopvnc'
+echo 'The default is to run in the foreground, you can press Ctrl + C to terminate, or type "stopvnc" in the original termux system.'
+dbus-launch gnome-session
+EndOfFile
+
+
+##############
+
+cat >stopvnc<<-'EndOfFile'
+#!/bin/bash
+export USER=root
+export HOME=/root
+vncserver -kill :1
+rm -rf /tmp/.X1-lock
+rm -rf /tmp/.X11-unix/X1
+pkill Xtightvnc
+EndOfFile
+chmod +x startvnc stopvnc startxsdl
+echo 'The vnc service is about to start for you. The password you entered is hidden.'
+echo '即将为您启动vnc服务，您需要输两遍（不可见的）密码。'
+echo "When prompted for a view-only password, it is recommended that you enter 'n'"
+echo '如果提示view-only,那么建议您输n,选择权在您自己的手上。'
+echo '请输入6至8位密码'
+startvnc
+echo '您之后可以输startvnc来启动vnc服务，输stopvnc停止'
+echo '您还可以在termux原系统里输startxsdl来启动xsdl，按Ctrl+C或在termux原系统里输stopvnc停止进程'
+echo '若xsdl音频端口不是4713，而是4712，则请输xsdl-4712进行修复。'
+}
+function remove()
+{
+apt purge -y tightvncserver
+apt autopurge
+aptitude purge -y task-gnome-desktop
+apt purge -y task-gnome-desktop
+apt purge -y ^gnome
+apt autopurge
+}
+
+function main()
+{
+                case "$1" in
+                install|in|i)
+                        install
+                            ;;
+                remove|rm|uninstall|un|purge)
+                         remove
+                        ;;
+                   *)
+			        install
+			         ;;
+
+
+        esac
+}
+main "$@"
+Matryoshka
+chmod +x gnome.sh

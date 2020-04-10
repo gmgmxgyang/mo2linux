@@ -580,6 +580,9 @@ chmod +x remove-debian.sh
 
 cd ~/${DebianFolder}/root
 ########################
+curl -sLo "${DebianCHROOT}/usr/local/bin/neofetch" 'https://gitee.com/mirrors/neofetch/raw/master/neofetch'
+chmod +x "${DebianCHROOT}/usr/local/bin/neofetch"
+
 if [ -f "${HOME}/.RASPBIANARMHFDetectionFILE" ]; then
   mv -f "${HOME}/.RASPBIANARMHFDetectionFILE" "${DebianCHROOT}/tmp/"
   #树莓派换源
@@ -595,10 +598,6 @@ elif [ -f "${HOME}/.REDHATDetectionFILE" ]; then
 nameserver 114.114.114.114
 nameserver 240c::6666
 EndOfFile
-elif [ -f "${HOME}/.SUSEDetectionFILE" ]; then
-  rm -f "${HOME}/.SUSEDetectionFILE"
-  curl -sLo "${DebianCHROOT}/usr/local/bin/neofetch" 'https://gitee.com/mirrors/neofetch/raw/master/neofetch'
-  chmod +x "${DebianCHROOT}/usr/local/bin/neofetch"
 elif [ -f "${HOME}/.ALPINELINUXDetectionFILE" ]; then
   #sed -i '/DEFAULTZSHLOGIN/d' $(which debian)
   #sed -i '/DEFAULTZSHLOGIN/d' $(which debian)
@@ -1304,8 +1303,7 @@ EndofgentooConf
     echo '检测到您当前的系统为Funtoo GNU/Linux,将不会为您继续配置任何优化步骤！'
     rm -f vnc* zsh* .profile
     mv -f .profile.bak .profile 2>/dev/null
-    #wget -qO- 'https://gitee.com/mirrors/neofetch/raw/master/neofetch' | bash -
-    wget -qcO /usr/local/bin/neofetch 'https://gitee.com/mirrors/neofetch/raw/master/neofetch'
+    #wget -qcO /usr/local/bin/neofetch 'https://gitee.com/mirrors/neofetch/raw/master/neofetch'
     chmod +x /usr/local/bin/neofetch
     neofetch
     bash
@@ -1323,7 +1321,8 @@ EOF
     sed -i 's|https://alpha.de.repo.voidlinux.org|https://mirrors.tuna.tsinghua.edu.cn/voidlinux|g' /etc/xbps.d/*-repository-*.conf
     xbps-install -S
     xbps-install -y wget
-    wget -qO- 'https://gitee.com/mirrors/neofetch/raw/master/neofetch' | bash -
+    #wget -qO- 'https://gitee.com/mirrors/neofetch/raw/master/neofetch' | bash -
+    neofetch
     rm -f vnc* zsh* .profile
     mv -f .profile.bak .profile 2>/dev/null
     wget -qO zsh.sh 'https://gitee.com/mo2/zsh/raw/master/zsh.sh'
@@ -1684,8 +1683,7 @@ fi
 
 echo "Automatically configure zsh after 2 seconds,you can press Ctrl + C to cancel."
 echo "2s后将自动开始配置zsh，您可以按Ctrl+C取消，这将不会继续配置其它步骤，同时也不会启动Tmoe-debian工具。"
-#wget -qO- 'https://gitee.com/mirrors/neofetch/raw/master/neofetch' | bash -
-wget -qcO /usr/local/bin/neofetch 'https://gitee.com/mirrors/neofetch/raw/master/neofetch' || curl -sLo /usr/local/bin/neofetch 'https://gitee.com/mirrors/neofetch/raw/master/neofetch'
+#wget -qcO /usr/local/bin/neofetch 'https://gitee.com/mirrors/neofetch/raw/master/neofetch' || curl -sLo /usr/local/bin/neofetch 'https://gitee.com/mirrors/neofetch/raw/master/neofetch'
 chmod +x /usr/local/bin/neofetch
 neofetch
 

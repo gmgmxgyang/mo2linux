@@ -2147,7 +2147,6 @@ INSTALLotherSystems() {
 	fi
 	####################
 	if [ "${BETASYSTEM}" == '1' ]; then
-		touch ~/.SUSEDetectionFILE
 		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
 			sed 's/debian系统/opensuse系统/g' |
 			sed 's/debian system/opensuse system/g' |

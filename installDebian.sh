@@ -591,6 +591,7 @@ curl -sLo "debian-i" 'https://gitee.com/mo2/linux/raw/master/debian-gui-install.
 chmod +x neofetch debian-i
 
 cd ${DebianCHROOT}/root
+chmod u+w "${DebianCHROOT}/root"
 curl -sLo zsh-i.sh 'https://gitee.com/mo2/zsh/raw/master/zsh.sh'
 chmod +x zsh-i.sh
 #zsh-i和zsh是不同的

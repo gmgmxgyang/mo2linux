@@ -1520,10 +1520,24 @@ OTHERSOFTWARE() {
 			read
 		fi
 
-		if [ "$(uname -m)" = "aarch64" ]; then
-			wget -O LINUXQQ.deb 'http://down.qq.com/qqweb/LinuxQQ/%E5%AE%89%E8%A3%85%E5%8C%85/linuxqq_2.0.0-b2-1076_arm64.deb'
-		elif [ "$(uname -m)" = "x86_64" ]; then
-			wget -O LINUXQQ.deb 'http://down.qq.com/qqweb/LinuxQQ/%E5%AE%89%E8%A3%85%E5%8C%85/linuxqq_2.0.0-b2-1076_amd64.deb'
+		if [ "${archtype}" = "arm64" ]; then
+			if [ "${LINUXDISTRO}" = "debian" ]; then
+				wget -O LINUXQQ.deb "http://down.qq.com/qqweb/LinuxQQ/%E5%AE%89%E8%A3%85%E5%8C%85/linuxqq_2.0.0-b2-1076_arm64.deb"
+				apt install -y ./LINUXQQ.deb
+			else
+				wget -O LINUXQQ.sh http://down.qq.com/qqweb/LinuxQQ_1/linuxqq_2.0.0-b2-1082_arm64.sh
+				chmod +x LINUXQQ.sh
+				./LINUXQQ.sh
+			fi
+		elif [ "${archtype}" = "amd64" ]; then
+			if [ "${LINUXDISTRO}" = "debian" ]; then
+				wget -O LINUXQQ.deb "http://down.qq.com/qqweb/LinuxQQ/%E5%AE%89%E8%A3%85%E5%8C%85/linuxqq_2.0.0-b2-1076_amd64.deb"
+				apt install -y ./LINUXQQ.deb
+			else
+				wget -O LINUXQQ.sh "http://down.qq.com/qqweb/LinuxQQ_1/linuxqq_2.0.0-b2-1082_x86_64.sh"
+				chmod +x LINUXQQ.sh
+				./LINUXQQ.sh
+			fi
 		else
 			echo "暂不支持您的架构"
 			echo 'Press Enter to return.'
@@ -1531,7 +1545,6 @@ OTHERSOFTWARE() {
 			read
 			OTHERSOFTWARE
 		fi
-		apt install -y ./LINUXQQ.deb
 		echo "若安装失败，则请前往官网手动下载安装。"
 		echo "url: https://im.qq.com/linuxqq/download.html"
 		rm -fv ./LINUXQQ.deb

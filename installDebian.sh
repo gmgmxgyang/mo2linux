@@ -1168,7 +1168,7 @@ EndOfFile
 cat >vnc-autostartup-zsh <<-'EndOfFile'
 cat /etc/issue
 
-grep -q 'cat /etc/issue' ~/.zlogin 2>&1 || sed -i '1 a\cat /etc/issue' ~/.zlogin
+grep -q '^cat /etc/' ~/.zlogin 2>&1 || sed -i '1 a\cat /etc/issue' ~/.zlogin
 if [ -f "/root/.vnc/startvnc" ]; then
 	/usr/local/bin/startvnc
 	echo "已为您启动vnc服务 Vnc service has been started, enjoy it!"

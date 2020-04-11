@@ -279,7 +279,7 @@ CHECKdependencies() {
 DEBIANMENU() {
 	cd ${cur}
 	OPTION=$(
-		whiptail --title "Tmoe-linux Tool输debian-i启动(20200411-05)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.当前主菜单有十几个选项，请使用方向键或触屏上下滑动，按回车键确认。${TMOENODEBIAN} 更新日志:0331优化WSL2,0410适配其它系统,0411增加测试版桌面" 20 50 6 \
+		whiptail --title "Tmoe-linux Tool输debian-i启动(20200411-05)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.当前主菜单有十几个选项，请使用方向键或触屏上下滑动，按回车键确认。${TMOENODEBIAN} 更新日志:0410适配其它系统和桌面,0411支持修复VNC闪退" 20 50 6 \
 			"1" "Install GUI 安装图形界面" \
 			"2" "Install browser 安装浏览器" \
 			"3" "Download theme 下载主题" \
@@ -2320,10 +2320,12 @@ FrequentlyAskedQuestions() {
 		echo "注1：该操作在linux虚拟机及win10子系统上没有任何问题"
 		echo "注2：2020-0412更新的版本已加入检测功能，理论上不会再出现此问题。"
 		if [ ! -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
-			echo "检测到您当前可能不是处于proot环境下，是否继续修复"
+			echo "检测到您当前可能处于非proot环境下，是否继续修复？"
+			echo "非proot容器执行此操作后，可能会导致X启动失败"
 			echo "如需还原，请覆盖安装gui,将为您重新配置vnc启动脚本！"
 		fi
 		echo "${YELLOW}按回车键禁用dbus-launch启动命令，按Ctrl+C取消${RESET}"
+		echo "Press Enter to continue,press Ctrl+C to cancel."
 		read
 		sed -i 's:dbus-launch::' "/usr/local/bin/startxsdl"
 		sed -i 's:dbus-launch::' ~/.vnc/xstartup

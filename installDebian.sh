@@ -1068,6 +1068,10 @@ ENDOFPOWERLEVEL
     fi
     sed -i '1 r vnc-autostartup-zsh' ~/.zlogin
 
+    if [ "${LINUXDISTRO}" = "redhat" ]; then
+       sed -i "s@/etc/issue@/etc/os-release | grep PRETTYNAME | cut -d '\"' -f 2@g" .zlogin
+    fi
+
     rm -f vnc-autostartup-zsh
 
     if [ "${LINUXDISTRO}" = "debian" ]; then
@@ -1164,7 +1168,7 @@ EndOfFile
 cat >vnc-autostartup-zsh <<-'EndOfFile'
 cat /etc/issue
 
-grep -q 'cat /etc/issue' ~/.zshrc 2>&1 || sed -i '1 a\cat /etc/issue' ~/.zshrc
+grep -q 'cat /etc/issue' ~/.zlogin 2>&1 || sed -i '1 a\cat /etc/issue' ~/.zlogin
 if [ -f "/root/.vnc/startvnc" ]; then
 	/usr/local/bin/startvnc
 	echo "已为您启动vnc服务 Vnc service has been started, enjoy it!"

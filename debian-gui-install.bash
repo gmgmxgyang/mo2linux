@@ -1060,6 +1060,7 @@ INSTALL-cinnamon-DESKTOP() {
 		echo keyboard-configuration keyboard-configuration/layoutcode select 'us' | debconf-set-selections
 		#task-cinnamon-desktop
 		aptitude install -y cinnamon
+		aptitude install -y cinnamon-desktop-environment
 		apt install -y fonts-noto-cjk
 		apt install -y dbus-x11
 		apt install -y tightvncserver
@@ -1084,7 +1085,7 @@ INSTALL-cinnamon-DESKTOP() {
 		unset DBUS_SESSION_BUS_ADDRESS
 		xrdb ${HOME}/.Xresources
 		export PULSE_SERVER=127.0.0.1
-		dbus-launch cinnamon-session &
+		dbus-launch cinnamon &
 	EndOfFile
 	chmod +x ./xstartup
 	rm -f /tmp/.Tmoe-*Desktop-Detection-FILE 2>/dev/null 2>/dev/null
@@ -2184,7 +2185,7 @@ STARTVNCANDSTOPVNC() {
 	elif [ -f "/tmp/.Tmoe-cinnamon-Desktop-Detection-FILE" ]; then
 		rm -f /tmp/.Tmoe-cinnamon-Desktop-Detection-FILE
 		sed -i '/dbus-launch/d' startxsdl
-		sed -i '$ a\dbus-launch cinnamon-session' startxsdl
+		sed -i '$ a\dbus-launch cinnamon' startxsdl
 	elif [ -f "/tmp/.Tmoe-DEEPIN-Desktop-Detection-FILE" ]; then
 		rm -f /tmp/.Tmoe-DEEPIN-Desktop-Detection-FILE
 		sed -i '/dbus-launch/d' startxsdl
@@ -2379,10 +2380,10 @@ FIXVNCdbusLaunch() {
 			echo "检测您当前的VNC配置为GNOME3，正在将dbus-launch加入至启动脚本中..."
 			sed -i 's/.*gnome-session.*/dbus-launch gnome-session \&/' ~/.vnc/xstartup
 			sed -i 's/.*gnome-session.*/dbus-launch gnome-session \&/' "/usr/local/bin/startxsdl"
-		elif grep 'cinnamon-session' ~/.vnc/xstartup; then
+		elif grep 'cinnamon' ~/.vnc/xstartup; then
 			echo "检测您当前的VNC配置为cinnamon，正在将dbus-launch加入至启动脚本中..."
-			sed -i 's/.*cinnamon-session.*/dbus-launch cinnamon-session \&/' ~/.vnc/xstartup
-			sed -i 's/.*cinnamon-session.*/dbus-launch cinnamon-session \&/' "/usr/local/bin/startxsdl"
+			sed -i 's/.*cinnamon.*/dbus-launch cinnamon \&/' ~/.vnc/xstartup
+			sed -i 's/.*cinnamon.*/dbus-launch cinnamon \&/' "/usr/local/bin/startxsdl"
 		elif grep 'startdde' ~/.vnc/xstartup; then
 			echo "检测您当前的VNC配置为deepin desktop，正在将dbus-launch加入至启动脚本中..."
 			sed -i 's/.*startdde.*/dbus-launch startdde \&/' ~/.vnc/xstartup

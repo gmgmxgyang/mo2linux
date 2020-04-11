@@ -2041,7 +2041,7 @@ INSTALLLXDEDESKTOP() {
 
 #################################################
 STARTVNCANDSTOPVNC() {
-	if [ "${LINUXDISTRO}" = "debian" ]; then
+	if [ "${LINUXDISTRO}" = "debian" ] || [ "${LINUXDISTRO}" = "redhat" ]; then
 		if [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
 			sed -i 's:dbus-launch::' ~/.vnc/xstartup
 		fi

@@ -2171,13 +2171,7 @@ STARTVNCANDSTOPVNC() {
 	elif [ -f "/tmp/.Tmoe-KDE-PLASMA5-DESKTOP" ]; then
 		rm -f /tmp/.Tmoe-KDE-PLASMA5-DESKTOP
 		sed -i '/dbus-launch/d' startxsdl
-		cat >>startxsdl <<-'EOF'
-			if command -v startkde >/dev/null; then
-				dbus-launch startkde &
-			else
-				dbus-launch startplasma-x11 &
-			fi
-		EOF
+		sed -i '$ a\dbus-launch startplasma-x11' startxsdl
 	elif [ -f "/tmp/.Tmoe-GNOME3-Detection-FILE" ]; then
 		rm -f /tmp/.Tmoe-GNOME3-Desktop-Detection-FILE
 		sed -i '/dbus-launch/d' startxsdl

@@ -653,26 +653,49 @@ installBROWSER() {
 			echo "1s后将自动开始安装"
 			sleep 1
 			echo
-			if [ "${DEBIANDISTRO}" = "ubuntu" ]; then
-				add-apt-repository -y ppa:mozillateam/ppa
+			if [ "${LINUXDISTRO}" = "debian" ]; then
+				if [ "${DEBIANDISTRO}" = "ubuntu" ]; then
+					add-apt-repository -y ppa:mozillateam/ppa
+				fi
+				apt update
+				#分项安装，防止ubuntu安装失败
+				apt install -y firefox-esr
+				apt install -y firefox-esr-l10n-zh-cn
+				apt install -y firefox-esr-locale-zh-hans 2>/dev/null
+			elif [ "${LINUXDISTRO}" = "arch" ]; then
+				pacman -Sy --noconfirm firefox-esr-gtk2
+				if [ ! -e "/usr/bin/firefox-esr" ]; then
+					echo "${YELLOW}对不起，我...我真的已经尽力了ヽ(*。>Д<)o゜！您的软件源仓库里容不下我，我只好叫姐姐来代替了。${RESET}"
+					pacman -Syu --noconfirm firefox firefox-i18n-zh-cn
+				fi
+
+			elif [ "${LINUXDISTRO}" = "redhat" ]; then
+				dnf install -y firefox-esr || yum install -y firefox-esr
+				if [ ! -e "/usr/bin/firefox-esr" ]; then
+					echo "${YELLOW}对不起，我...我真的已经尽力了ヽ(*。>Д<)o゜！您的软件源仓库里容不下我，我只好叫姐姐来代替了。${RESET}"
+					dnf install -y firefox || yum install -y firefox
+				fi
 			fi
-			apt update
-			#分项安装，防止ubuntu安装失败
-			apt install -y firefox-esr
-			apt install -y firefox-esr-l10n-zh-cn
-			apt install -y firefox-esr-locale-zh-hans 2>/dev/null
 		else
 			echo 'Thank you for choosing me, I will definitely do better than my sister! ╰ (* ° ▽ ° *) ╯'
 			echo " ${YELLOW}“谢谢您选择了我，我一定会比妹妹向您提供更好的上网服务的！”╰(*°▽°*)╯火狐娘坚定地说道。${RESET} "
 			echo "1s后将自动开始安装"
 			sleep 1
-			apt update
-			apt install -y firefox || apt install -y firefox-esr firefox-esr-l10n-zh-cn
-			if [ -e "/usr/bin/firefox-esr" ]; then
-				echo "${YELLOW}对不起，我...我真的已经尽力了ヽ(*。>Д<)o゜！您的软件源仓库里容不下我，我只好叫妹妹ESR来代替了。${RESET}"
+			if [ "${LINUXDISTRO}" = "debian" ]; then
+				apt update
+				apt install -y firefox || apt install -y firefox-esr firefox-esr-l10n-zh-cn
+				if [ -e "/usr/bin/firefox-esr" ]; then
+					echo "${YELLOW}对不起，我...我真的已经尽力了ヽ(*。>Д<)o゜！您的软件源仓库里容不下我，我只好叫妹妹ESR来代替了。${RESET}"
+				fi
+				apt install -y firefox-l10n-zh-cn 2>/dev/null
+				apt install -y firefox-locale-zh-hans 2>/dev/null
+			elif [ "${LINUXDISTRO}" = "arch" ]; then
+				pacman -Syu --noconfirm firefox firefox-i18n-zh-cn
+			elif
+				[ "${LINUXDISTRO}" = "redhat" ]
+			then
+				dnf install -y firefox || yum install -y firefox
 			fi
-			apt install -y firefox-l10n-zh-cn 2>/dev/null
-			apt install -y firefox-locale-zh-hans 2>/dev/null
 		fi
 		echo "若无法正常加载HTML5视频，则您可能需要安装火狐扩展${YELLOW}User-Agent Switcher and Manager${RESET}，并将浏览器UA修改为windows版chrome"
 	else

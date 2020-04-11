@@ -279,7 +279,7 @@ CHECKdependencies() {
 DEBIANMENU() {
 	cd ${cur}
 	OPTION=$(
-		whiptail --title "Tmoe-linux Tool输debian-i启动(20200411-05)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.当前主菜单有十几个选项，请使用方向键或触屏上下滑动，按回车键确认。${TMOENODEBIAN} 更新日志:0410适配其它系统和桌面,0411支持修复VNC闪退" 20 50 6 \
+		whiptail --title "Tmoe-linux Tool输debian-i启动(20200411-22)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.当前主菜单有十几个选项，请使用方向键或触屏上下滑动，按回车键确认。${TMOENODEBIAN} 更新日志:0410适配其它系统和桌面,0411支持修复VNC闪退" 20 50 6 \
 			"1" "Install GUI 安装图形界面" \
 			"2" "Install browser 安装浏览器" \
 			"3" "Download theme 下载主题" \
@@ -450,6 +450,7 @@ MODIFYOTHERCONF() {
 		"2" "VNC密码 password" \
 		"3" "Edit xstartup manually 手动编辑xstartup" \
 		"4" "Edit startvnc manually 手动编辑vnc启动脚本" \
+		"5" "修复VNC闪退" \
 		"0" "Back to the main menu 返回主菜单" \
 		3>&1 1>&2 2>&3)
 	###########
@@ -489,6 +490,10 @@ MODIFYOTHERCONF() {
 	###########
 	if [ "${MODIFYOTHERVNCCONF}" == '4' ]; then
 		NANOSTARTVNCMANUALLY
+	fi
+	#########################
+	if [ "${MODIFYOTHERVNCCONF}" == '5' ]; then
+		FIXVNCdbusLaunch
 	fi
 	##########
 }
@@ -904,7 +909,7 @@ INSTALL-lXQT-DESKTOP() {
 		apt install -y fonts-noto-cjk lxqt-core lxqt-config qterminal
 		apt install -y dbus-x11
 		apt install -y tightvncserver
-		apt autopurge -y ^libfprint || apt purge -y ^libfprint
+		apt purge -y ^libfprint
 		apt clean
 
 	elif [ "${LINUXDISTRO}" = "redhat" ]; then
@@ -949,7 +954,7 @@ INSTALL-KDE-PLASMA5-DESKTOP() {
 		aptitude install -y kde-plasma-desktop || apt install -y kde-plasma-desktop
 		apt install -y fonts-noto-cjk dbus-x11
 		apt install -y tightvncserver
-		apt autopurge -y ^libfprint || apt purge -y ^libfprint
+		apt purge -y ^libfprint
 		apt clean
 
 	elif [ "${LINUXDISTRO}" = "redhat" ]; then
@@ -1008,7 +1013,7 @@ INSTALL-GNOME3-DESKTOP() {
 		apt install -y fonts-noto-cjk
 		apt install -y dbus-x11 xinit
 		apt install -y tightvncserver
-		apt autopurge -y ^libfprint || apt purge -y ^libfprint
+		apt purge -y ^libfprint
 		apt clean
 
 	elif [ "${LINUXDISTRO}" = "redhat" ]; then
@@ -1057,7 +1062,7 @@ INSTALL-cinnamon-DESKTOP() {
 		apt install -y fonts-noto-cjk
 		apt install -y dbus-x11
 		apt install -y tightvncserver
-		apt autopurge -y ^libfprint || apt purge -y ^libfprint
+		apt purge -y ^libfprint
 		apt clean
 
 	elif [ "${LINUXDISTRO}" = "redhat" ]; then
@@ -1131,7 +1136,7 @@ INSTALL-DEEPIN-DESKTOP() {
 		apt install -y fonts-noto-cjk
 		apt install -y dbus-x11
 		apt install -y tightvncserver
-		apt autopurge -y ^libfprint || apt purge -y ^libfprint
+		apt purge -y ^libfprint
 		apt clean
 
 	elif [ "${LINUXDISTRO}" = "redhat" ]; then
@@ -1783,7 +1788,7 @@ INSTALLXFCE4DESKTOP() {
 		apt install -y fonts-noto-cjk xfce4 xfce4-terminal xfce4-goodies
 		apt install -y dbus-x11
 		apt install -y tightvncserver
-		apt autopurge -y ^libfprint || apt purge -y ^libfprint
+		apt purge -y ^libfprint
 		#apt install -y xfwm4-theme-breeze xcursor-themes
 		if [ "${DEBIANDISTRO}" = "kali" ]; then
 			apt install -y kali-linux
@@ -2151,7 +2156,7 @@ STARTVNCANDSTOPVNC() {
 		sed -i '/dbus-launch/d' startxsdl
 		sed -i '$ a\dbus-launch mate-session' startxsdl
 	elif [ -f "/tmp/.Tmoe-LXDE-Desktop-Detection-FILE" ]; then
-		rm -f /tmp/.Tmoe-MATE-Desktop-Detection-FILE
+		rm -f /tmp/.Tmoe-LXDE-Desktop-Detection-FILE
 		sed -i '/dbus-launch/d' startxsdl
 		sed -i '$ a\dbus-launch startlxde' startxsdl
 	elif [ -f "/tmp/.Tmoe-LXQT-Desktop-Detection-FILE" ]; then
@@ -2318,26 +2323,80 @@ FrequentlyAskedQuestions() {
 	fi
 	#######################
 	if [ "${TMOEFAQ}" == '4' ]; then
-		echo "由于在2020-0410至0411更新中给所有的桌面都加入了dbus-launch，故在部分安卓设备的Proot容器上出现了兼容性问题。"
-		echo "注1：该操作在linux虚拟机及win10子系统上没有任何问题"
-		echo "注2：2020-0412更新的版本已加入检测功能，理论上不会再出现此问题。"
-		if [ ! -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
-			echo "检测到您当前可能处于非proot环境下，是否继续修复？"
-			echo "非proot容器执行此操作后，可能会导致X启动失败"
-			echo "如需还原，请覆盖安装gui,将为您重新配置vnc启动脚本！"
-		fi
-		echo "${YELLOW}按回车键禁用dbus-launch启动命令，按Ctrl+C取消${RESET}"
-		echo "Press Enter to continue,press Ctrl+C to cancel."
-		read
-		sed -i 's:dbus-launch::' "/usr/local/bin/startxsdl"
-		sed -i 's:dbus-launch::' ~/.vnc/xstartup
-
-		#Proot-Container
-		DEBIANMENU
+		FIXVNCdbusLaunch
 	fi
-	#############################
 }
 #################
+FIXVNCdbusLaunch() {
+	echo "由于在2020-0410至0411更新中给所有的桌面都加入了dbus-launch，故在部分安卓设备的Proot容器上出现了兼容性问题。"
+	echo "注1：该操作在linux虚拟机及win10子系统上没有任何问题"
+	echo "注2：2020-0412更新的版本已加入检测功能，理论上不会再出现此问题。"
+	if [ ! -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
+		echo "检测到您当前可能处于非proot环境下，是否继续修复？"
+		echo "如需重新配置vnc启动脚本，请覆盖安装gui"
+	fi
+	echo "${YELLOW}按回车键继续，按Ctrl+C取消${RESET}"
+	echo "Press Enter to continue,press Ctrl+C to cancel."
+	read
+
+	if grep 'dbus-launch' ~/.vnc/xstartup; then
+		DBUSstatus="$(echo 检测到dbus-launch当前在VNC脚本中处于启用状态)"
+	else
+		DBUSstatus="$(echo 检测到dbus-launch当前在vnc脚本中处于禁用状态)"
+	fi
+
+	if (whiptail --title "您想要对这个小可爱中做什么 " --yes-button "Disable" --no-button "Enable" --yesno "您是想要禁用dbus-launch，还是启用呢？${DBUSstatus} ✨\n请做出您的选择！ " 15 50); then
+		sed -i 's:dbus-launch::' "/usr/local/bin/startxsdl"
+		sed -i 's:dbus-launch::' ~/.vnc/xstartup
+	else
+		if grep 'startxfce4' ~/.vnc/xstartup; then
+			echo "检测您当前的VNC配置为xfce4，正在将dbus-launch加入至启动脚本中..."
+			sed -i 's/.*startxfce.*/dbus-launch startxfce4 \&/' ~/.vnc/xstartup
+			sed -i 's/.*startxfce.*/dbus-launch startxfce4 \&/' "/usr/local/bin/startxsdl"
+		elif grep 'startlxde' ~/.vnc/xstartup; then
+			echo "检测您当前的VNC配置为lxde，正在将dbus-launch加入至启动脚本中..."
+			sed -i 's/.*startlxde.*/dbus-launch startlxde \&/' ~/.vnc/xstartup
+			sed -i 's/.*startlxde.*/dbus-launch startlxde \&/' "/usr/local/bin/startxsdl"
+		elif grep 'startlxqt' ~/.vnc/xstartup; then
+			echo "检测您当前的VNC配置为lxqt，正在将dbus-launch加入至启动脚本中..."
+			sed -i 's/.*startlxqt.*/dbus-launch startlxqt \&/' ~/.vnc/xstartup
+			sed -i 's/.*startlxqt.*/dbus-launch startlxqt \&/' "/usr/local/bin/startxsdl"
+		elif grep 'mate-session' ~/.vnc/xstartup; then
+			echo "检测您当前的VNC配置为mate，正在将dbus-launch加入至启动脚本中..."
+			sed -i 's/.*mate-session.*/dbus-launch mate-session \&/' ~/.vnc/xstartup
+			sed -i 's/.*mate-session.*/dbus-launch mate-session \&/' "/usr/local/bin/startxsdl"
+		elif grep 'startkde' ~/.vnc/xstartup; then
+			echo "检测您当前的VNC配置为KDE Plasma5，正在将dbus-launch加入至启动脚本中..."
+			sed -i 's/.*startplasma-x11.*/dbus-launch startplasma-x11 \&/' ~/.vnc/xstartup
+			sed -i 's/.*startplasma-x11.*/dbus-launch startplasma-x11 \&/' "/usr/local/bin/startxsdl"
+			sed -i 's/.*startkde.*/dbus-launch startkde \&/' ~/.vnc/xstartup
+			sed -i 's/.*startkde.*/dbus-launch startkde \&/' "/usr/local/bin/startxsdl"
+		elif grep 'gnome-session' ~/.vnc/xstartup; then
+			echo "检测您当前的VNC配置为GNOME3，正在将dbus-launch加入至启动脚本中..."
+			sed -i 's/.*gnome-session.*/dbus-launch gnome-session \&/' ~/.vnc/xstartup
+			sed -i 's/.*gnome-session.*/dbus-launch gnome-session \&/' "/usr/local/bin/startxsdl"
+		elif grep 'cinnamon-session' ~/.vnc/xstartup; then
+			echo "检测您当前的VNC配置为cinnamon，正在将dbus-launch加入至启动脚本中..."
+			sed -i 's/.*cinnamon-session.*/dbus-launch cinnamon-session \&/' ~/.vnc/xstartup
+			sed -i 's/.*cinnamon-session.*/dbus-launch cinnamon-session \&/' "/usr/local/bin/startxsdl"
+		elif grep 'startdde' ~/.vnc/xstartup; then
+			echo "检测您当前的VNC配置为deepin desktop，正在将dbus-launch加入至启动脚本中..."
+			sed -i 's/.*startdde.*/dbus-launch startdde \&/' ~/.vnc/xstartup
+			sed -i 's/.*startdde.*/dbus-launch startdde \&/' "/usr/local/bin/startxsdl"
+		else
+			echo "未检测到vnc相关配置，请覆盖安装gui！！！"
+		fi
+	fi
+
+	echo "${YELLOW}修改完成，按回车键返回${RESET}"
+	echo "若无法修复，则请前往gitee.com/mo2/linux提交issue，并附上报错截图和详细说明。"
+	echo "还建议您附上cat /usr/local/bin/startxsdl 和 cat ~/.vnc/xstartup 的启动脚本截图"
+	echo "Press Enter to return"
+	read
+	DEBIANMENU
+}
+
+####################
 BetaFeatures() {
 	TMOEBETA=$(whiptail --title "Beta features" --menu \
 		"测试版功能可能无法正常运行\nBeta features may not work properly." 15 60 5 \

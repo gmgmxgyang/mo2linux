@@ -132,7 +132,7 @@ CHECKdependencies() {
 	fi
 	#####################
 	if [ ! -e /usr/bin/sudo ]; then
-		if [ "${LINUXDISTRO}" = "debian" ]; then
+		if [ "${LINUXDISTRO}" != "gentoo" ]; then
 			dependencies="${dependencies} sudo"
 		fi
 	fi
@@ -915,7 +915,7 @@ INSTALL-lXQT-DESKTOP() {
 
 	elif [ "${LINUXDISTRO}" = "arch" ]; then
 		pacman -Syu --noconfirm lxqt xorg
-		pacman -S --noconfirm tigervnc 
+		pacman -S --noconfirm tigervnc
 		pacman -S --noconfirm noto-fonts-cjk
 	elif [ "${LINUXDISTRO}" = "void" ]; then
 		xbps-install -S -y lxqt tigervnc
@@ -967,7 +967,7 @@ INSTALL-KDE-PLASMA5-DESKTOP() {
 		#pacman -S fcitx fcitx-rime fcitx-im kcm-fcitx fcitx-sogoupinyin
 		pacman -S --noconfirm kdebase
 		pacman -S pamac-aur
-		pacman -S --noconfirm tigervnc 
+		pacman -S --noconfirm tigervnc
 		pacman -S --noconfirm noto-fonts-cjk
 	elif [ "${LINUXDISTRO}" = "void" ]; then
 		xbps-install -S -y kde tigervnc
@@ -1021,7 +1021,7 @@ INSTALL-GNOME3-DESKTOP() {
 
 	elif [ "${LINUXDISTRO}" = "arch" ]; then
 		pacman -Syu --noconfirm gnome gnome-extra
-		pacman -S --noconfirm tigervnc 
+		pacman -S --noconfirm tigervnc
 		pacman -S --noconfirm noto-fonts-cjk
 	elif [ "${LINUXDISTRO}" = "void" ]; then
 		xbps-install -S -y gnome tigervnc
@@ -1068,7 +1068,7 @@ INSTALL-cinnamon-DESKTOP() {
 
 	elif [ "${LINUXDISTRO}" = "arch" ]; then
 		pacman -Syu --noconfirm sddm cinnamon xorg
-		pacman -S --noconfirm tigervnc 
+		pacman -S --noconfirm tigervnc
 		pacman -S --noconfirm noto-fonts-cjk
 	fi
 
@@ -1143,7 +1143,7 @@ INSTALL-DEEPIN-DESKTOP() {
 	elif [ "${LINUXDISTRO}" = "arch" ]; then
 		pacman -Syu --noconfirm deepin deepin-extra lightdm lightdm-deepin-greeter xorg
 		pacman -S --noconfirm file-roller evince gedit thunderbird gpicview
-		pacman -S --noconfirm tigervnc 
+		pacman -S --noconfirm tigervnc
 		pacman -S --noconfirm noto-fonts-cjk
 		rm -v ~/.pam_environment 2>/dev/null
 	fi
@@ -1816,7 +1816,7 @@ INSTALLXFCE4DESKTOP() {
 		rm -rf /etc/xdg/autostart/xfce-polkit.desktop
 	elif [ "${LINUXDISTRO}" = "arch" ]; then
 		pacman -Syu --noconfirm xfce4 xfce4-goodies
-		pacman -S --noconfirm tigervnc 
+		pacman -S --noconfirm tigervnc
 		pacman -S --noconfirm noto-fonts-cjk
 	elif [ "${LINUXDISTRO}" = "void" ]; then
 		xbps-install -S -y xfce4 tigervnc
@@ -1969,7 +1969,7 @@ INSTALLMATEDESKTOP() {
 		dnf install -y tigervnc-server google-noto-cjk-fonts || yum install -y tigervnc-server google-noto-cjk-fonts
 	elif [ "${LINUXDISTRO}" = "arch" ]; then
 		pacman -Syu --noconfirm mate mate-extra
-		pacman -S --noconfirm tigervnc 
+		pacman -S --noconfirm tigervnc
 		pacman -S --noconfirm noto-fonts-cjk
 	elif [ "${LINUXDISTRO}" = "void" ]; then
 		xbps-install -S -y mate tigervnc
@@ -2008,7 +2008,7 @@ INSTALLLXDEDESKTOP() {
 		dnf install -y tigervnc-server google-noto-cjk-fonts || yum install -y tigervnc-server google-noto-cjk-fonts
 	elif [ "${LINUXDISTRO}" = "arch" ]; then
 		pacman -Syu --noconfirm lxde
-		pacman -S --noconfirm tigervnc 
+		pacman -S --noconfirm tigervnc
 		pacman -S --noconfirm noto-fonts-cjk
 	elif [ "${LINUXDISTRO}" = "void" ]; then
 		xbps-install -S -y lxde tigervnc

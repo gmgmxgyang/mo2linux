@@ -1522,10 +1522,6 @@ metadata_expire=6h
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
 skip_if_unavailable=False
 EndOfYumRepo
-
-        dnf clean all
-        dnf makecache
-        dnf upgrade -y
     fi
 fi
 ############################

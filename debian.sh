@@ -2088,7 +2088,7 @@ CHOOSEWHICHGNULINUX() {
 		"1" "Debian:最早的发行版之一" \
 		"2" "Ubuntu 20.04:我的存在是因為大家的存在" \
 		"3" "Kali Rolling:设计用于数字取证和渗透测试" \
-		"4" "Other其它系统(绝赞测试中):mint,centos" \
+		"4" "Other其它系统(公测版新功能):mint,centos" \
 		"5" "fedora 31(红帽社区版,新技术试验场)" \
 		"6" "arch(系统设计以KISS为总体指导原则)" \
 		"0" "Back to the main menu 返回主菜单" \

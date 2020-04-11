@@ -808,10 +808,10 @@ INSTALLGUI() {
 		"1" "xfce：兼容性高" \
 		"2" "lxde：轻量化桌面" \
 		"3" "mate：基于GNOME 2" \
-		"4" "Other其它桌面(绝赞测试中):lxqt,kde" \
+		"4" "Other其它桌面(内测版新功能):lxqt,kde" \
 		"0" "我一个都不要 =￣ω￣=" \
 		3>&1 1>&2 2>&3)
-
+	#绝赞测试中
 	##########################
 	if [ "$INSTALLDESKTOP" == '1' ]; then
 		#bash /etc/tmp/xfce.sh
@@ -841,7 +841,7 @@ INSTALLGUI() {
 }
 #######################
 OTHERDESKTOP() {
-	BETADESKTOP=$(whiptail --title "Beta features" --menu \
+	BETADESKTOP=$(whiptail --title "Alpha features" --menu \
 		"WARNING！本功能仍处于测试阶段,可能无法正常运行。部分桌面依赖systemd,无法在chroot环境中运行\nBeta features may not work properly." 15 60 6 \
 		"1" "lxqt" \
 		"2" "kde plasma 5" \

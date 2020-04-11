@@ -1473,7 +1473,10 @@ fi
 if [ "$(cat /etc/os-release | grep 'ID=' | head -n 1 | cut -d '=' -f 2)" = "fedora" ]; then
     tar -Ppzcvf ~/yum.repos.d-backup.tar.gz /etc/yum.repos.d
     mv -f ~/yum.repos.d-backup.tar.gz /etc/yum.repos.d
-    cat >/etc/yum.repos.d/fedora.repo <<-'EndOfYumRepo'
+    FEDORAversion="$(cat /etc/os-release | grep 'VERSION_ID' | cut -d '=' -f 2)"
+    if ((${FEDORAversion} >= 30)); then
+
+        cat >/etc/yum.repos.d/fedora.repo <<-'EndOfYumRepo'
 [fedora]
 name=Fedora $releasever - $basearch
 failovermethod=priority
@@ -1484,7 +1487,7 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
 skip_if_unavailable=False
 EndOfYumRepo
 
-    cat >/etc/yum.repos.d/fedora-updates.repoo <<-'EndOfYumRepo'
+        cat >/etc/yum.repos.d/fedora-updates.repoo <<-'EndOfYumRepo'
 [updates]
 name=Fedora $releasever - $basearch - Updates
 failovermethod=priority
@@ -1496,7 +1499,7 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
 skip_if_unavailable=False
 EndOfYumRepo
 
-    cat >/etc/yum.repos.d/fedora-modular.repo <<-'EndOfYumRepo'
+        cat >/etc/yum.repos.d/fedora-modular.repo <<-'EndOfYumRepo'
 [fedora-modular]
 name=Fedora Modular $releasever - $basearch
 failovermethod=priority
@@ -1508,7 +1511,7 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
 skip_if_unavailable=False
 EndOfYumRepo
 
-    cat >/etc/yum.repos.d/fedora-updates-modular.repo <<-'EndOfYumRepo'
+        cat >/etc/yum.repos.d/fedora-updates-modular.repo <<-'EndOfYumRepo'
 [updates-modular]
 name=Fedora Modular $releasever - $basearch - Updates
 failovermethod=priority
@@ -1520,8 +1523,10 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
 skip_if_unavailable=False
 EndOfYumRepo
 
-dnf makecache
-dnf upgrade -y
+        dnf clean all
+        dnf makecache
+        dnf upgrade -y
+    fi
 fi
 ############################
 if ! grep -q 'debian' '/etc/os-release'; then

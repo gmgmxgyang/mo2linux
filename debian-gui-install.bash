@@ -691,9 +691,7 @@ installBROWSER() {
 				apt install -y firefox-locale-zh-hans 2>/dev/null
 			elif [ "${LINUXDISTRO}" = "arch" ]; then
 				pacman -Syu --noconfirm firefox firefox-i18n-zh-cn
-			elif
-				[ "${LINUXDISTRO}" = "redhat" ]
-			then
+			elif [ "${LINUXDISTRO}" = "redhat" ]; then
 				dnf install -y firefox || yum install -y firefox
 			fi
 		fi
@@ -704,37 +702,46 @@ installBROWSER() {
 		echo '要是下次见不到妾身，就关掉那个小沙盒吧！"chromium --no-sandbox"'
 		echo "1s后将自动开始安装"
 		sleep 1
-		#新版Ubuntu是从snap商店下载chromium的，为解决这一问题，将临时换源成ubuntu 18.04LTS.
-		if [ "${DEBIANDISTRO}" = "ubuntu" ]; then
-			if ! grep -q '^deb.*bionic-update' "/etc/apt/sources.list"; then
-				if [ $(uname -m) = "aarch64" ] || [ $(uname -m) = "armv7l" ] || [ $(uname -m) = "armv6l" ]; then
-					sed -i '$ a\deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ bionic-updates main restricted universe multiverse' "/etc/apt/sources.list"
+		if [ "${LINUXDISTRO}" = "debian" ]; then
+			#新版Ubuntu是从snap商店下载chromium的，为解决这一问题，将临时换源成ubuntu 18.04LTS.
+			if [ "${DEBIANDISTRO}" = "ubuntu" ]; then
+				if ! grep -q '^deb.*bionic-update' "/etc/apt/sources.list"; then
+					if [ $(uname -m) = "aarch64" ] || [ $(uname -m) = "armv7l" ] || [ $(uname -m) = "armv6l" ]; then
+						sed -i '$ a\deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ bionic-updates main restricted universe multiverse' "/etc/apt/sources.list"
+					else
+						sed -i '$ a\deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-updates main restricted universe multiverse' "/etc/apt/sources.list"
+					fi
+					apt update
+					apt install -y chromium-browser/bionic-updates
+					apt install -y chromium-browser-l10n/bionic-updates
+					sed -i '$ d' "/etc/apt/sources.list"
+					apt update
 				else
-					sed -i '$ a\deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-updates main restricted universe multiverse' "/etc/apt/sources.list"
+					apt install -y chromium-browser chromium-browser-l10n
 				fi
-				apt update
-				apt install -y chromium-browser/bionic-updates
-				apt install -y chromium-browser-l10n/bionic-updates
-				sed -i '$ d' "/etc/apt/sources.list"
-				apt update
+				sed -i 's/chromium-browser %U/chromium-browser --no-sandbox %U/g' /usr/share/applications/chromium-browser.desktop
+				grep 'chromium-browser' /etc/profile || sed -i '$ a\alias chromium="chromium-browser --no-sandbox"' /etc/profile
 			else
-				apt install -y chromium-browser chromium-browser-l10n
+				apt update
+				apt install -y chromium chromium-l10n
+				sed -i 's/chromium %U/chromium --no-sandbox %U/g' /usr/share/applications/chromium.desktop
+				grep 'chromium' /etc/profile || sed -i '$ a\alias chromium="chromium --no-sandbox"' /etc/profile
 			fi
-			sed -i 's/chromium-browser %U/chromium-browser --no-sandbox %U/g' /usr/share/applications/chromium-browser.desktop
-			grep 'chromium-browser' /etc/profile || sed -i '$ a\alias chromium="chromium-browser --no-sandbox"' /etc/profile
-		else
-			apt update
-			apt install -y chromium chromium-l10n
+		#echo 'alias chromium="chromium --no-sandbox"' >>/etc/profile
+		elif [ "${LINUXDISTRO}" = "arch" ]; then
+			pacman -Syu --noconfirm chromium
 			sed -i 's/chromium %U/chromium --no-sandbox %U/g' /usr/share/applications/chromium.desktop
 			grep 'chromium' /etc/profile || sed -i '$ a\alias chromium="chromium --no-sandbox"' /etc/profile
-		#echo 'alias chromium="chromium --no-sandbox"' >>/etc/profile
+		elif [ "${LINUXDISTRO}" = "redhat" ]; then
+			dnf install -y chromium || yum install -y chromium
+			sed -i 's/chromium %U/chromium --no-sandbox %U/g' /usr/share/applications/chromium.desktop
+			grep 'chromium' /etc/profile || sed -i '$ a\alias chromium="chromium --no-sandbox"' /etc/profile
 		fi
 	fi
 	echo 'Press enter to return.'
 	echo "${YELLOW}按回车键返回。${RESET}"
 	read
 	DEBIANMENU
-
 }
 ######################################################
 INSTALLGUI() {
@@ -895,11 +902,11 @@ INSTALL-lXQT-DESKTOP() {
 
 	elif [ "${LINUXDISTRO}" = "redhat" ]; then
 		dnf groupinstall -y lxqt || yum groupinstall -y lxqt
-		dnf install -y tigervnc-server || yum install -y tigervnc-server
+		dnf install -y tigervnc-server google-noto-cjk-fonts || yum install -y tigervnc-server google-noto-cjk-fonts
 
 	elif [ "${LINUXDISTRO}" = "arch" ]; then
 		pacman -Syu --noconfirm lxqt xorg
-		pacman -S --noconfirm tigervnc
+		pacman -S --noconfirm tigervnc noto-fonts-cjk
 	elif [ "${LINUXDISTRO}" = "void" ]; then
 		xbps-install -S -y lxqt tigervnc
 
@@ -941,7 +948,7 @@ INSTALL-KDE-PLASMA5-DESKTOP() {
 		#yum groupinstall kde-desktop
 		dnf groupinstall -y "KDE" || yum groupinstall -y "KDE"
 		dnf install -y sddm || yum install -y sddm
-		dnf install -y tigervnc-server || yum install -y tigervnc-server
+		dnf install -y tigervnc-server google-noto-cjk-fonts || yum install -y tigervnc-server google-noto-cjk-fonts
 
 	elif [ "${LINUXDISTRO}" = "arch" ]; then
 		pacman -Syu --noconfirm plasma-desktop xorg
@@ -950,7 +957,7 @@ INSTALL-KDE-PLASMA5-DESKTOP() {
 		#pacman -S fcitx fcitx-rime fcitx-im kcm-fcitx fcitx-sogoupinyin
 		pacman -S --noconfirm kdebase
 		pacman -S pamac-aur
-		pacman -S --noconfirm tigervnc
+		pacman -S --noconfirm tigervnc noto-fonts-cjk
 	elif [ "${LINUXDISTRO}" = "void" ]; then
 		xbps-install -S -y kde tigervnc
 
@@ -999,11 +1006,11 @@ INSTALL-GNOME3-DESKTOP() {
 		#yum groupremove "GNOME Desktop Environment"
 		#yum groupinstall "GNOME Desktop Environment"
 		dnf groupinstall -y "GNOME" || yum groupinstall -y "GNOME"
-		dnf install -y tigervnc-server || yum install -y tigervnc-server
+		dnf install -y tigervnc-server google-noto-cjk-fonts || yum install -y tigervnc-server google-noto-cjk-fonts
 
 	elif [ "${LINUXDISTRO}" = "arch" ]; then
 		pacman -Syu --noconfirm gnome gnome-extra
-		pacman -S --noconfirm tigervnc
+		pacman -S --noconfirm tigervnc noto-fonts-cjk
 	elif [ "${LINUXDISTRO}" = "void" ]; then
 		xbps-install -S -y gnome tigervnc
 
@@ -1045,12 +1052,12 @@ INSTALL-cinnamon-DESKTOP() {
 
 	elif [ "${LINUXDISTRO}" = "redhat" ]; then
 		dnf groupinstall -y "Cinnamon Desktop" || yum groupinstall -y "Cinnamon Desktop"
-		dnf install -y tigervnc-server || yum install -y tigervnc-server
+		dnf install -y tigervnc-server google-noto-cjk-fonts || yum install -y tigervnc-server google-noto-cjk-fonts
 
 	elif [ "${LINUXDISTRO}" = "arch" ]; then
 		pacman -Syu --noconfirm sddm cinnamon xorg
 		pacman -S deepin deepin-screenshot
-		pacman -S --noconfirm tigervnc
+		pacman -S --noconfirm tigervnc noto-fonts-cjk
 	fi
 
 	mkdir -p ~/.vnc
@@ -1119,12 +1126,12 @@ INSTALL-DEEPIN-DESKTOP() {
 
 	elif [ "${LINUXDISTRO}" = "redhat" ]; then
 		dnf install -y deepin-desktop || yum install -y deepin-desktop
-		dnf install -y tigervnc-server || yum install -y tigervnc-server
+		dnf install -y tigervnc-server google-noto-cjk-fonts || yum install -y tigervnc-server google-noto-cjk-fonts
 
 	elif [ "${LINUXDISTRO}" = "arch" ]; then
 		pacman -Syu --noconfirm deepin deepin-extra lightdm lightdm-deepin-greeter xorg
 		pacman -S --noconfirm file-roller evince gedit thunderbird gpicview
-		pacman -S --noconfirm tigervnc
+		pacman -S --noconfirm tigervnc noto-fonts-cjk
 		rm -v ~/.pam_environment 2>/dev/null
 	fi
 
@@ -1743,11 +1750,11 @@ INSTALLXFCE4DESKTOP() {
 		apt clean
 	elif [ "${LINUXDISTRO}" = "redhat" ]; then
 		dnf groupinstall -y xfce || yum groupinstall -y xfce
-		dnf install -y tigervnc-server || yum install -y tigervnc-server
+		dnf install -y tigervnc-server google-noto-cjk-fonts || yum install -y tigervnc-server google-noto-cjk-fonts
 		rm -rf /etc/xdg/autostart/xfce-polkit.desktop
 	elif [ "${LINUXDISTRO}" = "arch" ]; then
 		pacman -Syu --noconfirm xfce4 xfce4-goodies
-		pacman -S --noconfirm tigervnc
+		pacman -S --noconfirm tigervnc noto-fonts-cjk
 	elif [ "${LINUXDISTRO}" = "void" ]; then
 		xbps-install -S -y xfce4 tigervnc
 
@@ -1873,10 +1880,10 @@ INSTALLMATEDESKTOP() {
 		apt clean
 	elif [ "${LINUXDISTRO}" = "redhat" ]; then
 		dnf groupinstall -y mate-desktop || yum groupinstall -y mate-desktop
-		dnf install -y tigervnc-server || yum install -y tigervnc-server
+		dnf install -y tigervnc-server google-noto-cjk-fonts || yum install -y tigervnc-server google-noto-cjk-fonts
 	elif [ "${LINUXDISTRO}" = "arch" ]; then
 		pacman -Syu --noconfirm mate mate-extra
-		pacman -S --noconfirm tigervnc
+		pacman -S --noconfirm tigervnc noto-fonts-cjk
 	elif [ "${LINUXDISTRO}" = "void" ]; then
 		xbps-install -S -y mate tigervnc
 	fi
@@ -1911,10 +1918,10 @@ INSTALLLXDEDESKTOP() {
 		apt clean
 	elif [ "${LINUXDISTRO}" = "redhat" ]; then
 		dnf groupinstall -y lxde-desktop || yum groupinstall -y lxde-desktop
-		dnf install -y tigervnc-server || yum install -y tigervnc-server
+		dnf install -y tigervnc-server google-noto-cjk-fonts || yum install -y tigervnc-server google-noto-cjk-fonts
 	elif [ "${LINUXDISTRO}" = "arch" ]; then
 		pacman -Syu --noconfirm lxde
-		pacman -S --noconfirm tigervnc
+		pacman -S --noconfirm tigervnc noto-fonts-cjk
 	elif [ "${LINUXDISTRO}" = "void" ]; then
 		xbps-install -S -y lxde tigervnc
 	fi

@@ -470,3 +470,12 @@ nano /usr/bin/startvnc
 
 - 1.支持非 root 用户配置 vnc 服务
 - 2.修复大量 bug
+
+##### 2020-04-10 更新日志
+
+- 1.加入测试版容器 arch,fedora,centos.raspbian,mint 等等
+
+##### 2020-04-11 更新日志
+
+- 1.加入测试版桌面 lxqt,kde,gnome 等。
+- 2.除 deb 系外，还支持给其它发行版安装 gui。

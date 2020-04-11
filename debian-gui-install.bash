@@ -825,6 +825,19 @@ OTHERDESKTOP() {
 	fi
 	##############################
 	if [ "${BETADESKTOP}" == '3' ]; then
+		if [ -e "/etc/tmp/.ChrootInstallationDetectionFile" ]; then
+			echo "检测到您当前可能处于chroot容器环境！"
+			echo "${YELLOW}警告！GNOME3可能无法正常运行${RESET}"
+		fi
+		ps -e >/dev/null 2>&1
+		if [ "$?" != "0" ]; then
+			echo "检测到您当前可能处于容器环境！"
+			echo "${YELLOW}警告！GNOME3可能无法正常运行${RESET}"
+			echo "WARNNING! 检测到您未挂载/proc分区，请勿安装！"
+		fi
+		echo 'Press Enter to continue，press Ctrl+C to cancel.'
+		echo "${YELLOW}按回车键继续安装，按Ctrl+C取消${RESET}"
+		read
 		INSTALL-GNOME3-DESKTOP
 	fi
 	##############################

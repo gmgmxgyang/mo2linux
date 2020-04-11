@@ -2032,7 +2032,7 @@ INSTALLLXDEDESKTOP() {
 
 #################################################
 STARTVNCANDSTOPVNC() {
-	if [ ! -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
+	if [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
 		sed -i 's:dbus-launch::' ~/.vnc/xstartup
 	fi
 	cd /usr/local/bin
@@ -2180,7 +2180,7 @@ STARTVNCANDSTOPVNC() {
 		sed -i '$ a\dbus-launch startdde' startxsdl
 	fi
 
-	if [ ! -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
+	if [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
 		sed -i 's:dbus-launch::' startxsdl
 	fi
 
@@ -2278,6 +2278,7 @@ FrequentlyAskedQuestions() {
 		"1" "Cannot open Baidu Netdisk" \
 		"2" "udisks2/gvfs配置失败" \
 		"3" "linuxQQ闪退" \
+		"4" "VNC/X11闪退" \
 		"0" "Back to the main menu 返回主菜单" \
 		3>&1 1>&2 2>&3)
 	##############################
@@ -2311,6 +2312,23 @@ FrequentlyAskedQuestions() {
 		echo 'Press Enter to return.'
 		echo "${YELLOW}按回车键返回。${RESET}"
 		read
+		DEBIANMENU
+	fi
+	#######################
+	if [ "${TMOEFAQ}" == '4' ]; then
+		echo "由于在2020-0410至0411更新中给所有的桌面都加入了dbus-launch，故在部分安卓设备的Proot容器上出现了兼容性问题。"
+		echo "注1：该操作在linux虚拟机及win10子系统上没有任何问题"
+		echo "注2：2020-0412更新的版本已加入检测功能，理论上不会再出现此问题。"
+		if [ ! -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
+			echo "检测到您当前可能不是处于proot环境下，是否继续修复"
+			echo "如需还原，请覆盖安装gui,将为您重新配置vnc启动脚本！"
+		fi
+		echo "${YELLOW}按回车键禁用dbus-launch启动命令，按Ctrl+C取消${RESET}"
+		read
+		sed -i 's:dbus-launch::' "/usr/local/bin/startxsdl"
+		sed -i 's:dbus-launch::' ~/.vnc/xstartup
+
+		#Proot-Container
 		DEBIANMENU
 	fi
 	#############################

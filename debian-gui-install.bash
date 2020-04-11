@@ -261,6 +261,12 @@ CHECKdependencies() {
 	if [ "$(uname -r | cut -d '-' -f 3)" = "Microsoft" ] || [ "$(uname -r | cut -d '-' -f 2)" = "microsoft" ]; then
 		WINDOWSDISTRO='WSL'
 	fi
+	
+	if [ "${LINUXDISTRO}" = "debian" ]; then
+	    TMOENODEBIAN="$(echo WARINNING！检测到您当前使用的不是deb系linux，可能无法正常运行！)"
+	else
+		TMOENODEBIAN=""
+	fi
 
 	YELLOW=$(printf '\033[33m')
 	RESET=$(printf '\033[m')
@@ -271,7 +277,7 @@ CHECKdependencies() {
 DEBIANMENU() {
 	cd ${cur}
 	OPTION=$(
-		whiptail --title "Tmoe-linux Tool输debian-i启动(20200411-05)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.当前主菜单有十几个选项，请使用方向键或触屏上下滑动，按回车键确认。更新日志:0331优化WSL2,0410适配其它系统,0411增加测试版桌面" 19 50 7 \
+		whiptail --title "Tmoe-linux Tool输debian-i启动(20200411-05)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.当前主菜单有十几个选项，请使用方向键或触屏上下滑动，按回车键确认。${TMOENODEBIAN} 更新日志:0331优化WSL2,0410适配其它系统,0411增加测试版桌面" 20 50 6 \
 			"1" "Install GUI 安装图形界面" \
 			"2" "Install browser 安装浏览器" \
 			"3" "Download theme 下载主题" \
@@ -834,7 +840,7 @@ INSTALLGUI() {
 #######################
 OTHERDESKTOP() {
 	BETADESKTOP=$(whiptail --title "Beta features" --menu \
-		"WARNNING！本功能仍处于测试阶段,可能无法正常运行。部分桌面依赖systemd,无法在chroot环境中运行\nBeta features may not work properly." 15 60 6 \
+		"WARNING！本功能仍处于测试阶段,可能无法正常运行。部分桌面依赖systemd,无法在chroot环境中运行\nBeta features may not work properly." 15 60 6 \
 		"1" "lxqt" \
 		"2" "kde plasma 5" \
 		"3" "gnome 3" \
@@ -864,7 +870,7 @@ OTHERDESKTOP() {
 		if [ "$?" != "0" ]; then
 			echo "检测到您当前可能处于容器环境！"
 			echo "${YELLOW}警告！GNOME3可能无法正常运行${RESET}"
-			echo "WARNNING! 检测到您未挂载/proc分区，请勿安装！"
+			echo "WARNING! 检测到您未挂载/proc分区，请勿安装！"
 		fi
 		echo 'Press Enter to continue，press Ctrl+C to cancel.'
 		echo "${YELLOW}按回车键继续安装，按Ctrl+C取消${RESET}"

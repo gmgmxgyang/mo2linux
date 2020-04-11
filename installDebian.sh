@@ -1063,16 +1063,32 @@ ENDOFPOWERLEVEL
     fi
 
     cd ~
-    if [ ! -f ~/.zlogin ]; then
-        echo '' >~/.zlogin
-    fi
-    sed -i '1 r vnc-autostartup-zsh' ~/.zlogin
 
-    if [ "${LINUXDISTRO}" = "redhat" ]; then
-       sed -i "s@/etc/issue@/etc/os-release | grep PRETTYNAME | cut -d '\"' -f 2@g" .zlogin
-    fi
+ cat >~/.zlogin <<-'EndOfFile'
+cat /etc/os-release | grep PRETTY_NAME |cut -d '"' -f 2
 
-    rm -f vnc-autostartup-zsh
+if [ -f "/root/.vnc/startvnc" ]; then
+	/usr/local/bin/startvnc
+	echo "已为您启动vnc服务 Vnc service has been started, enjoy it!"
+	rm -f /root/.vnc/startvnc
+fi
+
+if [ -f "/root/.vnc/startxsdl" ]; then
+    echo '检测到您在termux原系统中输入了startxsdl，已为您打开xsdl安卓app'
+	echo 'Detected that you entered "startxsdl" from the termux original system, and the xsdl Android application has been opened.'
+	rm -f /root/.vnc/startxsdl
+  echo '9s后将为您启动xsdl'
+  echo 'xsdl will start in 9 seconds'
+  sleep 9
+	/usr/local/bin/startxsdl
+fi
+ps -e 2>/dev/null | tail -n 20
+EndOfFile
+
+if [ "${LINUXDISTRO}" != "redhat" ]; then
+    sed -i "1 c\cat /etc/issue" .zlogin
+fi
+
 
     if [ "${LINUXDISTRO}" = "debian" ]; then
         if [ -e "/usr/lib/command-not-found" ]; then
@@ -1163,28 +1179,6 @@ if [ -f "/root/.vnc/startxsdl" ]; then
   /usr/local/bin/startxsdl
 fi
  ps -e 2>/dev/null | tail -n 25
-EndOfFile
-
-cat >vnc-autostartup-zsh <<-'EndOfFile'
-cat /etc/issue
-
-grep -q '^cat /etc/' ~/.zlogin 2>&1 || sed -i '1 a\cat /etc/issue' ~/.zlogin
-if [ -f "/root/.vnc/startvnc" ]; then
-	/usr/local/bin/startvnc
-	echo "已为您启动vnc服务 Vnc service has been started, enjoy it!"
-	rm -f /root/.vnc/startvnc
-fi
-
-if [ -f "/root/.vnc/startxsdl" ]; then
-    echo '检测到您在termux原系统中输入了startxsdl，已为您打开xsdl安卓app'
-	echo 'Detected that you entered "startxsdl" from the termux original system, and the xsdl Android application has been opened.'
-	rm -f /root/.vnc/startxsdl
-  echo '9s后将为您启动xsdl'
-  echo 'xsdl will start in 9 seconds'
-  sleep 9
-	/usr/local/bin/startxsdl
-fi
-ps -e 2>/dev/null | tail -n 25
 EndOfFile
 
 sed -i '1 r vnc-autostartup' ./.bashrc

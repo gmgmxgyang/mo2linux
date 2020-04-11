@@ -1371,3 +1371,4 @@ local -A ctxt=(\"\${(@ps:\2:)CTXT}\")
     zstyle ':fzf-tab:complete:*:*' extra-opts --preview=$extract'ls -A1 --color=always ${~ctxt[hpre]}$in 2>/dev/null'
 EndOFfzfTab
 fi
+########################

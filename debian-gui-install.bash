@@ -2332,7 +2332,7 @@ FrequentlyAskedQuestions() {
 }
 #################
 FIXVNCdbusLaunch() {
-	echo "由于在2020-0410至0411更新中给所有的桌面都加入了dbus-launch，故在部分安卓设备的Proot容器上出现了兼容性问题。"
+	echo "由于在2020-0410至0411的更新中给所有系统的桌面都加入了dbus-launch，故在部分安卓设备的Proot容器上出现了兼容性问题。"
 	echo "注1：该操作在linux虚拟机及win10子系统上没有任何问题"
 	echo "注2：2020-0412更新的版本已加入检测功能，理论上不会再出现此问题。"
 	if [ ! -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then

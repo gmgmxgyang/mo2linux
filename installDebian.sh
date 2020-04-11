@@ -1470,6 +1470,11 @@ EndOfArchMirrors
   pacman -Syyu --noconfirm
 fi
 #################################
+
+
+
+
+#############################################
 if [ "$(cat /etc/os-release | grep 'ID=' | head -n 1 | cut -d '=' -f 2)" = "fedora" ]; then
     tar -Ppzcf ~/yum.repos.d-backup.tar.gz /etc/yum.repos.d
     mv -f ~/yum.repos.d-backup.tar.gz /etc/yum.repos.d
@@ -1477,7 +1482,7 @@ if [ "$(cat /etc/os-release | grep 'ID=' | head -n 1 | cut -d '=' -f 2)" = "fedo
     if ((${FEDORAversion} >= 30)); then
         curl -o /etc/yum.repos.d/fedora.repo http://mirrors.aliyun.com/repo/fedora.repo
         curl -o /etc/yum.repos.d/fedora-updates.repo http://mirrors.aliyun.com/repo/fedora-updates.repo
-cat >/etc/yum.repos.d/fedora-modular.repo <<-'EndOfYumRepo'
+        cat >/etc/yum.repos.d/fedora-modular.repo <<-'EndOfYumRepo'
 [fedora-modular]
 name=Fedora Modular $releasever - $basearch
 failovermethod=priority
@@ -1489,7 +1494,7 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
 skip_if_unavailable=False
 EndOfYumRepo
 
-cat >/etc/yum.repos.d/fedora-updates-modular.repo <<-'EndOfYumRepo'
+        cat >/etc/yum.repos.d/fedora-updates-modular.repo <<-'EndOfYumRepo'
 [updates-modular]
 name=Fedora Modular $releasever - $basearch - Updates
 failovermethod=priority
@@ -1501,7 +1506,11 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
 skip_if_unavailable=False
 EndOfYumRepo
     fi
+elif [ "$(cat /etc/os-release | grep 'ID=' | head -n 1 | cut -d '=' -f 2)" = "centos" ]; then
+    cp /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak
+    curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-8.repo
 fi
+
 ############################
 if ! grep -q 'debian' '/etc/os-release'; then
   echo "检测到您使用的不是deb系linux，优化步骤可能会出现错误"

@@ -263,7 +263,7 @@ CHECKdependencies() {
 	fi
 
 	if [ "${LINUXDISTRO}" != "debian" ]; then
-		TMOENODEBIAN="$(echo WARINNING！检测到您当前使用的不是deb系linux，可能无法正常运行！)"
+		TMOENODEBIAN="$(echo WARNING！检测到您当前使用的不是deb系linux，可能无法正常运行！)"
 	else
 		TMOENODEBIAN=""
 	fi

@@ -2168,11 +2168,11 @@ STARTVNCANDSTOPVNC() {
 		rm -f /tmp/.Tmoe-LXQT-Desktop-Detection-FILE
 		sed -i '/dbus-launch/d' startxsdl
 		sed -i '$ a\dbus-launch startlxqt' startxsdl
-	elif [ -f "/tmp/.Tmoe-KDE-PLASMA5-DESKTOP" ]; then
-		rm -f /tmp/.Tmoe-KDE-PLASMA5-DESKTOP
+	elif [ -f "/tmp/.Tmoe-KDE-PLASMA5-Desktop-Detection-FILE" ]; then
+		rm -f /tmp/.Tmoe-KDE-PLASMA5-Desktop-Detection-FILE
 		sed -i '/dbus-launch/d' startxsdl
 		sed -i '$ a\dbus-launch startplasma-x11' startxsdl
-	elif [ -f "/tmp/.Tmoe-GNOME3-Detection-FILE" ]; then
+	elif [ -f "/tmp/.Tmoe-GNOME3-Desktop-Detection-FILE" ]; then
 		rm -f /tmp/.Tmoe-GNOME3-Desktop-Detection-FILE
 		sed -i '/dbus-launch/d' startxsdl
 		sed -i '$ a\dbus-launch gnome-session' startxsdl

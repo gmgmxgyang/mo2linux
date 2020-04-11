@@ -1047,13 +1047,18 @@ INSTALL-cinnamon-DESKTOP() {
 }
 ####################
 INSTALL-DEEPIN-DESKTOP() {
+
 	if [ "${archtype}" != "i386" ] && [ "${archtype}" != "amd64" ]; then
 		echo "非常抱歉，深度桌面不支持您当前的架构。"
 		echo "建议您在换用x86_64或i386架构的设备后，再来尝试。"
-		echo "${YELLOW}按回车键返回。${RESET}"
-		echo "Press enter to return."
+		#echo "${YELLOW}按回车键返回。${RESET}"
+		#echo "Press enter to return."
+		#read
+		#DEBIANMENU
+		echo "${YELLOW}警告！deepin桌面可能无法正常运行${RESET}"
+		echo 'Press Enter to continue，press Ctrl+C to cancel.'
+		echo "${YELLOW}按回车键继续安装，按Ctrl+C取消${RESET}"
 		read
-		DEBIANMENU
 	fi
 
 	if [ "${LINUXDISTRO}" = "debian" ]; then
@@ -1097,7 +1102,7 @@ INSTALL-DEEPIN-DESKTOP() {
 		pacman -Syu --noconfirm deepin deepin-extra lightdm lightdm-deepin-greeter xorg
 		pacman -S --noconfirm file-roller evince gedit thunderbird gpicview
 		pacman -S --noconfirm tigervnc
-		rm ~/.pam_environment
+		rm -v ~/.pam_environment 2>/dev/null
 	fi
 
 	mkdir -p ~/.vnc

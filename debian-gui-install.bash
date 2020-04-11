@@ -1509,8 +1509,14 @@ OTHERSOFTWARE() {
 	fi
 	##############################
 	if [ "${SOFTWARE}" == '1' ]; then
-		apt update
-		apt install -y mpv
+		if [ "${LINUXDISTRO}" = "debian" ]; then
+			apt update
+			apt install -y mpv
+		elif [ "${LINUXDISTRO}" = "arch" ]; then
+			pacman -Syu --noconfirm mpv
+		elif [ "${LINUXDISTRO}" = "redhat" ]; then
+			dnf install -y kmplayer || yum install -y kmplayer
+		fi
 		echo "安装完成，如需卸载，请手动输apt purge -y mpv"
 		echo 'Press Enter to return.'
 		echo "${YELLOW}按回车键返回。${RESET}"

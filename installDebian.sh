@@ -1471,57 +1471,12 @@ EndOfArchMirrors
 fi
 #################################
 if [ "$(cat /etc/os-release | grep 'ID=' | head -n 1 | cut -d '=' -f 2)" = "fedora" ]; then
-    tar -Ppzcvf ~/yum.repos.d-backup.tar.gz /etc/yum.repos.d
+    tar -Ppzcf ~/yum.repos.d-backup.tar.gz /etc/yum.repos.d
     mv -f ~/yum.repos.d-backup.tar.gz /etc/yum.repos.d
     FEDORAversion="$(cat /etc/os-release | grep 'VERSION_ID' | cut -d '=' -f 2)"
     if ((${FEDORAversion} >= 30)); then
-
-        cat >/etc/yum.repos.d/fedora.repo <<-'EndOfYumRepo'
-[fedora]
-name=Fedora $releasever - $basearch
-failovermethod=priority
-baseurl=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/$releasever/Everything/$basearch/os/
-metadata_expire=28d
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
-skip_if_unavailable=False
-EndOfYumRepo
-
-        cat >/etc/yum.repos.d/fedora-updates.repoo <<-'EndOfYumRepo'
-[updates]
-name=Fedora $releasever - $basearch - Updates
-failovermethod=priority
-baseurl=https://mirrors.tuna.tsinghua.edu.cn/fedora/updates/$releasever/Everything/$basearch/
-enabled=1
-gpgcheck=1
-metadata_expire=6h
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
-skip_if_unavailable=False
-EndOfYumRepo
-
-        cat >/etc/yum.repos.d/fedora-modular.repo <<-'EndOfYumRepo'
-[fedora-modular]
-name=Fedora Modular $releasever - $basearch
-failovermethod=priority
-baseurl=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/$releasever/Modular/$basearch/os/
-enabled=1
-metadata_expire=7d
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
-skip_if_unavailable=False
-EndOfYumRepo
-
-        cat >/etc/yum.repos.d/fedora-updates-modular.repo <<-'EndOfYumRepo'
-[updates-modular]
-name=Fedora Modular $releasever - $basearch - Updates
-failovermethod=priority
-baseurl=https://mirrors.tuna.tsinghua.edu.cn/fedora/updates/$releasever/Modular/$basearch/
-enabled=1
-gpgcheck=1
-metadata_expire=6h
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
-skip_if_unavailable=False
-EndOfYumRepo
+        curl -o /etc/yum.repos.d/fedora.repo http://mirrors.aliyun.com/repo/fedora.repo
+        curl -o /etc/yum.repos.d/fedora-updates.repo http://mirrors.aliyun.com/repo/fedora-updates.repo
     fi
 fi
 ############################

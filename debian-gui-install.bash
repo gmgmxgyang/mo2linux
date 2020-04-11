@@ -2032,8 +2032,10 @@ INSTALLLXDEDESKTOP() {
 
 #################################################
 STARTVNCANDSTOPVNC() {
-	if [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
-		sed -i 's:dbus-launch::' ~/.vnc/xstartup
+	if [ "${LINUXDISTRO}" = "debian" ]; then
+		if [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
+			sed -i 's:dbus-launch::' ~/.vnc/xstartup
+		fi
 	fi
 	cd /usr/local/bin
 	cat >startvnc <<-'EndOfFile'
@@ -2179,11 +2181,11 @@ STARTVNCANDSTOPVNC() {
 		sed -i '/dbus-launch/d' startxsdl
 		sed -i '$ a\dbus-launch startdde' startxsdl
 	fi
-
-	if [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
-		sed -i 's:dbus-launch::' startxsdl
+	if [ "${LINUXDISTRO}" = "debian" ]; then
+		if [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
+			sed -i 's:dbus-launch::' startxsdl
+		fi
 	fi
-
 	#下面那行需放在检测完成之后才执行
 	rm -f /tmp/.Tmoe-*Desktop-Detection-FILE 2>/dev/null
 

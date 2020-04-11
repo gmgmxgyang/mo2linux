@@ -869,7 +869,8 @@ OTHERDESKTOP() {
 			echo "${YELLOW}警告！GNOME3可能无法正常运行${RESET}"
 		fi
 		ps -e >/dev/null 2>&1
-		if [ "$?" != "0" ]; then
+		exitstatus=$?
+		if [ "${exitstatus}" != "0" ]; then
 			echo "检测到您当前可能处于容器环境！"
 			echo "${YELLOW}警告！GNOME3可能无法正常运行${RESET}"
 			echo "WARNING! 检测到您未挂载/proc分区，请勿安装！"

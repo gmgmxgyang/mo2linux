@@ -16,7 +16,7 @@ CHECKdependencies() {
 	fi
 	#############################
 
-	if grep -q 'debian' "/etc/os-release"; then
+	if grep -Eq 'debian|ubuntu' "/etc/os-release"; then
 		LINUXDISTRO='debian'
 		if grep -q 'ubuntu' /etc/os-release; then
 			DEBIANDISTRO='ubuntu'

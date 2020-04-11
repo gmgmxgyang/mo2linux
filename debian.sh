@@ -106,7 +106,7 @@ GNULINUX() {
 		exit 0
 	fi
 	##############
-	if grep -q 'debian' '/etc/os-release'; then
+	if grep -Eq 'debian|ubuntu' "/etc/os-release"; then
 		LINUXDISTRO='debian'
 
 	elif grep -Eq "opkg|entware" '/opt/etc/opkg.conf' 2>/dev/null || grep -q 'openwrt' "/etc/os-release"; then

@@ -1656,7 +1656,7 @@ INSTALLDEBIANORDOWNLOADRECOVERYTARXZ() {
 			同时希望您能注意在信息网络上不存在“绝对完善的安全措施”。
 
 			7.其它说明
-			(a)若您需要在开源项目中引用本脚本，建议您先与原开发者联系,并附上本git-repo的原链接https://gitee.com/mo2/linux
+			(a)若您需要在开源项目中引用本脚本，建议您先与原开发者联系,并附上本git-repo的原链接gitee.com/mo2/linux
 			If you want to reference this script in an open source project, please indicate the original link of this repo and suggest that you contact the original developer before that.
 
 			8.最终用户许可协议的更改
@@ -2088,9 +2088,9 @@ CHOOSEWHICHGNULINUX() {
 		"1" "Debian:最早的发行版之一" \
 		"2" "Ubuntu 20.04:我的存在是因為大家的存在" \
 		"3" "Kali Rolling:设计用于数字取证和渗透测试" \
-		"4" "Other其它系统(绝赞测试中):mint,arch,centos" \
-		"5" "Funtoo:专注于改进Gentoo" \
-		"6" "Void:基于xbps包管理器的独立发行版" \
+		"4" "Other其它系统(绝赞测试中):mint,centos" \
+		"5" "fedora 31(红帽社区版,新技术试验场)" \
+		"6" "arch(系统设计以KISS为总体指导原则)" \
 		"0" "Back to the main menu 返回主菜单" \
 		3>&1 1>&2 2>&3)
 
@@ -2117,42 +2117,6 @@ CHOOSEWHICHGNULINUX() {
 	fi
 	##############################
 	if [ "${SELECTGNULINUX}" == '5' ]; then
-		INSTALLFuntooDISTRO
-	fi
-	#############################
-	if [ "${SELECTGNULINUX}" == '6' ]; then
-		INSTALLVOIDLINUXDISTRO
-	fi
-	##############################
-	echo 'Press Enter to return.'
-	echo "${YELLOW}按回车键返回。${RESET}"
-	read
-	MainMenu
-}
-##############################
-INSTALLotherSystems() {
-	BETASYSTEM=$(whiptail --title "Beta features" --menu \
-		"WARNNING！本功能仍处于测试阶段，可能无法正常运行\nBeta features may not work properly." 17 55 7 \
-		"1" "arch(系统设计以KISS为总体指导原则)" \
-		"2" "fedora 31(红帽社区版,新技术试验场)" \
-		"3" "centos 8(基于红帽的社区企业操作系统)" \
-		"4" "gentoo(追求极限配置和极高自由armhf,x86,x64)" \
-		"5" "alpine edge(非glibc的精简系统)" \
-		"6" "opensuse tumbleweed(小蜥蜴风滚草)" \
-		"7" "樹莓派raspbian buster(armhf)" \
-		"8" "mint tricia(简单易用的系统x86,x64)" \
-		"9" "openwrt(常见于路由器x64)" \
-		"10" "devuan ascii(不使用systemd,基于debian)" \
-		"11" "apertis 18.12" \
-		"12" "alt p9" \
-		"0" "Back to the main menu 返回主菜单" \
-		3>&1 1>&2 2>&3)
-	##############################
-	if [ "${BETASYSTEM}" == '0' ]; then
-		MainMenu
-	fi
-	####################
-	if [ "${BETASYSTEM}" == '1' ]; then
 		if [ "${archtype}" = 'armhf' ] || [ "${archtype}" = 'i386' ]; then
 			echo "检测到Arch Linux不支持您当前的架构"
 		else
@@ -2165,8 +2129,7 @@ INSTALLotherSystems() {
 		fi
 	fi
 	####################
-
-	if [ "${BETASYSTEM}" == '2' ]; then
+	if [ "${SELECTGNULINUX}" == '6' ]; then
 		touch ~/.REDHATDetectionFILE
 		if [ "${archtype}" = 'armhf' ]; then
 			echo "检测到您使用的是armhf架构，将为您降级至Fedora 29"
@@ -2186,6 +2149,44 @@ INSTALLotherSystems() {
 				sed 's:debian/sid:fedora/31:g' |
 				sed 's:Debian GNU/Linux:Fedora GNU/Linux:g')"
 		fi
+	fi
+	##############################
+	echo 'Press Enter to return.'
+	echo "${YELLOW}按回车键返回。${RESET}"
+	read
+	MainMenu
+}
+##############################
+INSTALLotherSystems() {
+	BETASYSTEM=$(
+		whiptail --title "Beta features" --menu "WARNNING！本功能仍处于测试阶段,可能无法正常运行。\nBeta features may not work properly." 17 55 7 \
+			"1" "Funtoo:专注于改进Gentoo" \
+			"2" "Void:基于xbps包管理器的独立发行版" \
+			"3" "centos 8(基于红帽的社区企业操作系统)" \
+			"4" "gentoo(追求极限配置和极高自由,armhf,x86,x64)" \
+			"5" "alpine edge(非glibc的精简系统)" \
+			"6" "opensuse tumbleweed(小蜥蜴风滚草)" \
+			"7" "樹莓派raspbian buster(armhf)" \
+			"8" "mint tricia(简单易用的系统,x86,x64)" \
+			"9" "openwrt(常见于路由器,x64)" \
+			"10" "devuan ascii(不使用systemd,基于debian)" \
+			"11" "apertis 18.12" \
+			"12" "alt p9" \
+			"0" "Back to the main menu 返回主菜单" \
+			3>&1 1>&2 2>&3
+	)
+	##############################
+	if [ "${BETASYSTEM}" == '0' ]; then
+		MainMenu
+	fi
+	####################
+
+	if [ "${BETASYSTEM}" == '1' ]; then
+		INSTALLFuntooDISTRO
+	fi
+	#############################
+	if [ "${BETASYSTEM}" == '2' ]; then
+		INSTALLVOIDLINUXDISTRO
 	fi
 	####################
 	if [ "${BETASYSTEM}" == '3' ]; then

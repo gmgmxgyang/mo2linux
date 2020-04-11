@@ -44,6 +44,9 @@ CHECKdependencies() {
 	elif grep -Eq "gentoo|funtoo" "/etc/os-release"; then
 		LINUXDISTRO='gentoo'
 
+	elif grep -qi 'suse' '/etc/os-release'; then
+		LINUXDISTRO='suse'
+
 	elif [ "$(cat /etc/issue | cut -c 1-4)" = "Void" ]; then
 		LINUXDISTRO='void'
 	fi
@@ -74,7 +77,7 @@ CHECKdependencies() {
 				dependencies="${dependencies} catimg"
 			fi
 		fi
-	elif [ "${LINUXDISTRO}" = "redhat" ]; then
+	elif [ "${LINUXDISTRO}" = "redhat" ] || [ "${LINUXDISTRO}" = "arch" ]; then
 		dependencies="${dependencies} catimg"
 	fi
 
@@ -185,6 +188,10 @@ CHECKdependencies() {
 
 		elif [ "${LINUXDISTRO}" = "gentoo" ]; then
 			emerge -av ${dependencies}
+
+		elif [ "${LINUXDISTRO}" = "suse" ]; then
+			zypper in -y ${dependencies}
+
 		else
 			apt update
 			apt install -y ${dependencies} || port install ${dependencies} || zypper in ${dependencies} || guix package -i ${dependencies} || pkg install ${dependencies} || pkg_add ${dependencies} || pkgutil -i ${dependencies}

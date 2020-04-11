@@ -1360,3 +1360,14 @@ EndOfFile
 
 chmod +x /usr/local/bin/xsdl-4712 /usr/local/bin/xsdl-4713
 ##############
+if ! grep -q 'extract=' "${HOME}/.oh-my-zsh/custom/plugins/fzf-tab/fzf-tab.zsh"; then
+    cat >>"${HOME}/.oh-my-zsh/custom/plugins/fzf-tab/fzf-tab.zsh" <<-'EndOFfzfTab'
+    local extract="
+# 提取当前选择的内容
+in=\${\${\"\$(<{f})\"%\$'\0'*}#*\$'\0'}
+# 获取当前补全状态的上下文
+local -A ctxt=(\"\${(@ps:\2:)CTXT}\")
+"
+    zstyle ':fzf-tab:complete:*:*' extra-opts --preview=$extract'ls -A1 --color=always ${~ctxt[hpre]}$in 2>/dev/null'
+EndOFfzfTab
+fi

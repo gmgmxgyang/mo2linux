@@ -623,74 +623,144 @@ fi
 cat >zsh.sh <<-'ADDZSHSHELL'
 #!/bin/bash
 
+if grep -q 'debian' "/etc/os-release"; then
+    LINUXDISTRO='debian'
+    if grep -q 'ubuntu' /etc/os-release; then
+        DEBIANDISTRO='ubuntu'
+    elif [ "$(cat /etc/issue | cut -c 1-4)" = "Kali" ]; then
+        DEBIANDISTRO='kali'
+    fi
+
+elif grep -Eqi "Fedora|CentOS|Red Hat|redhat" '/etc/os-release'; then
+    LINUXDISTRO='redhat'
+    if [ "$(cat /etc/os-release | grep 'ID=' | head -n 1 | cut -d '"' -f 2)" = "centos" ]; then
+        REDHATDISTRO='centos'
+    elif grep -q 'Fedora' "/etc/os-release"; then
+        REDHATDISTRO='fedora'
+    fi
+
+elif grep -q "Alpine" '/etc/issue' || grep -q "Alpine" '/etc/os-release'; then
+    LINUXDISTRO='alpine'
+
+elif grep -Eq "Arch|Manjaro" '/etc/os-release'; then
+    LINUXDISTRO='arch'
+
+elif grep -qi 'Void' '/etc/issue'; then
+    LINUXDISTRO='void'
+
+elif grep -qi 'suse' '/etc/os-release'; then
+    LINUXDISTRO='suse'
+
+elif grep -Eq "gentoo|funtoo" '/etc/os-release'; then
+    LINUXDISTRO='gentoo'
+fi
+#####################
 dependencies=""
-
-if [ ! -e /bin/zsh ]; then
-  dependencies="${dependencies} zsh"
+if [ ! -e /bin/bash ]; then
+    dependencies="${dependencies} bash"
 fi
 
-if [ ! -d /usr/share/doc/fonts-powerline ]; then
-  dependencies="${dependencies} fonts-powerline"
+if [ ! -e "/usr/lib/command-not-found" ]; then
+    if [ "${LINUXDISTRO}" = "debian" ]; then
+        dependencies="${dependencies} command-not-found"
+    fi
 fi
+##################
+if [ "${LINUXDISTRO}" = "debian" ]; then
+    if [ ! -f "/tmp/.openwrtcheckfile" ]; then
+        if [ ! -d /usr/share/command-not-found ]; then
+            dependencies="${dependencies} command-not-found"
+        fi
+    fi
 
-if [ ! -f "/tmp/.openwrtcheckfile" ]; then
-  if [ ! -d /usr/share/command-not-found ]; then
-    dependencies="${dependencies} command-not-found"
-  fi
+    if [ ! -d /usr/share/doc/fonts-powerline ]; then
+        dependencies="${dependencies} fonts-powerline"
+    fi
+fi
+###########################################
+if [ ! -e /usr/bin/fzf ]; then
+    if [ "${LINUXDISTRO}" = "debian" ] || [ "${LINUXDISTRO}" = "alpine" ] || [ "${REDHATDISTRO}" = "fedora" ] || [ "${LINUXDISTRO}" = "arch" ]; then
+        dependencies="${dependencies} fzf"
+    fi
 fi
 
 if [ ! -e /usr/bin/git ]; then
-  dependencies="${dependencies} git"
+    if [ "${LINUXDISTRO}" = "openwrt" ]; then
+        dependencies="${dependencies} git git-http"
+    elif [ "${LINUXDISTRO}" = "gentoo" ]; then
+        dependencies="${dependencies} dev-vcs/git"
+    else
+        dependencies="${dependencies} git"
+    fi
 fi
-
-if [ ! -e /usr/bin/fzf ]; then
-  dependencies="${dependencies} fzf"
-fi
-
+####################################
 if [ ! -e /usr/bin/wget ]; then
-  dependencies="${dependencies} wget"
+    if [ "${LINUXDISTRO}" = "gentoo" ]; then
+        dependencies="${dependencies} net-misc/wget"
+    else
+        dependencies="${dependencies} wget"
+    fi
+fi
+###########################
+
+if [ ! -e /bin/zsh ]; then
+    if [ "${LINUXDISTRO}" = "alpine" ]; then
+        dependencies="${dependencies} zsh zsh-vcs"
+    elif [ "${LINUXDISTRO}" = "gentoo" ]; then
+        dependencies="${dependencies} app-shells/zsh"
+    else
+        dependencies="${dependencies} zsh"
+    fi
 fi
 
+#############################
 if [ ! -z "${dependencies}" ]; then
-  echo "正在安装相关依赖..."
-  apt install -y ${dependencies}
-fi
+    echo "正在安装相关依赖..."
 
+    if [ "${LINUXDISTRO}" = "debian" ]; then
+        apt update
+        apt install -y ${dependencies} || apt install -y command-not-found zsh git wget whiptail command-not-found
+
+    elif [ "${LINUXDISTRO}" = "alpine" ]; then
+        apk add -q ${dependencies}
+        #apk add -q xz newt tar zsh git wget bash zsh-vcs pv
+
+    elif [ "${LINUXDISTRO}" = "arch" ]; then
+        pacman -Syu --noconfirm ${dependencies}
+
+    elif [ "${LINUXDISTRO}" = "redhat" ]; then
+        dnf install -y ${dependencies} || yum install -y ${dependencies}
+        #dnf install -y zsh git pv wget xz tar newt || yum install -y zsh git pv wget xz tar newt
+
+    elif [ "${LINUXDISTRO}" = "openwrt" ]; then
+        #opkg update
+        opkg install ${dependencies} || opkg install whiptail
+
+    elif [ "${LINUXDISTRO}" = "void" ]; then
+        xbps-install -S
+        xbps-install -y ${dependencies}
+
+    elif [ "${LINUXDISTRO}" = "gentoo" ]; then
+        emerge -av ${dependencies}
+
+    elif
+        [ "${LINUXDISTRO}" = "suse" ]
+    then
+        zypper in -y ${dependencies}
+
+    else
+        apt update
+        apt install -y command-not-found zsh git wget whiptail command-not-found || port install ${dependencies} || guix package -i ${dependencies} || pkg install ${dependencies} || pkg_add ${dependencies} || pkgutil -i ${dependencies}
+
+    fi
+
+fi
+###############################
 wget -qO /usr/local/bin/debian-i 'https://gitee.com/mo2/linux/raw/master/debian-gui-install.bash'
 chmod +x /usr/local/bin/debian-i
 
 rm -rf ${HOME}/.oh-my-zsh
 chsh -s /usr/bin/zsh
-#
-# This script should be run via curl:
-#   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-# or wget:
-#   sh -c "$(wget -qO- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-#
-# As an alternative, you can first download the install script and run it afterwards:
-#   wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
-#   sh install.sh
-#
-# You can tweak the install behavior by setting variables when running the script. For
-# example, to change the path to the Oh My Zsh repository:
-#   ZSH=~/.zsh sh install.sh
-#
-# Respects the following environment variables:
-#   ZSH     - path to the Oh My Zsh repository folder (default: ${HOME}/.oh-my-zsh)
-#   REPO    - name of the GitHub repo to install from (default: ohmyzsh/ohmyzsh)
-#   REMOTE  - full remote URL of the git repo to install (default: GitHub via HTTPS)
-#   BRANCH  - branch to check out immediately after install (default: master)
-#
-# Other options:
-#   CHSH    -'no' means the installer will not change the default shell (default: yes)
-#   RUNZSH  -'no' means the installer will not run zsh after the install (default: yes)
-#
-# You can also pass some arguments to the install script to set some these options:
-#   --skip-chsh: has the same behavior as setting CHSH to 'no'
-#   --unattended: sets both CHSH and RUNZSH to 'no'
-# For example:
-#   sh install.sh --unattended
-#
 set -e
 #change the default repo
 #https://github.com/ohmyzsh/ohmyzsh
@@ -710,362 +780,356 @@ CHSH=${CHSH:-yes}
 RUNZSH=${RUNZSH:-yes}
 
 command_exists() {
-  command -v "$@" >/dev/null 2>&1
+    command -v "$@" >/dev/null 2>&1
 }
 
 error() {
-  echo ${RED}"Error: $@"${RESET} >&2
+    echo ${RED}"Error: $@"${RESET} >&2
 }
 
 setup_color() {
-  # Only use colors if connected to a terminal
-  if [ -t 1 ]; then
-    RED=$(printf '\033[31m')
-    GREEN=$(printf '\033[32m')
-    YELLOW=$(printf '\033[33m')
-    BLUE=$(printf '\033[34m')
-    BOLD=$(printf '\033[1m')
-    RESET=$(printf '\033[m')
-  else
-    RED=""
-    GREEN=""
-    YELLOW=""
-    BLUE=""
-    BOLD=""
-    RESET=""
-  fi
+    # Only use colors if connected to a terminal
+    if [ -t 1 ]; then
+        RED=$(printf '\033[31m')
+        GREEN=$(printf '\033[32m')
+        YELLOW=$(printf '\033[33m')
+        BLUE=$(printf '\033[34m')
+        BOLD=$(printf '\033[1m')
+        RESET=$(printf '\033[m')
+    else
+        RED=""
+        GREEN=""
+        YELLOW=""
+        BLUE=""
+        BOLD=""
+        RESET=""
+    fi
 }
 
 setup_ohmyzsh() {
-  # Prevent the cloned repository from having insecure permissions. Failing to do
-  # so causes compinit() calls to fail with "command not found: compdef" errors
-  # for users with insecure umasks (e.g., "002", allowing group writability). Note
-  # that this will be ignored under Cygwin by default, as Windows ACLs take
-  # precedence over umasks except for filesystems mounted with option "noacl".
-  umask g-w,o-w
+    # Prevent the cloned repository from having insecure permissions. Failing to do
+    # so causes compinit() calls to fail with "command not found: compdef" errors
+    # for users with insecure umasks (e.g., "002", allowing group writability). Note
+    # that this will be ignored under Cygwin by default, as Windows ACLs take
+    # precedence over umasks except for filesystems mounted with option "noacl".
+    umask g-w,o-w
 
-  echo "${BLUE}Cloning Oh My Zsh...${RESET}"
+    echo "${BLUE}Cloning Oh My Zsh...${RESET}"
 
-  command_exists git || {
-    error "git is not installed"
-    exit 1
-  }
+    command_exists git || {
+        error "git is not installed"
+        exit 1
+    }
 
-  if [ "$OSTYPE" = cygwin ] && git --version | grep -q msysgit; then
-    error "Windows/MSYS Git is not supported on Cygwin"
-    error "Make sure the Cygwin git package is installed and is first on the \$PATH"
-    exit 1
-  fi
+    if [ "$OSTYPE" = cygwin ] && git --version | grep -q msysgit; then
+        error "Windows/MSYS Git is not supported on Cygwin"
+        error "Make sure the Cygwin git package is installed and is first on the \$PATH"
+        exit 1
+    fi
 
-  git clone -c core.eol=lf -c core.autocrlf=false \
-    -c fsck.zeroPaddedFilemode=ignore \
-    -c fetch.fsck.zeroPaddedFilemode=ignore \
-    -c receive.fsck.zeroPaddedFilemode=ignore \
-    --depth=1 --branch "$BRANCH" "$REMOTE" "$ZSH" || {
-    error "git clone of oh-my-zsh repo failed"
-    exit 1
-  }
+    git clone -c core.eol=lf -c core.autocrlf=false \
+        -c fsck.zeroPaddedFilemode=ignore \
+        -c fetch.fsck.zeroPaddedFilemode=ignore \
+        -c receive.fsck.zeroPaddedFilemode=ignore \
+        --depth=1 --branch "$BRANCH" "$REMOTE" "$ZSH" || {
+        error "git clone of oh-my-zsh repo failed"
+        exit 1
+    }
 
-  echo
+    echo
 }
 
 setup_zshrc() {
-  # Keep most recent old .zshrc at .zshrc.pre-oh-my-zsh, and older ones
-  # with datestamp of installation that moved them aside, so we never actually
-  # destroy a user's original zshrc
-  echo "${BLUE}Looking for an existing zsh config...${RESET}"
+    # Keep most recent old .zshrc at .zshrc.pre-oh-my-zsh, and older ones
+    # with datestamp of installation that moved them aside, so we never actually
+    # destroy a user's original zshrc
+    echo "${BLUE}Looking for an existing zsh config...${RESET}"
 
-  # Must use this exact name so uninstall.sh can find it
-  OLD_ZSHRC=~/.zshrc.pre-oh-my-zsh
-  if [ -f ~/.zshrc ] || [ -h ~/.zshrc ]; then
-    if [ -e "$OLD_ZSHRC" ]; then
-      OLD_OLD_ZSHRC="${OLD_ZSHRC}-$(date +%Y-%m-%d_%H-%M-%S)"
-      if [ -e "$OLD_OLD_ZSHRC" ]; then
-        error "$OLD_OLD_ZSHRC exists. Can't back up ${OLD_ZSHRC}"
-        error "re-run the installer again in a couple of seconds"
-        exit 1
-      fi
-      mv "$OLD_ZSHRC" "${OLD_OLD_ZSHRC}"
+    # Must use this exact name so uninstall.sh can find it
+    OLD_ZSHRC=~/.zshrc.pre-oh-my-zsh
+    if [ -f ~/.zshrc ] || [ -h ~/.zshrc ]; then
+        if [ -e "$OLD_ZSHRC" ]; then
+            OLD_OLD_ZSHRC="${OLD_ZSHRC}-$(date +%Y-%m-%d_%H-%M-%S)"
+            if [ -e "$OLD_OLD_ZSHRC" ]; then
+                error "$OLD_OLD_ZSHRC exists. Can't back up ${OLD_ZSHRC}"
+                error "re-run the installer again in a couple of seconds"
+                exit 1
+            fi
+            mv "$OLD_ZSHRC" "${OLD_OLD_ZSHRC}"
 
-      echo "${YELLOW}Found old ~/.zshrc.pre-oh-my-zsh." \
-        "${GREEN}Backing up to ${OLD_OLD_ZSHRC}${RESET}"
+            echo "${YELLOW}Found old ~/.zshrc.pre-oh-my-zsh." \
+                "${GREEN}Backing up to ${OLD_OLD_ZSHRC}${RESET}"
+        fi
+        echo "${YELLOW}Found ~/.zshrc.${RESET} ${GREEN}Backing up to ${OLD_ZSHRC}${RESET}"
+        mv ~/.zshrc "$OLD_ZSHRC"
     fi
-    echo "${YELLOW}Found ~/.zshrc.${RESET} ${GREEN}Backing up to ${OLD_ZSHRC}${RESET}"
-    mv ~/.zshrc "$OLD_ZSHRC"
-  fi
 
-  echo "${GREEN}Using the Oh My Zsh template file and adding it to ~/.zshrc.${RESET}"
+    echo "${GREEN}Using the Oh My Zsh template file and adding it to ~/.zshrc.${RESET}"
 
-  cp "$ZSH/templates/zshrc.zsh-template" ~/.zshrc
-  sed "/^export ZSH=/ c\\
+    cp "$ZSH/templates/zshrc.zsh-template" ~/.zshrc
+    sed "/^export ZSH=/ c\\
 export ZSH=\"$ZSH\"
 " ~/.zshrc >~/.zshrc-omztemp
-  mv -f ~/.zshrc-omztemp ~/.zshrc
+    mv -f ~/.zshrc-omztemp ~/.zshrc
 
-  echo
+    echo
 }
 
 setup_shell() {
-  # Skip setup if the user wants or stdin is closed (not running interactively).
-  if [ $CHSH = no ]; then
-    return
-  fi
+    # Skip setup if the user wants or stdin is closed (not running interactively).
+    if [ $CHSH = no ]; then
+        return
+    fi
 
-  # If this user's login shell is already "zsh", do not attempt to switch.
-  if [ "$(basename "$SHELL")" = "zsh" ]; then
-    return
-  fi
+    # If this user's login shell is already "zsh", do not attempt to switch.
+    if [ "$(basename "$SHELL")" = "zsh" ]; then
+        return
+    fi
 
-  # If this platform doesn't provide a "chsh" command, bail out.
-  if ! command_exists chsh; then
-    cat <<-EOF
+    # If this platform doesn't provide a "chsh" command, bail out.
+    if ! command_exists chsh; then
+        cat <<-EOF
 			I can't change your shell automatically because this system does not have chsh.
 			${BLUE}Please manually change your default shell to zsh${RESET}
 		EOF
-    return
-  fi
-
-  echo "${BLUE}Time to change your default shell to zsh:${RESET}"
-
-  # Prompt for user choice on changing the default login shell
-  printf "${YELLOW}Changing the default shell to zsh for you.${RESET} "
-
-  # Check if we're running on Termux
-  case "${PREFIX}" in
-  *com.termux*)
-    termux=true
-    zsh=zsh
-    ;;
-  *) termux=false ;;
-  esac
-
-  if [ "$termux" != true ]; then
-    # Test for the right location of the "shells" file
-    if [ -f /etc/shells ]; then
-      shells_file=/etc/shells
-    elif [ -f /usr/share/defaults/etc/shells ]; then # Solus OS
-      shells_file=/usr/share/defaults/etc/shells
-    else
-      error "could not find /etc/shells file. Change your default shell manually."
-      return
-    fi
-
-    # Get the path to the right zsh binary
-    # 1. Use the most preceding one based on $PATH, then check that it's in the shells file
-    # 2. If that fails, get a zsh path from the shells file, then check it actually exists
-    if ! zsh=$(command -v zsh) || ! grep -qx "$zsh" "$shells_file"; then
-      if ! zsh=$(grep '^/.*/zsh$' "$shells_file" | tail -1) || [ ! -f "$zsh" ]; then
-        error "no zsh binary found or not present in '$shells_file'"
-        error "change your default shell manually."
         return
-      fi
     fi
-  fi
 
-  # We're going to change the default shell, so back up the current one
-  if [ -n "$SHELL" ]; then
-    echo $SHELL >~/.shell.pre-oh-my-zsh
-  else
-    grep "^$USER:" /etc/passwd | awk -F: '{print $7}' >~/.shell.pre-oh-my-zsh
-  fi
+    echo "${BLUE}Time to change your default shell to zsh:${RESET}"
 
-  # Actually change the default shell to zsh
-  if ! chsh -s "$zsh"; then
-    error "chsh command unsuccessful. Change your default shell manually."
-  else
-    export SHELL="$zsh"
-    echo "${GREEN}Shell successfully changed to '$zsh'.${RESET}"
-  fi
+    # Prompt for user choice on changing the default login shell
+    printf "${YELLOW}Changing the default shell to zsh for you.${RESET} "
 
-  echo
+    # Check if we're running on Termux
+    case "${PREFIX}" in
+    *com.termux*)
+        termux=true
+        zsh=zsh
+        ;;
+    *) termux=false ;;
+    esac
+
+    if [ "$termux" != true ]; then
+        # Test for the right location of the "shells" file
+        if [ -f /etc/shells ]; then
+            shells_file=/etc/shells
+        elif [ -f /usr/share/defaults/etc/shells ]; then # Solus OS
+            shells_file=/usr/share/defaults/etc/shells
+        else
+            error "could not find /etc/shells file. Change your default shell manually."
+            return
+        fi
+
+        # Get the path to the right zsh binary
+        # 1. Use the most preceding one based on $PATH, then check that it's in the shells file
+        # 2. If that fails, get a zsh path from the shells file, then check it actually exists
+        if ! zsh=$(command -v zsh) || ! grep -qx "$zsh" "$shells_file"; then
+            if ! zsh=$(grep '^/.*/zsh$' "$shells_file" | tail -1) || [ ! -f "$zsh" ]; then
+                error "no zsh binary found or not present in '$shells_file'"
+                error "change your default shell manually."
+                return
+            fi
+        fi
+    fi
+
+    # We're going to change the default shell, so back up the current one
+    if [ -n "$SHELL" ]; then
+        echo $SHELL >~/.shell.pre-oh-my-zsh
+    else
+        grep "^$USER:" /etc/passwd | awk -F: '{print $7}' >~/.shell.pre-oh-my-zsh
+    fi
+
+    # Actually change the default shell to zsh
+    if ! chsh -s "$zsh"; then
+        error "chsh command unsuccessful. Change your default shell manually."
+    else
+        export SHELL="$zsh"
+        echo "${GREEN}Shell successfully changed to '$zsh'.${RESET}"
+    fi
+
+    echo
 }
 
 main() {
-  # Run as unattended if stdin is closed
-  if [ ! -t 0 ]; then
-    RUNZSH=no
-    CHSH=no
-  fi
+    # Run as unattended if stdin is closed
+    if [ ! -t 0 ]; then
+        RUNZSH=no
+        CHSH=no
+    fi
 
-  # Parse arguments
-  while [ $# -gt 0 ]; do
-    case $1 in
-    --unattended)
-      RUNZSH=no
-      CHSH=no
-      ;;
-    --skip-chsh) CHSH=no ;;
-    esac
-    shift
-  done
+    # Parse arguments
+    while [ $# -gt 0 ]; do
+        case $1 in
+        --unattended)
+            RUNZSH=no
+            CHSH=no
+            ;;
+        --skip-chsh) CHSH=no ;;
+        esac
+        shift
+    done
 
-  setup_color
+    setup_color
 
-  if ! command_exists zsh; then
-    echo "${YELLOW}Zsh is not installed.${RESET} Please install zsh first."
-    exit 1
-  fi
+    if ! command_exists zsh; then
+        echo "${YELLOW}Zsh is not installed.${RESET} Please install zsh first."
+        exit 1
+    fi
 
-  if [ -d "$ZSH" ]; then
-    cat <<-EOF
+    if [ -d "$ZSH" ]; then
+        cat <<-EOF
 			${YELLOW}You already have Oh My Zsh installed.${RESET}
 			You'll need to remove '$ZSH' if you want to reinstall.
 		EOF
-    exit 1
-  fi
+        exit 1
+    fi
 
-  setup_ohmyzsh
-  setup_zshrc
-  setup_shell
+    setup_ohmyzsh
+    setup_zshrc
+    setup_shell
 
-  printf "$GREEN"
-  cat <<-'EOF'
+    printf "$BLUE"
+    cat <<-'EOF'
 		         __                                     __
 		  ____  / /_     ____ ___  __  __   ____  _____/ /_
 		 / __ \/ __ \   / __ `__ \/ / / /  /_  / / ___/ __ \
 		/ /_/ / / / /  / / / / / / /_/ /    / /_(__  ) / / /
 		\____/_/ /_/  /_/ /_/ /_/\__, /    /___/____/_/ /_/
 		                        /____/                       ....is now installed!
-
-
 		Please look over the ~/.zshrc file to select plugins, themes, and options.
-
-		p.s. Follow us on https://twitter.com/ohmyzsh
-
-		p.p.s. Get stickers, shirts, and coffee mugs at https://shop.planetargon.com/collections/oh-my-zsh
+    p.s. Get stickers, shirts, and coffee mugs at https://shop.planetargon.com/collections/oh-my-zsh
+		p.p.s. Follow us on https://twitter.com/ohmyzsh
 
 	EOF
-  printf "$RESET"
+    printf "$RESET"
 
-  if [ $RUNZSH = no ]; then
-    echo "${YELLOW}Run zsh to try it out.${RESET}"
-    exit
-  fi
-  echo "                                        "
-  echo "                 .::::..                "
-  echo "      ::::rrr7QQJi::i:iirijQBBBQB.      "
-  echo "      BBQBBBQBP. ......:::..1BBBB       "
-  echo "      .BuPBBBX  .........r.  vBQL  :Y.  "
-  echo "       rd:iQQ  ..........7L   MB    rr  "
-  echo "        7biLX .::.:....:.:q.  ri    .   "
-  echo "         JX1: .r:.r....i.r::...:.  gi5  "
-  echo "         ..vr .7: 7:. :ii:  v.:iv :BQg  "
-  echo "         : r:  7r:i7i::ri:DBr..2S       "
-  echo "      i.:r:. .i:XBBK...  :BP ::jr   .7. "
-  echo "      r  i....ir r7.         r.J:   u.  "
-  echo "     :..X: .. .v:           .:.Ji       "
-  echo "    i. ..i .. .u:.     .   77: si   1Q  "
-  echo "   ::.. .r .. :P7.r7r..:iLQQJ: rv   ..  "
-  echo "  7  iK::r  . ii7r LJLrL1r7DPi iJ     r "
-  echo "    .  ::.:   .  ri 5DZDBg7JR7.:r:   i. "
-  echo "   .Pi r..r7:     i.:XBRJBY:uU.ii:.  .  "
-  echo "   QB rJ.:rvDE: .. ri uv . iir.7j r7.   "
-  echo "  iBg ::.7251QZ. . :.      irr:Iu: r.   "
-  echo "   QB  .:5.71Si..........  .sr7ivi:U    "
-  echo "   7BJ .7: i2. ........:..  sJ7Lvr7s    "
-  echo "    jBBdD. :. ........:r... YB  Bi      "
-  echo "       :7j1.                 :  :       "
+    if [ $RUNZSH = no ]; then
+        echo "${YELLOW}Run zsh to try it out.${RESET}"
+        exit
+    fi
+    echo "                                        "
+    echo "                 .::::..                "
+    echo "      ::::rrr7QQJi::i:iirijQBBBQB.      "
+    echo "      BBQBBBQBP. ......:::..1BBBB       "
+    echo "      .BuPBBBX  .........r.  vBQL  :Y.  "
+    echo "       rd:iQQ  ..........7L   MB    rr  "
+    echo "        7biLX .::.:....:.:q.  ri    .   "
+    echo "         JX1: .r:.r....i.r::...:.  gi5  "
+    echo "         ..vr .7: 7:. :ii:  v.:iv :BQg  "
+    echo "         : r:  7r:i7i::ri:DBr..2S       "
+    echo "      i.:r:. .i:XBBK...  :BP ::jr   .7. "
+    echo "      r  i....ir r7.         r.J:   u.  "
+    echo "     :..X: .. .v:           .:.Ji       "
+    echo "    i. ..i .. .u:.     .   77: si   1Q  "
+    echo "   ::.. .r .. :P7.r7r..:iLQQJ: rv   ..  "
+    echo "  7  iK::r  . ii7r LJLrL1r7DPi iJ     r "
+    echo "    .  ::.:   .  ri 5DZDBg7JR7.:r:   i. "
+    echo "   .Pi r..r7:     i.:XBRJBY:uU.ii:.  .  "
+    echo "   QB rJ.:rvDE: .. ri uv . iir.7j r7.   "
+    echo "  iBg ::.7251QZ. . :.      irr:Iu: r.   "
+    echo "   QB  .:5.71Si..........  .sr7ivi:U    "
+    echo "   7BJ .7: i2. ........:..  sJ7Lvr7s    "
+    echo "    jBBdD. :. ........:r... YB  Bi      "
+    echo "       :7j1.                 :  :       "
 
-if [ "$(uname -m)" = "mips" ]; then
-    echo "Configuring zsh theme 正在配置zsh主题(agnoster)..."
-    sed -i '/^ZSH_THEME/d' "${HOME}/.zshrc"
-    sed -i "1 i\ZSH_THEME='agnoster'" "${HOME}/.zshrc"
-else
-    echo "Configuring zsh theme 正在配置zsh主题(powerlevel 10k)..."
-    cd ${HOME}/.oh-my-zsh/custom/themes || mkdir -p ${HOME}/.oh-my-zsh/custom/themes && cd ${HOME}/.oh-my-zsh/custom/themes
-    rm -rf "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k"
-    git clone https://gitee.com/mo2/powerlevel10k.git "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k" --depth=1
-    sed -i '/^ZSH_THEME/d' "${HOME}/.zshrc"
-    sed -i "1 i\ZSH_THEME='powerlevel10k/powerlevel10k'" "${HOME}/.zshrc"
-    # sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="agnosterzak"/g' ~/.zshrc
-    echo '检测到您选择的是powerlevel 10k主题,若无法弹出配置面板，则请拉宽屏幕显示大小，然后输p10k configure'
-    if ! grep -q '.p10k.zsh' "${HOME}/.zshrc"; then
-        wget -qO /root/.p10k.zsh 'https://gitee.com/mo2/Termux-zsh/raw/p10k/.p10k.zsh' || curl -sLo /root/.p10k.zsh 'https://gitee.com/mo2/Termux-zsh/raw/p10k/.p10k.zsh'
-        cat >>${HOME}/.zshrc <<-"ENDOFPOWERLEVEL"
+    if [ "$(uname -m)" = "mips" ]; then
+        echo "Configuring zsh theme 正在配置zsh主题(agnoster)..."
+        sed -i '/^ZSH_THEME/d' "${HOME}/.zshrc"
+        sed -i "1 i\ZSH_THEME='agnoster'" "${HOME}/.zshrc"
+    else
+        echo "Configuring zsh theme 正在配置zsh主题(powerlevel 10k)..."
+        cd ${HOME}/.oh-my-zsh/custom/themes || mkdir -p ${HOME}/.oh-my-zsh/custom/themes && cd ${HOME}/.oh-my-zsh/custom/themes
+        rm -rf "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k"
+        git clone https://gitee.com/mo2/powerlevel10k.git "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k" --depth=1
+        sed -i '/^ZSH_THEME/d' "${HOME}/.zshrc"
+        sed -i "1 i\ZSH_THEME='powerlevel10k/powerlevel10k'" "${HOME}/.zshrc"
+        # sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="agnosterzak"/g' ~/.zshrc
+        echo '检测到您选择的是powerlevel 10k主题,若无法弹出配置面板，则请拉宽屏幕显示大小，然后输p10k configure'
+        if ! grep -q '.p10k.zsh' "${HOME}/.zshrc"; then
+            wget -qO /root/.p10k.zsh 'https://gitee.com/mo2/Termux-zsh/raw/p10k/.p10k.zsh' || curl -sLo /root/.p10k.zsh 'https://gitee.com/mo2/Termux-zsh/raw/p10k/.p10k.zsh'
+            cat >>${HOME}/.zshrc <<-"ENDOFPOWERLEVEL"
   [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh 
 ENDOFPOWERLEVEL
+        fi
     fi
-fi
 
-  if [ -e "/etc/tmp/.ChrootInstallationDetectionFile" ]; then
-    grep -q 'unset LD_PRELOAD' ${HOME}/.zshrc >/dev/null 2>&1 || sed -i "1 a\unset LD_PRELOAD" ${HOME}/.zshrc >/dev/null 2>&1
-    grep -q 'zh_CN.UTF-8' ${HOME}/.zshrc >/dev/null 2>&1 || sed -i "$ a\export LANG=zh_CN.UTF-8" ${HOME}/.zshrc >/dev/null 2>&1
-    grep -q 'HOME=/root' ${HOME}/.zshrc >/dev/null 2>&1 || sed -i "$ a\export HOME=/root" ${HOME}/.zshrc >/dev/null 2>&1
-    grep -q 'cd /root' ${HOME}/.zshrc >/dev/null 2>&1 || sed -i "$ a\cd /root" ${HOME}/.zshrc >/dev/null 2>&1
-  fi
-
-  cd ~
-  if [ ! -f ~/.zlogin ]; then 
-     echo '' > ~/.zlogin
-  fi
-  sed -i '1 r vnc-autostartup-zsh' ~/.zlogin
-
-  rm -f vnc-autostartup-zsh
-
-  if [ -e "/usr/lib/command-not-found" ]; then
-    grep -q 'command-not-found/command-not-found.plugin.zsh' ${HOME}/.zshrc 2>/dev/null || sed -i "$ a\source ${HOME}/.oh-my-zsh/plugins/command-not-found/command-not-found.plugin.zsh" ${HOME}/.zshrc
-    if ! grep -qi 'Ubuntu' '/etc/os-release'; then
-      echo "正在配置command-not-found插件..."
-      apt-file update 2>/dev/null
-      update-command-not-found 2>/dev/null
+    if [ -e "/etc/tmp/.ChrootInstallationDetectionFile" ]; then
+        grep -q 'unset LD_PRELOAD' ${HOME}/.zshrc >/dev/null 2>&1 || sed -i "1 a\unset LD_PRELOAD" ${HOME}/.zshrc >/dev/null 2>&1
+        grep -q 'zh_CN.UTF-8' ${HOME}/.zshrc >/dev/null 2>&1 || sed -i "$ a\export LANG=zh_CN.UTF-8" ${HOME}/.zshrc >/dev/null 2>&1
+        grep -q 'HOME=/root' ${HOME}/.zshrc >/dev/null 2>&1 || sed -i "$ a\export HOME=/root" ${HOME}/.zshrc >/dev/null 2>&1
+        grep -q 'cd /root' ${HOME}/.zshrc >/dev/null 2>&1 || sed -i "$ a\cd /root" ${HOME}/.zshrc >/dev/null 2>&1
     fi
-  fi
 
-  echo "正在克隆zsh-syntax-highlighting语法高亮插件..."
+    cd ~
+    if [ ! -f ~/.zlogin ]; then
+        echo '' >~/.zlogin
+    fi
+    sed -i '1 r vnc-autostartup-zsh' ~/.zlogin
 
-  rm -rf ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting 2>/dev/null
-  mkdir -p ${HOME}/.oh-my-zsh/custom/plugins
+    rm -f vnc-autostartup-zsh
 
-  # git clone --depth=1 git://github.com/zsh-users/zsh-syntax-highlighting ~/.zsh-syntax-highlighting
-  git clone --depth=1 https://gitee.com/mo2/zsh-syntax-highlighting.git ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+    if [ "${LINUXDISTRO}" = "debian" ]; then
+        if [ -e "/usr/lib/command-not-found" ]; then
+            grep -q 'command-not-found/command-not-found.plugin.zsh' ${HOME}/.zshrc 2>/dev/null || sed -i "$ a\source ${HOME}/.oh-my-zsh/plugins/command-not-found/command-not-found.plugin.zsh" ${HOME}/.zshrc
+            if [ "${DEBIANDISTRO}" != "ubuntu" ]; then
+                echo "正在配置command-not-found插件..."
+                apt-file update 2>/dev/null
+                update-command-not-found 2>/dev/null
+            fi
+        fi
+    fi
+    echo "正在克隆zsh-syntax-highlighting语法高亮插件..."
 
-  grep -q 'zsh-syntax-highlighting/zsh-syntax-highlighting.zsh' ${HOME}/.zshrc >/dev/null 2>&1 || sed -i "$ a\source ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ${HOME}/.zshrc
-  #echo -e "\nsource ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ${HOME}/.zshrc
+    rm -rf ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting 2>/dev/null
+    mkdir -p ${HOME}/.oh-my-zsh/custom/plugins
 
-  echo "正在克隆zsh-autosuggestions自动补全插件..."
-  rm -rf ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions 2>/dev/null
+    # git clone --depth=1 git://github.com/zsh-users/zsh-syntax-highlighting ~/.zsh-syntax-highlighting
+    git clone --depth=1 https://gitee.com/mo2/zsh-syntax-highlighting.git ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 
-  #git clone --depth=1 git://github.com/zsh-users/zsh-autosuggestions ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-  git clone --depth=1 https://gitee.com/mo2/zsh-autosuggestions.git ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+    grep -q 'zsh-syntax-highlighting/zsh-syntax-highlighting.zsh' ${HOME}/.zshrc >/dev/null 2>&1 || sed -i "$ a\source ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ${HOME}/.zshrc
+    #echo -e "\nsource ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ${HOME}/.zshrc
 
-  grep -q '/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh' ${HOME}/.zshrc >/dev/null 2>&1 || sed -i "$ a\source ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" ${HOME}/.zshrc
-  #echo -e "\nsource ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" >> ${HOME}/.zshrc
+    echo "正在克隆zsh-autosuggestions自动补全插件..."
+    rm -rf ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions 2>/dev/null
 
-  echo "正在克隆fzf-tab插件..."
-  rm -rf ${HOME}/.oh-my-zsh/custom/plugins/fzf-tab 2>/dev/null
-  git clone --depth=1 https://gitee.com/mo2/fzf-tab.git ${HOME}/.oh-my-zsh/custom/plugins/fzf-tab || git clone --depth=1 https://github.com/Aloxaf/fzf-tab.git ${HOME}/.oh-my-zsh/custom/plugins/fzf-tab
+    #git clone --depth=1 git://github.com/zsh-users/zsh-autosuggestions ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+    git clone --depth=1 https://gitee.com/mo2/zsh-autosuggestions.git ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
-  grep -q 'custom/plugins/fzf-tab/fzf-tab.zsh' "${HOME}/.zshrc" >/dev/null 2>&1 || sed -i "$ a\source ${HOME}/.oh-my-zsh/custom/plugins/fzf-tab/fzf-tab.zsh" ${HOME}/.zshrc
-  if ! grep -q 'extract=' "${HOME}/.oh-my-zsh/custom/plugins/fzf-tab/fzf-tab.zsh"; then
-    cat >>"${HOME}/.oh-my-zsh/custom/plugins/fzf-tab/fzf-tab.zsh" <<-'EndOFfzfTab'
-    local extract="
-# 提取当前选择的内容
-in=\${\${\"\$(<{f})\"%\$'\0'*}#*\$'\0'}
-# 获取当前补全状态的上下文
-local -A ctxt=(\"\${(@ps:\2:)CTXT}\")
-"
-    zstyle ':fzf-tab:complete:*:*' extra-opts --preview=$extract'ls -A1 --color=always ${~ctxt[hpre]}$in 2>/dev/null'
-EndOFfzfTab
-  fi
+    grep -q '/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh' ${HOME}/.zshrc >/dev/null 2>&1 || sed -i "$ a\source ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" ${HOME}/.zshrc
+    #echo -e "\nsource ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" >> ${HOME}/.zshrc
 
-  sed -i 's/plugins=(git)/plugins=(git extract z)/g' ~/.zshrc
+    echo "正在克隆fzf-tab插件..."
+    if [ "${LINUXDISTRO}" = "debian" ] || [ "${LINUXDISTRO}" = "alpine" ] || [ "${LINUXDISTRO}" = "redhat" ] || [ "${LINUXDISTRO}" = "arch" ]; then
+        if [ -e /usr/bin/fzf ] || [ -e /bin/fzf ]; then
+            rm -rf ${HOME}/.oh-my-zsh/custom/plugins/fzf-tab 2>/dev/null
+            git clone --depth=1 https://gitee.com/mo2/fzf-tab.git ${HOME}/.oh-my-zsh/custom/plugins/fzf-tab || git clone --depth=1 https://github.com/Aloxaf/fzf-tab.git ${HOME}/.oh-my-zsh/custom/plugins/fzf-tab
 
-if [ -f "/tmp/.openwrtcheckfile" ]; then
-  ADMINACCOUNT="$(ls -l /home |grep ^d | head -n 1 | awk -F ' ' '$0=$NF')"
-  cp -rf /root/.z* /root/.oh-my-zsh /root/*sh /home/${ADMINACCOUNT}
-  rm -f /tmp/.openwrtcheckfile
-fi
+            grep -q 'custom/plugins/fzf-tab/fzf-tab.zsh' "${HOME}/.zshrc" >/dev/null 2>&1 || sed -i "$ a\source ${HOME}/.oh-my-zsh/custom/plugins/fzf-tab/fzf-tab.zsh" ${HOME}/.zshrc
+        fi
+    fi
 
-  echo 'All optimization steps have been completed, enjoy it!'
-  echo 'zsh配置完成，2s后将为您启动Tmoe-debian工具'
-  echo '您也可以手动输debian-i进入'
-  echo 'After 2 seconds, Tmoe-debian gui installation manager will be launched.'
-  echo 'You can also enter debian-i manually to start it.'
-  sleep 2
-  bash /usr/local/bin/debian-i
-  exec zsh -l
-  source ~/.zshrc
-  zsh
+    if [ "${LINUXDISTRO}" = "debian" ] || [ "${LINUXDISTRO}" = "arch" ]; then
+        sed -i 's/plugins=(git)/plugins=(git extract z)/g' ~/.zshrc
+    else
+        sed -i 's/plugins=(git)/plugins=(git extract)/g' ~/.zshrc
+    fi
+
+    if [ -f "/tmp/.openwrtcheckfile" ]; then
+        ADMINACCOUNT="$(ls -l /home | grep ^d | head -n 1 | awk -F ' ' '$0=$NF')"
+        cp -rf /root/.z* /root/.oh-my-zsh /root/*sh /home/${ADMINACCOUNT}
+        rm -f /tmp/.openwrtcheckfile
+    fi
+
+    echo 'All optimization steps have been completed, enjoy it!'
+    echo 'zsh配置完成，2s后将为您启动Tmoe-debian工具'
+    echo '您也可以手动输debian-i进入'
+    echo 'After 2 seconds, Tmoe-debian gui installation manager will be launched.'
+    echo 'You can also enter debian-i manually to start it.'
+    sleep 2
+    bash /usr/local/bin/debian-i
+    exec zsh -l
+    source ~/.zshrc
+    zsh
 }
 
 main "$@"
@@ -1200,7 +1264,7 @@ if [ -f "/tmp/.ALPINELINUXDetectionFILE" ]; then
     opkg update
     opkg install libustream-openssl  ca-bundle ca-certificates bash
   fi
-  ash -c "$(wget --no-check-certificate -O- 'https://gitee.com/mo2/zsh/raw/master/zsh.sh')"
+ # ash -c "$(wget --no-check-certificate -O- 'https://gitee.com/mo2/zsh/raw/master/zsh.sh')"
 fi
 
 if grep -q 'openSUSE' "/etc/issue"; then
@@ -1321,8 +1385,8 @@ EndofgentooConf
     #wget -qcO /usr/local/bin/neofetch 'https://gitee.com/mirrors/neofetch/raw/master/neofetch'
     chmod +x /usr/local/bin/neofetch
     neofetch
-    bash
-    exit 0
+    #bash
+   # exit 0
 
 elif grep -qi 'Void' '/etc/issue'; then
     LINUXDISTRO='void'
@@ -1340,12 +1404,12 @@ EOF
     neofetch
     rm -f vnc* zsh* .profile
     mv -f .profile.bak .profile 2>/dev/null
-    wget -qO zsh.sh 'https://gitee.com/mo2/zsh/raw/master/zsh.sh'
-    sed -i '1 c\#!/bin/bash' zsh.sh
-    chmod +x zsh.sh
+    #wget -qO zsh.sh 'https://gitee.com/mo2/zsh/raw/master/zsh.sh'
+    #sed -i '1 c\#!/bin/bash' zsh.sh
+    #chmod +x zsh.sh
     echo '检测到您当前的系统为Void GNU/Linux,将不会为您继续配置任何优化步骤！'
-    zsh 2>/dev/null || bash
-    exit 0
+    #zsh 2>/dev/null || bash
+    #exit 0
 elif [ "$(uname -m)" = "mips" ]; then
   chattr -i /etc/apt/sources.list    
 elif ! grep -Eqi 'debian|ubuntu|kali|raspbian' "/etc/issue"; then
@@ -1393,7 +1457,7 @@ EndOfArchMirrors
 Server = https://mirrors.tuna.tsinghua.edu.cn/archlinux/$repo/os/$arch
 EndOfArchMirrors
   fi
-  pacman -Syy --noconfirm
+  pacman -Syyu --noconfirm
 fi
 
 if ! grep -q 'debian' '/etc/os-release'; then

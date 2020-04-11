@@ -2117,19 +2117,6 @@ CHOOSEWHICHGNULINUX() {
 	fi
 	##############################
 	if [ "${SELECTGNULINUX}" == '5' ]; then
-		if [ "${archtype}" = 'armhf' ] || [ "${archtype}" = 'i386' ]; then
-			echo "检测到Arch Linux不支持您当前的架构"
-		else
-			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
-				sed 's/debian系统/arch系统/g' |
-				sed 's/debian system/arch system/g' |
-				sed 's:debian-sid:archlinux-current:g' |
-				sed 's:debian/sid:archlinux/current:g' |
-				sed 's:Debian GNU/Linux:Arch GNU/Linux:g')"
-		fi
-	fi
-	####################
-	if [ "${SELECTGNULINUX}" == '6' ]; then
 		touch ~/.REDHATDetectionFILE
 		if [ "${archtype}" = 'armhf' ]; then
 			echo "检测到您使用的是armhf架构，将为您降级至Fedora 29"
@@ -2151,6 +2138,20 @@ CHOOSEWHICHGNULINUX() {
 		fi
 	fi
 	##############################
+	if [ "${SELECTGNULINUX}" == '6' ]; then
+		if [ "${archtype}" = 'armhf' ] || [ "${archtype}" = 'i386' ]; then
+			echo "检测到Arch Linux不支持您当前的架构"
+		else
+			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+				sed 's/debian系统/arch系统/g' |
+				sed 's/debian system/arch system/g' |
+				sed 's:debian-sid:archlinux-current:g' |
+				sed 's:debian/sid:archlinux/current:g' |
+				sed 's:Debian GNU/Linux:Arch GNU/Linux:g')"
+		fi
+	fi
+	####################
+
 	echo 'Press Enter to return.'
 	echo "${YELLOW}按回车键返回。${RESET}"
 	read

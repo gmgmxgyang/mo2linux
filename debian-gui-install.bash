@@ -1447,6 +1447,13 @@ INSTALLORREMOVEVSCODE() {
 }
 ############################################
 MODIFYTOKALISourcesList() {
+	if [ "${LINUXDISTRO}" != "debian" ]; then
+		echo "${YELLOW}非常抱歉，检测到您使用的不是deb系linux，按回车键返回。${RESET}"
+		echo "Press enter to return."
+		read
+		DEBIANMENU
+	fi
+
 	if [ "${DEBIANDISTRO}" = "ubuntu" ]; then
 		echo "${YELLOW}非常抱歉，暂不支持Ubuntu，按回车键返回。${RESET}"
 		echo "Press enter to return."

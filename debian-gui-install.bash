@@ -1836,8 +1836,9 @@ INSTALLXFCE4DESKTOP() {
 		unset DBUS_SESSION_BUS_ADDRESS
 		xrdb ${HOME}/.Xresources
 		export PULSE_SERVER=127.0.0.1
-		dbus-launch startxfce4 &
+		startxfce4 &
 	EndOfFile
+	#dbus-launch startxfce4 &
 	chmod +x ./xstartup
 	rm -f /tmp/.Tmoe-*Desktop-Detection-FILE 2>/dev/null 2>/dev/null
 	#touch /tmp/.Tmoe-XFCE4-Desktop-Detection-FILE

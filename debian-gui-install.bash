@@ -2333,7 +2333,7 @@ FIXVNCdbusLaunch() {
 	echo "注2：2020-0412更新的版本已加入检测功能，理论上不会再出现此问题。"
 	if [ ! -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
 		echo "检测到您当前可能处于非proot环境下，是否继续修复？"
-		echo "如需重新配置vnc启动脚本，请覆盖安装gui"
+		echo "如需重新配置vnc启动脚本，请更新debian-i后再覆盖安装gui"
 	fi
 	echo "${YELLOW}按回车键继续，按Ctrl+C取消${RESET}"
 	echo "Press Enter to continue,press Ctrl+C to cancel."
@@ -2345,7 +2345,7 @@ FIXVNCdbusLaunch() {
 		DBUSstatus="$(echo 检测到dbus-launch当前在vnc脚本中处于禁用状态)"
 	fi
 
-	if (whiptail --title "您想要对这个小可爱中做什么 " --yes-button "Disable" --no-button "Enable" --yesno "您是想要禁用dbus-launch，还是启用呢？${DBUSstatus} ✨\n请做出您的选择！ " 15 50); then
+	if (whiptail --title "您想要对这个小可爱中做什么 " --yes-button "Disable" --no-button "Enable" --yesno "您是想要禁用dbus-launch，还是启用呢？${DBUSstatus} \n请做出您的选择！✨" 10 50); then
 		sed -i 's:dbus-launch::' "/usr/local/bin/startxsdl"
 		sed -i 's:dbus-launch::' ~/.vnc/xstartup
 	else
@@ -2384,7 +2384,7 @@ FIXVNCdbusLaunch() {
 			sed -i 's/.*startdde.*/dbus-launch startdde \&/' ~/.vnc/xstartup
 			sed -i 's/.*startdde.*/dbus-launch startdde \&/' "/usr/local/bin/startxsdl"
 		else
-			echo "未检测到vnc相关配置，请覆盖安装gui！！！"
+			echo "未检测到vnc相关配置，请更新debian-i后再覆盖安装gui"
 		fi
 	fi
 

@@ -1295,7 +1295,10 @@ if grep -q 'openSUSE' "/etc/issue"; then
 fi
 
 apt update
-apt install -y locales
+if [ ! -e "/usr/sbin/locale-gen" ] && [ ! -e "/sbin/locale-gen" ]; then
+  apt install -y locales
+fi
+
 if grep -q 'ubuntu' /etc/os-release; then
     apt install -y language-pack-zh-hans
 fi
@@ -1320,7 +1323,8 @@ LANG="zh_CN.UTF-8"
 LANGUAGE="zh_CN:zh"
 LC_ALL="zh_CN.UTF-8"
 EOF
-locale-gen
+#locale-gen
+locale-gen zh_CN.UTF-8
 source /etc/default/locale 2>/dev/null
 
 echo "                                         "

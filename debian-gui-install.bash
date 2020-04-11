@@ -986,7 +986,7 @@ INSTALL-KDE-PLASMA5-DESKTOP() {
 		unset DBUS_SESSION_BUS_ADDRESS
 		xrdb ${HOME}/.Xresources
 		export PULSE_SERVER=127.0.0.1
-		if command -v startkde >/dev/null; then
+		if command -v "startkde" >/dev/null; then
 			dbus-launch startkde &
 		else
 			dbus-launch startplasma-x11 &
@@ -2368,8 +2368,8 @@ FIXVNCdbusLaunch() {
 			echo "检测您当前的VNC配置为KDE Plasma5，正在将dbus-launch加入至启动脚本中..."
 			sed -i 's/.*startplasma-x11.*/dbus-launch startplasma-x11 \&/' ~/.vnc/xstartup
 			sed -i 's/.*startplasma-x11.*/dbus-launch startplasma-x11 \&/' "/usr/local/bin/startxsdl"
-			sed -i 's/.*startkde.*/dbus-launch startkde \&/' ~/.vnc/xstartup
-			sed -i 's/.*startkde.*/dbus-launch startkde \&/' "/usr/local/bin/startxsdl"
+			sed -i 's/.* startkde.*/ dbus-launch startkde \&/' ~/.vnc/xstartup
+			#sed -i 's/.*startkde.*/dbus-launch startkde \&/' "/usr/local/bin/startxsdl"
 		elif grep 'gnome-session' ~/.vnc/xstartup; then
 			echo "检测您当前的VNC配置为GNOME3，正在将dbus-launch加入至启动脚本中..."
 			sed -i 's/.*gnome-session.*/dbus-launch gnome-session \&/' ~/.vnc/xstartup

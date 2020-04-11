@@ -1576,7 +1576,8 @@ OTHERSOFTWARE() {
 			else
 				wget -O LINUXQQ.sh http://down.qq.com/qqweb/LinuxQQ_1/linuxqq_2.0.0-b2-1082_arm64.sh
 				chmod +x LINUXQQ.sh
-				./LINUXQQ.sh
+				sudo ./LINUXQQ.sh
+				#即使是root用户也需要加sudo
 			fi
 		elif [ "${archtype}" = "amd64" ]; then
 			if [ "${LINUXDISTRO}" = "debian" ]; then
@@ -1585,7 +1586,7 @@ OTHERSOFTWARE() {
 			else
 				wget -O LINUXQQ.sh "http://down.qq.com/qqweb/LinuxQQ_1/linuxqq_2.0.0-b2-1082_x86_64.sh"
 				chmod +x LINUXQQ.sh
-				./LINUXQQ.sh
+				sudo ./LINUXQQ.sh
 			fi
 		else
 			echo "暂不支持您的架构"

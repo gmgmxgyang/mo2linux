@@ -505,7 +505,7 @@ EDITVNCPULSEAUDIO() {
 		#sed -i '/PULSE_SERVER/d' ~/.vnc/xstartup
 		#sed -i "2 a\export PULSE_SERVER=$TARGET" ~/.vnc/xstartup
 		if grep '^export.*PULSE_SERVER' "${HOME}/.vnc/xstartup"; then
-			sed -i "s@export.*PULSE_SERVER=.*@export PULSE_SERVER=$TARGET" ~/.vnc/xstartup
+			sed -i "s@export.*PULSE_SERVER=.*@export PULSE_SERVER=$TARGET@" ~/.vnc/xstartup
 		else
 			sed -i "4 a\export PULSE_SERVER=$TARGET" ~/.vnc/xstartup
 		fi

@@ -728,6 +728,7 @@ installBROWSER() {
 					apt install -y chromium-browser/bionic-updates
 					apt install -y chromium-browser-l10n/bionic-updates
 					sed -i '$ d' "/etc/apt/sources.list"
+					apt-mark hold chromium-browser chromium-browser-l10n chromium-codecs-ffmpeg-extra
 					apt update
 				else
 					apt install -y chromium-browser chromium-browser-l10n
@@ -1221,6 +1222,7 @@ REMOVEBROWSER() {
 		read
 		apt purge -y firefox-esr firefox-esr-l10n-zh-cn
 		apt purge -y firefox firefox-l10n-zh-cn
+		apt purge -y firefox-locale-zh-hans
 		apt autopurge
 	else
 		echo '小声嘀咕：“妾身不在的时候，你一定要好好照顾好自己。” '
@@ -1228,6 +1230,8 @@ REMOVEBROWSER() {
 		echo 'Press enter to confirm uninstall chromium,press Ctrl + C to cancel'
 		read
 		apt purge -y chromium chromium-l10n
+		apt-mark unhold chromium-browser chromium-browser-l10n chromium-codecs-ffmpeg-extra
+		apt purge -y chromium-browser chromium-browser-l10n
 		apt autopurge
 	fi
 	DEBIANMENU

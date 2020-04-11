@@ -243,19 +243,21 @@ CHECKdependencies() {
 		fi
 	fi
 
-	if [ "${DEBIANDISTRO}" = "ubuntu" ]; then
-		if [ ! -e "/bin/add-apt-repository" ] && [ ! -e "/usr/bin/add-apt-repository" ]; then
-			apt install -y software-properties-common
+	if [ "${LINUXDISTRO}" = "debian" ]; then
+		if [ "${DEBIANDISTRO}" = "ubuntu" ]; then
+			if [ ! -e "/bin/add-apt-repository" ] && [ ! -e "/usr/bin/add-apt-repository" ]; then
+				apt install -y software-properties-common
+			fi
 		fi
-	fi
 
-	if ! grep -q "^zh_CN" "/etc/locale.gen"; then
-		if [ ! -e "/usr/sbin/locale-gen" ]; then
-			apt install -y locales
+		if ! grep -q "^zh_CN" "/etc/locale.gen"; then
+			if [ ! -e "/usr/sbin/locale-gen" ]; then
+				apt install -y locales
+			fi
+			sed -i 's/# zh_CN.UTF-8 UTF-8/zh_CN.UTF-8 UTF-8/' /etc/locale.gen
+			locale-gen
+			apt install -y language-pack-zh-hans 2>/dev/null
 		fi
-		sed -i 's/# zh_CN.UTF-8 UTF-8/zh_CN.UTF-8 UTF-8/' /etc/locale.gen
-		locale-gen
-		apt install -y language-pack-zh-hans 2>/dev/null
 	fi
 
 	if [ "$(uname -r | cut -d '-' -f 3)" = "Microsoft" ] || [ "$(uname -r | cut -d '-' -f 2)" = "microsoft" ]; then
@@ -1062,7 +1064,6 @@ INSTALL-cinnamon-DESKTOP() {
 
 	elif [ "${LINUXDISTRO}" = "arch" ]; then
 		pacman -Syu --noconfirm sddm cinnamon xorg
-		pacman -S deepin deepin-screenshot
 		pacman -S --noconfirm tigervnc noto-fonts-cjk
 	fi
 
@@ -1162,21 +1163,44 @@ REMOVEGUI() {
 	echo '"xfce" "呜呜，(≧﹏ ≦)您真的要离开我么"  '
 	echo '"lxde" "很庆幸能与阁下相遇（；´д｀）ゞ "  '
 	echo '"mate" "喔...喔呜...我不舍得你走/(ㄒoㄒ)/~~"  '
-
+	#新功能预告：即将适配非deb系linux的gui卸载功能
 	echo "${YELLOW}按回车键确认卸载,按Ctrl+C取消${RESET} "
 	echo 'Press enter to confirm ,press Ctrl + C to cancel'
 	read
-	apt purge -y xfce4 xfce4-terminal tightvncserver xfce4-goodies
-	apt purge -y dbus-x11
-	apt purge -y ^xfce
-	apt purge -y xfwm4-theme-breeze xcursor-themes
-	apt purge -y lxde-core lxterminal
-	apt purge -y ^lxde
-	apt purge -y mate-desktop-environment-core mate-terminal || aptitude purge -y mate-desktop-environment-core 2>/dev/null
-	umount .gvfs
-	apt purge -y ^gvfs ^udisks
-	apt purge -y ^mate
-	apt autopurge
+	if [ "${LINUXDISTRO}" = "debian" ]; then
+		apt purge -y xfce4 xfce4-terminal tightvncserver xfce4-goodies
+		apt purge -y dbus-x11
+		apt purge -y ^xfce
+		apt purge -y xfwm4-theme-breeze xcursor-themes
+		apt purge -y lxde-core lxterminal
+		apt purge -y ^lxde
+		apt purge -y mate-desktop-environment-core mate-terminal || aptitude purge -y mate-desktop-environment-core 2>/dev/null
+		umount .gvfs
+		apt purge -y ^gvfs ^udisks
+		apt purge -y ^mate
+		apt purge -y -y kde-plasma-desktop
+		apt purge -y ^kde-plasma
+		apt purge -y ^gnome
+		apt purge -y ^cinnamon
+		apt purge -y dde
+		apt autopurge || apt autoremove
+	elif [ "${LINUXDISTRO}" = "arch" ]; then
+		pacman -Rsc xfce4 xfce4-goodies
+		pacman -Rsc mate mate-extra
+		pacman -Rsc lxde lxqt
+		pacman -Rsc plasma-desktop
+		pacman -Rsc gnome gnome-extra
+		pacman -Rsc cinnamon
+		pacman -Rsc deepin deepin-extra
+	elif [ "${LINUXDISTRO}" = "redhat" ]; then
+		dnf groupremove -y xfce
+		dnf groupremove -y mate-desktop
+		dnf groupremove -y lxde-desktop
+		dnf groupremove -y lxqt
+		dnf groupremove -y "KDE" "GNOME" "Cinnamon Desktop"
+	fi
+	dnf remove -y deepin-desktop
+
 	DEBIANMENU
 }
 

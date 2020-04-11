@@ -76,9 +76,10 @@ CHECKdependencies() {
 			else
 				dependencies="${dependencies} catimg"
 			fi
+
+		elif [ "${LINUXDISTRO}" = "redhat" ] || [ "${LINUXDISTRO}" = "arch" ]; then
+			dependencies="${dependencies} catimg"
 		fi
-	elif [ "${LINUXDISTRO}" = "redhat" ] || [ "${LINUXDISTRO}" = "arch" ]; then
-		dependencies="${dependencies} catimg"
 	fi
 
 	if [ ! -e /usr/bin/curl ]; then

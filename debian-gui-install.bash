@@ -1866,8 +1866,31 @@ MODIFYREMOTEDESKTOP() {
 #################################################
 MODIFYXRDPCONF() {
 	if [ ! -e "/usr/sbin/xrdp" ]; then
-		apt update
-		apt install -y xrdp
+		if [ "${LINUXDISTRO}" = "debian" ]; then
+			apt update
+			apt install -y xrdp
+		elif [ "${LINUXDISTRO}" = "alpine" ]; then
+			apk update
+			apk add xrdp
+
+		elif [ "${LINUXDISTRO}" = "arch" ]; then
+			pacman -Syu --noconfirm xrdp
+
+		elif [ "${LINUXDISTRO}" = "redhat" ]; then
+			dnf install -y xrdp || yum install -y xrdp
+
+		elif [ "${LINUXDISTRO}" = "openwrt" ]; then
+			#opkg update
+			opkg install xrdp
+
+		elif [ "${LINUXDISTRO}" = "gentoo" ]; then
+			emerge -av layman
+			layman -a bleeding-edge
+			layman -S
+			#ACCEPT_KEYWORDS="~amd64" USE="server" emerge -a xrdp
+			emerge -av xrdp
+		fi
+
 		if [ "${WINDOWSDISTRO}" = 'WSL' ]; then
 			echo '检测到您使用的是WSL,为防止与windows自带的远程桌面的端口冲突，建议您将默认的3389端口修改为其它'
 		fi

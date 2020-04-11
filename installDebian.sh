@@ -1453,7 +1453,7 @@ echo "2s后将自动开始配置zsh，您可以按Ctrl+C取消，这将不会继
 #wget -qcO /usr/local/bin/neofetch 'https://gitee.com/mirrors/neofetch/raw/master/neofetch' || curl -sLo /usr/local/bin/neofetch 'https://gitee.com/mirrors/neofetch/raw/master/neofetch'
 chmod +x /usr/local/bin/neofetch
 neofetch
-
+#############################
 if [ "$(cat /etc/issue | cut -c 1-4)" = "Arch" ]; then
   grep -q '^LANG=' /etc/locale.conf 2>/dev/null || echo 'LANG="zh_CN.UTF-8"' >> /etc/locale.conf
   if [ "$(uname -m)" = "aarch64" ] || [ "$(uname -m)" = "armv7l" ]; then
@@ -1469,7 +1469,61 @@ EndOfArchMirrors
   fi
   pacman -Syyu --noconfirm
 fi
+#################################
+if [ "$(cat /etc/os-release | grep 'ID=' | head -n 1 | cut -d '=' -f 2)" = "fedora" ]; then
+    tar -Ppzcvf ~/yum.repos.d-backup.tar.gz /etc/yum.repos.d
+    mv -f ~/yum.repos.d-backup.tar.gz /etc/yum.repos.d
+    cat >/etc/yum.repos.d/fedora.repo <<-'EndOfYumRepo'
+[fedora]
+name=Fedora $releasever - $basearch
+failovermethod=priority
+baseurl=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/$releasever/Everything/$basearch/os/
+metadata_expire=28d
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
+skip_if_unavailable=False
+EndOfYumRepo
 
+    cat >/etc/yum.repos.d/fedora-updates.repoo <<-'EndOfYumRepo'
+[updates]
+name=Fedora $releasever - $basearch - Updates
+failovermethod=priority
+baseurl=https://mirrors.tuna.tsinghua.edu.cn/fedora/updates/$releasever/Everything/$basearch/
+enabled=1
+gpgcheck=1
+metadata_expire=6h
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
+skip_if_unavailable=False
+EndOfYumRepo
+
+    cat >/etc/yum.repos.d/fedora-modular.repo <<-'EndOfYumRepo'
+[fedora-modular]
+name=Fedora Modular $releasever - $basearch
+failovermethod=priority
+baseurl=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/$releasever/Modular/$basearch/os/
+enabled=1
+metadata_expire=7d
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
+skip_if_unavailable=False
+EndOfYumRepo
+
+    cat >/etc/yum.repos.d/fedora-updates-modular.repo <<-'EndOfYumRepo'
+[updates-modular]
+name=Fedora Modular $releasever - $basearch - Updates
+failovermethod=priority
+baseurl=https://mirrors.tuna.tsinghua.edu.cn/fedora/updates/$releasever/Modular/$basearch/
+enabled=1
+gpgcheck=1
+metadata_expire=6h
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
+skip_if_unavailable=False
+EndOfYumRepo
+
+dnf makecache
+dnf upgrade -y
+fi
+############################
 if ! grep -q 'debian' '/etc/os-release'; then
   echo "检测到您使用的不是deb系linux，优化步骤可能会出现错误"
   echo "在脚本执行完成后，您可以手动输./zsh-i.sh来配置zsh，输debian-i打开软件安装工具"

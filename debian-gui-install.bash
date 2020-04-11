@@ -2143,7 +2143,7 @@ STARTVNCANDSTOPVNC() {
 	elif [ -f "/tmp/.Tmoe-LXQT-Desktop-Detection-FILE" ]; then
 		rm -f /tmp/.Tmoe-LXQT-Desktop-Detection-FILE
 		sed -i '/dbus-launch/d' startxsdl
-		sed -i '$ a\dbus-launch startlxde' startxsdl
+		sed -i '$ a\dbus-launch startlxqt' startxsdl
 	elif [ -f "/tmp/.Tmoe-KDE-PLASMA5-DESKTOP" ]; then
 		rm -f /tmp/.Tmoe-KDE-PLASMA5-DESKTOP
 		sed -i '/dbus-launch/d' startxsdl

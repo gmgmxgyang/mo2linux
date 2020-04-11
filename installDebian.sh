@@ -691,7 +691,7 @@ if [ "${LINUXDISTRO}" = "debian" ]; then
 fi
 ###########################################
 if [ ! -e /usr/bin/fzf ]; then
-    if [ "${LINUXDISTRO}" = "debian" ] || [ "${LINUXDISTRO}" = "alpine" ] || [ "${REDHATDISTRO}" = "fedora" ] || [ "${LINUXDISTRO}" = "arch" ]; then
+    if [ "${LINUXDISTRO}" = "debian" ] || [ "${LINUXDISTRO}" = "alpine" ] || [ "${LINUXDISTRO}" = "arch" ]; then
         dependencies="${dependencies} fzf"
     fi
 fi
@@ -1131,7 +1131,7 @@ fi
     #echo -e "\nsource ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" >> ${HOME}/.zshrc
 
     echo "正在克隆fzf-tab插件..."
-    if [ "${LINUXDISTRO}" = "debian" ] || [ "${LINUXDISTRO}" = "alpine" ] || [ "${LINUXDISTRO}" = "redhat" ] || [ "${LINUXDISTRO}" = "arch" ]; then
+    if [ "${LINUXDISTRO}" = "debian" ] || [ "${LINUXDISTRO}" = "alpine" ] || [ "${LINUXDISTRO}" = "arch" ]; then
         if [ -e /usr/bin/fzf ] || [ -e /bin/fzf ]; then
             rm -rf ${HOME}/.oh-my-zsh/custom/plugins/fzf-tab 2>/dev/null
             git clone --depth=1 https://gitee.com/mo2/fzf-tab.git ${HOME}/.oh-my-zsh/custom/plugins/fzf-tab || git clone --depth=1 https://github.com/Aloxaf/fzf-tab.git ${HOME}/.oh-my-zsh/custom/plugins/fzf-tab

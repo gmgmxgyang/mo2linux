@@ -2351,37 +2351,45 @@ FIXVNCdbusLaunch() {
 		if grep 'startxfce4' ~/.vnc/xstartup; then
 			echo "检测您当前的VNC配置为xfce4，正在将dbus-launch加入至启动脚本中..."
 			sed -i 's/.*startxfce.*/dbus-launch startxfce4 \&/' ~/.vnc/xstartup
-			sed -i 's/.*startxfce.*/dbus-launch startxfce4 \&/' "/usr/local/bin/startxsdl"
+			#sed -i 's/.*startxfce.*/dbus-launch startxfce4 \&/' "/usr/local/bin/startxsdl"
+			sed -i '$ c\dbus-launch startxfce4 \&' "/usr/local/bin/startxsdl"
 		elif grep 'startlxde' ~/.vnc/xstartup; then
 			echo "检测您当前的VNC配置为lxde，正在将dbus-launch加入至启动脚本中..."
 			sed -i 's/.*startlxde.*/dbus-launch startlxde \&/' ~/.vnc/xstartup
-			sed -i 's/.*startlxde.*/dbus-launch startlxde \&/' "/usr/local/bin/startxsdl"
+			#sed -i 's/.*startlxde.*/dbus-launch startlxde \&/' "/usr/local/bin/startxsdl"
+			sed -i '$ c\dbus-launch startlxde \&' "/usr/local/bin/startxsdl"
 		elif grep 'startlxqt' ~/.vnc/xstartup; then
 			echo "检测您当前的VNC配置为lxqt，正在将dbus-launch加入至启动脚本中..."
 			sed -i 's/.*startlxqt.*/dbus-launch startlxqt \&/' ~/.vnc/xstartup
-			sed -i 's/.*startlxqt.*/dbus-launch startlxqt \&/' "/usr/local/bin/startxsdl"
+			#sed -i 's/.*startlxqt.*/dbus-launch startlxqt \&/' "/usr/local/bin/startxsdl"
+			sed -i '$ c\dbus-launch startlxqt \&' "/usr/local/bin/startxsdl"
 		elif grep 'mate-session' ~/.vnc/xstartup; then
 			echo "检测您当前的VNC配置为mate，正在将dbus-launch加入至启动脚本中..."
 			sed -i 's/.*mate-session.*/dbus-launch mate-session \&/' ~/.vnc/xstartup
-			sed -i 's/.*mate-session.*/dbus-launch mate-session \&/' "/usr/local/bin/startxsdl"
-		elif grep 'startkde' ~/.vnc/xstartup; then
+			#sed -i 's/.*mate-session.*/dbus-launch mate-session \&/' "/usr/local/bin/startxsdl"
+			sed -i '$ c\dbus-launch mate-session \&' "/usr/local/bin/startxsdl"
+		elif grep 'startplasma' ~/.vnc/xstartup; then
 			echo "检测您当前的VNC配置为KDE Plasma5，正在将dbus-launch加入至启动脚本中..."
 			sed -i 's/.*startplasma-x11.*/dbus-launch startplasma-x11 \&/' ~/.vnc/xstartup
-			sed -i 's/.*startplasma-x11.*/dbus-launch startplasma-x11 \&/' "/usr/local/bin/startxsdl"
+			#sed -i 's/.*startplasma-x11.*/dbus-launch startplasma-x11 \&/' "/usr/local/bin/startxsdl"
 			sed -i 's/.* startkde.*/ dbus-launch startkde \&/' ~/.vnc/xstartup
 			#sed -i 's/.*startkde.*/dbus-launch startkde \&/' "/usr/local/bin/startxsdl"
+			sed -i '$ c\dbus-launch startplasma-x11 \&' "/usr/local/bin/startxsdl"
 		elif grep 'gnome-session' ~/.vnc/xstartup; then
 			echo "检测您当前的VNC配置为GNOME3，正在将dbus-launch加入至启动脚本中..."
 			sed -i 's/.*gnome-session.*/dbus-launch gnome-session \&/' ~/.vnc/xstartup
-			sed -i 's/.*gnome-session.*/dbus-launch gnome-session \&/' "/usr/local/bin/startxsdl"
+			#sed -i 's/.*gnome-session.*/dbus-launch gnome-session \&/' "/usr/local/bin/startxsdl"
+			sed -i '$ c\dbus-launch gnome-session \&' "/usr/local/bin/startxsdl"
 		elif grep 'cinnamon' ~/.vnc/xstartup; then
 			echo "检测您当前的VNC配置为cinnamon，正在将dbus-launch加入至启动脚本中..."
 			sed -i 's/.*cinnamon.*/dbus-launch cinnamon \&/' ~/.vnc/xstartup
-			sed -i 's/.*cinnamon.*/dbus-launch cinnamon \&/' "/usr/local/bin/startxsdl"
+			#sed -i 's/.*cinnamon.*/dbus-launch cinnamon \&/' "/usr/local/bin/startxsdl"
+			sed -i '$ c\dbus-launch cinnamon \&' "/usr/local/bin/startxsdl"
 		elif grep 'startdde' ~/.vnc/xstartup; then
 			echo "检测您当前的VNC配置为deepin desktop，正在将dbus-launch加入至启动脚本中..."
 			sed -i 's/.*startdde.*/dbus-launch startdde \&/' ~/.vnc/xstartup
-			sed -i 's/.*startdde.*/dbus-launch startdde \&/' "/usr/local/bin/startxsdl"
+			#sed -i 's/.*startdde.*/dbus-launch startdde \&/' "/usr/local/bin/startxsdl"
+			sed -i '$ c\dbus-launch startdde \&' "/usr/local/bin/startxsdl"
 		else
 			echo "未检测到vnc相关配置，请更新debian-i后再覆盖安装gui"
 		fi

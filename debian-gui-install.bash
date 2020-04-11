@@ -73,9 +73,9 @@ CHECKdependencies() {
 			fi
 			if ((${DEBIANVERSION} <= 9)); then
 				echo "检测到您的系统版本低于debian10，跳过安装catimg"
+			else
+				dependencies="${dependencies} catimg"
 			fi
-		else
-			dependencies="${dependencies} catimg"
 		fi
 	elif [ "${LINUXDISTRO}" = "redhat" ] || [ "${LINUXDISTRO}" = "arch" ]; then
 		dependencies="${dependencies} catimg"

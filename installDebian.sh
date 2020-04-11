@@ -141,7 +141,7 @@ fi
 #旧版将相关设立了alias，新版需要删掉。
 ####################
 #卸载chroot挂载目录
-if [ -e "${DebianCHROOT}/etc/tmp/.ChrootInstallationDetectionFile" ]; then
+if [ -e "${DebianCHROOT}/tmp/.Chroot-Container-Detection-File" ]; then
   su -c "umount -lf ${DebianCHROOT}/dev >/dev/null 2>&1"
   su -c "umount -lf ${DebianCHROOT}/dev/shm  >/dev/null 2>&1"
   su -c "umount -lf ${DebianCHROOT}/dev/pts  >/dev/null 2>&1"
@@ -293,9 +293,8 @@ echo "     Y rLXJL7.:jvi:i:::rvU:.7PP XQ. 7r7 "
 echo "    ir iJgL:uRB5UPjriirqKJ2PQMP :Yi17.v "
 echo "         :   r. ..      .. .:i  ...     "
 
-if [ -f "${HOME}/.ChrootInstallationDetectionFile" ]; then
-  rm -f ${HOME}/.ChrootInstallationDetectionFile
-  mkdir -p ${DebianCHROOT}/etc/tmp
+if [ -f "${HOME}/.Chroot-Container-Detection-File" ]; then
+  #rm -f ${HOME}/.Chroot-Container-Detection-File
   echo "Creating chroot startup script"
   echo "正在创建chroot启动脚本${PREFIX}/bin/debian "
   if [ -d "/sdcard" ]; then
@@ -329,9 +328,8 @@ if [ -f "${HOME}/.ChrootInstallationDetectionFile" ]; then
   cat >${PREFIX}/bin/debian <<-EndOfChrootFile
   #!/data/data/com.termux/files/usr/bin/bash
   DebianCHROOT=${HOME}/${DebianFolder}
-  if [ ! -e "${DebianCHROOT}/etc/tmp/.ChrootInstallationDetectionFile" ]; then
-    mkdir -p "${DebianCHROOT}/etc/tmp"
-    echo "本文件为chroot容器检测文件 Please do not delete this file!" >>${DebianCHROOT}/etc/tmp/.ChrootInstallationDetectionFile 2>/dev/null
+  if [ ! -e "${DebianCHROOT}/tmp/.Chroot-Container-Detection-File" ]; then
+    echo "本文件为chroot容器检测文件 Please do not delete this file!" >>${DebianCHROOT}/tmp/.Chroot-Container-Detection-File 2>/dev/null
   fi
   #sed替换匹配行,加密内容为chroot登录shell。为防止匹配行被替换，故采用base64加密。
   DEFAULTZSHLOGIN="\$(echo 'Y2hyb290ICR7RGViaWFuQ0hST09UfSAvYmluL3pzaCAtLWxvZ2luCg==' | base64 -d)"
@@ -423,6 +421,10 @@ else
     sed -i "s:\${DEFAULTZSHLOGIN}:\${DEFAULTBASHLOGIN}:g" ${PREFIX}/bin/debian
 fi
 
+if [ ! -e "${DebianCHROOT}/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
+  echo "本文件为Proot容器检测文件 Please do not delete this file!" >>${DebianCHROOT}/tmp/.Tmoe-Proot-Container-Detection-File 2>/dev/null
+fi
+
 if [ -z "\$1" ];then
     exec \$command
 else
@@ -461,7 +463,8 @@ cat >${PREFIX}/bin/debian-rm <<-EndOfFile
 	  YELLOW=\$(printf '\033[33m')
 	  RESET=\$(printf '\033[m')
     cd ~
-  if [ -e "${DebianCHROOT}/etc/tmp/.ChrootInstallationDetectionFile" ]; then
+    
+  if [ -e "${DebianCHROOT}/tmp/.Chroot-Container-Detection-File" ]; then
 		su -c "umount -lf ${DebianCHROOT}/dev >/dev/null 2>&1"
 		su -c "umount -lf ${DebianCHROOT}/dev/shm  >/dev/null 2>&1"
 	  su -c "umount -lf ${DebianCHROOT}/dev/pts  >/dev/null 2>&1"
@@ -584,6 +587,13 @@ if [ -d "${DebianCHROOT}/usr/local/bin" ]; then
   mkdir -p ${DebianCHROOT}/usr/local/bin
 fi
 
+if [ -f "${HOME}/.Tmoe-Proot-Container-Detection-File" ]; then
+  mv -f "${HOME}/.Tmoe-Proot-Container-Detection-File" ${DebianCHROOT}/tmp
+  echo "本文件为Proot容器检测文件 Please do not delete this file!" >>${DebianCHROOT}/tmp/.Tmoe-Proot-Container-Detection-File 2>/dev/null
+elif [ -f "${HOME}/.Chroot-Container-Detection-File" ]; then
+  mv -f "${HOME}/.Chroot-Container-Detection-File" ${DebianCHROOT}/tmp
+  echo "本文件为Chroot容器检测文件 Please do not delete this file!" >>${DebianCHROOT}/tmp/.Chroot-Container-Detection-File 2>/dev/null
+fi
 cd ${DebianCHROOT}/usr/local/bin
 
 curl -sLo "neofetch" 'https://gitee.com/mirrors/neofetch/raw/master/neofetch'
@@ -1055,7 +1065,7 @@ ENDOFPOWERLEVEL
         fi
     fi
 
-    if [ -e "/etc/tmp/.ChrootInstallationDetectionFile" ]; then
+    if [ -e "/tmp/.Chroot-Container-Detection-File" ]; then
         grep -q 'unset LD_PRELOAD' ${HOME}/.zshrc >/dev/null 2>&1 || sed -i "1 a\unset LD_PRELOAD" ${HOME}/.zshrc >/dev/null 2>&1
         grep -q 'zh_CN.UTF-8' ${HOME}/.zshrc >/dev/null 2>&1 || sed -i "$ a\export LANG=zh_CN.UTF-8" ${HOME}/.zshrc >/dev/null 2>&1
         grep -q 'HOME=/root' ${HOME}/.zshrc >/dev/null 2>&1 || sed -i "$ a\export HOME=/root" ${HOME}/.zshrc >/dev/null 2>&1

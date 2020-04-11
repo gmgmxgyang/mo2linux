@@ -814,12 +814,10 @@ INSTALLGUI() {
 	#绝赞测试中
 	##########################
 	if [ "$INSTALLDESKTOP" == '1' ]; then
-		#bash /etc/tmp/xfce.sh
 		INSTALLXFCE4DESKTOP
 	fi
 
 	if [ "$INSTALLDESKTOP" == '2' ]; then
-		#bash /etc/tmp/lxde.sh
 		INSTALLLXDEDESKTOP
 	fi
 
@@ -864,7 +862,7 @@ OTHERDESKTOP() {
 	fi
 	##############################
 	if [ "${BETADESKTOP}" == '3' ]; then
-		if [ -e "/etc/tmp/.ChrootInstallationDetectionFile" ]; then
+		if [ -e "/tmp/.Chroot-Container-Detection-File" ]; then
 			echo "检测到您当前可能处于chroot容器环境！"
 			echo "${YELLOW}警告！GNOME3可能无法正常运行${RESET}"
 		fi
@@ -1236,10 +1234,10 @@ VSCODESERVER() {
 		apt install -y git
 	fi
 
-	if [ ! -e "/etc/tmp/sed-vscode.tmp" ]; then
-		mkdir -p /etc/tmp
+	if [ ! -e "/tmp/sed-vscode.tmp" ]; then
+		mkdir -p /tmp
 
-		cat >"/etc/tmp/sed-vscode.tmp" <<-'EOF'
+		cat >"/tmp/sed-vscode.tmp" <<-'EOF'
 			if [ -e "/tmp/startcode.tmp" ]; then
 				echo "正在为您启动VSCode服务(器),请复制密码，并在浏览器的密码框中粘贴。"
 				echo "The VSCode service(server) is starting, please copy the password and paste it in your browser."
@@ -1253,8 +1251,8 @@ VSCODESERVER() {
 			fi
 		EOF
 	fi
-	grep '/tmp/startcode.tmp' /root/.bashrc >/dev/null || sed -i "$ r /etc/tmp/sed-vscode.tmp" /root/.bashrc
-	grep '/tmp/startcode.tmp' /root/.zshrc >/dev/null || sed -i "$ r /etc/tmp/sed-vscode.tmp" /root/.zshrc
+	grep '/tmp/startcode.tmp' /root/.bashrc >/dev/null || sed -i "$ r /tmp/sed-vscode.tmp" /root/.bashrc
+	grep '/tmp/startcode.tmp' /root/.zshrc >/dev/null || sed -i "$ r /tmp/sed-vscode.tmp" /root/.zshrc
 	if [ ! -x "/usr/bin/code" ]; then
 		chmod +x /usr/bin/code 2>/dev/null || echo -e "检测到您未安装vscode server\nDetected that you do not have vscode server installed."
 	fi
@@ -1444,7 +1442,7 @@ INSTALLORREMOVEVSCODE() {
 		echo "按任意键确认移除，按Ctrl+C取消。"
 		echo "${YELLOW}Press any key to remove VSCode Server. ${RESET}"
 		read
-		rm -f /usr/bin/code /etc/tmp/sed-vscode.tmp
+		rm -f /usr/bin/code /tmp/sed-vscode.tmp
 		echo "${YELLOW}移除成功，按回车键返回。${RESET}"
 		echo "Remove successfully.Press enter to return."
 		read
@@ -1691,7 +1689,7 @@ OTHERSOFTWARE() {
 		apt update
 		apt install --no-install-recommends -y libreoffice-l10n-zh-cn
 		apt install -y libreoffice-l10n-zh-cn libreoffice-gtk3
-		if [ ! -e "/etc/tmp/.ChrootInstallationDetectionFile" ] && [ "$(uname -m)" != "x86_64" ] && [ "$(uname -m)" != "i686" ]; then
+		if [ ! -e "/tmp/.Chroot-Container-Detection-File" ] && [ "$(uname -m)" != "x86_64" ] && [ "$(uname -m)" != "i686" ]; then
 			mkdir -p /prod/version
 			cd /usr/lib/libreoffice/program
 			rm -f oosplash
@@ -1836,7 +1834,7 @@ INSTALLXFCE4DESKTOP() {
 		unset DBUS_SESSION_BUS_ADDRESS
 		xrdb ${HOME}/.Xresources
 		export PULSE_SERVER=127.0.0.1
-		startxfce4 &
+		dbus-launch startxfce4 &
 	EndOfFile
 	#dbus-launch startxfce4 &
 	chmod +x ./xstartup
@@ -1955,7 +1953,7 @@ INSTALLMATEDESKTOP() {
 		apt-mark hold gvfs
 		apt update
 		apt install -y udisks2 2>/dev/null
-		if [ ! -e "/etc/tmp/.ChrootInstallationDetectionFile" ] && [ "$(uname -m)" != "x86_64" ] && [ "$(uname -m)" != "i686" ]; then
+		if [ ! -e "/tmp/.Chroot-Container-Detection-File" ] && [ "$(uname -m)" != "x86_64" ] && [ "$(uname -m)" != "i686" ]; then
 			echo "" >/var/lib/dpkg/info/udisks2.postinst
 		fi
 		apt-mark hold udisks2
@@ -2034,6 +2032,9 @@ INSTALLLXDEDESKTOP() {
 
 #################################################
 STARTVNCANDSTOPVNC() {
+	if [ ! -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
+		sed -i 's:dbus-launch::' ~/.vnc/xstartup
+	fi
 	cd /usr/local/bin
 	cat >startvnc <<-'EndOfFile'
 		#!/bin/bash
@@ -2177,6 +2178,10 @@ STARTVNCANDSTOPVNC() {
 		rm -f /tmp/.Tmoe-DEEPIN-Desktop-Detection-FILE
 		sed -i '/dbus-launch/d' startxsdl
 		sed -i '$ a\dbus-launch startdde' startxsdl
+	fi
+
+	if [ ! -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
+		sed -i 's:dbus-launch::' startxsdl
 	fi
 
 	#下面那行需放在检测完成之后才执行

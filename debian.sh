@@ -366,7 +366,7 @@ GNULINUX() {
 				aria2c -x 5 -k 1M --split=5 --allow-overwrite=true -o "wsl_update_x64.msi" 'https://cdn.tmoe.me/windows/20H1/wsl_update_x64.msi' || aria2c -x 16 -k 1M --split=16 --allow-overwrite=true -o "wsl_update_x64.msi" 'https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi' || aria2c -x 5 -k 1M --split=5 --allow-overwrite=true -o "wsl_update_x64.msi" 'https://m.tmoe.me/show/share/windows/20H1/wsl_update_x64.msi'
 				#/mnt/c/WINDOWS/system32/cmd.exe /c "start .\wsl_update_x64.msi"
 			fi
-			if [ -e "${DebianCHROOT}/etc/tmp/.ChrootInstallationDetectionFile" ]; then
+			if [ -e "${DebianCHROOT}/tmp/.Chroot-Container-Detection-File" ]; then
 				echo "检测到您当前使用的是chroot容器，将不会自动调用Windows程序。"
 				echo "请手动启动音频服务和X服务。"
 			fi
@@ -588,7 +588,9 @@ MainMenu() {
 			MainMenu
 
 		fi
-
+		rm -f ~/.Chroot-Container-Detection-File
+		rm -f "${DebianCHROOT}/tmp/.Chroot-Container-Detection-File" 2>/dev/null
+		touch ~/.Tmoe-Proot-Container-Detection-File
 		installDebian
 
 	fi
@@ -805,7 +807,7 @@ RootMode() {
 REMOVESYSTEM() {
 
 	cd ~
-	if [ -e "${DebianCHROOT}/etc/tmp/.ChrootInstallationDetectionFile" ]; then
+	if [ -e "${DebianCHROOT}/tmp/.Chroot-Container-Detection-File" ]; then
 		su -c "umount -lf ${DebianCHROOT}/dev >/dev/null 2>&1"
 		su -c "umount -lf ${DebianCHROOT}/dev/shm  >/dev/null 2>&1"
 		su -c "umount -lf ${DebianCHROOT}/dev/pts  >/dev/null 2>&1"
@@ -886,7 +888,7 @@ It is recommended that you back up the entire system before removal. If the data
 ########################################################################
 #
 BackupSystem() {
-	if [ -e "${DebianCHROOT}/etc/tmp/.ChrootInstallationDetectionFile" ]; then
+	if [ -e "${DebianCHROOT}/tmp/.Chroot-Container-Detection-File" ]; then
 		su -c "umount -lf ${DebianCHROOT}/dev >/dev/null 2>&1"
 		su -c "umount -lf ${DebianCHROOT}/dev/shm  >/dev/null 2>&1"
 		su -c "umount -lf ${DebianCHROOT}/dev/pts  >/dev/null 2>&1"
@@ -1182,7 +1184,7 @@ BACKUPTERMUX() {
 ########################################################################
 #
 RESTORESYSTEM() {
-	if [ -e "${DebianCHROOT}/etc/tmp/.ChrootInstallationDetectionFile" ]; then
+	if [ -e "${DebianCHROOT}/tmp/.Chroot-Container-Detection-File" ]; then
 		su -c "umount -lf ${DebianCHROOT}/dev >/dev/null 2>&1"
 		su -c "umount -lf ${DebianCHROOT}/dev/shm  >/dev/null 2>&1"
 		su -c "umount -lf ${DebianCHROOT}/dev/pts  >/dev/null 2>&1"
@@ -1513,10 +1515,10 @@ STARTVSCODE() {
 		chmod +x ${PREFIX}/bin/code
 	fi
 
-	if [ ! -e "${HOME}/${DebianFolder}/etc/tmp/sed-vscode.tmp" ]; then
-		mkdir -p ${HOME}/${DebianFolder}/etc/tmp/
+	if [ ! -e "${HOME}/${DebianFolder}/tmp/sed-vscode.tmp" ]; then
+		mkdir -p ${HOME}/${DebianFolder}/tmp/
 
-		cat >${HOME}/${DebianFolder}/etc/tmp/sed-vscode.tmp <<-'EOF'
+		cat >${HOME}/${DebianFolder}/tmp/sed-vscode.tmp <<-'EOF'
 			if [ -e "/tmp/startcode.tmp" ]; then
 				echo "正在为您启动VSCode服务(器),请复制密码，并在浏览器的密码框中粘贴。"
 				echo "The VSCode service(server) is starting, please copy the password and paste it in your browser."
@@ -1538,8 +1540,8 @@ STARTVSCODE() {
 		echo "" >>${HOME}/${DebianFolder}/root/.bashrc
 	fi
 
-	grep '/tmp/startcode.tmp' ${HOME}/${DebianFolder}/root/.bashrc >/dev/null || sed -i "$ r ${HOME}/${DebianFolder}/etc/tmp/sed-vscode.tmp" ${HOME}/${DebianFolder}/root/.bashrc
-	grep '/tmp/startcode.tmp' ${HOME}/${DebianFolder}/root/.zshrc >/dev/null || sed -i "$ r ${HOME}/${DebianFolder}/etc/tmp/sed-vscode.tmp" ${HOME}/${DebianFolder}/root/.zshrc
+	grep '/tmp/startcode.tmp' ${HOME}/${DebianFolder}/root/.bashrc >/dev/null || sed -i "$ r ${HOME}/${DebianFolder}/tmp/sed-vscode.tmp" ${HOME}/${DebianFolder}/root/.bashrc
+	grep '/tmp/startcode.tmp' ${HOME}/${DebianFolder}/root/.zshrc >/dev/null || sed -i "$ r ${HOME}/${DebianFolder}/tmp/sed-vscode.tmp" ${HOME}/${DebianFolder}/root/.zshrc
 
 	if [ -e "${HOME}/${DebianFolder}/usr/bin/code" ]; then
 		code
@@ -1614,7 +1616,9 @@ CHROOTINSTALLDebian() {
 	echo "按回车键继续,按Ctrl+C取消。"
 	echo "${YELLOW}Press enter to continue.${RESET}"
 	read
-	touch ~/.ChrootInstallationDetectionFile
+	rm -f "${DebianCHROOT}/tmp/.Tmoe-Proot-Container-Detection-File" 2>/dev/null
+	rm -f ~/.Tmoe-Proot-Container-Detection-File 2>/dev/null
+	touch ~/.Chroot-Container-Detection-File
 	installDebian
 }
 #################################

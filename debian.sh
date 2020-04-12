@@ -1860,7 +1860,7 @@ SWITCHvncPULSEaudio() {
 		PULSEtransportMethon='检测到您当前使用的是termux音频传输'
 	fi
 
-	if (whiptail --title "您想用哪个软件来传输VNC音频？(｡･∀･)ﾉﾞ" --yes-button 'Termux(*￣▽￣*)o' --no-button 'XSDL(っ °Д °)' --yesno "${PULSEtransportMethon},请选择您需要切换的传输类型！注：您必须先安装XSDL app才能使用XSDL的音频服务，切换成XSDL后，启动VNC时将同时打开XSDL,此时不会转发X,您也无需执行任何操作。" 11 50); then
+	if (whiptail --title "您想用哪个软件来传输VNC音频？(｡･∀･)ﾉﾞ" --yes-button 'Termux(*￣▽￣*)o' --no-button 'XSDL(っ °Д °)' --yesno "${PULSEtransportMethon},请选择您需要切换的传输类型！注：您必须先安装XSDL app才能使用XSDL的音频服务，切换成XSDL后，启动VNC时将自动打开XSDL,此时不会转发X,您也无需执行任何操作。" 11 50); then
 
 		sed -i 's/^export.*PULSE.*/export PULSE_SERVER=127.0.0.1/' ${DebianCHROOT}/root/.vnc/xstartup || echo "没有找到vnc xstartup呢！请确保您已安装gui"
 		sed -i '/x.org.server.MainActivity/d' $PREFIX/bin/startvnc

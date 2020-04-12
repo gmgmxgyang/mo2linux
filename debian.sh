@@ -554,7 +554,7 @@ ANDROIDTERMUX() {
 
 MainMenu() {
 	OPTION=$(
-		whiptail --title "Tmoe-Debian GNU/Linux manager(20200409-21)" --backtitle "$(
+		whiptail --title "Tmoe-Debian GNU/Linux manager(20200412-15)" --backtitle "$(
 			base64 -d <<-'DoYouWantToSeeWhatIsInside'
 				6L6TZGViaWFuLWnlkK/liqjmnKznqIvluo8sVHlwZSBkZWJpYW4taSB0byBzdGFydCB0aGUgdG9v
 				bCzokIzns7vnlJ/niannoJTnqbblkZgK
@@ -1760,13 +1760,14 @@ TERMUXINSTALLXFCE() {
 		echo "${YELLOW}按回车键继续${RESET}"
 		read
 	fi
-	OPTION=$(whiptail --title "Termux GUI" --menu "Termux native GUI has fewer software packages. It is recommended that you install a debian system. Termux原系统GUI可玩性较低，建议您安装GNU/Linux系统" 16 60 4 \
+	OPTION=$(whiptail --title "Termux GUI" --menu "Termux native GUI has fewer software packages. It is recommended that you install a debian system. Termux原系统GUI可玩性较低，建议您安装GNU/Linux系统" 17 60 6 \
 		"1" "install xfce4" \
 		"2" "modify vnc conf" \
 		"3" "配置Termux局域网音频传输" \
-		"4" "更换为清华源(支持termux、debian、ubuntu)" \
-		"5" "下载termux_Fdroid.apk" \
-		"6" "remove xfce4" \
+		"4" "切换VNC音频传输方式" \
+		"5" "更换为清华源(支持termux、debian、ubuntu)" \
+		"6" "下载termux_Fdroid.apk" \
+		"7" "remove xfce4" \
 		"0" "Back to the main menu 返回主菜单" \
 		3>&1 1>&2 2>&3)
 	###########################################################################
@@ -1826,7 +1827,11 @@ TERMUXINSTALLXFCE() {
 		TERMUXPULSEAUDIOLAN
 	fi
 	##################
-	if [ "${OPTION}" == '6' ]; then
+	if [ "${OPTION}" == '4' ]; then
+		SWITCHvncPULSEaudio
+	fi
+	##################
+	if [ "${OPTION}" == '7' ]; then
 		if [ "${LINUXDISTRO}" != 'Android' ]; then
 			bash -c "$(curl -LfsS https://gitee.com/mo2/linux/raw/master/debian-gui-install.bash)"
 			exit 0
@@ -1834,7 +1839,7 @@ TERMUXINSTALLXFCE() {
 		REMOVEANDROIDTERMUXXFCE
 	fi
 	##################
-	if [ "${OPTION}" == '4' ]; then
+	if [ "${OPTION}" == '5' ]; then
 		if [ "${LINUXDISTRO}" = 'Android' ]; then
 			TERMUXTUNASOURCESLIST
 		else
@@ -1842,11 +1847,38 @@ TERMUXINSTALLXFCE() {
 		fi
 	fi
 	##################
-	if [ "${OPTION}" == '5' ]; then
+	if [ "${OPTION}" == '6' ]; then
 		ARIA2CDOWNLOADTERMUXAPK
 	fi
 }
 #####################################
+SWITCHvncPULSEaudio() {
+	cd ${DebianCHROOT}/root
+	if grep -Eq '4712|4713' ./.vnc/xstartup; then
+		PULSEtransportMethon='检测到您当前使用的可能是XSDL音频传输'
+	else
+		PULSEtransportMethon='检测到您当前使用的是termux音频传输'
+	fi
+
+	if (whiptail --title "您想用哪个软件来传输VNC音频？(｡･∀･)ﾉﾞ" --yes-button 'Termux(*￣▽￣*)o' --no-button 'XSDL(っ °Д °)' --yesno "${PULSEtransportMethon},请选择您需要切换的传输类型！" 8 50); then
+
+		sed -i 's/^export.*PULSE.*/export PULSE_SERVER=127.0.0.1/' ${DebianCHROOT}/root/.vnc/xstartup
+		sed -i '/x.org.server.MainActivity/d' $PREFIX/bin/startvnc
+		sed -i '/sleep 5/d' $PREFIX/bin/startvnc
+		#source startvnc
+	else
+		sed -i 's/^export.*PULSE.*/export PULSE_SERVER=127.0.0.1:4713/' ${DebianCHROOT}/root/.vnc/xstartup
+		#cd $PREFIX/bin/
+		grep -q 'x.org.server' startvnc || sed -i '2 a\am start -n x.org.server/x.org.server.MainActivity \nsleep 5' startvnc
+		#source startvnc
+	fi
+	echo "修改完成！(￣▽￣),您需要输startvnc来启动vnc"
+	echo 'press Enter to return.'
+	echo "${YELLOW}按回车键返回。${RESET}"
+	read
+	TERMUXINSTALLXFCE
+}
+###############################
 TERMUXPULSEAUDIOLAN() {
 	cd $PREFIX/etc/pulse
 	if grep -q '192.168.0.0/16' default.pa; then
@@ -1990,7 +2022,7 @@ MODIFYANDROIDTERMUXVNCCONF() {
 	CURRENTTERMUXVNCRES=$(sed -n 7p "$(command -v startvnc)" | cut -d 'y' -f 2 | cut -d '-' -f 1)
 	if (whiptail --title "modify vnc configuration" --yes-button '分辨率resolution' --no-button '其它other' --yesno "您想要修改哪些配置信息？What configuration do you want to modify?" 9 50); then
 		if grep -q 'debian_' "$(command -v startvnc)"; then
-			echo "您当前使用的startvnc配置为debian系统专用版，请进入debian系统后输debian-i修改"
+			echo "您当前使用的startvnc配置为Linux容器系统专用版，请输debian进入容器后再输debian-i修改"
 			echo "本选项仅适用于termux原系统。"
 			echo 'Press Enter to return.'
 			echo "${YELLOW}按回车键返回。${RESET}"

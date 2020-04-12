@@ -1543,6 +1543,7 @@ OTHERSOFTWARE() {
 			"9" "Parole：xfce默认媒体播放器，风格简洁" \
 			"10" "百度网盘(x86_64):提供文件的网络备份、同步和分享服务" \
 			"11" "网易云音乐(x86_64):专注于发现与分享的音乐产品" \
+			"12" "Tasksel:轻松,快速地安装组软件" \
 			"0" "Back to the main menu 返回主菜单" \
 			3>&1 1>&2 2>&3
 	)
@@ -1751,6 +1752,24 @@ OTHERSOFTWARE() {
 	if [ "${SOFTWARE}" == '11' ]; then
 		163NETEASEMUSIC
 	fi
+	###########################
+	if [ "${SOFTWARE}" == '12' ]; then
+		if [ ! -e "/usr/bin/tasksel" ]; then
+			apt update
+			apt install -y tasksel
+		fi
+		tasksel --list-tasks
+		echo "您可以使用tasksel install 包名来安装软件。"
+		echo "按回车键打开gui管理工具"
+		read
+		tasksel
+		echo 'Press Enter to return.'
+		echo "${YELLOW}按回车键返回。${RESET}"
+		read
+		DEBIANMENU
+
+	fi
+
 }
 ######################
 163NETEASEMUSIC() {

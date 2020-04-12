@@ -1865,11 +1865,10 @@ SWITCHvncPULSEaudio() {
 		sed -i 's/^export.*PULSE.*/export PULSE_SERVER=127.0.0.1/' ${DebianCHROOT}/root/.vnc/xstartup || echo "没有找到vnc xstartup呢！请确保您已安装gui"
 		sed -i '/x.org.server.MainActivity/d' $PREFIX/bin/startvnc
 		sed -i '/sleep 5/d' $PREFIX/bin/startvnc
-		#source startvnc
 	else
 		sed -i 's/^export.*PULSE.*/export PULSE_SERVER=127.0.0.1:4713/' ${DebianCHROOT}/root/.vnc/xstartup || echo "没有找到vnc xstartup呢！请确保您已安装gui"
-		grep -q 'x.org.server' startvnc || sed -i '2 a\am start -n x.org.server/x.org.server.MainActivity \nsleep 5' $PREFIX/bin/startvnc
-		#source startvnc
+		cd $PREFIX/bin/
+		grep -q 'x.org.server' startvnc || sed -i '2 a\am start -n x.org.server/x.org.server.MainActivity \nsleep 5' startvnc
 	fi
 	echo "修改完成！(￣▽￣),您需要输startvnc来启动vnc"
 	echo 'press Enter to return.'

@@ -1209,8 +1209,8 @@ REMOVEGUI() {
 		dnf groupremove -y lxde-desktop
 		dnf groupremove -y lxqt
 		dnf groupremove -y "KDE" "GNOME" "Cinnamon Desktop"
+		dnf remove -y deepin-desktop
 	fi
-	dnf remove -y deepin-desktop
 
 	DEBIANMENU
 }

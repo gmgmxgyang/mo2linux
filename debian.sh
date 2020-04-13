@@ -559,7 +559,7 @@ ANDROIDTERMUX() {
 
 MainMenu() {
 	OPTION=$(
-		whiptail --title "Tmoe-Debian GNU/Linux manager(20200412-15)" --backtitle "$(
+		whiptail --title "Tmoe-Debian GNU/Linux manager(20200414-01)" --backtitle "$(
 			base64 -d <<-'DoYouWantToSeeWhatIsInside'
 				6L6TZGViaWFuLWnlkK/liqjmnKznqIvluo8sVHlwZSBkZWJpYW4taSB0byBzdGFydCB0aGUgdG9v
 				bCzokIzns7vnlJ/niannoJTnqbblkZgK
@@ -908,6 +908,7 @@ BackupSystem() {
 		"0" "Back to the main menu 返回主菜单" \
 		"1" "备份Debian" \
 		"2" "备份Termux" \
+		"3" "使用Timeshift备份宿主机系统" \
 		3>&1 1>&2 2>&3)
 	###########################################################################
 	if [ "${OPTION}" == '1' ]; then
@@ -974,7 +975,23 @@ BackupSystem() {
 		BACKUPTERMUX
 
 	fi
+	###################
+	if [ "${OPTION}" == '3' ]; then
+		if [ "${LINUXDISTRO}" = "Android" ]; then
+			echo 'Sorry,本功能不支持Android系统'
+			echo "${YELLOW}按回车键返回。${RESET}"
+			echo "Press enter to return."
+			read
+			MainMenu
+		fi
 
+		if [ ! -e "/usr/bin/timeshift" ]; then
+			apt update
+			apt install -y timeshift
+		else
+			timeshift
+		fi
+	fi
 	##########################################
 	if [ "${OPTION}" == '0' ]; then
 

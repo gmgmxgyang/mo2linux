@@ -2193,9 +2193,9 @@ STARTVNCANDSTOPVNC() {
 		#sed -i '$ a\dbus-launch startplasma-x11' startxsdl
 		cat >>startxsdl <<-'EndOfKDE'
 			if command -v "startkde" >/dev/null; then
-				dbus-launch startkde &
+				dbus-launch startkde
 			else
-				dbus-launch startplasma-x11 &
+				dbus-launch startplasma-x11
 			fi
 		EndOfKDE
 	elif [ -f "/tmp/.Tmoe-GNOME3-Desktop-Detection-FILE" ]; then

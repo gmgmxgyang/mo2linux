@@ -1242,7 +1242,7 @@ RESTORESYSTEM() {
 				if [ ! -z "$(command -v pv)" ]; then
 					pv ${RESTORE} | tar -PJx
 				else
-					tar -PpJxvf ${RESTORE}
+					tar -Ppzxvf ${RESTORE}
 				fi
 			fi
 

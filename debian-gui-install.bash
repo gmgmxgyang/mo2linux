@@ -1827,15 +1827,6 @@ INSTALLXFCE4DESKTOP() {
 			sed -i 's/chromium %U/chromium --no-sandbox %U/g' /usr/share/applications/chromium.desktop
 			grep 'chromium' /etc/profile || sed -i '$ a\alias chromium="chromium --no-sandbox"' /etc/profile
 			apt search kali-linux
-		else
-			if [ ! -e "/usr/share/desktop-base/kali-theme" ]; then
-				cd /tmp
-				rm -f ./kali-themes-common.deb 2>/dev/null
-				KaliTHEMElatestLINK="$(wget -O- 'https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-themes/' | grep kali-themes-common | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
-				wget -O 'kali-themes-common.deb' "https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-themes/${KaliTHEMElatestLINK}"
-				apt install -y ./kali-themes-common.deb
-				rm -f ./kali-themes-common.deb
-			fi
 		fi
 		apt clean
 	elif [ "${LINUXDISTRO}" = "redhat" ]; then
@@ -1848,7 +1839,20 @@ INSTALLXFCE4DESKTOP() {
 		pacman -S --noconfirm noto-fonts-cjk
 	elif [ "${LINUXDISTRO}" = "void" ]; then
 		xbps-install -S -y xfce4 tigervnc
+	fi
 
+	if [ ! -e "/usr/share/desktop-base/kali-theme" ]; then
+		mkdir -p /tmp/.kali-themes-common
+		cd /tmp/kali-theme
+		#rm -f ./kali-themes-common.deb 2>/dev/null
+		KaliTHEMElatestLINK="$(wget -O- 'https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-themes/' | grep kali-themes-common | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
+		wget -O 'kali-themes-common.deb' "https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-themes/${KaliTHEMElatestLINK}"
+		ar vx 'kali-themes-common.deb'
+		tar -Jxvf data.tar.xz -C /
+		cd ..
+		rm -rf /tmp/.kali-themes-common
+	#apt install -y ./kali-themes-common.deb
+	#rm -f ./kali-themes-common.deb
 	fi
 	cd /usr/share/xfce4/terminal
 	echo "正在配置xfce4终端配色..."

@@ -1230,12 +1230,20 @@ RESTORESYSTEM() {
 			#0-6是截取字符
 			if [ "${RESTORE:0-6:6}" == 'tar.xz' ]; then
 				echo 'tar.xz'
-				pv ${RESTORE} | tar -PJx
+				if [ ! -z "$(command -v pv)" ]; then
+					pv ${RESTORE} | tar -PJx
+				else
+					tar -PpJxvf ${RESTORE}
+				fi
 			fi
 
 			if [ "${RESTORE:0-6:6}" == 'tar.gz' ]; then
 				echo 'tar.gz'
-				pv ${RESTORE} | tar -Pzx
+				if [ ! -z "$(command -v pv)" ]; then
+					pv ${RESTORE} | tar -PJx
+				else
+					tar -PpJxvf ${RESTORE}
+				fi
 			fi
 
 			;;

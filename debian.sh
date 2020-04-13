@@ -853,7 +853,7 @@ It is recommended that you back up the entire system before removal. If the data
 	chmod 777 -R ${DebianFolder}
 	rm -rfv "${DebianFolder}" ${PREFIX}/bin/debian ${PREFIX}/bin/startvnc ${PREFIX}/bin/stopvnc ${PREFIX}/bin/startxsdl ${PREFIX}/bin/debian-rm ${PREFIX}/bin/code 2>/dev/null || tsudo rm -rfv "${DebianFolder}" ${PREFIX}/bin/debian ${PREFIX}/bin/startvnc ${PREFIX}/bin/stopvnc ${PREFIX}/bin/startxsdl ${PREFIX}/bin/debian-rm ${PREFIX}/bin/code 2>/dev/null
 	if [ -d "${HOME}/debian_armhf" ]; then
-		echo "疑似检测到存在树莓派armhf系统，正在移除..."
+		echo "检测到疑似存在树莓派armhf系统，正在移除..."
 		chmod 777 -R "${HOME}/debian_armhf"
 		rm -rf "${HOME}/debian_armhf" 2>/dev/null || tsudo rm -rfv "${HOME}/debian_armhf"
 	fi
@@ -949,9 +949,11 @@ BackupSystem() {
 			echo "您选择了tar.gz,即将为您备份至/sdcard/Download/backup/${TMPtime}.tar.gz"
 			echo "${YELLOW}按回车键开始备份,按Ctrl+C取消。Press Enter to start the backup.${RESET} "
 			read
-
-			tar -Ppczf - --exclude=~/${DebianFolder}/root/sd --exclude=~/${DebianFolder}/root/tf --exclude=~/${DebianFolder}/root/termux ~/${DebianFolder} ${PREFIX}/bin/debian ${PREFIX}/bin/startvnc ${PREFIX}/bin/stopvnc | (pv -p --timer --rate --bytes >${TMPtime}.tar.gz)
-
+			if [ ! -z "$(command -v pv)" ]; then
+				tar -Ppczf - --exclude=~/${DebianFolder}/root/sd --exclude=~/${DebianFolder}/root/tf --exclude=~/${DebianFolder}/root/termux ~/${DebianFolder} ${PREFIX}/bin/debian ${PREFIX}/bin/startvnc ${PREFIX}/bin/stopvnc | (pv -p --timer --rate --bytes >${TMPtime}.tar.gz)
+			else
+				tar -Ppczvf ${TMPtime}.tar.gz --exclude=~/${DebianFolder}/root/sd --exclude=~/${DebianFolder}/root/tf --exclude=~/${DebianFolder}/root/termux ~/${DebianFolder} ${PREFIX}/bin/debian ${PREFIX}/bin/startvnc ${PREFIX}/bin/stopvnc
+			fi
 			#最新版弃用了whiptail的进度条！！！
 			#tar -Ppczf - --exclude=~/${DebianFolder}/root/sd --exclude=~/${DebianFolder}/root/tf --exclude=~/${DebianFolder}/root/termux ~/${DebianFolder} ${PREFIX}/bin/debian | (pv -n >${TMPtime}.tar.gz) 2>&1 | whiptail --gauge "Packaging into tar.gz \n正在打包成tar.gz" 10 70
 
@@ -1023,7 +1025,7 @@ BACKUPTERMUX() {
 			echo "${YELLOW}按回车键开始备份,按Ctrl+C取消。Press Enter to start the backup.${RESET} "
 			read
 
-			tar -PJpvcf ${TMPtime}.tar.xz --exclude=/data/data/com.termux/files/home/${DebianFolder}/root/sd --exclude=/data/data/com.termux/files/home/${DebianFolder}/root/termux --exclude=/data/data/com.termux/files/home/${DebianFolder}/root/tf /data/data/com.termux/files/home
+			tar -PJpvcf ${TMPtime}.tar.xz --exclude=${DebianCHROOT}/root/sd --exclude=${DebianCHROOT}/root/termux --exclude=${DebianCHROOT}/root/tf ${HOME}
 
 			#xz -z -T0 -e -9 -v ${TMPtime}.tar
 
@@ -1042,7 +1044,7 @@ BACKUPTERMUX() {
 			echo "${YELLOW}按回车键开始备份,按Ctrl+C取消。Press Enter to start the backup.${RESET} "
 			read
 
-			tar -Ppvczf ${TMPtime}.tar.gz --exclude=/data/data/com.termux/files/home/${DebianFolder}/root/sd --exclude=/data/data/com.termux/files/home/${DebianFolder}/root/termux --exclude=/data/data/com.termux/files/home/${DebianFolder}/root/tf /data/data/com.termux/files/home
+			tar -Ppvczf ${TMPtime}.tar.gz --exclude=${DebianCHROOT}/root/sd --exclude=${DebianCHROOT}/root/termux --exclude=${DebianCHROOT}/root/tf ${HOME}
 
 			echo "Don't worry too much, it is normal for some directories to backup without permission."
 			echo "部分目录无权限备份是正常现象。"
@@ -1061,10 +1063,9 @@ BACKUPTERMUX() {
 	if [ "$TERMUXBACKUP" == 'usr' ]; then
 
 		if [ ! -d /sdcard/Download/backup ]; then
-			mkdir -p /sdcard/Download/backup && cd /sdcard/Download/backup
-		else
-			cd /sdcard/Download/backup
+			mkdir -p /sdcard/Download/backup
 		fi
+		cd /sdcard/Download/backup
 
 		ls -lth ./termux-usr*.tar.* 2>/dev/null && echo '您之前所备份的(部分)文件如上所示'
 
@@ -1082,7 +1083,13 @@ BACKUPTERMUX() {
 
 			#tar -PJpcf ${TMPtime}.tar /data/data/com.termux/files/usr
 			echo '正在压缩成tar.xz'
-			tar -PJpcf - /data/data/com.termux/files/usr | (pv -p --timer --rate --bytes >${TMPtime}.tar.xz)
+
+			if [ ! -z "$(command -v pv)" ]; then
+				tar -PpJcf - ${PREFIX} | (pv -p --timer --rate --bytes >${TMPtime}.tar.xz)
+			else
+				tar -PpJcvf ${TMPtime}.tar.xz ${PREFIX}
+			fi
+
 			#echo '正在压缩成xz'
 			#xz -z -T0 -e -9 -v ${TMPtime}.tar
 
@@ -1102,7 +1109,13 @@ BACKUPTERMUX() {
 			read
 
 			#tar -Ppczf ${TMPtime}.tar.gz   /data/data/com.termux/files/usr
-			tar -Ppczf - /data/data/com.termux/files/usr | (pv -p --timer --rate --bytes >${TMPtime}.tar.gz)
+
+			if [ ! -z "$(command -v pv)" ]; then
+				tar -Ppczf - ${PREFIX} | (pv -p --timer --rate --bytes >${TMPtime}.tar.gz)
+			else
+				tar -Ppczvf ${TMPtime}.tar.gz ${PREFIX}
+			fi
+
 			##tar -czf - ~/${DebianFolder} | (pv -p --timer --rate --bytes > ${TMPtime}.tar.gz)
 
 			echo "Don't worry too much, it is normal for some directories to backup without permission."
@@ -1142,7 +1155,12 @@ BACKUPTERMUX() {
 
 			#tar -PJpcf ${TMPtime}.tar /data/data/com.termux/files/usr
 			echo '正在压缩成tar.xz'
-			tar -PJpcf - /data/data/com.termux/files/home /data/data/com.termux/files/usr | (pv -p --timer --rate --bytes >${TMPtime}.tar.xz)
+			if [ ! -z "$(command -v pv)" ]; then
+				tar -PpJcf - ${HOME} ${PREFIX} | (pv -p --timer --rate --bytes >${TMPtime}.tar.xz)
+			else
+				tar -PpJcvf ${TMPtime}.tar.xz ${HOME} ${PREFIX}
+			fi
+
 			#echo '正在压缩成xz'
 			#xz -z -T0 -e -9 -v ${TMPtime}.tar
 
@@ -1162,7 +1180,11 @@ BACKUPTERMUX() {
 			read
 
 			#tar -Ppczf ${TMPtime}.tar.gz   /data/data/com.termux/files/usr
-			tar -Ppczf - /data/data/com.termux/files/home /data/data/com.termux/files/usr | (pv -p --timer --rate --bytes >${TMPtime}.tar.gz)
+			if [ ! -z "$(command -v pv)" ]; then
+				tar -Ppczf - ${HOME} ${PREFIX} | (pv -p --timer --rate --bytes >${TMPtime}.tar.gz)
+			else
+				tar -Ppczvf ${TMPtime}.tar.gz ${HOME} ${PREFIX}
+			fi
 			##tar -czf - ~/${DebianFolder} | (pv -p --timer --rate --bytes > ${TMPtime}.tar.gz)
 
 			echo "Don't worry too much, it is normal for some directories to backup without permission."
@@ -1240,7 +1262,7 @@ RESTORESYSTEM() {
 			if [ "${RESTORE:0-6:6}" == 'tar.gz' ]; then
 				echo 'tar.gz'
 				if [ ! -z "$(command -v pv)" ]; then
-					pv ${RESTORE} | tar -PJx
+					pv ${RESTORE} | tar -Pzx
 				else
 					tar -Ppzxvf ${RESTORE}
 				fi
@@ -1289,12 +1311,20 @@ RESTORESYSTEM() {
 
 			if [ "${RESTORE:0-6:6}" == 'tar.xz' ]; then
 				echo 'tar.xz'
-				pv ${RESTORE} | tar -PJx
+				if [ ! -z "$(command -v pv)" ]; then
+					pv ${RESTORE} | tar -PJx
+				else
+					tar -PpJxvf ${RESTORE}
+				fi
 			fi
 
 			if [ "${RESTORE:0-6:6}" == 'tar.gz' ]; then
 				echo 'tar.gz'
-				pv ${RESTORE} | tar -Pzx
+				if [ ! -z "$(command -v pv)" ]; then
+					pv ${RESTORE} | tar -Pzx
+				else
+					tar -Ppzxvf ${RESTORE}
+				fi
 			fi
 
 			;;
@@ -1742,6 +1772,7 @@ UNXZDEBIANRECOVERYKIT() {
 	echo "正在解压debian_2020-03-11_17-31.tar.xz，Decompressing debian-xfce recovery package, please be patient."
 	pv "debian_2020-03-11_17-31.tar.xz" | tar -PpJx 2>/dev/null
 	cd "$cur"
+	#用绝对路径
 	if [ ! -L '/data/data/com.termux/files/home/storage/external-1' ]; then
 
 		sed -i 's@^command+=" -b /data/data/com.termux/files/home/storage/external-1@#&@g' ${PREFIX}/bin/debian 2>/dev/null

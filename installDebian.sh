@@ -445,7 +445,8 @@ EndOfFile
 
 cat >${PREFIX}/bin/stopvnc <<-'EndOfFile'
 #!/data/data/com.termux/files/usr/bin/bash
-pkill -u $(whoami)
+#pkill -u $(whoami)
+sh -c "$(ps -e | grep -Ev "sshd|sh|pkill" | awk '{print $4}' | sed '/(/d' | sed 's/^/pkill &/g')"
 EndOfFile
 
 #不要单引号

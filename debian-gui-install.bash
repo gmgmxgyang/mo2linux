@@ -1085,7 +1085,7 @@ INSTALL-cinnamon-DESKTOP() {
 		unset DBUS_SESSION_BUS_ADDRESS
 		xrdb ${HOME}/.Xresources
 		export PULSE_SERVER=127.0.0.1
-		dbus-launch cinnamon &
+		dbus-launch cinnamon-launch &
 	EndOfFile
 	chmod +x ./xstartup
 	rm -f /tmp/.Tmoe-*Desktop-Detection-FILE 2>/dev/null 2>/dev/null
@@ -2190,7 +2190,14 @@ STARTVNCANDSTOPVNC() {
 	elif [ -f "/tmp/.Tmoe-KDE-PLASMA5-Desktop-Detection-FILE" ]; then
 		rm -f /tmp/.Tmoe-KDE-PLASMA5-Desktop-Detection-FILE
 		sed -i '/dbus-launch/d' startxsdl
-		sed -i '$ a\dbus-launch startplasma-x11' startxsdl
+		#sed -i '$ a\dbus-launch startplasma-x11' startxsdl
+		cat >>startxsdl <<-'EndOfKDE'
+			if command -v "startkde" >/dev/null; then
+				dbus-launch startkde &
+			else
+				dbus-launch startplasma-x11 &
+			fi
+		EndOfKDE
 	elif [ -f "/tmp/.Tmoe-GNOME3-Desktop-Detection-FILE" ]; then
 		rm -f /tmp/.Tmoe-GNOME3-Desktop-Detection-FILE
 		sed -i '/dbus-launch/d' startxsdl
@@ -2198,7 +2205,7 @@ STARTVNCANDSTOPVNC() {
 	elif [ -f "/tmp/.Tmoe-cinnamon-Desktop-Detection-FILE" ]; then
 		rm -f /tmp/.Tmoe-cinnamon-Desktop-Detection-FILE
 		sed -i '/dbus-launch/d' startxsdl
-		sed -i '$ a\dbus-launch cinnamon' startxsdl
+		sed -i '$ a\dbus-launch cinnamon-launch' startxsdl
 	elif [ -f "/tmp/.Tmoe-DEEPIN-Desktop-Detection-FILE" ]; then
 		rm -f /tmp/.Tmoe-DEEPIN-Desktop-Detection-FILE
 		sed -i '/dbus-launch/d' startxsdl
@@ -2390,10 +2397,11 @@ FIXVNCdbusLaunch() {
 		elif grep 'startplasma' ~/.vnc/xstartup; then
 			echo "检测您当前的VNC配置为KDE Plasma5，正在将dbus-launch加入至启动脚本中..."
 			sed -i 's/.*startplasma-x11.*/dbus-launch startplasma-x11 \&/' ~/.vnc/xstartup
-			#sed -i 's/.*startplasma-x11.*/dbus-launch startplasma-x11 \&/' "/usr/local/bin/startxsdl"
+			sed -i 's/.*startplasma-x11.*/dbus-launch startplasma-x11 \&/' "/usr/local/bin/startxsdl"
 			sed -i 's/.* startkde.*/ dbus-launch startkde \&/' ~/.vnc/xstartup
+			sed -i 's/.* startkde.*/ dbus-launch startkde \&/' "/usr/local/bin/startxsdl"
 			#sed -i 's/.*startkde.*/dbus-launch startkde \&/' "/usr/local/bin/startxsdl"
-			sed -i '$ c\dbus-launch startplasma-x11 \&' "/usr/local/bin/startxsdl"
+			#sed -i '$ c\dbus-launch startplasma-x11 \&' "/usr/local/bin/startxsdl"
 		elif grep 'gnome-session' ~/.vnc/xstartup; then
 			echo "检测您当前的VNC配置为GNOME3，正在将dbus-launch加入至启动脚本中..."
 			sed -i 's/.*gnome-session.*/dbus-launch gnome-session \&/' ~/.vnc/xstartup
@@ -2401,9 +2409,9 @@ FIXVNCdbusLaunch() {
 			sed -i '$ c\dbus-launch gnome-session \&' "/usr/local/bin/startxsdl"
 		elif grep 'cinnamon' ~/.vnc/xstartup; then
 			echo "检测您当前的VNC配置为cinnamon，正在将dbus-launch加入至启动脚本中..."
-			sed -i 's/.*cinnamon.*/dbus-launch cinnamon \&/' ~/.vnc/xstartup
+			sed -i 's/.*cinnamon.*/dbus-launch cinnamon-launch \&/' ~/.vnc/xstartup
 			#sed -i 's/.*cinnamon.*/dbus-launch cinnamon \&/' "/usr/local/bin/startxsdl"
-			sed -i '$ c\dbus-launch cinnamon \&' "/usr/local/bin/startxsdl"
+			sed -i '$ c\dbus-launch cinnamon-launch \&' "/usr/local/bin/startxsdl"
 		elif grep 'startdde' ~/.vnc/xstartup; then
 			echo "检测您当前的VNC配置为deepin desktop，正在将dbus-launch加入至启动脚本中..."
 			sed -i 's/.*startdde.*/dbus-launch startdde \&/' ~/.vnc/xstartup

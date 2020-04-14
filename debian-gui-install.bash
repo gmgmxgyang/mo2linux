@@ -1355,6 +1355,7 @@ CONFIGTHEMES() {
 			tar -Jxvf /tmp/.ukui-gtk-themes/data.tar.xz ./usr
 			#if which update-icon-caches >/dev/null 2>&1; then
 			update-icon-caches /usr/share/icons/ukui-icon-theme-basic /usr/share/icons/ukui-icon-theme-classical /usr/share/icons/ukui-icon-theme-default
+			update-icon-caches /usr/share/icons/ukui-icon-theme
 			#fi
 			rm -rf /tmp/.ukui-gtk-themes
 			#apt install -y ./ukui-themes.deb

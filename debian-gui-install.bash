@@ -1317,8 +1317,8 @@ CHINESEMANPAGES() {
 	apt update
 	apt install -y debian-reference-zh-cn manpages manpages-zh man-db
 	if [ ! -e "${HOME}/文档/debian-handbook/usr/share/doc/debian-handbook/html" ]; then
-		mkdir -p ~/文档/debian-handbook
-		cd ~/文档/debian-handbook
+		mkdir -p ${HOME}/文档/debian-handbook
+		cd ${HOME}/文档/debian-handbook
 		wget -O 'debian-handbook.deb' 'https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/d/debian-handbook/debian-handbook_8.20180830_all.deb'
 		ar xv 'debian-handbook.deb'
 		tar -Jxvf data.tar.xz ./usr/share/doc/debian-handbook/html

@@ -1353,9 +1353,9 @@ CONFIGTHEMES() {
 			ar vx 'ukui-themes.deb'
 			cd /
 			tar -Jxvf /tmp/.ukui-gtk-themes/data.tar.xz ./usr
-			if which update-icon-caches >/dev/null 2>&1; then
-				update-icon-caches /usr/share/icons/ukui-icon-theme-basic /usr/share/icons/ukui-icon-theme-classical /usr/share/icons/ukui-icon-theme-default
-			fi
+			#if which update-icon-caches >/dev/null 2>&1; then
+			update-icon-caches /usr/share/icons/ukui-icon-theme-basic /usr/share/icons/ukui-icon-theme-classical /usr/share/icons/ukui-icon-theme-default
+			#fi
 			rm -rf /tmp/.ukui-gtk-themes
 			#apt install -y ./ukui-themes.deb
 			#rm -f ukui-themes.deb
@@ -1867,6 +1867,7 @@ INSTALLXFCE4DESKTOP() {
 		KaliTHEMElatestLINK="$(wget -O- 'https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-themes/' | grep kali-themes-common | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
 		wget -O 'kali-themes-common.deb' "https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-themes/${KaliTHEMElatestLINK}"
 		ar vx 'kali-themes-common.deb'
+		update-icon-caches /usr/share/icons/Flat-Remix-Blue-Dark /usr/share/icons/Flat-Remix-Blue-Light /usr/share/icons/desktop-base
 		#tar -Jxvf data.tar.xz -C /
 		cd /
 		tar -Jxvf /tmp/.kali-themes-common/data.tar.xz ./usr

@@ -1316,6 +1316,15 @@ CHINESEMANPAGES() {
 	echo '即将为您安装 debian-reference-zh-cn、manpages、manpages-zh和man-db'
 	apt update
 	apt install -y debian-reference-zh-cn manpages manpages-zh man-db
+	if [ ! -e "${HOME}/文档/debian-handbook/usr/share/doc/debian-handbook/html" ]; then
+		mkdir -p ~/文档/debian-handbook
+		cd ~/文档/debian-handbook
+		wget -O 'debian-handbook.deb' 'https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/d/debian-handbook/debian-handbook_8.20180830_all.deb'
+		ar xv 'debian-handbook.deb'
+		tar -Jxvf data.tar.xz ./usr/share/doc/debian-handbook/html
+		ls | grep -v usr | xargs rm -rf
+		ln -sf ./usr/share/doc/debian-handbook/html/zh-CN/index.html ./
+	fi
 	echo "man一款帮助手册软件，它可以帮助您了解关于命令的详细用法。"
 	echo "man a help manual software, which can help you understand the detailed usage of the command."
 	echo "您可以输${YELLOW}man 软件或命令名称${RESET}来获取帮助信息，例如${YELLOW}man bash${RESET}或${YELLOW}man zsh${RESET}"
@@ -1841,6 +1850,7 @@ INSTALLXFCE4DESKTOP() {
 		if [ "${DEBIANDISTRO}" = "kali" ]; then
 			apt install -y kali-menu
 			apt install -y kali-undercover
+			apt install -y zenmap
 			apt install -y kali-themes-common
 			if [ "${archtype}" = "arm64" ] || [ "${archtype}" = "armhf" ]; then
 				apt install -y kali-linux-arm

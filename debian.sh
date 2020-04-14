@@ -986,10 +986,23 @@ BackupSystem() {
 		fi
 
 		if [ ! -e "/usr/bin/timeshift" ]; then
-			apt update
-			apt install -y timeshift
-		else
-			timeshift
+			if [ "${LINUXDISTRO}" = "debian" ]; then
+				apt update
+				apt install -y timeshift
+			elif [ "${LINUXDISTRO}" = "arch" ]; then
+				pacman -Syu --noconfirm timeshift
+			elif [ "${LINUXDISTRO}" = "redhat" ]; then
+				dnf install timeshift
+			fi
+		fi
+
+		if [ -e "/usr/bin/timeshift" ]; then
+			timeshift-launcher &
+			echo "安装完成，如需卸载，请手动输apt purge -y timeshift"
+			echo "${YELLOW}按回车键返回。${RESET}"
+			echo "Press enter to return."
+			read
+			BackupSystem
 		fi
 	fi
 	##########################################

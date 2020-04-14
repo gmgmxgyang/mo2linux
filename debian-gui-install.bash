@@ -1342,14 +1342,24 @@ CONFIGTHEMES() {
 	fi
 
 	if [ "$INSTALLTHEME" == '1' ]; then
+		apt update
 		apt install ukui-themes
 
 		if [ ! -e '/usr/share/icons/ukui-icon-theme-default' ] && [ ! -e '/usr/share/icons/ukui-icon-theme' ]; then
-			cd /tmp
+			mkdir -p /tmp/.ukui-gtk-themes
+			cd /tmp/.ukui-gtk-themes
 			UKUITHEME="$(curl -LfsS 'https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/u/ukui-themes/' | grep all.deb | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
 			wget -O 'ukui-themes.deb' "https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/u/ukui-themes/${UKUITHEME}"
-			apt install -y ./ukui-themes.deb
-			rm -f ukui-themes.deb
+			ar vx 'ukui-themes.deb'
+			cd /
+			tar -Jxvf /tmp/.ukui-gtk-themes/data.tar.xz ./usr
+			if which update-icon-caches >/dev/null 2>&1; then
+				update-icon-caches /usr/share/icons/ukui-icon-theme-basic /usr/share/icons/ukui-icon-theme-classical /usr/share/icons/ukui-icon-theme-default
+			fi
+			rm -rf /tmp/.ukui-gtk-themes
+			#apt install -y ./ukui-themes.deb
+			#rm -f ukui-themes.deb
+			apt install -y ukui-greeter
 		else
 			echo '请前往外观设置手动修改图标'
 		fi
@@ -1843,13 +1853,14 @@ INSTALLXFCE4DESKTOP() {
 
 	if [ ! -e "/usr/share/desktop-base/kali-theme" ]; then
 		mkdir -p /tmp/.kali-themes-common
-		cd /tmp/kali-theme
+		cd /tmp/.kali-themes-common
 		#rm -f ./kali-themes-common.deb 2>/dev/null
 		KaliTHEMElatestLINK="$(wget -O- 'https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-themes/' | grep kali-themes-common | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
 		wget -O 'kali-themes-common.deb' "https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-themes/${KaliTHEMElatestLINK}"
 		ar vx 'kali-themes-common.deb'
-		tar -Jxvf data.tar.xz -C /
-		cd ..
+		#tar -Jxvf data.tar.xz -C /
+		cd /
+		tar -Jxvf /tmp/.kali-themes-common/data.tar.xz ./usr
 		rm -rf /tmp/.kali-themes-common
 	#apt install -y ./kali-themes-common.deb
 	#rm -f ./kali-themes-common.deb

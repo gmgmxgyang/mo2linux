@@ -1344,7 +1344,7 @@ CONFIGTHEMES() {
 		"2" "win10：kali卧底模式主题" \
 		"3" "MacOS：Mojave" \
 		"4" "UOS：国产统一操作系统图标包" \
-		"5" "breeze：plasma桌面的gtk+版主题" \
+		"5" "breeze：plasma桌面微风gtk+版主题" \
 		"6" "Kali：kali-Flat-Remix-Blue主题" \
 		"0" "我一个都不要 =￣ω￣=" \
 		3>&1 1>&2 2>&3)

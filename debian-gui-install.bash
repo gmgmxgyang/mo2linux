@@ -1720,7 +1720,7 @@ OTHERSOFTWARE() {
 		apt update
 		apt install --no-install-recommends -y libreoffice-l10n-zh-cn
 		apt install -y libreoffice-l10n-zh-cn libreoffice-gtk3
-		if [ ! -e "/tmp/.Chroot-Container-Detection-File" ] && [ "$(uname -m)" != "x86_64" ] && [ "$(uname -m)" != "i686" ]; then
+		if [ ! -e "/tmp/.Chroot-Container-Detection-File" ] && [ "${archtype}" != "amd64" ] && [ "${archtype}" != "i386" ]; then
 			mkdir -p /prod/version
 			cd /usr/lib/libreoffice/program
 			rm -f oosplash
@@ -2012,7 +2012,7 @@ INSTALLMATEDESKTOP() {
 		apt-mark hold gvfs
 		apt update
 		apt install -y udisks2 2>/dev/null
-		if [ ! -e "/tmp/.Chroot-Container-Detection-File" ] && [ "$(uname -m)" != "x86_64" ] && [ "$(uname -m)" != "i686" ]; then
+		if [ ! -e "/tmp/.Chroot-Container-Detection-File" ] && [ "${archtype}" != "amd64" ] && [ "${archtype}" != "i386" ]; then
 			echo "" >/var/lib/dpkg/info/udisks2.postinst
 		fi
 		apt-mark hold udisks2
@@ -2552,13 +2552,19 @@ BetaFeatures() {
 	############################
 	if [ "${TMOEBETA}" == '8' ]; then
 		cd /tmp
-		if [ "$(uname -m)" = "x86_64" ]; then
-			wget -O 'electronic-wechat.deb' 'http://mirrors.ustc.edu.cn/debiancn/debiancn/pool/main/e/electronic-wechat/electronic-wechat_2.0~repack0~debiancn0_amd64.deb'
-			apt install -y ./electronic-wechat.deb
-			rm -vf ./electronic-wechat.deb
-			echo "安装完成，如需卸载，请手动输apt purge -y electronic-wechat"
+		if [ "${archtype}" = "amd64" ]; then
+			#wget -O 'electronic-wechat.deb' 'http://mirrors.ustc.edu.cn/debiancn/debiancn/pool/main/e/electronic-wechat/electronic-wechat_2.0~repack0~debiancn0_amd64.deb'
+			wget -O 'electronic-wechat.deb' 'http://archive.ubuntukylin.com:10006/ubuntukylin/pool/main/e/electronic-wechat/electronic-wechat_2.0.1_amd64.deb'
+		elif [ "${archtype}" = "i386" ]; then
+			wget -O 'electronic-wechat.deb' 'http://archive.ubuntukylin.com:10006/ubuntukylin/pool/main/e/electronic-wechat/electronic-wechat_2.0.1_i386.deb'
 		else
 			echo "非常抱歉，暂不支持您的架构"
+		fi
+
+		apt install -y ./electronic-wechat.deb
+		rm -vf ./electronic-wechat.deb
+		if [ -e "/usr/bin/electronic-wechat" ]; then
+			echo "安装完成，如需卸载，请手动输apt purge -y electronic-wechat"
 		fi
 	fi
 	##############################

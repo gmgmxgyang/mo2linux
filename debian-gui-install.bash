@@ -1422,7 +1422,7 @@ CONFIGTHEMES() {
 ################################
 Installkaliundercover() {
 
-	if [ -f "/usr/bin/kali-undercover" ]; then
+	if [ -e "/usr/share/icons/Windows-10-Icons" ]; then
 		echo "检测到您已安装win10主题"
 	else
 		#if [ "$(cat /etc/issue | cut -c 1-4)" = "Kali" ]; then
@@ -1430,14 +1430,23 @@ Installkaliundercover() {
 			apt update
 			apt install -y kali-undercover
 		else
-			cd /tmp
+			mkdir -p /tmp/.kali-undercover-win10-theme
+			cd /tmp/.kali-undercover-win10-theme
 			UNDERCOVERlatestLINK="$(curl -LfsS 'https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-undercover/' | grep all.deb | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
 			wget -O kali-undercover.deb "https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-undercover/${UNDERCOVERlatestLINK}"
 			apt install -y ./kali-undercover.deb
-			rm -f ./kali-undercover.deb
+			if [ ! -e "/usr/share/icons/Windows-10-Icons" ]; then
+				ar xv kali-undercover.deb
+				cd /
+				tar -Jxvf /tmp/.kali-undercover-win10-theme/data.tar.xz ./usr
+				if which update-icon-caches >/dev/null 2>&1; then
+					update-icon-caches /usr/share/icons/Windows-10-Icons
+				fi
+			fi
+			rm -rf /tmp/.kali-undercover-win10-theme
+			#rm -f ./kali-undercover.deb
 		fi
 	fi
-
 	echo "安装完成，如需卸载，请手动输apt purge -y kali-undercover"
 	echo 'Press Enter to return.'
 	echo "${YELLOW}按回车键返回。${RESET}"

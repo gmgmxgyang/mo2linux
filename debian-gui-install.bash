@@ -1746,7 +1746,7 @@ OTHERSOFTWARE() {
 	fi
 	##########################
 	if [ "${SOFTWARE}" == '10' ]; then
-		if [ "$(uname -m)" != "x86_64" ]; then
+		if [ "${archtype}" != "amd64" ] && [ "${archtype}" != "i386" ]; then
 			echo "暂不支持您的架构"
 			echo 'Press Enter to return.'
 			echo "${YELLOW}按回车键返回。${RESET}"
@@ -1793,7 +1793,7 @@ OTHERSOFTWARE() {
 }
 ######################
 163NETEASEMUSIC() {
-	if [ "$(uname -m)" != "x86_64" ]; then
+	if [ "${archtype}" != "amd64" ] && [ "${archtype}" != "i386" ]; then
 		echo "暂不支持您的架构"
 		echo 'Press Enter to return.'
 		echo "${YELLOW}按回车键返回。${RESET}"
@@ -1806,7 +1806,11 @@ OTHERSOFTWARE() {
 		read
 	fi
 	cd /tmp
-	wget -O netease-cloud-music.deb "http://d1.music.126.net/dmusic/netease-cloud-music_1.2.1_amd64_ubuntu_20190428.deb"
+	if [ "${archtype}" = "amd64" ]; then
+		wget -O netease-cloud-music.deb "http://d1.music.126.net/dmusic/netease-cloud-music_1.2.1_amd64_ubuntu_20190428.deb"
+	else
+		wget -O netease-cloud-music.deb "http://mirrors.ustc.edu.cn/debiancn/pool/main/n/netease-cloud-music/netease-cloud-music_1.0.0%2Brepack.debiancn-1_i386.deb"
+	fi
 	apt install -y ./netease-cloud-music.deb
 	echo "安装完成，如需卸载，请手动输apt purge -y netease-cloud-music"
 	rm -fv ./netease-cloud-music.deb

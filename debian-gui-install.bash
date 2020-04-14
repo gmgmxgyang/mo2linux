@@ -1340,12 +1340,12 @@ CHINESEMANPAGES() {
 CONFIGTHEMES() {
 	INSTALLTHEME=$(whiptail --title "桌面环境主题" --menu \
 		"您想要下载哪个主题？按方向键选择！下载完成后，您需要手动修改外观设置中的样式和图标。注：您需修改窗口管理器样式才能解决标题栏丢失的问题。\n Which theme do you want to download? " 15 60 5 \
-		"1" "ukui：国产优麒麟ukui桌面默认主题" \
-		"2" "win10：kali卧底模式主题(仅支持xfce)" \
+		"1" "ukui：国产优麒麟ukui桌面主题" \
+		"2" "win10：kali卧底模式主题" \
 		"3" "MacOS：Mojave" \
 		"4" "UOS：国产统一操作系统图标包" \
 		"5" "breeze：plasma桌面的gtk+版主题" \
-		"6" "Kali：kali默认主题Flat-Remix-Blue" \
+		"6" "Kali：kali-Flat-Remix-Blue主题" \
 		"0" "我一个都不要 =￣ω￣=" \
 		3>&1 1>&2 2>&3)
 

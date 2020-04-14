@@ -1985,6 +1985,11 @@ MODIFYXRDPCONF() {
 			sed -i 's:exec /bin/sh /etc/X11/Xsession:exec /bin/sh xfce4-session /etc/X11/Xsession:g' /etc/xrdp/startwm.sh
 		fi
 	fi
+
+	if ! grep -q 'PULSE_SERVER' /etc/xrdp/startwm.sh; then
+		sed -i '/test -x \/etc\/X11/i\#export PULSE_SERVER=127.0.0.1' /etc/xrdp/startwm.sh
+	fi
+
 	service xrdp status || systemctl status xrdp
 	echo "如需修改启动脚本，请输nano /etc/xrdp/startwm.sh"
 	echo "如需修改配置文件，请输nano /etc/xrdp/xrdp.ini"

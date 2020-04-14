@@ -1182,7 +1182,7 @@ REMOVEGUI() {
 		apt purge -y xfce4 xfce4-terminal tightvncserver xfce4-goodies
 		apt purge -y dbus-x11
 		apt purge -y ^xfce
-		apt purge -y xfwm4-theme-breeze xcursor-themes
+		#apt purge -y xcursor-themes
 		apt purge -y lxde-core lxterminal
 		apt purge -y ^lxde
 		apt purge -y mate-desktop-environment-core mate-terminal || aptitude purge -y mate-desktop-environment-core 2>/dev/null
@@ -1296,6 +1296,7 @@ INSTALLsynaptic() {
 	if (whiptail --title "您想要对这个小可爱做什么呢 " --yes-button "Install安装" --no-button "Remove移除" --yesno "新立德是一款使用apt的图形化软件包管理工具，您也可以把它理解为软件商店。Synaptic is a graphical package management program for apt. It provides the same features as the apt-get command line utility with a GUI front-end based on Gtk+.它提供与apt-get命令行相同的功能，并带有基于Gtk+的GUI前端。功能：1.安装、删除、升级和降级单个或多个软件包。 2.升级整个系统。 3.管理软件源列表。  4.自定义过滤器选择(搜索)软件包。 5.按名称、状态、大小或版本对软件包进行排序。 6.浏览与所选软件包相关的所有可用在线文档。♪(^∇^*) " 19 50); then
 		apt update
 		apt install -y synaptic
+		apt install -y gdebi
 		sed -i 's/synaptic-pkexec/synaptic/g' /usr/share/applications/synaptic.desktop
 
 	else
@@ -1338,11 +1339,12 @@ CHINESEMANPAGES() {
 ########################################################################
 CONFIGTHEMES() {
 	INSTALLTHEME=$(whiptail --title "桌面环境主题" --menu \
-		"您想要下载哪个主题？按方向键选择,当前可下载4个主题/图标包。下载完成后，您需要手动修改外观设置中的样式和图标。注：您需修改窗口管理器样式才能解决标题栏丢失的问题。\n Which theme do you want to download? " 15 60 4 \
+		"您想要下载哪个主题？按方向键选择！下载完成后，您需要手动修改外观设置中的样式和图标。注：您需修改窗口管理器样式才能解决标题栏丢失的问题。\n Which theme do you want to download? " 15 60 5 \
 		"1" "ukui：国产优麒麟ukui桌面默认主题" \
 		"2" "win10：kali卧底模式主题(仅支持xfce)" \
 		"3" "MacOS：Mojave" \
 		"4" "UOS：国产统一操作系统图标包" \
+		"5" "breeze：plasma桌面的gtk+版主题" \
 		"0" "我一个都不要 =￣ω￣=" \
 		3>&1 1>&2 2>&3)
 
@@ -1401,7 +1403,7 @@ CONFIGTHEMES() {
 		rm -rf /tmp/McMojave
 		echo "Download completed.如需删除，请手动输rm -rf /usr/share/themes/Mojave-dark /usr/share/icons/McMojave-circle-dark /usr/share/icons/McMojave-circle"
 	fi
-
+	##########################
 	if [ "$INSTALLTHEME" == '4' ]; then
 		if [ -d "/usr/share/icons/Uos" ]; then
 			echo "检测到Uos图标包已下载，是否继续。"
@@ -1421,7 +1423,15 @@ CONFIGTHEMES() {
 		rm -rf /tmp/UosICONS
 		echo "Download completed.如需删除，请手动输rm -rf /usr/share/icons/Uos"
 	fi
+	###########################################
 
+	if [ "$INSTALLTHEME" == '5' ]; then
+		apt update
+		apt install -y breeze-cursor-theme breeze-gtk-theme breeze-icon-theme
+		apt install -y xfwm4-theme-breeze
+		echo "Install completed.如需卸载，请手动输apt purge -y breeze-cursor-theme breeze-gtk-theme breeze-icon-theme xfwm4-theme-breeze"
+	fi
+	######################################
 	echo 'Press Enter to return.'
 	echo "${YELLOW}按回车键返回。${RESET}"
 	read
@@ -1796,7 +1806,6 @@ OTHERSOFTWARE() {
 		echo "${YELLOW}按回车键返回。${RESET}"
 		read
 		DEBIANMENU
-
 	fi
 
 }
@@ -1846,7 +1855,7 @@ INSTALLXFCE4DESKTOP() {
 		apt install -y dbus-x11
 		apt install -y tightvncserver
 		apt purge -y ^libfprint
-		apt install -y xfwm4-theme-breeze xcursor-themes
+		apt install -y xcursor-themes
 		if [ "${DEBIANDISTRO}" = "kali" ]; then
 			apt install -y kali-menu
 			apt install -y kali-undercover
@@ -2486,6 +2495,8 @@ BetaFeatures() {
 		"7" "typora(markdown编辑器)" \
 		"8" "electronic-wechat(第三方微信客户端)" \
 		"9" "qbittorrent(P2P下载工具)" \
+		"10" "plasma-discover:KDE发现(软件中心)" \
+		"11" "gnome-software软件商店" \
 		"0" "Back to the main menu 返回主菜单" \
 		3>&1 1>&2 2>&3)
 	##############################
@@ -2587,6 +2598,25 @@ BetaFeatures() {
 		echo "安装完成，如需卸载，请手动输apt purge -y qbittorrent"
 	fi
 
+	################################
+	##################################
+	if [ "${TMOEBETA}" == '10' ]; then
+		if [ ! -e "/usr/bin/plasma-discover" ]; then
+			apt update
+			apt install -y plasma-discover
+		fi
+		plasma-discover &
+		echo "安装完成，如需卸载，请手动输apt purge -y plasma-discover"
+	fi
+	##################################
+	if [ "${TMOEBETA}" == '11' ]; then
+		if [ ! -e "/usr/bin/gnome-software" ]; then
+			apt update
+			apt install -y gnome-software
+		fi
+		gnome-software &
+		echo "安装完成，如需卸载，请手动输apt purge -y gnome-software"
+	fi
 	############################
 	echo 'Press Enter to return.'
 	echo "${YELLOW}按回车键返回。${RESET}"

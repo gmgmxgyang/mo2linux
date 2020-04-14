@@ -1147,7 +1147,8 @@ INSTALL-DEEPIN-DESKTOP() {
 
 	elif [ "${LINUXDISTRO}" = "arch" ]; then
 		pacman -Syu --noconfirm deepin deepin-extra lightdm lightdm-deepin-greeter xorg
-		pacman -S --noconfirm file-roller evince gedit thunderbird gpicview
+		#pacman -S --noconfirm deepin-kwin
+		#pacman -S --noconfirm file-roller evince
 		pacman -S --noconfirm tigervnc
 		pacman -S --noconfirm noto-fonts-cjk
 		rm -v ~/.pam_environment 2>/dev/null

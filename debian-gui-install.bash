@@ -1345,6 +1345,7 @@ CONFIGTHEMES() {
 		"3" "MacOS：Mojave" \
 		"4" "UOS：国产统一操作系统图标包" \
 		"5" "breeze：plasma桌面的gtk+版主题" \
+		"6" "Kali：kali默认主题Flat-Remix-Blue" \
 		"0" "我一个都不要 =￣ω￣=" \
 		3>&1 1>&2 2>&3)
 
@@ -1427,11 +1428,27 @@ CONFIGTHEMES() {
 
 	if [ "$INSTALLTHEME" == '5' ]; then
 		apt update
-		apt install -y breeze-cursor-theme breeze-gtk-theme breeze-icon-theme
+		apt install -y breeze-cursor-theme breeze-gtk-theme
+		apt install -y breeze-icon-theme
 		apt install -y xfwm4-theme-breeze
 		echo "Install completed.如需卸载，请手动输apt purge -y breeze-cursor-theme breeze-gtk-theme breeze-icon-theme xfwm4-theme-breeze"
 	fi
 	######################################
+	if [ "$INSTALLTHEME" == '6' ]; then
+		if [ ! -e "/usr/share/desktop-base/kali-theme" ]; then
+			mkdir -p /tmp/.kali-themes-common
+			cd /tmp/.kali-themes-common
+			KaliTHEMElatestLINK="$(wget -O- 'https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-themes/' | grep kali-themes-common | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
+			wget -O 'kali-themes-common.deb' "https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-themes/${KaliTHEMElatestLINK}"
+			ar vx 'kali-themes-common.deb'
+			update-icon-caches /usr/share/icons/Flat-Remix-Blue-Dark /usr/share/icons/Flat-Remix-Blue-Light /usr/share/icons/desktop-base
+			cd /
+			tar -Jxvf /tmp/.kali-themes-common/data.tar.xz ./usr
+			rm -rf /tmp/.kali-themes-common
+		fi
+		echo "Download completed.如需删除，请手动输rm -rf /usr/share/desktop-base/kali-theme /usr/share/icons/desktop-base /usr/share/icons/Flat-Remix-Blue-Light /usr/share/icons/Flat-Remix-Blue-Dark"
+	fi
+	##############################
 	echo 'Press Enter to return.'
 	echo "${YELLOW}按回车键返回。${RESET}"
 	read

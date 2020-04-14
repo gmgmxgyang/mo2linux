@@ -1839,12 +1839,10 @@ INSTALLXFCE4DESKTOP() {
 		apt purge -y ^libfprint
 		apt install -y xfwm4-theme-breeze xcursor-themes
 		if [ "${DEBIANDISTRO}" = "kali" ]; then
-			apt install -y kali-linux
 			apt install -y kali-menu
 			apt install -y kali-undercover
-			apt install -y kali-linux-top10
 			apt install -y kali-themes-common
-			if [ "$(uname -m)" = "aarch64" ] || [ "$(uname -m)" = "armv7l" ]; then
+			if [ "${archtype}" = "arm64" ] || [ "${archtype}" = "armhf" ]; then
 				apt install -y kali-linux-arm
 			fi
 			apt install -y chromium-l10n

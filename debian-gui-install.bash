@@ -1439,9 +1439,9 @@ Installkaliundercover() {
 				ar xv kali-undercover.deb
 				cd /
 				tar -Jxvf /tmp/.kali-undercover-win10-theme/data.tar.xz ./usr
-				if which update-icon-caches >/dev/null 2>&1; then
-					update-icon-caches /usr/share/icons/Windows-10-Icons
-				fi
+				#if which update-icon-caches >/dev/null 2>&1; then
+				update-icon-caches /usr/share/icons/Windows-10-Icons
+				#fi
 			fi
 			rm -rf /tmp/.kali-undercover-win10-theme
 			#rm -f ./kali-undercover.deb

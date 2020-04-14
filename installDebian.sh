@@ -1207,7 +1207,7 @@ cat >.profile <<-'EDITBASHPROFILE'
 YELLOW=$(printf '\033[33m')
 RESET=$(printf '\033[m')
 cd ~
-#配置清华源
+#配置国内镜像源
 if [ "$(uname -m)" = "mips" ]; then
   chattr +i /etc/apt/sources.list
   sed -i 's:# en_US.UTF-8 UTF-8:en_US.UTF-8 UTF-8:' /etc/locale.gen
@@ -1221,32 +1221,32 @@ if [ ! -f "/tmp/.RASPBIANARMHFDetectionFILE" ]; then
     if grep -q 'Debian' "/etc/issue"; then
         #stable-backports会出错，需改为buster-backports
         cat >/etc/apt/sources.list <<-'EndOfFile'
-#deb http://mirrors.tuna.tsinghua.edu.cn/debian/ stable main contrib non-free
-#deb http://mirrors.tuna.tsinghua.edu.cn/debian/ stable-updates main contrib non-free
-#deb http://mirrors.tuna.tsinghua.edu.cn/debian/ buster-backports main contrib non-free
-#deb http://mirrors.tuna.tsinghua.edu.cn/debian-security stable/updates main contrib non-free
-deb http://mirrors.tuna.tsinghua.edu.cn/debian/ sid main contrib non-free
+#deb http://mirrors.huaweicloud.com/debian/ stable main contrib non-free
+#deb http://mirrors.huaweicloud.com/debian/ stable-updates main contrib non-free
+#deb http://mirrors.huaweicloud.com/debian/ buster-backports main contrib non-free
+#deb http://mirrors.huaweicloud.com/debian-security stable/updates main contrib non-free
+deb http://mirrors.huaweicloud.com/debian/ sid main contrib non-free
 EndOfFile
     fi
 fi
 	if grep -q 'Kali' "/etc/issue"; then
 echo "检测到您使用的是Kali系统"
 cat >/etc/apt/sources.list <<-"EndOfSourcesList"
-deb http://mirrors.tuna.tsinghua.edu.cn/kali/ kali-rolling main contrib non-free
-deb http://mirrors.tuna.tsinghua.edu.cn/debian/ stable main contrib non-free
-# deb http://mirrors.tuna.tsinghua.edu.cn/kali/ kali-last-snapshot main contrib non-free
+deb http://mirrors.huaweicloud.com/kali/ kali-rolling main contrib non-free
+deb http://mirrors.huaweicloud.com/debian/ stable main contrib non-free
+# deb http://mirrors.huaweicloud.com/kali/ kali-last-snapshot main contrib non-free
 EndOfSourcesList
     #注意：kali-rolling添加debian testing源后，可能会破坏系统依赖关系，可以添加stable源（暂未发现严重影响）
 	fi
 
 if [ "$(cat /etc/issue | cut -c 1-6)" = "Ubuntu" ]; then
     cat >/etc/apt/sources.list <<-'EndOfFile'
-deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ focal main restricted universe multiverse
-deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ focal-updates main restricted universe multiverse
-deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ focal-backports main restricted universe multiverse
-deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ focal-security main restricted universe multiverse
+deb http://mirrors.huaweicloud.com/ubuntu-ports/ focal main restricted universe multiverse
+deb http://mirrors.huaweicloud.com/ubuntu-ports/ focal-updates main restricted universe multiverse
+deb http://mirrors.huaweicloud.com/ubuntu-ports/ focal-backports main restricted universe multiverse
+deb http://mirrors.huaweicloud.com/ubuntu-ports/ focal-security main restricted universe multiverse
 # proposed为预发布软件源，不建议启用
-# deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ focal-proposed main restricted universe multiverse
+# deb http://mirrors.huaweicloud.com/ubuntu-ports/ focal-proposed main restricted universe multiverse
 EndOfFile
     touch ~/.hushlogin
 fi

@@ -2497,6 +2497,7 @@ BetaFeatures() {
 		"9" "qbittorrent(P2P下载工具)" \
 		"10" "plasma-discover:KDE发现(软件中心)" \
 		"11" "gnome-software软件商店" \
+		"12" "gparted:磁盘分区工具" \
 		"0" "Back to the main menu 返回主菜单" \
 		3>&1 1>&2 2>&3)
 	##############################
@@ -2617,7 +2618,17 @@ BetaFeatures() {
 		gnome-software &
 		echo "安装完成，如需卸载，请手动输apt purge -y gnome-software"
 	fi
+
 	############################
+	if [ "${TMOEBETA}" == '12' ]; then
+		if [ ! -e "/usr/sbin/gparted" ]; then
+			apt update
+			apt install -y gparted
+		fi
+		gparted &
+		echo "安装完成，如需卸载，请手动输apt purge -y gparted"
+	fi
+	########################################
 	echo 'Press Enter to return.'
 	echo "${YELLOW}按回车键返回。${RESET}"
 	read

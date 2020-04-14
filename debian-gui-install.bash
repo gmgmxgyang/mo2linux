@@ -1832,7 +1832,7 @@ INSTALLXFCE4DESKTOP() {
 		apt install -y dbus-x11
 		apt install -y tightvncserver
 		apt purge -y ^libfprint
-		#apt install -y xfwm4-theme-breeze xcursor-themes
+		apt install -y xfwm4-theme-breeze xcursor-themes
 		if [ "${DEBIANDISTRO}" = "kali" ]; then
 			apt install -y kali-linux
 			apt install -y kali-menu

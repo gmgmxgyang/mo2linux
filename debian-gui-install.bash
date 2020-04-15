@@ -688,6 +688,9 @@ installBROWSER() {
 					echo "${YELLOW}对不起，我...我真的已经尽力了ヽ(*。>Д<)o゜！您的软件源仓库里容不下我，我只好叫姐姐来代替了。${RESET}"
 					dnf install -y firefox || yum install -y firefox
 				fi
+			elif [ "${LINUXDISTRO}" = "gentoo" ]; then
+				dispatch-conf
+				emerge -avk www-client/firefox
 			fi
 		else
 			echo 'Thank you for choosing me, I will definitely do better than my sister! ╰ (* ° ▽ ° *) ╯'
@@ -706,6 +709,9 @@ installBROWSER() {
 				pacman -Syu --noconfirm firefox firefox-i18n-zh-cn
 			elif [ "${LINUXDISTRO}" = "redhat" ]; then
 				dnf install -y firefox || yum install -y firefox
+			elif [ "${LINUXDISTRO}" = "gentoo" ]; then
+				dispatch-conf
+				emerge -avk www-client/firefox-bin
 			fi
 		fi
 		echo "若无法正常加载HTML5视频，则您可能需要安装火狐扩展${YELLOW}User-Agent Switcher and Manager${RESET}，并将浏览器UA修改为windows版chrome"
@@ -750,6 +756,10 @@ installBROWSER() {
 			dnf install -y chromium || yum install -y chromium
 			sed -i 's/chromium %U/chromium --no-sandbox %U/g' /usr/share/applications/chromium.desktop
 			grep 'chromium' /etc/profile || sed -i '$ a\alias chromium="chromium --no-sandbox"' /etc/profile
+		elif [ "${LINUXDISTRO}" = "gentoo" ]; then
+			dispatch-conf
+			emerge -avk www-client/chromium
+			#emerge -avk www-client/google-chrome-unstable
 		fi
 	fi
 	echo 'Press enter to return.'

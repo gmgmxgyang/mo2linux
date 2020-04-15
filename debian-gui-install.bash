@@ -925,6 +925,7 @@ INSTALL-lXQT-DESKTOP() {
 		xbps-install -S -y lxqt tigervnc
 	elif [ "${LINUXDISTRO}" = "gentoo" ]; then
 		dispatch-conf
+		etc-update
 		emerge -avk lxqt-base/lxqt-meta net-misc/tigervnc
 	fi
 
@@ -982,6 +983,7 @@ INSTALL-KDE-PLASMA5-DESKTOP() {
 		PLASMAnoSystemd=$(eselect profile list | grep plasma | grep -v systemd | tail -n 1 | cut -d ']' -f 1 | cut -d '[' -f 2)
 		eselect profile set ${PLASMAnoSystemd}
 		dispatch-conf
+		etc-update
 		#emerge -auvDN --with-bdeps=y @world
 		emerge -avk plasma-desktop plasma-nm plasma-pa sddm konsole net-misc/tigervnc
 	fi
@@ -1043,6 +1045,7 @@ INSTALL-GNOME3-DESKTOP() {
 		eselect profile set ${GNOMEnoSystemd}
 		#emerge -auvDN --with-bdeps=y @world
 		dispatch-conf
+		etc-update
 		emerge -avk gnome-shell gdm gnome-terminal net-misc/tigervnc
 	fi
 
@@ -1091,6 +1094,7 @@ INSTALL-cinnamon-DESKTOP() {
 		pacman -S --noconfirm noto-fonts-cjk
 	elif [ "${LINUXDISTRO}" = "gentoo" ]; then
 		dispatch-conf
+		etc-update
 		emerge -avk gnome-extra/cinnamon gnome-extra/cinnamon-desktop gnome-extra/cinnamon-translations net-misc/tigervnc
 	fi
 
@@ -1930,6 +1934,7 @@ INSTALLXFCE4DESKTOP() {
 		xbps-install -S -y xfce4 tigervnc
 	elif [ "${LINUXDISTRO}" = "gentoo" ]; then
 		dispatch-conf
+		etc-update
 		emerge -avk xfce4-meta x11-terms/xfce4-terminal net-misc/tigervnc
 	fi
 
@@ -2107,6 +2112,7 @@ INSTALLMATEDESKTOP() {
 		xbps-install -S -y mate tigervnc
 	elif [ "${LINUXDISTRO}" = "gentoo" ]; then
 		dispatch-conf
+		etc-update
 		emerge -avk mate-base/mate-desktop mate-base/mate x11-base/xorg-x11 mate-base/mate-panel net-misc/tigervnc
 	fi
 	mkdir -p ~/.vnc
@@ -2149,6 +2155,7 @@ INSTALLLXDEDESKTOP() {
 		xbps-install -S -y lxde tigervnc
 	elif [ "${LINUXDISTRO}" = "gentoo" ]; then
 		dispatch-conf
+		etc-update
 		emerge -avk lxde-base/lxde-meta net-misc/tigervnc
 	fi
 

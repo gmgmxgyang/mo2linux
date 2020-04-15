@@ -1390,6 +1390,9 @@ EndofgentooConf
     #emerge --sync
     emerge-webrsync
     emerge --config sys-libs/timezone-data 2>/dev/null
+    eselect profile list
+    eselect profile set 1
+    emerge -uvDN --with-bdeps=y @world
     #etc-update
     emerge eix 2>/dev/null
     echo '检测到您当前的系统为Funtoo GNU/Linux,将不会为您继续配置任何优化步骤！'

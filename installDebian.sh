@@ -1315,10 +1315,7 @@ ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
 echo "正在配置中文环境..."
 echo "Configuring Chinese environment..."
-#下面两条没有重复
-sed -i 's/# zh_CN.UTF-8 UTF-8/zh_CN.UTF-8 UTF-8/' /etc/locale.gen
-sed -i 's/#zh_CN.UTF-8 UTF-8/zh_CN.UTF-8 UTF-8/' /etc/locale.gen
-#Arch linux的locale.gen为第二条
+sed -i 's/^#.*zh_CN.UTF-8.*/zh_CN.UTF-8 UTF-8/' /etc/locale.gen
 cat >/etc/default/locale <<-'EOF'
 LANG="zh_CN.UTF-8"
 LANGUAGE="zh_CN:zh"

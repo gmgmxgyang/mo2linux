@@ -1361,19 +1361,68 @@ else
 fi
 
 if grep -Eq 'Funtoo|Gentoo' '/etc/os-release'; then
-    GNULINUXOSRELEASE=FUNTOO
+    LINUXDISTRO=gentoo
     grep -q 'zh_CN' /etc/locale.gen || echo -e '\nzh_CN.UTF-8 UTF-8\nen_US.UTF-8 UTF-8' >>/etc/locale.gen
     locale-gen
+    GENTOOLOCALE="$(eselect locale list | grep 'zh_CN' | head -n 1| cut -d '[' -f 2 | cut -d ']' -f 1)"
+    eselect locale set "${GENTOOLOCALE}"
+    #bash /etc/profile
     mkdir -p '/usr/portage'
     #下面生成的文件不要留空格
 cat >/etc/portage/make.conf <<-'Endofmakeconf'
+#语言设定
 L10N="zh-CN en-US"
 LINGUAS="zh_CN en_US"
-#GENTOO_MIRRORS="https://mirrors.ustc.edu.cn/gentoo/"
-GENTOO_MIRRORS="https://mirrors.tuna.tsinghua.edu.cn/gentoo"
-EMERGE_DEFAULT_OPTS="--keep-going --with-bdeps=y"
+
 #FEATURES="${FEATURES} -userpriv -usersandbox -sandbox"
 ACCEPT_LICENSE="*"
+# GCC编译时所调用的配置
+#CFLAGS="-march=kabylake -O4 -pipe"
+#指定CPU核心数
+CFLAGS="-march=native -O4 -pipe"
+CXXFLAGS="${CFLAGS}"
+
+#与用于CFLAGS变量不同，CHOST变量是固定的，不能轻易更改。你需要选择合适的架构平台。
+#CHOST="x86_64-pc-linux-gnu"
+#CHOST="aarch64-pc-linux-gnu"
+CPU_FLAGS_X86="aes avx avx2 fma3 mmx mmxext pclmul popcnt sse sse2 sse3 sse4_1 sse4_2 ssse3"
+#线程数
+MAKEOPTS="-j8"
+#显卡
+#VIDEO_CARDS="intel i965"
+
+# USE
+SUPPORT="pulseaudio btrfs mtp git chromium"
+DESKTOP="infinality emoji cjk"
+FUCK="-bindist -grub -plymouth -systemd consolekit -modemmanager -gnome-shell -gnome -gnome-keyring -nautilus -modules"
+ELSE="client icu sudo python"
+
+USE="${SUPPORT} ${DESKTOP} ${FUCK} ${ELSE}"
+
+# Portage
+PORTDIR="/usr/portage"
+DISTDIR="${PORTDIR}/distfiles"
+PKGDIR="${PORTDIR}/packages"
+#国内镜像源，用于快照更新（emerge-webrsync）
+#GENTOO_MIRRORS="https://mirrors.ustc.edu.cn/gentoo/"
+GENTOO_MIRRORS="https://mirrors.tuna.tsinghua.edu.cn/gentoo"
+
+#执行emerge时所调用的参数
+EMERGE_DEFAULT_OPTS="--keep-going --with-bdeps=y"
+EMERGE_DEFAULT_OPTS="--ask --verbose=y --keep-going --with-bdeps=y --load-average"
+# FEATURES="${FEATURES} -userpriv -usersandbox -sandbox"
+PORTAGE_REPO_DUPLICATE_WARN="0"
+# PORTAGE_TMPDIR="/var/tmp/notmpfs"
+
+#ACCEPT_KEYWORDS="~amd64"
+ACCEPT_LICENSE="*"
+
+
+RUBY_TARGETS="ruby24 ruby25"
+#LLVM_TARGETS="X86"
+QEMU_SOFTMMU_TARGETS="alpha aarch64 arm i386 mips mips64 mips64el mipsel ppc ppc64 s390x sh4 sh4eb sparc sparc64 x86_64"
+QEMU_USER_TARGETS="alpha aarch64 arm armeb i386 mips mipsel ppc ppc64 ppc64abi32 s390x sh4 sh4eb sparc sparc32plus sparc64"
+#关于该配置文件的相关选项参数，详见wiki.gentoo.org/wiki//etc/portage/make.conf
 Endofmakeconf
     source /etc/portage/make.conf 2>/dev/null
     mkdir -p /etc/portage/repos.conf/
@@ -1385,7 +1434,7 @@ sync-type = rsync
 sync-uri = rsync://mirrors.tuna.tsinghua.edu.cn/gentoo-portage/
 auto-sync = yes
 EndofgentooConf
-    source /etc/portage/repos.conf/gentoo.conf2>/dev/null
+    source /etc/portage/repos.conf/gentoo.conf 2>/dev/null
     #同步过于耗时，故注释掉
     #emerge --sync
     emerge-webrsync

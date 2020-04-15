@@ -1844,9 +1844,11 @@ OTHERSOFTWARE() {
 
 		if [ -e /usr/bin/adb ]; then
 			adb --help
-			echo "adb安装完成,正在重启进程"
+			echo "adb安装完成,正在重启进程,您也可以手动输adb devices来获取设备列表"
 			adb kill-server
 			adb devices -l
+			echo "即将为您自动进入adb shell模式，您也可以手动输adb shell来进入该模式"
+            adb shell
 		fi
 		echo 'Press Enter to return.'
 		echo "${YELLOW}按回车键返回。${RESET}"

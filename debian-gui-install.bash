@@ -188,7 +188,7 @@ CHECKdependencies() {
 			opkg install ${dependencies} || opkg install whiptail
 
 		elif [ "${LINUXDISTRO}" = "gentoo" ]; then
-			emerge -av ${dependencies}
+			emerge -avk ${dependencies}
 
 		elif [ "${LINUXDISTRO}" = "suse" ]; then
 			zypper in -y ${dependencies}

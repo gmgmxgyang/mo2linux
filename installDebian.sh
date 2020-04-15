@@ -754,7 +754,7 @@ if [ ! -z "${dependencies}" ]; then
         xbps-install -y ${dependencies}
 
     elif [ "${LINUXDISTRO}" = "gentoo" ]; then
-        emerge -av ${dependencies}
+        emerge -avk ${dependencies}
 
     elif
         [ "${LINUXDISTRO}" = "suse" ]
@@ -1385,18 +1385,18 @@ sync-type = rsync
 sync-uri = rsync://mirrors.tuna.tsinghua.edu.cn/gentoo-portage/
 auto-sync = yes
 EndofgentooConf
-    source /etc/portage/repos.conf/gentoo.conf
+    source /etc/portage/repos.conf/gentoo.conf2>/dev/null
     #同步过于耗时，故注释掉
     #emerge --sync
     emerge-webrsync
     emerge --config sys-libs/timezone-data 2>/dev/null
     eselect profile list
     eselect profile set 1
+    etc-update
     emerge -uvDN --with-bdeps=y @world
-    #etc-update
     emerge eix 2>/dev/null
     echo '检测到您当前的系统为Funtoo GNU/Linux,将不会为您继续配置任何优化步骤！'
-    rm -f vnc* zsh* .profile
+    #rm -f vnc* zsh* .profile
     mv -f .profile.bak .profile 2>/dev/null
     #wget -qcO /usr/local/bin/neofetch 'https://gitee.com/mirrors/neofetch/raw/master/neofetch'
     chmod +x /usr/local/bin/neofetch

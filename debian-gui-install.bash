@@ -1588,7 +1588,7 @@ DEBIANSOURCESLIST() {
 OTHERSOFTWARE() {
 	SOFTWARE=$(
 		whiptail --title "其它软件" --menu \
-			"您想要安装哪个软件？\n Which software do you want to install? 您需要使用方向键或pgdown来翻页。 您需要先安装gui才能安装里面的软件！" 17 60 6 \
+			"您想要安装哪个软件？\n Which software do you want to install? 您需要使用方向键或pgdown来翻页。 部分软件需要在安装gui后才能使用！" 17 60 6 \
 			"1" "MPV：开源、跨平台的音视频播放器" \
 			"2" "LinuxQQ：在线聊天软件" \
 			"3" "韦诺之战：奇幻背景的回合制策略战棋游戏" \

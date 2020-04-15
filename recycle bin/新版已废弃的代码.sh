@@ -1419,3 +1419,20 @@ metadata_expire=6h
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
 skip_if_unavailable=False
 EndOfYumRepo
+##############################
+	if [ "${SOFTWARE}" == '12' ]; then
+		if [ ! -e "/usr/bin/tasksel" ]; then
+			apt update
+			apt install -y tasksel
+		fi
+		tasksel --list-tasks
+		echo "您可以使用tasksel install 包名来安装软件。"
+		echo "Press enter to continue."
+		read
+		tasksel
+		echo 'Press Enter to return.'
+		echo "${YELLOW}按回车键返回。${RESET}"
+		read
+		DEBIANMENU
+	fi
+	#########################

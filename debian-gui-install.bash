@@ -279,7 +279,7 @@ CHECKdependencies() {
 DEBIANMENU() {
 	cd ${cur}
 	OPTION=$(
-		whiptail --title "Tmoe-linux Tool输debian-i启动(20200411-22)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.当前主菜单有十几个选项，请使用方向键或触屏上下滑动，按回车键确认。${TMOENODEBIAN} 更新日志:0410适配其它系统和桌面,0411支持修复VNC闪退" 20 50 6 \
+		whiptail --title "Tmoe-linux Tool输debian-i启动(20200415-23)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.当前主菜单有十几个选项，请使用方向键或触屏上下滑动，按回车键确认。${TMOENODEBIAN} 更新日志:0410适配其它系统和桌面,0411支持修复VNC闪退" 20 50 6 \
 			"1" "Install GUI 安装图形界面" \
 			"2" "Install browser 安装浏览器" \
 			"3" "Download theme 下载主题" \
@@ -1600,12 +1600,11 @@ OTHERSOFTWARE() {
 			"9" "Parole：xfce默认媒体播放器，风格简洁" \
 			"10" "百度网盘(x86_64):提供文件的网络备份、同步和分享服务" \
 			"11" "网易云音乐(x86_64):专注于发现与分享的音乐产品" \
-			"12" "Tasksel:轻松,快速地安装组软件" \
-			"13" "ADB:Android Debug Bridge" \
+			"12" "ADB:Android Debug Bridge" \
 			"0" "Back to the main menu 返回主菜单" \
 			3>&1 1>&2 2>&3
 	)
-
+	#(已移除)"12" "Tasksel:轻松,快速地安装组软件" \
 	##############################
 	if [ "${SOFTWARE}" == '0' ]; then
 
@@ -1812,22 +1811,6 @@ OTHERSOFTWARE() {
 	fi
 	###########################
 	if [ "${SOFTWARE}" == '12' ]; then
-		if [ ! -e "/usr/bin/tasksel" ]; then
-			apt update
-			apt install -y tasksel
-		fi
-		tasksel --list-tasks
-		echo "您可以使用tasksel install 包名来安装软件。"
-		echo "按回车键打开gui管理工具"
-		read
-		tasksel
-		echo 'Press Enter to return.'
-		echo "${YELLOW}按回车键返回。${RESET}"
-		read
-		DEBIANMENU
-	fi
-	#########################
-	if [ "${SOFTWARE}" == '13' ]; then
 
 		if [ ! -e /usr/bin/adb ]; then
 			if [ "${LINUXDISTRO}" = "debian" ]; then
@@ -1848,7 +1831,7 @@ OTHERSOFTWARE() {
 			adb kill-server
 			adb devices -l
 			echo "即将为您自动进入adb shell模式，您也可以手动输adb shell来进入该模式"
-            adb shell
+			adb shell
 		fi
 		echo 'Press Enter to return.'
 		echo "${YELLOW}按回车键返回。${RESET}"

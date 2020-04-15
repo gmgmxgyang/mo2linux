@@ -926,7 +926,7 @@ INSTALL-lXQT-DESKTOP() {
 	elif [ "${LINUXDISTRO}" = "gentoo" ]; then
 		dispatch-conf
 		etc-update
-		emerge -avk lxqt-base/lxqt-meta net-misc/tigervnc
+		emerge -avk lxqt-base/lxqt-meta net-misc/tigervnc media-fonts/wqy-bitmapfont
 	fi
 
 	mkdir -p ~/.vnc
@@ -1046,7 +1046,7 @@ INSTALL-GNOME3-DESKTOP() {
 		#emerge -auvDN --with-bdeps=y @world
 		dispatch-conf
 		etc-update
-		emerge -avk gnome-shell gdm gnome-terminal net-misc/tigervnc
+		emerge -avk gnome-shell gdm gnome-terminal net-misc/tigervnc media-fonts/wqy-bitmapfont
 	fi
 
 	mkdir -p ~/.vnc
@@ -1095,7 +1095,7 @@ INSTALL-cinnamon-DESKTOP() {
 	elif [ "${LINUXDISTRO}" = "gentoo" ]; then
 		dispatch-conf
 		etc-update
-		emerge -avk gnome-extra/cinnamon gnome-extra/cinnamon-desktop gnome-extra/cinnamon-translations net-misc/tigervnc
+		emerge -avk gnome-extra/cinnamon gnome-extra/cinnamon-desktop gnome-extra/cinnamon-translations net-misc/tigervnc media-fonts/wqy-bitmapfont
 	fi
 
 	mkdir -p ~/.vnc
@@ -1935,7 +1935,8 @@ INSTALLXFCE4DESKTOP() {
 	elif [ "${LINUXDISTRO}" = "gentoo" ]; then
 		dispatch-conf
 		etc-update
-		emerge -avk xfce4-meta x11-terms/xfce4-terminal net-misc/tigervnc
+		emerge -avk xfce4-meta x11-terms/xfce4-terminal net-misc/tigervnc media-fonts/wqy-bitmapfont
+
 	fi
 
 	if [ ! -e "/usr/share/desktop-base/kali-theme" ]; then
@@ -2113,7 +2114,7 @@ INSTALLMATEDESKTOP() {
 	elif [ "${LINUXDISTRO}" = "gentoo" ]; then
 		dispatch-conf
 		etc-update
-		emerge -avk mate-base/mate-desktop mate-base/mate x11-base/xorg-x11 mate-base/mate-panel net-misc/tigervnc
+		emerge -avk mate-base/mate-desktop mate-base/mate x11-base/xorg-x11 mate-base/mate-panel net-misc/tigervnc media-fonts/wqy-bitmapfont
 	fi
 	mkdir -p ~/.vnc
 	cd ~/.vnc
@@ -2156,7 +2157,7 @@ INSTALLLXDEDESKTOP() {
 	elif [ "${LINUXDISTRO}" = "gentoo" ]; then
 		dispatch-conf
 		etc-update
-		emerge -avk lxde-base/lxde-meta net-misc/tigervnc
+		emerge -avk lxde-base/lxde-meta net-misc/tigervnc media-fonts/wqy-bitmapfont
 	fi
 
 	mkdir -p ~/.vnc

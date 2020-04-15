@@ -1360,7 +1360,7 @@ else
    rm -f "/tmp/.RASPBIANARMHFDetectionFILE"  
 fi
 
-if grep -q 'Funtoo GNU/Linux' '/etc/os-release'; then
+if grep -Eq 'Funtoo|Gentoo' '/etc/os-release'; then
     GNULINUXOSRELEASE=FUNTOO
     grep -q 'zh_CN' /etc/locale.gen || echo -e '\nzh_CN.UTF-8 UTF-8\nen_US.UTF-8 UTF-8' >>/etc/locale.gen
     locale-gen
@@ -1388,6 +1388,7 @@ EndofgentooConf
     source /etc/portage/repos.conf/gentoo.conf
     #同步过于耗时，故注释掉
     #emerge --sync
+    emerge-webrsync
     emerge --config sys-libs/timezone-data 2>/dev/null
     #etc-update
     emerge eix 2>/dev/null

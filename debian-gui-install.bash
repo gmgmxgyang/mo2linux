@@ -1257,6 +1257,10 @@ REMOVEBROWSER() {
 		apt purge -y firefox firefox-l10n-zh-cn
 		apt purge -y firefox-locale-zh-hans
 		apt autopurge
+		dnf remove -y firefox 2>/dev/null
+		pacman -Rsc firefox 2>/dev/null
+		emerge -C firefox-bin firefox 2>/dev/null
+
 	else
 		echo '小声嘀咕：“妾身不在的时候，你一定要好好照顾好自己。” '
 		echo "${YELLOW}按回车键确认卸载chromium,按Ctrl+C取消${RESET} "
@@ -1266,6 +1270,10 @@ REMOVEBROWSER() {
 		apt-mark unhold chromium-browser chromium-browser-l10n chromium-codecs-ffmpeg-extra
 		apt purge -y chromium-browser chromium-browser-l10n
 		apt autopurge
+		dnf remove -y chromium 2>/dev/null
+		pacman -Rsc chromium 2>/dev/null
+		emerge -C chromium 2>/dev/null
+
 	fi
 	DEBIANMENU
 }

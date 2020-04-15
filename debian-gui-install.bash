@@ -1601,6 +1601,7 @@ OTHERSOFTWARE() {
 			"10" "百度网盘(x86_64):提供文件的网络备份、同步和分享服务" \
 			"11" "网易云音乐(x86_64):专注于发现与分享的音乐产品" \
 			"12" "Tasksel:轻松,快速地安装组软件" \
+			"13" "ADB:Android Debug Bridge" \
 			"0" "Back to the main menu 返回主菜单" \
 			3>&1 1>&2 2>&3
 	)
@@ -1820,6 +1821,33 @@ OTHERSOFTWARE() {
 		echo "按回车键打开gui管理工具"
 		read
 		tasksel
+		echo 'Press Enter to return.'
+		echo "${YELLOW}按回车键返回。${RESET}"
+		read
+		DEBIANMENU
+	fi
+	#########################
+	if [ "${SOFTWARE}" == '13' ]; then
+
+		if [ ! -e /usr/bin/adb ]; then
+			if [ "${LINUXDISTRO}" = "debian" ]; then
+				apt update
+				apt install -y adb
+
+			elif [ "${LINUXDISTRO}" = "arch" ]; then
+				pacman -Syu --noconfirm android-tools
+
+			elif [ "${LINUXDISTRO}" = "redhat" ]; then
+				dnf install -y android-tools || yum install -y android-tools
+			fi
+		fi
+
+		if [ -e /usr/bin/adb ]; then
+			adb --help
+			echo "adb安装完成,正在重启进程"
+			adb kill-server
+			adb devices -l
+		fi
 		echo 'Press Enter to return.'
 		echo "${YELLOW}按回车键返回。${RESET}"
 		read

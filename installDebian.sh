@@ -237,7 +237,7 @@ if [ ! -f ${DebianTarXz} ]; then
     ttime=$(cat get-date-tmp.html | tail -n2 | head -n1 | cut -d\" -f4)
     rm -f get-date-tmp.html
     if [ "${LINUXDISTRO}" != 'iSH' ]; then
-      aria2c -x 16 -k 1M --split 16 -o $DebianTarXz "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/sid/${archtype}/default/${ttime}rootfs.tar.xz"
+      aria2c -x 5 -k 1M --split 5 -o $DebianTarXz "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/sid/${archtype}/default/${ttime}rootfs.tar.xz"
     else
       wget -O $DebianTarXz "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/sid/${archtype}/default/${ttime}rootfs.tar.xz"
     fi

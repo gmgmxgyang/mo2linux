@@ -1441,6 +1441,7 @@ EndofgentooConf
     eselect profile list
     eselect profile set 1
     etc-update --automode -3
+    etc-update
     #dispatch-conf
     emerge -uvDN --with-bdeps=y @world
     emerge eix 2>/dev/null

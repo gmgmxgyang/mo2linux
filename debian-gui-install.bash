@@ -923,7 +923,9 @@ INSTALL-lXQT-DESKTOP() {
 		pacman -S --noconfirm noto-fonts-cjk
 	elif [ "${LINUXDISTRO}" = "void" ]; then
 		xbps-install -S -y lxqt tigervnc
-
+	elif [ "${LINUXDISTRO}" = "gentoo" ]; then
+		dispatch-conf
+		emerge -avk lxqt-base/lxqt-meta net-misc/tigervnc
 	fi
 
 	mkdir -p ~/.vnc
@@ -979,9 +981,9 @@ INSTALL-KDE-PLASMA5-DESKTOP() {
 	elif [ "${LINUXDISTRO}" = "gentoo" ]; then
 		PLASMAnoSystemd=$(eselect profile list | grep plasma | grep -v systemd | tail -n 1 | cut -d ']' -f 1 | cut -d '[' -f 2)
 		eselect profile set ${PLASMAnoSystemd}
-		etc-update --automode -3
+		dispatch-conf
 		#emerge -auvDN --with-bdeps=y @world
-		emerge -avk plasma-desktop plasma-nm plasma-pa sddm konsole
+		emerge -avk plasma-desktop plasma-nm plasma-pa sddm konsole net-misc/tigervnc
 	fi
 
 	mkdir -p ~/.vnc
@@ -1038,10 +1040,10 @@ INSTALL-GNOME3-DESKTOP() {
 
 	elif [ "${LINUXDISTRO}" = "gentoo" ]; then
 		GNOMEnoSystemd=$(eselect profile list | grep gnome | grep -v systemd | tail -n 1 | cut -d ']' -f 1 | cut -d '[' -f 2)
-        eselect profile set ${GNOMEnoSystemd}
-		etc-update --automode -3
+		eselect profile set ${GNOMEnoSystemd}
 		#emerge -auvDN --with-bdeps=y @world
-		emerge -av gnome-shell gdm gnome-terminal
+		dispatch-conf
+		emerge -avk gnome-shell gdm gnome-terminal net-misc/tigervnc
 	fi
 
 	mkdir -p ~/.vnc
@@ -1087,6 +1089,9 @@ INSTALL-cinnamon-DESKTOP() {
 		pacman -Syu --noconfirm sddm cinnamon xorg
 		pacman -S --noconfirm tigervnc
 		pacman -S --noconfirm noto-fonts-cjk
+	elif [ "${LINUXDISTRO}" = "gentoo" ]; then
+		dispatch-conf
+		emerge -avk gnome-extra/cinnamon gnome-extra/cinnamon-desktop gnome-extra/cinnamon-translations net-misc/tigervnc
 	fi
 
 	mkdir -p ~/.vnc
@@ -1923,6 +1928,9 @@ INSTALLXFCE4DESKTOP() {
 		pacman -S --noconfirm noto-fonts-cjk
 	elif [ "${LINUXDISTRO}" = "void" ]; then
 		xbps-install -S -y xfce4 tigervnc
+	elif [ "${LINUXDISTRO}" = "gentoo" ]; then
+		dispatch-conf
+		emerge -avk xfce4-meta x11-terms/xfce4-terminal net-misc/tigervnc
 	fi
 
 	if [ ! -e "/usr/share/desktop-base/kali-theme" ]; then
@@ -2097,6 +2105,9 @@ INSTALLMATEDESKTOP() {
 		pacman -S --noconfirm noto-fonts-cjk
 	elif [ "${LINUXDISTRO}" = "void" ]; then
 		xbps-install -S -y mate tigervnc
+	elif [ "${LINUXDISTRO}" = "gentoo" ]; then
+		dispatch-conf
+		emerge -avk mate-base/mate-desktop mate-base/mate x11-base/xorg-x11 mate-base/mate-panel net-misc/tigervnc
 	fi
 	mkdir -p ~/.vnc
 	cd ~/.vnc
@@ -2136,6 +2147,9 @@ INSTALLLXDEDESKTOP() {
 		pacman -S --noconfirm noto-fonts-cjk
 	elif [ "${LINUXDISTRO}" = "void" ]; then
 		xbps-install -S -y lxde tigervnc
+	elif [ "${LINUXDISTRO}" = "gentoo" ]; then
+		dispatch-conf
+		emerge -avk lxde-base/lxde-meta net-misc/tigervnc
 	fi
 
 	mkdir -p ~/.vnc

@@ -1377,12 +1377,11 @@ LINGUAS="zh_CN en_US"
 #FEATURES="${FEATURES} -userpriv -usersandbox -sandbox"
 ACCEPT_LICENSE="*"
 # GCC编译时所调用的配置
-#CFLAGS="-march=kabylake -O4 -pipe"
 #指定CPU核心数
 CFLAGS="-march=native -O4 -pipe"
 CXXFLAGS="${CFLAGS}"
 
-#与用于CFLAGS变量不同，CHOST变量是固定的，不能轻易更改。你需要选择合适的架构平台。
+#与CFLAGS变量不同，CHOST变量是固定的，不能轻易更改。你需要选择合适的架构平台。
 #CHOST="x86_64-pc-linux-gnu"
 #CHOST="aarch64-pc-linux-gnu"
 CPU_FLAGS_X86="aes avx avx2 fma3 mmx mmxext pclmul popcnt sse sse2 sse3 sse4_1 sse4_2 ssse3"
@@ -1441,7 +1440,8 @@ EndofgentooConf
     emerge --config sys-libs/timezone-data 2>/dev/null
     eselect profile list
     eselect profile set 1
-    etc-update
+    etc-update --automode -3
+    #dispatch-conf
     emerge -uvDN --with-bdeps=y @world
     emerge eix 2>/dev/null
     echo '检测到您当前的系统为Funtoo GNU/Linux,将不会为您继续配置任何优化步骤！'

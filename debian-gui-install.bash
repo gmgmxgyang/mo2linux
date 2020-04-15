@@ -976,6 +976,12 @@ INSTALL-KDE-PLASMA5-DESKTOP() {
 	elif [ "${LINUXDISTRO}" = "void" ]; then
 		xbps-install -S -y kde tigervnc
 
+	elif [ "${LINUXDISTRO}" = "gentoo" ]; then
+		PLASMAnoSystemd=$(eselect profile list | grep plasma | grep -v systemd | tail -n 1 | cut -d ']' -f 1 | cut -d '[' -f 2)
+		eselect profile set ${PLASMAnoSystemd}
+		etc-update --automode -3
+		#emerge -auvDN --with-bdeps=y @world
+		emerge -avk plasma-desktop plasma-nm plasma-pa sddm konsole
 	fi
 
 	mkdir -p ~/.vnc
@@ -1030,6 +1036,12 @@ INSTALL-GNOME3-DESKTOP() {
 	elif [ "${LINUXDISTRO}" = "void" ]; then
 		xbps-install -S -y gnome tigervnc
 
+	elif [ "${LINUXDISTRO}" = "gentoo" ]; then
+		GNOMEnoSystemd=$(eselect profile list | grep gnome | grep -v systemd | tail -n 1 | cut -d ']' -f 1 | cut -d '[' -f 2)
+        eselect profile set ${GNOMEnoSystemd}
+		etc-update --automode -3
+		#emerge -auvDN --with-bdeps=y @world
+		emerge -av gnome-shell gdm gnome-terminal
 	fi
 
 	mkdir -p ~/.vnc

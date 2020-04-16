@@ -2646,7 +2646,7 @@ GNULINUXTUNASOURCESLIST() {
 		echo "Replacing http software source list with https."
 		echo "正在将http源替换为https..."
 		update-ca-certificates
-		sed -i 's:http:https:g' /etc/apt/sources.list
+		sed -i 's@http:@https:@g' /etc/apt/sources.list
 	fi
 	apt update
 	apt dist-upgrade -y

@@ -63,6 +63,14 @@ CHECKdependencies() {
 	if [ ! -e /bin/bash ]; then
 		dependencies="${dependencies} bash"
 	fi
+
+	if [ ! -e /usr/bin/busybox ]; then
+		if [ "${LINUXDISTRO}" = "gentoo" ]; then
+			dependencies="${dependencies} sys-apps/busybox"
+		else
+			dependencies="${dependencies} busybox"
+		fi
+	fi
 	#####################
 	if [ ! -e /usr/bin/catimg ]; then
 		if [ "${LINUXDISTRO}" = "debian" ]; then
@@ -1361,7 +1369,7 @@ CHINESEMANPAGES() {
 		mkdir -p ${HOME}/文档/debian-handbook
 		cd ${HOME}/文档/debian-handbook
 		wget -O 'debian-handbook.deb' 'https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/d/debian-handbook/debian-handbook_8.20180830_all.deb'
-		ar xv 'debian-handbook.deb'
+		busybox ar xv 'debian-handbook.deb'
 		tar -Jxvf data.tar.xz ./usr/share/doc/debian-handbook/html
 		ls | grep -v usr | xargs rm -rf
 		ln -sf ./usr/share/doc/debian-handbook/html/zh-CN/index.html ./
@@ -1402,7 +1410,7 @@ CONFIGTHEMES() {
 			cd /tmp/.ukui-gtk-themes
 			UKUITHEME="$(curl -LfsS 'https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/u/ukui-themes/' | grep all.deb | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
 			wget -O 'ukui-themes.deb' "https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/u/ukui-themes/${UKUITHEME}"
-			ar vx 'ukui-themes.deb'
+			busybox ar xv 'ukui-themes.deb'
 			cd /
 			tar -Jxvf /tmp/.ukui-gtk-themes/data.tar.xz ./usr
 			#if which update-icon-caches >/dev/null 2>&1; then
@@ -1480,7 +1488,7 @@ CONFIGTHEMES() {
 			cd /tmp/.kali-themes-common
 			KaliTHEMElatestLINK="$(wget -O- 'https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-themes/' | grep kali-themes-common | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
 			wget -O 'kali-themes-common.deb' "https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-themes/${KaliTHEMElatestLINK}"
-			ar vx 'kali-themes-common.deb'
+			busybox ar xv 'kali-themes-common.deb'
 			update-icon-caches /usr/share/icons/Flat-Remix-Blue-Dark /usr/share/icons/Flat-Remix-Blue-Light /usr/share/icons/desktop-base
 			cd /
 			tar -Jxvf /tmp/.kali-themes-common/data.tar.xz ./usr
@@ -1513,7 +1521,7 @@ Installkaliundercover() {
 			wget -O kali-undercover.deb "https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-undercover/${UNDERCOVERlatestLINK}"
 			apt install -y ./kali-undercover.deb
 			if [ ! -e "/usr/share/icons/Windows-10-Icons" ]; then
-				ar xv kali-undercover.deb
+				busybox ar xv kali-undercover.deb
 				cd /
 				tar -Jxvf /tmp/.kali-undercover-win10-theme/data.tar.xz ./usr
 				#if which update-icon-caches >/dev/null 2>&1; then
@@ -1963,7 +1971,7 @@ INSTALLXFCE4DESKTOP() {
 		#rm -f ./kali-themes-common.deb 2>/dev/null
 		KaliTHEMElatestLINK="$(wget -O- 'https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-themes/' | grep kali-themes-common | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
 		wget -O 'kali-themes-common.deb' "https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-themes/${KaliTHEMElatestLINK}"
-		ar vx 'kali-themes-common.deb'
+		busybox ar xv 'kali-themes-common.deb'
 		update-icon-caches /usr/share/icons/Flat-Remix-Blue-Dark /usr/share/icons/Flat-Remix-Blue-Light /usr/share/icons/desktop-base
 		#tar -Jxvf data.tar.xz -C /
 		cd /

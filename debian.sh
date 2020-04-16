@@ -268,6 +268,8 @@ GNULINUX() {
 		dependencies="${dependencies} qemu qemu-user-static debootstrap"
 	fi
 	##############
+	#在容器中测试发现，部分系统无法显示中文，故此处设定语言变量
+	export LANG="zh_CN.UTF8"
 
 	if [ ! -z "${dependencies}" ]; then
 		if [ "${LINUXDISTRO}" = "debian" ]; then

@@ -1438,8 +1438,9 @@ EndofgentooConf
     #emerge --sync
     emerge-webrsync
     emerge --config sys-libs/timezone-data 2>/dev/null
-    eselect profile list
-    eselect profile set 1
+    #eselect profile list
+    GENTOOnosystemdStable="$(eselect profile list | grep -Ev 'desktop|hardened|developer|systemd|selinux|multilib' | grep stable | tail -n 1 | cut -d '[' -f 2 | cut -d ']' -f 1)"
+    eselect profile set "${GENTOOnosystemdStable}"
     etc-update --automode -3
     etc-update
     #dispatch-conf

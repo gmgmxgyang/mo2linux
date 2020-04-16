@@ -2568,14 +2568,14 @@ GNULINUXTUNASOURCESLIST() {
 			GNULINUX
 		fi
 		echo "检测到您使用的是Debian ${SOURCELISTCODE}系统"
-
+		sed -i 's/^deb/# &/g' /etc/apt/sources.list
 		if [ "${SOURCELISTCODE}" = "sid" ]; then
-			cat >/etc/apt/sources.list <<-"EndOfSourcesList"
+			cat >>/etc/apt/sources.list <<-"EndOfSourcesList"
 				deb http://mirrors.tuna.tsinghua.edu.cn/debian/ sid main contrib non-free
 			EndOfSourcesList
 		else
 			#下面那行EndOfSourcesList不能加单引号
-			cat >/etc/apt/sources.list <<-EndOfSourcesList
+			cat >>/etc/apt/sources.list <<-EndOfSourcesList
 				deb http://mirrors.tuna.tsinghua.edu.cn/debian/ ${SOURCELISTCODE} main contrib non-free
 				deb http://mirrors.tuna.tsinghua.edu.cn/debian/ ${SOURCELISTCODE}-updates main contrib non-free
 				deb http://mirrors.tuna.tsinghua.edu.cn/debian/ ${BACKPORTCODE}-backports main contrib non-free
@@ -2587,7 +2587,8 @@ GNULINUXTUNASOURCESLIST() {
 	###################
 	if grep -q 'Kali' "/etc/issue"; then
 		echo "检测到您使用的是Kali系统"
-		cat >/etc/apt/sources.list <<-"EndOfSourcesList"
+		sed -i 's/^deb/# &/g' /etc/apt/sources.list
+		cat >>/etc/apt/sources.list <<-"EndOfSourcesList"
 			deb http://mirrors.tuna.tsinghua.edu.cn/kali/ kali-rolling main contrib non-free
 			deb http://mirrors.tuna.tsinghua.edu.cn/debian/ stable main contrib non-free
 			# deb http://mirrors.tuna.tsinghua.edu.cn/kali/ kali-last-snapshot main contrib non-free
@@ -2624,8 +2625,9 @@ GNULINUXTUNASOURCESLIST() {
 			GNULINUX
 		fi
 		echo "检测到您使用的是Ubuntu ${SOURCELISTCODE}系统"
+		sed -i 's/^deb/# &/g' /etc/apt/sources.list
 		#下面那行EndOfSourcesList不能有单引号
-		cat >/etc/apt/sources.list <<-EndOfSourcesList
+		cat >>/etc/apt/sources.list <<-EndOfSourcesList
 			deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu/ ${SOURCELISTCODE} main restricted universe multiverse
 			deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu/ ${SOURCELISTCODE}-updates main restricted universe multiverse
 			deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu/ ${SOURCELISTCODE}-backports main restricted universe multiverse

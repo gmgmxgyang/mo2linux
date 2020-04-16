@@ -2538,22 +2538,22 @@ INSTALLVOIDLINUXDISTRO() {
 GNULINUXTUNASOURCESLIST() {
 	cp -pf /etc/apt/sources.list /etc/apt/sources.list.bak
 	if grep -q 'Debian' "/etc/issue"; then
-		if grep -q 'bullseye' "/etc/issue"; then
+		if grep -q 'bullseye' "/etc/os-release"; then
 			SOURCELISTCODE='sid'
 			BACKPORTCODE='bullseye'
 			echo "Debian 11 bullseye"
 
-		elif grep -q 'buster' "/etc/issue"; then
+		elif grep -q 'buster' "/etc/os-release"; then
 			SOURCELISTCODE='stable'
 			BACKPORTCODE='bullseye'
 			echo "Debian 10 buster"
 
-		elif grep -q 'stretch' "/etc/issue"; then
+		elif grep -q 'stretch' "/etc/os-release"; then
 			SOURCELISTCODE='stretch'
 			BACKPORTCODE='stretch'
 			echo "Debian 9 stretch"
 
-		elif grep -q 'jessie' "/etc/issue"; then
+		elif grep -q 'jessie' "/etc/os-release"; then
 			SOURCELISTCODE='jessie'
 			BACKPORTCODE='jessie'
 			echo "Debian 8 jessie"

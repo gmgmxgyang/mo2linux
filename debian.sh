@@ -133,7 +133,7 @@ GNULINUX() {
 	elif grep -q "Alpine" '/etc/issue' || grep -q "Alpine" '/etc/os-release'; then
 		LINUXDISTRO='alpine'
 
-	elif grep -Eq "Arch|Manjaro" '/etc/os-release'; then
+	elif grep -Eq "Arch|Manjaro" '/etc/os-release' || grep -Eq "Arch|Manjaro" '/etc/issue'; then
 		LINUXDISTRO='arch'
 
 	elif grep -Eq "gentoo|funtoo" '/etc/os-release'; then
@@ -268,9 +268,6 @@ GNULINUX() {
 		dependencies="${dependencies} qemu qemu-user-static debootstrap"
 	fi
 	##############
-	#在容器中测试发现，部分系统无法显示中文，故此处设定语言变量
-	export LANG="zh_CN.UTF8"
-
 	if [ ! -z "${dependencies}" ]; then
 		if [ "${LINUXDISTRO}" = "debian" ]; then
 			if ! grep -q '^deb.*edu.cn' "/etc/apt/sources.list"; then

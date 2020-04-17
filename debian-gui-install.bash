@@ -38,7 +38,7 @@ CHECKdependencies() {
 	elif grep -q "Alpine" '/etc/issue' || grep -q "Alpine" "/etc/os-release"; then
 		LINUXDISTRO='alpine'
 
-	elif grep -Eq "Arch|Manjaro" "/etc/os-release"; then
+	elif grep -Eq "Arch|Manjaro" '/etc/os-release' || grep -Eq "Arch|Manjaro" '/etc/issue'; then
 		LINUXDISTRO='arch'
 
 	elif grep -Eq "gentoo|funtoo" "/etc/os-release"; then

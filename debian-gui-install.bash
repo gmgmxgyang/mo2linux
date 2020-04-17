@@ -986,12 +986,12 @@ INSTALL-KDE-PLASMA5-DESKTOP() {
 		dnf install -y tigervnc-server google-noto-cjk-fonts || yum install -y tigervnc-server google-noto-cjk-fonts
 
 	elif [ "${LINUXDISTRO}" = "arch" ]; then
-		pacman -Syu --noconfirm plasma-desktop xorg
+		pacman -S --noconfirm phonon-qt5-vnc plasma-desktop xorg
 		pacman -S --noconfirm sddm sddm-kcm
 		#中文输入法
 		#pacman -S fcitx fcitx-rime fcitx-im kcm-fcitx fcitx-sogoupinyin
 		pacman -S --noconfirm kdebase
-		pacman -S pamac-aur
+		#pacman -S pamac-aur
 		pacman -S --noconfirm tigervnc
 		pacman -S --noconfirm noto-fonts-cjk
 	elif [ "${LINUXDISTRO}" = "void" ]; then

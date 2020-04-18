@@ -1149,6 +1149,10 @@ INSTALL-DEEPIN-DESKTOP() {
 	fi
 
 	if [ "${LINUXDISTRO}" = "debian" ]; then
+		if [ ! -e "/usr/bin/gpg" ]; then
+			apt update
+			apt install gpg -y
+		fi
 		#apt-mark hold gvfs
 		if [ "${DEBIANDISTRO}" = "ubuntu" ]; then
 			add-apt-repository ppa:leaeasy/dde

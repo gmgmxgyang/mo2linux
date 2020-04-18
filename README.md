@@ -26,6 +26,8 @@ Supported containers:
 - [x] **Raspbian buster**
 - [x] **Mint tricia**
 - [x] **Devuan ascii**
+- [x] **Slackware**
+- [x] **Armbian**
 
   ✨ 支持自动配置中文环境，并执行其它优化步骤。🍹
   配置和优化步骤仅适用于 Debian、Ubuntu、Kali、Arch、Fedora 和 Gentoo(x64)。

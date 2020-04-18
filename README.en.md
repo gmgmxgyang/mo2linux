@@ -8,6 +8,8 @@ The following containers are now **supported**:
 - [x] **Debian buster/sid**
 - [x] **Ubuntu 20.04**
 - [x] **Kali rolling**
+- [x] **Arch**
+- [x] **Fedora 31**
 - [x] **Funtoo**
 - [x] **Void**
 

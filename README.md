@@ -4,17 +4,34 @@
 
 ## 介绍
 
+Without any basic knowledge of linux shell, you can run GNU/Linux on your mobile phone/PC, and you can easily install a graphical desktop environment.
+
 在 **GNU/Linux** 上一键安装 **GNU/Linux chroot** 容器。  
-在 **Android Termux** 上一键安装 **GNU/Linux proot** 容器。  
+在 **Android Termux** 上一键安装 **GNU/Linux proot** 容器。
+
 🍸 目前支持：
+Supported containers:
 
 - [x] **Debian buster/sid**
 - [x] **Ubuntu 20.04**
 - [x] **Kali rolling**
+- [x] **Arch**
+- [x] **Fedora 31**
+- [x] **CentOS 8**
+- [x] **Ubuntu 20.04**
+- [x] **Gentoo**
 - [x] **Funtoo**
-- [x] **Void**  
-       ✨ 支持自动配置中文环境，并执行其它优化步骤。🍹  
-       所有的配置和优化步骤仅适用于 deb 系！
+- [x] **Fedora**
+- [x] **Alpine edge**
+- [x] **OpenSUSE tumbleweed**
+- [x] **Void**
+- [x] **Raspbian buster**
+- [x] **Mint tricia**
+- [x] **Devuan ascii**
+
+       ✨ 支持自动配置中文环境，并执行其它优化步骤。🍹
+       配置和优化步骤仅适用于 Debian、Ubuntu、Kali、Arch、Fedora 和 Gentoo(x64)。
+      All configuration and optimization steps only apply to Debian,Ubuntu,Kali,Fedora and Arch.
 
 ![Capture__2020-02-16-02-23-49.png](https://gitee.com/mo2/pic_api/raw/test/2020/02/16/KtxgGq3bFSf4Uwvo.png)
 

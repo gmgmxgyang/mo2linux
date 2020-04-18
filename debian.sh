@@ -584,7 +584,7 @@ MainMenu() {
 			"6" "备份系统 backup system" \
 			"7" "还原 restore" \
 			"8" "查询空间占用 query space occupation" \
-			"9" "更新本管理器 update debian manager" \
+			"9" "更新 update debian manager" \
 			"10" "配置zsh(优化termux) Configure zsh" \
 			"11" "Download VNC apk" \
 			"12" "VSCode Server arm64" \

@@ -29,9 +29,9 @@ Supported containers:
 - [x] **Mint tricia**
 - [x] **Devuan ascii**
 
-       ✨ 支持自动配置中文环境，并执行其它优化步骤。🍹
-       配置和优化步骤仅适用于 Debian、Ubuntu、Kali、Arch、Fedora 和 Gentoo(x64)。
-      All configuration and optimization steps only apply to Debian,Ubuntu,Kali,Fedora and Arch.
+  ✨ 支持自动配置中文环境，并执行其它优化步骤。🍹
+  配置和优化步骤仅适用于 Debian、Ubuntu、Kali、Arch、Fedora 和 Gentoo(x64)。
+  All configuration and optimization steps only apply to Debian,Ubuntu,Kali,Fedora and Arch.
 
 ![Capture__2020-02-16-02-23-49.png](https://gitee.com/mo2/pic_api/raw/test/2020/02/16/KtxgGq3bFSf4Uwvo.png)
 
@@ -91,7 +91,7 @@ wsl --set-default-version 2
 _**精简命令**_
 
 ```shell
-    bash -c "$(wget -qO- gitee.com/mo2/linux/raw/master/debian.sh)"
+    bash -c "$(wget -O- gitee.com/mo2/linux/raw/master/debian.sh)"
 ```
 
 > 注：精简命令和长命令调用的内容是一样的，二选一即可。  
@@ -103,7 +103,7 @@ _**长命令**_
 ```shell
     apt update
     apt install -y wget
-    bash -c "$(wget -qO- 'https://gitee.com/mo2/linux/raw/master/debian.sh')"
+    bash -c "$(wget -O- https://gitee.com/mo2/linux/raw/master/debian.sh)"
 ```
 
 最后按方向键和回车键进行操作。
@@ -151,7 +151,7 @@ _**长命令**_
 
 ```shell
     apt install -y curl
-    bash -c "$(curl -LfsS 'https://gitee.com/mo2/linux/raw/master/debian.sh')"
+    bash -c "$(curl -Lv https://gitee.com/mo2/linux/raw/master/debian.sh)"
 ```
 
 > 3.如需使用 gui,可能还需要安装 VNC apk,您可以前往 Google play 或使用 Tmoe-linux 的 debian-i 来下载。  
@@ -162,7 +162,7 @@ _**长命令**_
 _**精简命令**_
 
 ```shell
-    bash -c "$(wget -qO- gitee.com/mo2/linux/raw/master/debian.sh)"
+    bash -c "$(wget -O- gitee.com/mo2/linux/raw/master/debian.sh)"
 ```
 
 > 注：精简命令和长命令调用的内容是一样的，二选一即可。  
@@ -178,21 +178,21 @@ if [ ! -f /usr/bin/wget ]; then
     apt update || sudo apt update || su -c "apt update"
     apt install -y wget || sudo apt install -y wget || su -c "apt install -y wget"
 fi
-bash -c "$(wget -qO- 'https://gitee.com/mo2/linux/raw/master/debian.sh')"
+bash -c "$(wget -O- https://gitee.com/mo2/linux/raw/master/debian.sh)"
 ```
 
 #### 4.RedHat/Fedora/CentOS
 
 ```shell
     dnf install -y curl || yum install -y curl
-    bash -c "$(curl -LfsS 'https://gitee.com/mo2/linux/raw/master/debian.sh')"
+    bash -c "$(curl -Lv https://gitee.com/mo2/linux/raw/master/debian.sh)"
 ```
 
 #### 5.Arch/Manjaro
 
 ```shell
     pacman -Syu --noconfirm curl
-    bash -c "$(curl -LfsS 'https://gitee.com/mo2/linux/raw/master/debian.sh')"
+    bash -c "$(curl -Lv https://gitee.com/mo2/linux/raw/master/debian.sh)"
 ```
 
 #### 6.OpenWRT/Entware
@@ -200,14 +200,14 @@ bash -c "$(wget -qO- 'https://gitee.com/mo2/linux/raw/master/debian.sh')"
 ```shell
     opkg update
     opkg install libustream-openssl ca-bundle ca-certificates wget bash
-    bash -c "$(wget --no-check-certificate -qO- 'https://gitee.com/mo2/linux/raw/master/debian.sh')"
+    bash -c "$(wget --no-check-certificate -O- https://gitee.com/mo2/linux/raw/master/debian.sh)"
 ```
 
 #### 7.Alpine
 
 ```shell
-    apk add -q wget
-    wget -qO- 'https://gitee.com/mo2/linux/raw/master/debian.sh' | ash
+    apk add wget
+    wget -O- https://gitee.com/mo2/linux/raw/master/debian.sh | ash
 ```
 
 #### 8.Void
@@ -215,14 +215,14 @@ bash -c "$(wget -qO- 'https://gitee.com/mo2/linux/raw/master/debian.sh')"
 ```shell
     xbps-install -S
     xbps-install -y wget
-    bash -c "$(wget -qO- 'https://gitee.com/mo2/linux/raw/master/debian.sh')"
+    bash -c "$(wget -O- https://gitee.com/mo2/linux/raw/master/debian.sh)"
 ```
 
 #### 9.Gentoo/Funtoo
 
 ```shell
-    emerge -av net-misc/wget
-    bash -c "$(wget -qO- 'https://gitee.com/mo2/linux/raw/master/debian.sh')"
+    emerge -avk net-misc/wget
+    bash -c "$(wget -O- https://gitee.com/mo2/linux/raw/master/debian.sh)"
 ```
 
 #### 10.其它 system 未测试,以下系统请自行解决依赖关系
@@ -240,7 +240,7 @@ bash -c "$(wget -qO- 'https://gitee.com/mo2/linux/raw/master/debian.sh')"
 - 1.安装 Tmoe GNU/Linux 管理工具的命令(仅支持在原系统内输)
 
 ```shell
-bash -c "$(curl -LfsS 'https://gitee.com/mo2/linux/raw/master/debian.sh')"
+bash -c "$(curl -Lv https://gitee.com/mo2/linux/raw/master/debian.sh)"
 ```
 
 > 进入工具后，按方向键和回车键进行操作，基本上所有操作都有提示。
@@ -290,7 +290,7 @@ startvnc
 ```shell
 apt update
 apt install -y wget
-bash -c "$(wget -qO- 'https://gitee.com/mo2/linux/raw/master/debian.sh')"
+bash -c "$(wget -O- https://gitee.com/mo2/linux/raw/master/debian.sh)"
 ```
 
 **(旧版)视频教程**[链接](https://pan.baidu.com/s/1rh7Nkcd0gG9RPx77JyGqZA) 提取码: **debb**

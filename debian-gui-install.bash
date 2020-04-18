@@ -2714,10 +2714,11 @@ BetaFeatures() {
 	if [ "${TMOEBETA}" == '12' ]; then
 		if [ ! -e "/usr/sbin/gparted" ]; then
 			apt update
-			apt install -y gparted
+			apt install -y gparted 
+			apt install -y baobab
 		fi
 		gparted &
-		echo "安装完成，如需卸载，请手动输apt purge -y gparted"
+		echo "安装完成，如需卸载，请手动输apt purge -y gparted baobab"
 	fi
 	########################################
 	echo 'Press Enter to return.'

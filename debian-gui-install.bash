@@ -180,15 +180,12 @@ CHECKdependencies() {
 
 		elif [ "${LINUXDISTRO}" = "alpine" ]; then
 			apk update
-			apk add -q ${dependencies}
+			apk add ${dependencies}
 
 		elif [ "${LINUXDISTRO}" = "arch" ]; then
 			pacman -Syu --noconfirm ${dependencies}
 
 		elif [ "${LINUXDISTRO}" = "redhat" ]; then
-			if [ "${REDHATDISTRO}" != "fedora" ]; then
-				dnf install -y epel-release || yum install -y epel-release
-			fi
 			dnf install -y ${dependencies} || yum install -y ${dependencies}
 
 		elif [ "${LINUXDISTRO}" = "openwrt" ]; then
@@ -201,7 +198,11 @@ CHECKdependencies() {
 		elif [ "${LINUXDISTRO}" = "suse" ]; then
 			zypper in -y ${dependencies}
 
+		elif [ "${LINUXDISTRO}" = "void" ]; then
+			xbps-install -S -y ${dependencies}
+
 		else
+
 			apt update
 			apt install -y ${dependencies} || port install ${dependencies} || zypper in ${dependencies} || guix package -i ${dependencies} || pkg install ${dependencies} || pkg_add ${dependencies} || pkgutil -i ${dependencies}
 		fi
@@ -1648,6 +1649,7 @@ OTHERSOFTWARE() {
 			"10" "百度网盘(x86_64):提供文件的网络备份、同步和分享服务" \
 			"11" "网易云音乐(x86_64):专注于发现与分享的音乐产品" \
 			"12" "ADB:Android Debug Bridge" \
+			"13" "文件管理器:thunar/nautilus/dolphin" \
 			"0" "Back to the main menu 返回主菜单" \
 			3>&1 1>&2 2>&3
 	)
@@ -1880,6 +1882,54 @@ OTHERSOFTWARE() {
 			echo "即将为您自动进入adb shell模式，您也可以手动输adb shell来进入该模式"
 			adb shell
 		fi
+		echo 'Press Enter to return.'
+		echo "${YELLOW}按回车键返回。${RESET}"
+		read
+		DEBIANMENU
+	fi
+	###########################
+	if [ "${SOFTWARE}" == '13' ]; then
+		dependencies=""
+		if [ ! -e /usr/bin/thunar ]; then
+			dependencies="${dependencies} thunar"
+		fi
+
+		if [ ! -e /usr/bin/nautilus ]; then
+			dependencies="${dependencies} nautilus"
+		fi
+
+		if [ ! -e /usr/bin/dolphin ]; then
+			dependencies="${dependencies} dolphin"
+		fi
+
+		if [ ! -z "${dependencies}" ]; then
+			if [ "${LINUXDISTRO}" = "debian" ]; then
+				apt update
+				apt install -y ${dependencies}
+
+			elif [ "${LINUXDISTRO}" = "alpine" ]; then
+				apk update
+				apk add ${dependencies}
+
+			elif [ "${LINUXDISTRO}" = "arch" ]; then
+				pacman -Syu --noconfirm ${dependencies}
+
+			elif [ "${LINUXDISTRO}" = "redhat" ]; then
+				dnf install -y ${dependencies} || yum install -y ${dependencies}
+
+			elif [ "${LINUXDISTRO}" = "openwrt" ]; then
+				#opkg update
+				opkg install ${dependencies} || opkg install ${dependencies}
+			elif [ "${LINUXDISTRO}" = "void" ]; then
+				xbps-install -S -y lxqt tigervnc
+
+			elif [ "${LINUXDISTRO}" = "gentoo" ]; then
+				emerge -vk ${dependencies}
+			fi
+		fi
+		echo "安装完成，如需卸载，请手动输apt purge -y nautilus dolphin"
+		nautilus &
+		dolphin &
 		echo 'Press Enter to return.'
 		echo "${YELLOW}按回车键返回。${RESET}"
 		read
@@ -2714,7 +2764,7 @@ BetaFeatures() {
 	if [ "${TMOEBETA}" == '12' ]; then
 		if [ ! -e "/usr/sbin/gparted" ]; then
 			apt update
-			apt install -y gparted 
+			apt install -y gparted
 			apt install -y baobab
 		fi
 		gparted &

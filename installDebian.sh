@@ -735,8 +735,8 @@ if [ ! -z "${dependencies}" ]; then
         apt install -y ${dependencies} || apt install -y command-not-found zsh git wget whiptail command-not-found
 
     elif [ "${LINUXDISTRO}" = "alpine" ]; then
-        apk add -q ${dependencies}
-        #apk add -q xz newt tar zsh git wget bash zsh-vcs pv
+        apk add ${dependencies}
+        #apk add xz newt tar zsh git wget bash zsh-vcs pv
 
     elif [ "${LINUXDISTRO}" = "arch" ]; then
         pacman -Syu --noconfirm ${dependencies}

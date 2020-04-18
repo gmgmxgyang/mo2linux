@@ -783,7 +783,7 @@ REPO=${REPO:-mirrors/oh-my-zsh}
 REMOTE=${REMOTE:-https://gitee.com/${REPO}.git}
 
 #REPO=${REPO:-ohmyzsh/ohmyzsh}
-#REMOTE=${REMOTE:-https://github.com/${REPO}.git}
+#REMOTE=${REMOTE:-git://github.com/${REPO}.git}
 BRANCH=${BRANCH:-master}
 
 # Other options
@@ -1051,7 +1051,7 @@ main() {
         echo "Configuring zsh theme 正在配置zsh主题(powerlevel 10k)..."
         cd ${HOME}/.oh-my-zsh/custom/themes || mkdir -p ${HOME}/.oh-my-zsh/custom/themes && cd ${HOME}/.oh-my-zsh/custom/themes
         rm -rf "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k"
-        git clone --depth=1 https://gitee.com/mo2/powerlevel10k.git "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k" || git clone --depth=1 https://github.com/romkatv/powerlevel10k "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k"
+        git clone --depth=1 https://gitee.com/mo2/powerlevel10k.git "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k" || git clone --depth=1 git://github.com/romkatv/powerlevel10k "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k"
         sed -i '/^ZSH_THEME/d' "${HOME}/.zshrc"
         sed -i "1 i\ZSH_THEME='powerlevel10k/powerlevel10k'" "${HOME}/.zshrc"
         # sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="agnosterzak"/g' ~/.zshrc
@@ -1114,7 +1114,7 @@ fi
     rm -rf ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting 2>/dev/null
     mkdir -p ${HOME}/.oh-my-zsh/custom/plugins
 
-    git clone --depth=1 https://gitee.com/mo2/zsh-syntax-highlighting.git ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting || git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting ~/.zsh-syntax-highlighting ${HOME}/.oh-my-zsh/custom/plugins/
+    git clone --depth=1 https://gitee.com/mo2/zsh-syntax-highlighting.git ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting || git clone --depth=1 git://github.com/zsh-users/zsh-syntax-highlighting ~/.zsh-syntax-highlighting ${HOME}/.oh-my-zsh/custom/plugins/
 
     grep -q 'zsh-syntax-highlighting/zsh-syntax-highlighting.zsh' ${HOME}/.zshrc >/dev/null 2>&1 || sed -i "$ a\source ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ${HOME}/.zshrc
     #echo -e "\nsource ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ${HOME}/.zshrc
@@ -1132,7 +1132,7 @@ fi
     if [ "${LINUXDISTRO}" = "debian" ] || [ "${LINUXDISTRO}" = "alpine" ] || [ "${LINUXDISTRO}" = "arch" ]; then
         if [ -e /usr/bin/fzf ] || [ -e /bin/fzf ]; then
             rm -rf ${HOME}/.oh-my-zsh/custom/plugins/fzf-tab 2>/dev/null
-            git clone --depth=1 https://gitee.com/mo2/fzf-tab.git ${HOME}/.oh-my-zsh/custom/plugins/fzf-tab || git clone --depth=1 https://github.com/Aloxaf/fzf-tab.git ${HOME}/.oh-my-zsh/custom/plugins/fzf-tab
+            git clone --depth=1 https://gitee.com/mo2/fzf-tab.git ${HOME}/.oh-my-zsh/custom/plugins/fzf-tab || git clone --depth=1 git://github.com/Aloxaf/fzf-tab.git ${HOME}/.oh-my-zsh/custom/plugins/fzf-tab
 
             grep -q 'custom/plugins/fzf-tab/fzf-tab.zsh' "${HOME}/.zshrc" >/dev/null 2>&1 || sed -i "$ a\source ${HOME}/.oh-my-zsh/custom/plugins/fzf-tab/fzf-tab.zsh" ${HOME}/.zshrc
         fi

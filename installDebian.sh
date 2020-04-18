@@ -234,9 +234,6 @@ if [ ! -f ${DebianTarXz} ]; then
     echo "正在从清华大学开源镜像站下载容器镜像"
     echo "Downloading debian-sid-rootfs.tar.xz from Tsinghua University Open Source Mirror Station."
     ttime=$(curl -L "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/sid/${archtype}/default/" | grep date | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)
-    #-o get-date-tmp.html >/dev/null 2>&1
-    #ttime=$(cat get-date-tmp.html | tail -n2 | head -n1 | cut -d\" -f4)
-    #rm -f get-date-tmp.html
     if [ "${LINUXDISTRO}" != 'iSH' ]; then
       aria2c -x 5 -k 1M --split 5 -o $DebianTarXz "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/sid/${archtype}/default/${ttime}rootfs.tar.xz"
     else
@@ -247,7 +244,7 @@ if [ ! -f ${DebianTarXz} ]; then
   fi
 fi
 cur=$(pwd)
-cd ~/${DebianFolder}
+cd ${DebianCHROOT}
 echo "正在解压debian-sid-rootfs.tar.xz，Decompressing Rootfs, please be patient."
 if [ "${LINUXDISTRO}" = "Android" ]; then
   pv ${cur}/${DebianTarXz} | proot --link2symlink tar -pJx
@@ -1054,7 +1051,7 @@ main() {
         echo "Configuring zsh theme 正在配置zsh主题(powerlevel 10k)..."
         cd ${HOME}/.oh-my-zsh/custom/themes || mkdir -p ${HOME}/.oh-my-zsh/custom/themes && cd ${HOME}/.oh-my-zsh/custom/themes
         rm -rf "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k"
-        git clone https://gitee.com/mo2/powerlevel10k.git "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k" --depth=1
+        git clone --depth=1 https://gitee.com/mo2/powerlevel10k.git "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k" || git clone --depth=1 https://github.com/romkatv/powerlevel10k "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k"
         sed -i '/^ZSH_THEME/d' "${HOME}/.zshrc"
         sed -i "1 i\ZSH_THEME='powerlevel10k/powerlevel10k'" "${HOME}/.zshrc"
         # sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="agnosterzak"/g' ~/.zshrc
@@ -1117,8 +1114,7 @@ fi
     rm -rf ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting 2>/dev/null
     mkdir -p ${HOME}/.oh-my-zsh/custom/plugins
 
-    # git clone --depth=1 git://github.com/zsh-users/zsh-syntax-highlighting ~/.zsh-syntax-highlighting
-    git clone --depth=1 https://gitee.com/mo2/zsh-syntax-highlighting.git ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+    git clone --depth=1 https://gitee.com/mo2/zsh-syntax-highlighting.git ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting || git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting ~/.zsh-syntax-highlighting ${HOME}/.oh-my-zsh/custom/plugins/
 
     grep -q 'zsh-syntax-highlighting/zsh-syntax-highlighting.zsh' ${HOME}/.zshrc >/dev/null 2>&1 || sed -i "$ a\source ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ${HOME}/.zshrc
     #echo -e "\nsource ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ${HOME}/.zshrc
@@ -1126,8 +1122,8 @@ fi
     echo "正在克隆zsh-autosuggestions自动补全插件..."
     rm -rf ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions 2>/dev/null
 
-    #git clone --depth=1 git://github.com/zsh-users/zsh-autosuggestions ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-    git clone --depth=1 https://gitee.com/mo2/zsh-autosuggestions.git ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+
+    git clone --depth=1 https://gitee.com/mo2/zsh-autosuggestions.git ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions || git clone --depth=1 git://github.com/zsh-users/zsh-autosuggestions ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestionszsh-autosuggestions
 
     grep -q '/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh' ${HOME}/.zshrc >/dev/null 2>&1 || sed -i "$ a\source ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" ${HOME}/.zshrc
     #echo -e "\nsource ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" >> ${HOME}/.zshrc

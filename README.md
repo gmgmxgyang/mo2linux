@@ -516,3 +516,14 @@ nano /usr/bin/startvnc
 ##### 2020-04-12 更新日志
 
 - 1.支持切换 VNC 音频传输方式。
+
+##### 2020-04-13 至 2020-04-19 更新日志
+
+- 1.优化并适配 Arch,Fedrora 系统
+- 2.Gentoo 和 OpenSUSE 仅优化 x64 版
+- 3.加入更多发行版的容器，例如 Slackware,Armbian 等
+
+##### 2020-04-20 更新日志
+
+- 1.支持安装其它版本的 VSCode,包括 VS Codium,VS Code OSS,以及官方版的 VScode。
+- 自动识别除 i\*86 外的主流架构，自动获取最新链接，对 deb 系和红帽系进行分别适配，其它发行版以 tar 压缩包形式进行安装，解压至/usr/local/bin 目录。

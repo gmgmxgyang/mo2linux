@@ -2031,7 +2031,7 @@ INSTALLXFCE4DESKTOP() {
 		etc-update
 		emerge -avk xfce4-meta x11-terms/xfce4-terminal net-misc/tigervnc media-fonts/wqy-bitmapfont
 	elif [ "${LINUXDISTRO}" = "suse" ]; then
-		zypper in -y tigervnc-x11vnc noto-sans-sc-fonts patterns-xfce-xfce
+		zypper in -y tigervnc-x11vnc noto-sans-sc-fonts patterns-xfce-xfce xfce4-terminal
 	fi
 
 	if [ ! -e "/usr/share/desktop-base/kali-theme" ]; then

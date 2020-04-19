@@ -305,7 +305,7 @@ CHECKdependencies() {
 DEBIANMENU() {
 	cd ${cur}
 	OPTION=$(
-		whiptail --title "Tmoe-linux Tool输debian-i启动(20200420-05)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.当前主菜单有十几个选项，请使用方向键或触屏上下滑动，按回车键确认。${TMOENODEBIAN} 更新日志:0411支持修复VNC闪退,0420增加全版本VSCode" 20 50 6 \
+		whiptail --title "Tmoe-linux Tool输debian-i启动(20200420-05)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.当前主菜单有十几个选项，请使用方向键或触屏上下滑动，按回车键确认。${TMOENODEBIAN} 更新日志:0411支持修复VNC闪退,0420增加其它版本的VSCode" 20 50 6 \
 			"1" "Install GUI 安装图形界面" \
 			"2" "Install browser 安装浏览器" \
 			"3" "Download theme 下载主题" \
@@ -419,8 +419,9 @@ DEBIANMENU() {
 }
 ############################
 WHICHVSCODEedition() {
+	ps -e >/dev/null 2>&1 || VSCODEtips=$(echo "检测到您无权读取/proc分区的部分内容，请选择Server版，或使用XSDL打开VSCode本地版")
 	VSCODEedition=$(whiptail --title "VS Code" --menu \
-		"Which edition do you want to install" 15 60 5 \
+		"${VSCODEtips} Which edition do you want to install" 15 60 5 \
 		"1" "VS Code Server(arm64,web版)" \
 		"2" "VS Codium" \
 		"3" "VS Code OSS" \
@@ -481,7 +482,7 @@ InstallVScodium() {
 	fi
 
 	if [ -e "/usr/bin/codium" ]; then
-		echo '检测到您已安装VSCodium,请请手动输以下命令启动'
+		echo '检测到您已安装VSCodium,请手动输以下命令启动'
 		#echo 'codium --user-data-dir=${HOME}/.config/VSCodium'
 		echo "codium --user-data-dir=${HOME}"
 		echo "如需卸载，请手动输apt purge -y codium"
@@ -567,7 +568,7 @@ InstallVSCodeOfficial() {
 	fi
 
 	if [ -e "/usr/bin/code" ]; then
-		echo '检测到您已安装VSCode,请请手动输以下命令启动'
+		echo '检测到您已安装VSCode,请手动输以下命令启动'
 		#echo 'code --user-data-dir=${HOME}/.vscode'
 		echo 'code --user-data-dir=${HOME}'
 		echo "如需卸载，请手动输apt purge -y code"

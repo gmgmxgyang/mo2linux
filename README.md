@@ -162,19 +162,8 @@ _**长命令**_
 > 1.安装安卓版[Termux](https://apk.tmoe.me/termux) 和[Termux:api](https://mirrors.tuna.tsinghua.edu.cn/fdroid/repo/com.termux.api_41.apk)  
 > 2.打开 termux，输入以下命令
 
-_**精简命令**_
-
 ```shell
-    curl -sL gitee.com/mo2/linux/raw/master/debian.sh | bash -
-```
-
-> 注：精简命令和长命令调用的内容是一样的，二选一即可。
-
-_**长命令**_
-
-```shell
-    apt install -y curl
-    bash -c "$(curl -Lv https://gitee.com/mo2/linux/raw/master/debian.sh)"
+    bash -c "$(curl -Lv gitee.com/mo2/linux/raw/master/debian.sh)"
 ```
 
 > 3.如需使用 gui,可能还需要安装 VNC apk,您可以前往 Google play 或使用 Tmoe-linux 的 debian-i 来下载。  

@@ -1638,10 +1638,8 @@ STARTVSCODE() {
 
 		echo "server版商店中不包含所有插件，如需下载额外插件，请前往微软vscode官方在线商店下载vsix后缀的离线插件，并手动安装。 https://marketplace.visualstudio.com/vscode"
 		git clone -b aarch64 --depth=1 https://gitee.com/mo2/vscode-server.git .VSCODESERVERTMPFILE
-		cd .VSCODESERVERTMPFILE
-		tar -Jpxvf code.tar.xz
-		cp -rvf usr ${DebianCHROOT}
-		cd ${cur}
+		cd ${DebianCHROOT}
+		tar -Jpxvf ${HOME}/.VSCODESERVERTMPFILE/code.tar.xz
 		rm -rf ${HOME}/.VSCODESERVERTMPFILE
 		echo "Congratulations, you have successfully installed vscode server!"
 		echo "您已成功安装VSCode服务，如需卸载请输rm -rf ${PREFIX}/bin/code-server ${DebianCHROOT}/usr/local/bin/code-server ${DebianCHROOT}/usr/local/bin/code-server-data"

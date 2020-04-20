@@ -2401,14 +2401,15 @@ INSTALLotherSystems() {
 	####################
 	if [ "${BETASYSTEM}" == '8' ]; then
 		if [ "${archtype}" = 'amd64' ] || [ "${archtype}" = 'i386' ]; then
-			echo "检测到mint不支持您当前的架构"
-		else
+
 			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
 				sed 's/debian系统/mint系统/g' |
 				sed 's/debian system/mint system/g' |
 				sed 's:debian-sid:mint-tricia:g' |
 				sed 's:debian/sid:mint/tricia:g' |
 				sed 's:Debian GNU/Linux:Mint GNU/Linux:g')"
+		else
+			echo "检测到mint不支持您当前的架构"
 		fi
 	fi
 

@@ -2409,13 +2409,14 @@ INSTALLotherSystems() {
 				sed 's:debian/sid:mint/tricia:g' |
 				sed 's:Debian GNU/Linux:Mint GNU/Linux:g')"
 		else
-			echo "检测到mint不支持您当前的架构"
+			echo "Linux Mint不支持您的架构"
 		fi
 	fi
 
 	####################
 	if [ "${BETASYSTEM}" == '9' ]; then
 		if [ ! -e "openwrt-snapshot-rootfs.tar.xz" ]; then
+			cd ~
 			if [ "${archtype}" = 'arm64' ]; then
 				aria2c -x 16 -s 16 -k 1M -o "openwrt-snapshot-rootfs.tar.xz" "https://cdn.tmoe.me/Tmoe-Debian-Tool/chroot/archive/openwrt_arm64.tar.xz" || aria2c -x 16 -s 16 -k 1M -o "openwrt-snapshot-rootfs.tar.xz" "https://m.tmoe.me/show/share/Tmoe-linux/chroot/openwrt_arm64.tar.xz"
 			fi

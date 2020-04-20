@@ -2418,8 +2418,6 @@ INSTALLotherSystems() {
 			if [ "${archtype}" = 'arm64' ]; then
 				aria2c -x 16 -s 16 -k 1M -o "openwrt-snapshot-rootfs.tar.xz" "https://cdn.tmoe.me/Tmoe-Debian-Tool/chroot/archive/openwrt_arm64.tar.xz" || aria2c -x 16 -s 16 -k 1M -o "openwrt-snapshot-rootfs.tar.xz" "https://m.tmoe.me/show/share/Tmoe-linux/chroot/openwrt_arm64.tar.xz"
 			fi
-			#echo "开发者暂时还没有构建${archtype}架构的容器镜像呢！"
-			#echo "您可以换用x86_64架构的设备进行安装"
 		fi
 		touch ~/.ALPINELINUXDetectionFILE
 		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |

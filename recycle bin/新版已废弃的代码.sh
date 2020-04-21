@@ -1420,19 +1420,22 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
 skip_if_unavailable=False
 EndOfYumRepo
 ##############################
-	if [ "${SOFTWARE}" == '12' ]; then
-		if [ ! -e "/usr/bin/tasksel" ]; then
-			apt update
-			apt install -y tasksel
-		fi
-		tasksel --list-tasks
-		echo "您可以使用tasksel install 包名来安装软件。"
-		echo "Press enter to continue."
-		read
-		tasksel
-		echo 'Press Enter to return.'
-		echo "${YELLOW}按回车键返回。${RESET}"
-		read
-		DEBIANMENU
-	fi
-	#########################
+if [ "${SOFTWARE}" == '12' ]; then
+    if [ ! -e "/usr/bin/tasksel" ]; then
+        apt update
+        apt install -y tasksel
+    fi
+    tasksel --list-tasks
+    echo "您可以使用tasksel install 包名来安装软件。"
+    echo "Press enter to continue."
+    read
+    tasksel
+    echo 'Press Enter to return.'
+    echo "${YELLOW}按回车键返回。${RESET}"
+    read
+    DEBIANMENU
+fi
+#########################
+echo "If the video does not play automatically, please enter the download directory to play it manually."
+echo "转载视频须经原作者同意，请勿擅自将视频上传至B站等平台。"
+echo "Do not upload video to platforms such as YouTube without authorization."

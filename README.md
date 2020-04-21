@@ -111,23 +111,13 @@ wsl --set-default-version 2
 
 重新打开子系统，然后输
 
-_**精简命令**_
-
 ```shell
-    bash -c "$(wget -O- gitee.com/mo2/linux/raw/master/debian.sh)"
+    sudo apt update
+    sudo apt install -y curl
+    bash -c "$(curl -L gitee.com/mo2/linux/raw/master/debian.sh)"
 ```
 
-> 注：精简命令和长命令调用的内容是一样的，二选一即可。  
-> 区别在于长命令重复安装了 wget。  
-> 建议使用精简命令，除非 wget 被您不慎卸载掉了。
-
-_**长命令**_
-
-```shell
-    apt update
-    apt install -y wget
-    bash -c "$(wget -O- https://gitee.com/mo2/linux/raw/master/debian.sh)"
-```
+若已经为 root 用户，则可以去掉 sudo。
 
 最后按方向键和回车键进行操作。
 
@@ -171,26 +161,10 @@ _**长命令**_
 
 #### 3.Debian/Ubuntu/Mint/Kali/Deepin/Devuan/MX 等 deb 系发行版
 
-_**精简命令**_
-
 ```shell
-    bash -c "$(wget -O- gitee.com/mo2/linux/raw/master/debian.sh)"
-```
-
-> 注：精简命令和长命令调用的内容是一样的，二选一即可。  
-> 区别在于长命令增加了 wget 的检测。  
-> 超精简的 debian 容器镜像内可能无 wget 和 sudo。  
-> 尽管大部分 deb 系列发行版使用 apt 安装软件时都需要 root 权限，但却有极少部分系统禁止以 root 权限运行，故并非一开始就调用 su -c  
-> 例如：使用 apt 包管理的 Android Termux，禁止以 root 权限运行 apt install
-
-_**长命令**_
-
-```shell
-if [ ! -f /usr/bin/wget ]; then
-    apt update || sudo apt update || su -c "apt update"
-    apt install -y wget || sudo apt install -y wget || su -c "apt install -y wget"
-fi
-bash -c "$(wget -O- https://gitee.com/mo2/linux/raw/master/debian.sh)"
+    sudo apt update
+    sudo apt install -y curl
+    . <(curl -L gitee.com/mo2/linux/raw/master/debian.sh)
 ```
 
 #### 4.RedHat/Fedora/CentOS
@@ -219,7 +193,7 @@ bash -c "$(wget -O- https://gitee.com/mo2/linux/raw/master/debian.sh)"
 
 ```shell
     apk add wget
-    wget -O- https://gitee.com/mo2/linux/raw/master/debian.sh | ash
+    ash -c "$(wget -O- https://gitee.com/mo2/linux/raw/master/debian.sh)"
 ```
 
 #### 8.Void

@@ -78,3 +78,8 @@ bash -c "$(wget -qO- 'https://gitee.com/mo2/Termux-Debian/raw/master/debian.sh')
 <video id="video" controls="" preload="none" poster="https://gitee.com/mo2/pic_api/raw/test/2020/03/24/YsZou4mIXZUFUYdZ.png">
       <source id="mp4" src="https://cdn.tmoe.me/Tmoe-Debian-Tool/20200229VNC%E6%95%99%E7%A8%8B06.mp4" type="video/mp4">
       </video>
+> 注：精简命令和长命令调用的内容是一样的，二选一即可。  
+> 区别在于长命令增加了 wget 的检测。  
+> 超精简的 debian 容器镜像内可能无 wget 和 sudo。  
+> 尽管大部分 deb 系列发行版使用 apt 安装软件时都需要 root 权限，但却有极少部分系统禁止以 root 权限运行，故并非一开始就调用 su -c  
+> 例如：使用 apt 包管理的 Android Termux，禁止以 root 权限运行 apt install

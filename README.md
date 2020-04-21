@@ -192,6 +192,7 @@ wsl --set-default-version 2
 #### 7.Alpine
 
 ```shell
+    apk update
     apk add wget
     ash -c "$(wget -O- https://gitee.com/mo2/linux/raw/master/debian.sh)"
 ```

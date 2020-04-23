@@ -4,7 +4,8 @@
 
 ## 介绍
 
-Without any basic knowledge of linux shell, you can run GNU/Linux on your mobile phone/PC, and you can easily install a graphical desktop environment.
+🍭Without any basic knowledge of linux shell,🍹 you can run GNU/Linux on your android phone and windows PC, and you can easily install a graphical desktop environment and configure pulseaudio server.✨
+You can also run Gentoo, Arch and other systems in WSL.
 
 在 **GNU/Linux** 上一键安装 **GNU/Linux chroot** 容器。  
 在 **Android Termux** 上一键安装 **GNU/Linux proot** 容器。
@@ -36,10 +37,11 @@ Supported containers:
 ![Capture__2020-02-16-02-23-49.png](https://gitee.com/mo2/pic_api/raw/test/2020/02/16/KtxgGq3bFSf4Uwvo.png)
 
 支持一键安装图形界面。
+Support one-key installation Graphical User Interface.
 
 ![截图_2020-02-01_08-53-21.jpg](https://gitee.com/mo2/pic_api/raw/test/2020/02/16/yMgxSkGh0Tx4IJz0.jpg)
 
-🍸 目前支持的桌面环境：  
+🍸 🍸 Supported GUI/DE 目前支持的桌面环境：  
 （仅部分系统支持）
 
 - [x] **xfce4**
@@ -51,22 +53,26 @@ Supported containers:
 - [ ] **gnome 3**
 - [ ] **deepin desktop**
 
-  > 注 1：仅部分系统支持  
-  > 注 2：优先适配 xfce  
-  > 注 3： 未打勾的选项在容器/远程桌面环境下存在一些问题
+> 注 1：Only some systems support desktop environment installation.  
+> 仅部分系统支持  
+> 注 2：Prioritize XFCE  
+> 优先适配 xfce  
+> 注 3： 未打勾的选项在容器/远程桌面环境下存在一些问题  
+> **Some desktops may not display properly through the remote desktop**
 
-  1.Arch + Deepin desktop 在 VNC 下会黑屏  
-  下图的 Arch 是运行在 debian 里的 chroot 容器。
-  ![Snipaste_2020-04-12_05-09-13.png](https://i.loli.net/2020/04/18/LQcrOqZxwU2svJ5.png)  
-  2.如下图所示，Debian sid + KDE Plasma 5 转发 X11 后，窗口显示会出现问题。  
-  注：在 RDP 下此问题未复现
-  ![Snipaste_2020-04-12_07-28-58.png](https://i.loli.net/2020/04/18/5g1Nn9DQpPqEhuz.png)
+1.Arch + Deepin desktop 在 VNC 下会黑屏  
+ 下图的 Arch 是运行在 debian 里的 chroot 容器。
+![Snipaste_2020-04-12_05-09-13.png](https://i.loli.net/2020/04/18/LQcrOqZxwU2svJ5.png)  
+ 2.如下图所示，Debian sid + KDE Plasma 5 转发 X11 后，窗口显示会出现问题。  
+ 注：在 RDP 下此问题未复现
+![Snipaste_2020-04-12_07-28-58.png](https://i.loli.net/2020/04/18/5g1Nn9DQpPqEhuz.png)
 
 ### 支持的架构 Supported architecture
 
 Debian 容器支持 **arm64(aarch64)、armhf、armel、amd64(x86_64) 、i386(x86)、s390x 和 ppc64el**
 
 ~~可以支持，但不想支持的是 **mipsel**~~
+In addition, the **mipsel** architecture is also supported! The developer has tested it on the router
 
 2020-03-24 已经支持 **mipsel** 架构了！(已经在路由器上测试过了 🍥)
 
@@ -74,17 +80,22 @@ Debian 容器支持 **arm64(aarch64)、armhf、armel、amd64(x86_64) 、i386(x86
 
 这可能是你见过的为数不多的，全架构 ~~、全平台~~ 项目。 ~~（win10 仅支持 wsl，不是全平台)~~
 
+Containers other than debian may only support mainstream architectures, not s390x and ppc64el.
 其它系统容器可能只支持主流的 amd64、arm64 等架构，不支持 s390x 和 ppc64el 等冷门架构。
 
-### 不同平台的安装教程
+### 不同平台的安装教程 Installation tutorials for different platforms
+
+**You can run this tool not only on Android, but also on GNU/Linux.**
 
 **您不仅可以在 Android 手机上运行本工具，亦可在 GNU/Linux 上运行。**
 
 #### 1.Windows10
 
-教程：  
+教程：Tutorial（教程）：  
 ![我不知道怎么用](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/247f4fvoKnj56MwN.png)  
+Q:I don't know how to use it?
 ![以admin身份运行powershell](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/h4IrTwyx4AaC8joE.png)
+A:Run PowerShell as an administrator and enter the following command.
 
 ```powershell
 dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
@@ -92,6 +103,7 @@ dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /nores
 ```
 
 重启系统后再次以管理员身份运行 _powershell_ ，然后输
+After restarting the system, run _powershell_ again as an administrator, then press the following command.
 
 ```powershell
 wsl --set-default-version 2
@@ -99,7 +111,7 @@ wsl --set-default-version 2
 
 [![enable](https://i.loli.net/2020/04/03/I9zdphVgMc5Zky3.png)](https://sm.ms/image/I9zdphVgMc5Zky3)  
 ![store](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/FLpQu0i7LbIP2K9L.png)  
-若无法连接 _Microsoft Store_,那么也可以手动安装。  
+若无法连接*Microsoft Store*,那么也可以手动安装。  
 请从以下三者中选择：  
 [Debian](https://aka.ms/wsl-debian-gnulinux)  
 [Kali](https://aka.ms/wsl-kali-linux-new)  

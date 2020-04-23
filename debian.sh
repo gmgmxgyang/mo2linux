@@ -1754,8 +1754,8 @@ INSTALLDEBIANORDOWNLOADRECOVERYTARXZ() {
 						同时希望您能注意在信息网络上不存在“绝对完善的安全措施”。
 
 						7.其它说明
-						(a)若您需要在开源项目中引用本脚本，建议您先与原开发者联系,并附上本git-repo的原链接gitee.com/mo2/linux
-						If you want to reference this script in an open source project,it is recommended that you contact the original developer.
+						(a)若您需要在开源项目中引用本脚本，建议您先与原开发者联系，若无法联系，则只需附上本git-repo的链接gitee.com/mo2/linux
+						If you want to reference this script in an open source project,it is recommended that you contact the original developer.If you can't contact the developer, just attach the github link: https://github.com/2moe/tmoe-linux
 
 						8.最终用户许可协议的更改
 						(a)如果决定更改最终用户许可协议，我们会在本协议中、本工具网站中以及我们认为适当的位置发布这些更改，以便您了解如何保障我们双方的权益。

@@ -93,8 +93,8 @@ Containers other than debian may only support mainstream architectures, not s390
 
 教程：Tutorial（教程）：  
 ![我不知道怎么用](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/247f4fvoKnj56MwN.png)  
-Q:I don't know how to use it?
-![以admin身份运行powershell](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/h4IrTwyx4AaC8joE.png)
+Q:I don't know how to use it?  
+![以admin身份运行powershell](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/h4IrTwyx4AaC8joE.png)  
 A:Run PowerShell as an administrator and enter the following command.
 
 ```powershell
@@ -102,8 +102,8 @@ dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux 
 dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
 ```
 
+After restarting the system, run _powershell_ again as an administrator, then press the following command.  
 重启系统后再次以管理员身份运行 _powershell_ ，然后输
-After restarting the system, run _powershell_ again as an administrator, then press the following command.
 
 ```powershell
 wsl --set-default-version 2

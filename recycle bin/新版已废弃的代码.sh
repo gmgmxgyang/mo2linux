@@ -1439,3 +1439,7 @@ fi
 echo "If the video does not play automatically, please enter the download directory to play it manually."
 echo "转载视频须经原作者同意，请勿擅自将视频上传至B站等平台。"
 echo "Do not upload video to platforms such as YouTube without authorization."
+
+if [ -d "${DebianCHROOT}/root/.vnc" ]; then
+    tsudo chown root:root -R "${DebianCHROOT}/root/.vnc" 2>/dev/null || su -c "chown root:root -R ${DebianCHROOT}/root/.vnc"
+fi

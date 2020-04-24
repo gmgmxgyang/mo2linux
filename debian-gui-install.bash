@@ -2951,6 +2951,7 @@ BetaFeatures() {
 			echo "检测到您当前使用的是Proot容器，软件可能无法正常运行。"
 			echo "安装后将有可能导致VNC黑屏,按Ctrl+C取消"
 			echo "Press enter to continue,press Ctrl+C to canacel."
+			read
 		fi
 		dependencies=""
 		if [ ! -e /usr/bin/thunar ]; then

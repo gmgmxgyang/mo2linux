@@ -1549,8 +1549,10 @@ EndOfArchMirrors
 Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxcn/$arch
 Endofpacman
   fi
-  pacman -Syu --noconfirm archlinuxcn-keyring
-  pacman -Sy --noconfirm yay
+  pacman -Syu --noconfirm archlinux-keyring
+  pacman -Sy --noconfirm archlinuxcn-keyring
+  pacman -S --noconfirm yay
+  yay --aururl "https://aur.tuna.tsinghua.edu.cn" --save
 fi
 #################################
 if [ "$(cat /etc/os-release | grep 'ID=' | head -n 1 | cut -d '=' -f 2)" = "slackware" ]; then

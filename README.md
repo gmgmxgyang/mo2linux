@@ -520,3 +520,7 @@ nano /usr/bin/startvnc
 ##### 2020-04-22 更新日志
 
 - 1.修复赋予 proot 容器真实 root 权限后，vnc 出现的权限问题。
+
+##### 2020-04-24 更新日志
+
+- 1.给 ArchLinux 容器添加了 archlinuxcn 源，并将自动安装 yay

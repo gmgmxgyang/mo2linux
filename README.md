@@ -349,7 +349,7 @@ _gnome_ 和 _kde_ 是用来卖萌用的，不要安装。如需安装，请自�
 
 ```shell
 apt install -y nano
-nano /usr/bin/startvnc
+nano $(which startvnc)
 ```
 
 > 将 **1440x720**（竖屏）改成你需要的分辨率，例如 **1920x10780**（横屏)

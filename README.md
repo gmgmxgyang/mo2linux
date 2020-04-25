@@ -176,7 +176,7 @@ wsl --set-default-version 2
 ```shell
     sudo apt update
     sudo apt install -y curl
-    . <(curl -L gitee.com/mo2/linux/raw/master/debian.sh)
+    bash <(curl -L gitee.com/mo2/linux/raw/master/debian.sh)
 ```
 
 #### 4.RedHat/Fedora/CentOS

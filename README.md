@@ -524,3 +524,7 @@ nano $(which startvnc)
 ##### 2020-04-24 更新日志
 
 - 1.给 ArchLinux 容器添加了 archlinuxcn 源，并将自动安装 yay
+
+##### 2020-04-29 更新日志
+
+- 1.应 gitee 的小伙伴要求，加入 WPS office 的安装。

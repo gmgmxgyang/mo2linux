@@ -305,7 +305,7 @@ CHECKdependencies() {
 DEBIANMENU() {
 	cd ${cur}
 	OPTION=$(
-		whiptail --title "Tmoe-linux Tool输debian-i启动(20200424-15)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.当前主菜单有十几个选项，请使用方向键或触屏上下滑动，按回车键确认。${TMOENODEBIAN} 更新日志:0411支持修复VNC闪退,0420增加其它版本的VSCode" 20 50 6 \
+		whiptail --title "Tmoe-linux Tool输debian-i启动(20200429-18)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.当前主菜单有十几个选项，请使用方向键或触屏上下滑动，按回车键确认。${TMOENODEBIAN} 更新日志:0411支持修复VNC闪退,0420增加其它版本的VSCode" 20 50 6 \
 			"1" "Install GUI 安装图形界面" \
 			"2" "Install browser 安装浏览器" \
 			"3" "Download theme 下载主题" \
@@ -1883,7 +1883,7 @@ OTHERSOFTWARE() {
 	##############################
 	if [ "${SOFTWARE}" == '1' ]; then
 		if [ -e "/usr/bin/mpv" ]; then
-			echo "检测到您已安装mpv,按回车键继续,按Ctrl+C取消"
+			echo "检测到您已安装mpv,按回车键重新安装,按Ctrl+C取消"
 			echo "Press enter to continue."
 			read
 		fi
@@ -1902,7 +1902,7 @@ OTHERSOFTWARE() {
 	if [ "${SOFTWARE}" == '2' ]; then
 		cd /tmp
 		if [ -e "/usr/share/tencent-qq" ]; then
-			echo "检测到您已安装linuxQQ,按回车键继续,按Ctrl+C取消"
+			echo "检测到您已安装linuxQQ,按回车键重新安装,按Ctrl+C取消"
 			echo "Press enter to continue."
 			read
 		fi
@@ -1936,7 +1936,7 @@ OTHERSOFTWARE() {
 		fi
 		echo "若安装失败，则请前往官网手动下载安装。"
 		echo "url: https://im.qq.com/linuxqq/download.html"
-		rm -fv ./LINUXQQ.deb
+		rm -fv ./LINUXQQ.deb ./LINUXQQ.sh 2>/dev/null
 		echo "安装完成，如需卸载，请手动输apt purge -y linuxqq"
 	fi
 	##############################
@@ -2040,13 +2040,13 @@ OTHERSOFTWARE() {
 			OTHERSOFTWARE
 		fi
 		if [ -e "/usr/share/applications/baidunetdisk.desktop" ]; then
-			echo "检测到您已安装baidunetdisk,按回车键继续,按Ctrl+C取消"
+			echo "检测到您已安装baidunetdisk,按回车键重新安装,按Ctrl+C取消"
 			echo "Press enter to continue."
 			read
 		fi
 		cd /tmp
 		if [ "${LINUXDISTRO}" = "arch" ]; then
-			yay -Syu --noconfirm baidunetdisk-bin
+			pacman -Syu --noconfirm baidunetdisk-bin
 		elif [ "${LINUXDISTRO}" = "redhat" ]; then
 			wget -O 'baidunetdisk.rpm' "http://wppkg.baidupcs.com/issue/netdisk/LinuxGuanjia/3.0.1/baidunetdisk_linux_3.0.1.2.rpm"
 			rpm -ivh 'baidunetdisk.rpm'
@@ -2126,13 +2126,13 @@ OTHERSOFTWARE() {
 		OTHERSOFTWARE
 	fi
 	if [ -e "/usr/share/applications/netease-cloud-music.desktop" ]; then
-		echo "检测到您已安装netease-cloud-music,按回车键继续,按Ctrl+C取消"
+		echo "检测到您已安装netease-cloud-music,按回车键重新安装,按Ctrl+C取消"
 		echo "Press enter to continue."
 		read
 	fi
 	cd /tmp
 	if [ "${LINUXDISTRO}" = "arch" ]; then
-		yay -Syu --noconfirm netease-cloud-music
+		pacman -Syu --noconfirm netease-cloud-music
 	elif [ "${LINUXDISTRO}" = "redhat" ]; then
 		wget https://dl.senorsen.com/pub/package/linux/add_repo.sh -qO - | sudo sh
 		sudo dnf install http://dl-http.senorsen.com/pub/package/linux/rpm/senorsen-repo-0.0.1-1.noarch.rpm
@@ -2820,10 +2820,10 @@ FIXVNCdbusLaunch() {
 BetaFeatures() {
 	TMOEBETA=$(whiptail --title "Beta features" --menu \
 		"测试版功能可能无法正常运行\nBeta features may not work properly." 15 60 5 \
-		"1" "pinyin(拼音) input method" \
+		"1" "sunpinyin+google拼音+搜狗拼音" \
 		"2" "calibre:电子书转换器和库管理" \
 		"3" "fbreader(epub阅读器)" \
-		"4" "krita(数字绘画)" \
+		"4" "WPS office(办公软件)" \
 		"5" "openshot(视频剪辑)" \
 		"6" "telegram(注重保护隐私的社交app)" \
 		"7" "typora(markdown编辑器)" \
@@ -2833,6 +2833,8 @@ BetaFeatures() {
 		"11" "gnome-software软件商店" \
 		"12" "gparted:磁盘分区工具" \
 		"13" "文件管理器:thunar/nautilus/dolphin" \
+		"14" "krita(数字绘画)" \
+		"15" "OBS-Studio(录屏软件)" \
 		"0" "Back to the main menu 返回主菜单" \
 		3>&1 1>&2 2>&3)
 	##############################
@@ -2845,6 +2847,13 @@ BetaFeatures() {
 		apt install -y fcitx
 		apt install -y fcitx-sunpinyin
 		apt install -y fcitx-googlepinyin
+		if [ "${LINUXDISTRO}" = "arch" ]; then
+			pacman -Syu --noconfirm fcitx-sogoupinyin
+			echo "fcitx-sogoupinyin安装完成,按回车键返回"
+			read
+			BetaFeatures
+		fi
+
 		if [ "$(uname -m)" = "x86_64" ]; then
 			cd /tmp
 			wget -O 'sogou_pinyin.deb' 'http://cdn2.ime.sogou.com/dl/index/1571302197/sogoupinyin_2.3.1.0112_amd64.deb?st=LibLXDSBIhQIpXS1y64TXg&e=1585607434&fn=sogoupinyin_2.3.1.0112_amd64.deb'
@@ -2873,10 +2882,46 @@ BetaFeatures() {
 	fi
 	##############################
 	if [ "${TMOEBETA}" == '4' ]; then
-		apt update
-		apt install -y krita
-		apt install -y krita-l10n
-		echo "安装完成，如需卸载，请手动输apt purge -y ^krita"
+		cd /tmp
+		if [ -e "/usr/share/applications/wps-office-wps.desktop" ]; then
+			echo "检测到您已安装WPS office,按回车键重新安装,按Ctrl+C取消"
+			echo "Press enter to continue."
+			read
+		fi
+
+		if [ "${LINUXDISTRO}" = "arch" ]; then
+			pacman -Syu --noconfirm wps-office
+		fi
+
+		if [ "${archtype}" = "arm64" ]; then
+			if [ "${LINUXDISTRO}" = "debian" ]; then
+				dpkg --configure -a
+				wget -O WPSoffice.deb "https://wdl1.cache.wps.cn/wps/download/ep/Linux2019/9505/wps-office_11.1.0.9505_arm64.deb"
+				apt install -y ./WPSoffice.deb
+			elif [ "${LINUXDISTRO}" = "redhat" ]; then
+				wget -O WPSoffice.rpm 'https://wdl1.cache.wps.cn/wps/download/ep/Linux2019/9505/wps-office-11.1.0.9505-1.aarch64.rpm'
+				rpm -ivh ./WPSoffice.rpm
+			fi
+		elif [ "${archtype}" = "amd64" ]; then
+			if [ "${LINUXDISTRO}" = "debian" ]; then
+				dpkg --configure -a
+				wget -O WPSoffice.deb "https://wdl1.cache.wps.cn/wps/download/ep/Linux2019/9505/wps-office_11.1.0.9505_amd64.deb"
+				apt install -y ./WPSoffice.deb
+			elif [ "${LINUXDISTRO}" = "redhat" ]; then
+				wget -O WPSoffice.rpm "https://wdl1.cache.wps.cn/wps/download/ep/Linux2019/9505/wps-office-11.1.0.9505-1.x86_64.rpm"
+				rpm -ivh ./WPSoffice.rpm
+			fi
+		else
+			echo "暂不支持您的架构"
+			echo 'Press Enter to return.'
+			echo "${YELLOW}按回车键返回。${RESET}"
+			read
+			BetaFeatures
+		fi
+		echo "若安装失败，则请前往官网手动下载安装。"
+		echo "url: https://linux.wps.cn"
+		rm -fv ./WPSoffice.deb ./WPSoffice.rpm 2>/dev/null
+		echo "安装完成，如需卸载，请手动输apt purge -y wps-office"
 	fi
 	##############################
 	if [ "${TMOEBETA}" == '5' ]; then
@@ -3012,12 +3057,39 @@ BetaFeatures() {
 		fi
 		echo "安装完成，如需卸载，请手动输apt purge -y nautilus dolphin"
 	fi
+	##############################
+	if [ "${TMOEBETA}" == '14' ]; then
+		apt update
+		apt install -y krita
+		apt install -y krita-l10n
+		echo "安装完成，如需卸载，请手动输apt purge -y ^krita"
+	fi
+	####################
+	if [ "${TMOEBETA}" == '15' ]; then
+		if [ "${LINUXDISTRO}" = "debian" ]; then
+			apt update
+			apt install -y ffmpeg obs-studio
+
+		elif [ "${LINUXDISTRO}" = "arch" ]; then
+			pacman -Syu --noconfirm obs-studio
+
+		elif [ "${LINUXDISTRO}" = "redhat" ]; then
+			dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+			dnf install -y obs-studio || yum install -y obs-studio
+			#dnf install xorg-x11-drv-nvidia-cuda
+		elif [ "${LINUXDISTRO}" = "gentoo" ]; then
+			emerge -vk media-video/obs-studio
+		fi
+		echo "若安装失败，则请前往官网阅读安装说明。"
+		echo "url: https://obsproject.com/wiki/install-instructions#linux"
+		echo "安装完成，如需卸载，请手动输apt purge -y ffmpeg obs-studio"
+	fi
+
 	########################################
 	echo 'Press Enter to return.'
 	echo "${YELLOW}按回车键返回。${RESET}"
 	read
-	DEBIANMENU
-
+	BetaFeatures
 }
 ###########################################
 CHECKdependencies

@@ -2691,11 +2691,12 @@ STARTVNCANDSTOPVNC() {
 ########################
 FrequentlyAskedQuestions() {
 	TMOEFAQ=$(whiptail --title "FAQ(よくある質問)" --menu \
-		"您有哪些疑问？\nWhat questions do you have?" 15 60 4 \
+		"您有哪些疑问？\nWhat questions do you have?" 15 60 5 \
 		"1" "Cannot open Baidu Netdisk" \
 		"2" "udisks2/gvfs配置失败" \
 		"3" "linuxQQ闪退" \
 		"4" "VNC/X11闪退" \
+		"5" "软件禁止以root权限运行" \
 		"0" "Back to the main menu 返回主菜单" \
 		3>&1 1>&2 2>&3)
 	##############################
@@ -2735,6 +2736,27 @@ FrequentlyAskedQuestions() {
 	#######################
 	if [ "${TMOEFAQ}" == '4' ]; then
 		FIXVNCdbusLaunch
+	fi
+	#######################
+	if [ "${TMOEFAQ}" == '5' ]; then
+		echo "部分软件出于安全性考虑，禁止以root权限运行。权限越大，责任越大。若root用户不慎操作，将有可能破坏系统。"
+		echo "您可以使用以下命令来新建普通用户"
+		echo "#创建一个用户名为mo2的新用户"
+		echo "${YELLOW}adduser mo2${RESET}"
+		echo "#输入的密码是隐藏的，根据提示创建完成后，接着输以下命令"
+		echo "#将mo2加入到sudo用户组"
+		echo "${YELLOW}adduser mo2 sudo${RESET}"
+		echo "之后，若需要提权，则只需输sudo 命令"
+		echo "例如${YELLOW}sudo apt update${RESET}"
+		echo ""
+		echo "切换用户的说明"
+		echo "您可以输${YELLOW}sudo su - ${RESET}切换至root用户"
+		echo "亦可输${YELLOW}sudo su - mo2${RESET}切换回mo2用户"
+		echo "若需要以普通用户身份启动VNC，请先切换至普通用户，再输${YELLOW}startvnc${RESET}"
+		echo 'Press Enter to return.'
+		echo "${YELLOW}按回车键返回。${RESET}"
+		read
+		DEBIANMENU
 	fi
 }
 #################

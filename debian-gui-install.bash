@@ -2818,25 +2818,27 @@ FIXVNCdbusLaunch() {
 
 ####################
 BetaFeatures() {
-	TMOEBETA=$(whiptail --title "Beta features" --menu \
-		"测试版功能可能无法正常运行\nBeta features may not work properly." 15 60 5 \
-		"1" "sunpinyin+google拼音+搜狗拼音" \
-		"2" "calibre:电子书转换器和库管理" \
-		"3" "fbreader(epub阅读器)" \
-		"4" "WPS office(办公软件)" \
-		"5" "openshot(视频剪辑)" \
-		"6" "telegram(注重保护隐私的社交app)" \
-		"7" "typora(markdown编辑器)" \
-		"8" "electronic-wechat(第三方微信客户端)" \
-		"9" "qbittorrent(P2P下载工具)" \
-		"10" "plasma-discover:KDE发现(软件中心)" \
-		"11" "gnome-software软件商店" \
-		"12" "gparted:磁盘分区工具" \
-		"13" "文件管理器:thunar/nautilus/dolphin" \
-		"14" "krita(数字绘画)" \
-		"15" "OBS-Studio(录屏软件)" \
-		"0" "Back to the main menu 返回主菜单" \
-		3>&1 1>&2 2>&3)
+	TMOEBETA=$(
+		whiptail --title "Beta features" --menu "测试版功能可能无法正常运行\nBeta features may not work properly." 15 60 5 \
+			"1" "sunpinyin+google拼音+搜狗拼音" \
+			"2" "WPS office(办公软件)" \
+			"3" "gparted:磁盘分区工具" \
+			"4" "gnome-system-monitor(资源监视器)" \
+			"5" "openshot(视频剪辑)" \
+			"6" "telegram(注重保护隐私的社交app)" \
+			"7" "typora(markdown编辑器)" \
+			"8" "electronic-wechat(第三方微信客户端)" \
+			"9" "qbittorrent(P2P下载工具)" \
+			"10" "plasma-discover:KDE发现(软件中心)" \
+			"11" "gnome-software软件商店" \
+			"12" "calibre:电子书转换器和库管理" \
+			"13" "文件管理器:thunar/nautilus/dolphin" \
+			"14" "krita(数字绘画)" \
+			"15" "OBS-Studio(录屏软件)" \
+			"16" "fbreader(epub阅读器)" \
+			"0" "Back to the main menu 返回主菜单" \
+			3>&1 1>&2 2>&3
+	)
 	##############################
 	if [ "${TMOEBETA}" == '0' ]; then
 		DEBIANMENU
@@ -2868,20 +2870,9 @@ BetaFeatures() {
 		fi
 		echo "如需卸载，请手动输apt purge -y sogoupinyin fcitx-sunpinyin fcitx-googlepinyin fcitx"
 	fi
+
 	##############################
 	if [ "${TMOEBETA}" == '2' ]; then
-		apt update
-		apt install -y calibre
-		echo "安装完成，如需卸载，请手动输apt purge -y calibre"
-	fi
-	##############################
-	if [ "${TMOEBETA}" == '3' ]; then
-		apt update
-		apt install -y fbreader
-		echo "安装完成，如需卸载，请手动输apt purge -y fbreader"
-	fi
-	##############################
-	if [ "${TMOEBETA}" == '4' ]; then
 		cd /tmp
 		if [ -e "/usr/share/applications/wps-office-wps.desktop" ]; then
 			echo "检测到您已安装WPS office,按回车键重新安装,按Ctrl+C取消"
@@ -2924,6 +2915,39 @@ BetaFeatures() {
 		echo "安装完成，如需卸载，请手动输apt purge -y wps-office"
 	fi
 	##############################
+	if [ "${TMOEBETA}" == '3' ]; then
+		if [ ! -e "/usr/sbin/gparted" ]; then
+			apt update
+			apt install -y gparted
+			apt install -y baobab
+		fi
+		gparted &
+		echo "安装完成，如需卸载，请手动输apt purge -y gparted baobab"
+	fi
+	##############################
+	if [ "${TMOEBETA}" == '4' ]; then
+
+		if [ "${LINUXDISTRO}" = "debian" ]; then
+			apt update
+			apt install -y gnome-system-monitor
+
+		elif [ "${LINUXDISTRO}" = "alpine" ]; then
+			apk update
+			apk add gnome-system-monitor
+
+		elif [ "${LINUXDISTRO}" = "arch" ]; then
+			pacman -Syu --noconfirm gnome-system-monitor
+
+		elif [ "${LINUXDISTRO}" = "redhat" ]; then
+			dnf install -y gnome-system-monitor || yum install -y gnome-system-monitor
+
+		elif [ "${LINUXDISTRO}" = "gentoo" ]; then
+			emerge -vk gnome-system-monitor
+		fi
+		echo "安装完成，如需卸载，请手动输apt purge -y gnome-system-monitor"
+	fi
+
+	################################
 	if [ "${TMOEBETA}" == '5' ]; then
 		apt update
 		apt install -y openshot
@@ -3001,13 +3025,9 @@ BetaFeatures() {
 
 	############################
 	if [ "${TMOEBETA}" == '12' ]; then
-		if [ ! -e "/usr/sbin/gparted" ]; then
-			apt update
-			apt install -y gparted
-			apt install -y baobab
-		fi
-		gparted &
-		echo "安装完成，如需卸载，请手动输apt purge -y gparted baobab"
+		apt update
+		apt install -y calibre
+		echo "安装完成，如需卸载，请手动输apt purge -y calibre"
 	fi
 	######################
 	if [ "${TMOEBETA}" == '13' ]; then
@@ -3084,7 +3104,12 @@ BetaFeatures() {
 		echo "url: https://obsproject.com/wiki/install-instructions#linux"
 		echo "安装完成，如需卸载，请手动输apt purge -y ffmpeg obs-studio"
 	fi
-
+	##############################
+	if [ "${TMOEBETA}" == '16' ]; then
+		apt update
+		apt install -y fbreader
+		echo "安装完成，如需卸载，请手动输apt purge -y fbreader"
+	fi
 	########################################
 	echo 'Press Enter to return.'
 	echo "${YELLOW}按回车键返回。${RESET}"

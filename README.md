@@ -528,4 +528,4 @@ nano $(which startvnc)
 
 ##### 2020-04-29 更新日志
 
-- 1.应 gitee 的小伙伴要求，加入 WPS office 的安装。
+- 1.应 gitee 的小伙伴要求，在测试功能中支持 WPS office 的安装。

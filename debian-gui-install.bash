@@ -2881,18 +2881,18 @@ BetaFeatures() {
 			BetaFeatures
 		fi
 
-		if [ "$(uname -m)" = "x86_64" ]; then
+		if [ "${archtype}" = "amd64" ] || [ "${archtype}" = "i386" ]; then
 			cd /tmp
-			curl -Lvo 'sogou_pinyin.deb' 'http://cdn2.ime.sogou.com/dl/index/1571302197/sogoupinyin_2.3.1.0112_amd64.deb?st=LibLXDSBIhQIpXS1y64TXg&e=1585607434&fn=sogoupinyin_2.3.1.0112_amd64.deb'
-			apt install -y ./sogou_pinyin.deb
-			rm -f sogou_pinyin.deb
-		elif [ "$(uname -m)" = "aarch64" ] || [ "$(uname -m)" = "armv7l" ]; then
-			echo "架构不支持，跳过安装搜狗输入法。"
+			LatestSogouPinyinLink=$(curl -L 'https://pinyin.sogou.com/linux' | grep ${archtype} | grep 'deb' | head -n 1 | cut -d '=' -f 3 | cut -d '?' -f 1 | cut -d '"' -f 2)
+			curl -Lvo 'sogou_pinyin.deb' "${LatestSogouPinyinLink}"
 		else
-			curl -Lvo 'sogou_pinyin.deb' 'http://cdn2.ime.sogou.com/dl/index/1524572032/sogoupinyin_2.2.0.0108_i386.deb?st=Y2AOqkQafg4B0WBAkItOyA&e=1585607434&fn=sogoupinyin_2.2.0.0108_i386.deb'
-			apt install -y ./sogou_pinyin.deb
-			rm -f sogou_pinyin.deb
+			echo "架构不支持，跳过安装搜狗输入法。"
 		fi
+		apt install -y ./sogou_pinyin.deb
+		echo "若安装失败，则请前往官网手动下载安装。"
+		echo 'url: https://pinyin.sogou.com/linux/'
+		rm -fv sogou_pinyin.deb
+		echo "安装完成！"
 		echo "如需卸载，请手动输apt purge -y sogoupinyin fcitx-sunpinyin fcitx-googlepinyin fcitx"
 	fi
 
@@ -2977,17 +2977,14 @@ BetaFeatures() {
 		cd /tmp
 		if [ "$(uname -m)" = "x86_64" ]; then
 			curl -Lvo 'typora.deb' 'http://mirrors.ustc.edu.cn/debiancn/debiancn/pool/main/t/typora/typora_0.9.67-1_amd64.deb'
-			apt install -y ./typora.deb
-			rm -vf ./typora.deb
-			echo "安装完成，如需卸载，请手动输apt purge -y typora"
 		elif [ "$(uname -m)" = "aarch64" ] || [ "$(uname -m)" = "armv7l" ]; then
 			echo "非常抱歉，暂不支持您的架构"
-		else
-			curl -Lvo 'typora.deb' wget 'https://mirrors.tuna.tsinghua.edu.cn/deepin/pool/non-free/t/typora/typora_0.9.22-1_i386.deb'
-			apt install -y ./typora.deb
-			rm -vf ./typora.deb
-			echo "安装完成，如需卸载，请手动输apt purge -y typora"
+		elif [ "${archtype}" = "i386" ]; then
+			curl -Lvo 'typora.deb' 'https://mirrors.tuna.tsinghua.edu.cn/deepin/pool/non-free/t/typora/typora_0.9.22-1_i386.deb'
 		fi
+		apt install -y ./typora.deb
+		rm -vf ./typora.deb
+		echo "安装完成，如需卸载，请手动输apt purge -y typora"
 	fi
 	############################
 	if [ "${TMOEBETA}" == '8' ]; then

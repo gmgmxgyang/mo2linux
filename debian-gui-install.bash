@@ -1826,7 +1826,10 @@ KALISOURCESLIST() {
 
 	sed -i 's/^deb/#&/g' /etc/apt/sources.list
 	cat >>/etc/apt/sources.list <<-'EOF'
-		deb https://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib
+		deb http://mirrors.tuna.tsinghua.edu.cn/kali/ kali-rolling main contrib non-free
+		deb http://mirrors.tuna.tsinghua.edu.cn/debian/ stable main contrib non-free
+		# deb https://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib
+		# deb http://mirrors.tuna.tsinghua.edu.cn/kali/ kali-last-snapshot main contrib non-free
 	EOF
 	apt update
 	apt list --upgradable

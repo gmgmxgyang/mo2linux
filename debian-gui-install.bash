@@ -2753,8 +2753,8 @@ FrequentlyAskedQuestions() {
 		echo "例如${YELLOW}sudo apt update${RESET}"
 		echo ""
 		echo "切换用户的说明"
-		echo "您可以输${YELLOW}sudo su - ${RESET}切换至root用户"
-		echo "亦可输${YELLOW}sudo su - mo2${RESET}切换回mo2用户"
+		echo "您可以输${YELLOW}sudo su - ${RESET}或${YELLOW}sudo -i ${RESET}切换至root用户"
+		echo "亦可输${YELLOW}sudo su - mo2${RESET}或${YELLOW}sudo -iu mo2${RESET}切换回mo2用户"
 		echo "若需要以普通用户身份启动VNC，请先切换至普通用户，再输${YELLOW}startvnc${RESET}"
 		echo 'Press Enter to return.'
 		echo "${YELLOW}按回车键返回。${RESET}"

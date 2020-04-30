@@ -365,7 +365,7 @@ DEBIANMENU() {
 	###################################
 	if [ "${OPTION}" == '7' ]; then
 
-		curl -Lo /usr/local/bin/debian-i 'https://gitee.com/mo2/linux/raw/master/debian-gui-install.bash'
+		curl -Lvo /usr/local/bin/debian-i 'https://gitee.com/mo2/linux/raw/master/debian-gui-install.bash'
 		echo 'Update completed, press Enter to return.'
 		echo "${YELLOW}更新完成，按回车键返回。${RESET}"
 		chmod +x /usr/local/bin/debian-i

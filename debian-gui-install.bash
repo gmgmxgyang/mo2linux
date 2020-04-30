@@ -2905,35 +2905,21 @@ BetaFeatures() {
 			read
 		fi
 
-		if [ "${LINUXDISTRO}" = "arch" ]; then
+		if [ "${LINUXDISTRO}" = "debian" ]; then
+			dpkg --configure -a
+			LatestWPSLink=$(curl -L https://linux.wps.cn/ | grep '\.deb' | grep -i "${archtype}" | head -n 1 | cut -d '=' -f 2 | cut -d '"' -f 2)
+			curl -Lvo WPSoffice.deb "${LatestWPSLink}"
+			apt install -y ./WPSoffice.deb
+
+		elif [ "${LINUXDISTRO}" = "arch" ]; then
 			pacman -Syu --noconfirm wps-office
+
+		elif [ "${LINUXDISTRO}" = "redhat" ]; then
+			LatestWPSLink=$(curl -L https://linux.wps.cn/ | grep '\.rpm' | grep -i "$(uname -m)" | head -n 1 | cut -d '=' -f 2 | cut -d '"' -f 2)
+			curl -Lvo WPSoffice.rpm "https://wdl1.cache.wps.cn/wps/download/ep/Linux2019/9505/wps-office-11.1.0.9505-1.x86_64.rpm"
+			rpm -ivh ./WPSoffice.rpm
 		fi
 
-		if [ "${archtype}" = "arm64" ]; then
-			if [ "${LINUXDISTRO}" = "debian" ]; then
-				dpkg --configure -a
-				curl -Lvo WPSoffice.deb "https://wdl1.cache.wps.cn/wps/download/ep/Linux2019/9505/wps-office_11.1.0.9505_arm64.deb"
-				apt install -y ./WPSoffice.deb
-			elif [ "${LINUXDISTRO}" = "redhat" ]; then
-				curl -Lvo WPSoffice.rpm 'https://wdl1.cache.wps.cn/wps/download/ep/Linux2019/9505/wps-office-11.1.0.9505-1.aarch64.rpm'
-				rpm -ivh ./WPSoffice.rpm
-			fi
-		elif [ "${archtype}" = "amd64" ]; then
-			if [ "${LINUXDISTRO}" = "debian" ]; then
-				dpkg --configure -a
-				curl -Lvo WPSoffice.deb "https://wdl1.cache.wps.cn/wps/download/ep/Linux2019/9505/wps-office_11.1.0.9505_amd64.deb"
-				apt install -y ./WPSoffice.deb
-			elif [ "${LINUXDISTRO}" = "redhat" ]; then
-				curl -Lvo WPSoffice.rpm "https://wdl1.cache.wps.cn/wps/download/ep/Linux2019/9505/wps-office-11.1.0.9505-1.x86_64.rpm"
-				rpm -ivh ./WPSoffice.rpm
-			fi
-		else
-			echo "暂不支持您的架构"
-			echo 'Press Enter to return.'
-			echo "${YELLOW}按回车键返回。${RESET}"
-			read
-			BetaFeatures
-		fi
 		echo "若安装失败，则请前往官网手动下载安装。"
 		echo "url: https://linux.wps.cn"
 		rm -fv ./WPSoffice.deb ./WPSoffice.rpm 2>/dev/null

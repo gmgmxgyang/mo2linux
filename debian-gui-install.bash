@@ -631,43 +631,6 @@ cookiesREADME() {
 }
 ##################
 INSTALLorRemoveVideoTOOL() {
-
-	if [ -e "/usr/local/bin/annie" ]; then
-	    echo "正在检测版本信息..."
-		AnnieVersion=$(annie -v | cut -d ':' -f 2 | cut -d ',' -f 1 | awk -F ' ' '$0=$NF')
-	else
-		AnnieVersion='您尚未安装annie'
-	fi
-
-	if [ $(command -v you-get) ]; then
-		YouGetVersion=$(you-get -V 2>&1 | head -n 1 | cut -d ':' -f 2 | cut -d ',' -f 1 | awk -F ' ' '$0=$NF')
-	else
-		YouGetVersion='您尚未安装you-get'
-	fi
-
-	if [ $(command -v youtube-dl) ]; then
-		YOTUBEdlVersion=$(youtube-dl --version 2>&1 | head -n 1)
-	else
-		YOTUBEdlVersion='您尚未安装youtube-dl'
-	fi
-
-	cat <<-ENDofTable
-		╔═══╦══════════╦═══════════════════╦════════════════════
-		║   ║          ║                   ║                    
-		║   ║ software ║    github url     ║   本地版本         
-		║   ║          ║      ✨           ║  Local version     
-		║---║----------║-------------------║--------------------
-		║ 1 ║   annie  ║        github.com/║  ${AnnieVersion}
-		║   ║          ║ iawia002/annie    ║
-		║---║----------║-------------------║--------------------
-		║   ║          ║        github.com/║                    
-		║ 2 ║ you-get  ║soimort/you-get    ║  ${YouGetVersion}
-		║---║----------║-------------------║--------------------
-		║   ║          ║        github.com/║                    
-		║ 3 ║youtube-dl║ytdl-org/youtube-dl║  ${YOTUBEdlVersion}
-
-	ENDofTable
-
 	cat <<-'ENDofTable'
 		╔═══╦════════════╦════════╦════════╦═════════╦
 		║   ║     💻     ║    🎞  ║   🌁   ║   📚    ║
@@ -712,6 +675,42 @@ INSTALLorRemoveVideoTOOL() {
 		║---║------------║--------║--------║---------║
 		║   ║            ║        ║        ║         ║
 		║13 ║ pornhub    ║  ✓     ║        ║         ║
+
+	ENDofTable
+
+	if [ -e "/usr/local/bin/annie" ]; then
+		echo "正在检测版本信息..."
+		AnnieVersion=$(annie -v | cut -d ':' -f 2 | cut -d ',' -f 1 | awk -F ' ' '$0=$NF')
+	else
+		AnnieVersion='您尚未安装annie'
+	fi
+
+	if [ $(command -v you-get) ]; then
+		YouGetVersion=$(you-get -V 2>&1 | head -n 1 | cut -d ':' -f 2 | cut -d ',' -f 1 | awk -F ' ' '$0=$NF')
+	else
+		YouGetVersion='您尚未安装you-get'
+	fi
+
+	if [ $(command -v youtube-dl) ]; then
+		YOTUBEdlVersion=$(youtube-dl --version 2>&1 | head -n 1)
+	else
+		YOTUBEdlVersion='您尚未安装youtube-dl'
+	fi
+
+	cat <<-ENDofTable
+		╔═══╦══════════╦═══════════════════╦════════════════════
+		║   ║          ║                   ║                    
+		║   ║ software ║    github url     ║   本地版本 🧪       
+		║   ║          ║      ✨           ║  Local version     
+		║---║----------║-------------------║--------------------
+		║ 1 ║   annie  ║        github.com/║  ${AnnieVersion}
+		║   ║          ║ iawia002/annie    ║
+		║---║----------║-------------------║--------------------
+		║   ║          ║        github.com/║                    
+		║ 2 ║ you-get  ║soimort/you-get    ║  ${YouGetVersion}
+		║---║----------║-------------------║--------------------
+		║   ║          ║        github.com/║                    
+		║ 3 ║youtube-dl║ytdl-org/youtube-dl║  ${YOTUBEdlVersion}
 
 	ENDofTable
 	#对原开发者iawia002的代码进行自动编译，并

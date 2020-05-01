@@ -305,7 +305,7 @@ CHECKdependencies() {
 DEBIANMENU() {
 	cd ${cur}
 	OPTION=$(
-		whiptail --title "Tmoe-linux Tool输debian-i启动(20200430-13)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.当前主菜单有十几个选项，请使用方向键或触屏上下滑动，按回车键确认。${TMOENODEBIAN} 更新日志:0501支持解析并下载B站、油管视频" 20 50 6 \
+		whiptail --title "Tmoe-linux Tool输debian-i启动(20200501-15)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.当前主菜单有十几个选项，请使用方向键或触屏上下滑动，按回车键确认。${TMOENODEBIAN} 更新日志:0501支持解析并下载B站、油管视频" 20 50 6 \
 			"1" "Install GUI 安装图形界面" \
 			"2" "Install browser 安装浏览器" \
 			"3" "Download theme 下载主题" \

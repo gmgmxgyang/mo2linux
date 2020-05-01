@@ -738,6 +738,12 @@ INSTALLorRemoveVideoTOOL() {
 			dependencies="${dependencies} ffmpeg"
 		fi
 	fi
+	#检测两次
+	if [ ! $(command -v ffmpeg) ]; then
+		if [ "${archtype}" = "amd64" ] || [ "${archtype}" = "arm64" ]; then
+			dependencies="${dependencies} ffmpeg"
+		fi
+	fi
 
 	if [ ! $(command -v pip3) ]; then
 		apt update 2>/dev/null
@@ -805,9 +811,6 @@ INSTALLorRemoveVideoTOOL() {
 		rm -f get-pip.py
 	fi
 
-	if [ ! $(command -v ffmpeg) ]; then
-		apt install -y ffmpeg
-	fi
 	rm -rf ./.ANNIETEMPFOLDER
 	git clone -b linux_${archtype} --depth=1 https://gitee.com/mo2/annie ./.ANNIETEMPFOLDER
 	mv ./.ANNIETEMPFOLDER/annie /usr/local/bin/

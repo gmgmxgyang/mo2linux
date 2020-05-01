@@ -633,6 +633,7 @@ cookiesREADME() {
 INSTALLorRemoveVideoTOOL() {
 
 	if [ -e "/usr/local/bin/annie" ]; then
+	    echo "正在检测版本信息..."
 		AnnieVersion=$(annie -v | cut -d ':' -f 2 | cut -d ',' -f 1 | awk -F ' ' '$0=$NF')
 	else
 		AnnieVersion='您尚未安装annie'

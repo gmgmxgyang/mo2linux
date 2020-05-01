@@ -424,7 +424,7 @@ DEBIANMENU() {
 ############################
 DOWNLOADvideo() {
 	VIDEOTOOL=$(
-		whiptail --title "DOWNLOAD VIDEOS" --menu "你想要使用哪个工具来下载视频呢" 20 50 6 \
+		whiptail --title "DOWNLOAD VIDEOS" --menu "你想要使用哪个工具来下载视频呢" 14 50 6 \
 			"1" "Annie" \
 			"2" "You-get" \
 			"3" "Youtube-dl" \
@@ -633,7 +633,7 @@ cookiesREADME() {
 INSTALLorRemoveVideoTOOL() {
 	cat <<-'ENDofTable'
 		╔═══╦════════════╦════════╦════════╦═════════╦
-		║   ║     💻     ║    🎞  ║   🌁   ║   📚    ║
+		║   ║     💻     ║    🎬  ║   🌁   ║   📚   ║
 		║   ║  website   ║ Videos ║ Images ║Playlist ║
 		║   ║            ║        ║        ║         ║
 		║---║------------║--------║--------║---------║
@@ -712,6 +712,7 @@ INSTALLorRemoveVideoTOOL() {
 		║   ║          ║        github.com/║                    
 		║ 3 ║youtube-dl║ytdl-org/youtube-dl║  ${YOTUBEdlVersion}
 
+
 	ENDofTable
 	#对原开发者iawia002的代码进行自动编译，并
 	echo "annie将于每月1号凌晨4点自动编译并发布最新版"
@@ -726,7 +727,16 @@ INSTALLorRemoveVideoTOOL() {
 	fi
 
 	if [ ! $(command -v ffmpeg) ]; then
-		dependencies="${dependencies} ffmpeg"
+		if [ "${archtype}" = "amd64" ] || [ "${archtype}" = "arm64" ]; then
+			cd /tmp
+			rm -rf .FFMPEGTEMPFOLDER
+			git clone -b linux_$(uname -m) --depth=1 https://gitee.com/mo2/ffmpeg.git ./.FFMPEGTEMPFOLDER
+			cd /usr/local/bin
+			tar -Jxvf /tmp/.FFMPEGTEMPFOLDER/ffmpeg.tar.xz ffmpeg
+			rm -rf /tmp/.FFMPEGTEMPFOLDER
+		else
+			dependencies="${dependencies} ffmpeg"
+		fi
 	fi
 
 	if [ ! $(command -v pip3) ]; then

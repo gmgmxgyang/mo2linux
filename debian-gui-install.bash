@@ -427,8 +427,9 @@ DOWNLOADvideo() {
 		whiptail --title "DOWNLOAD VIDEOS" --menu "你想要使用哪个工具来下载视频呢" 20 50 6 \
 			"1" "Annie" \
 			"2" "You-get" \
-			"3" "cookie说明" \
-			"4" "update更新下载工具" \
+			"3" "Youtube-dl" \
+			"4" "cookie说明" \
+			"5" "update更新下载工具" \
 			"0" "Back to the main menu 返回主菜单" \
 			3>&1 1>&2 2>&3
 	)
@@ -448,10 +449,14 @@ DOWNLOADvideo() {
 	fi
 	##############################
 	if [ "${VIDEOTOOL}" == '3' ]; then
-		cookiesREADME
+		pythonYOUTUBEdl
 	fi
 	##############################
 	if [ "${VIDEOTOOL}" == '4' ]; then
+		cookiesREADME
+	fi
+	##############################
+	if [ "${VIDEOTOOL}" == '5' ]; then
 		INSTALLorRemoveVideoTOOL
 	fi
 	#########################
@@ -521,7 +526,7 @@ pythonYOUGET() {
 
 	cd ${HOME}/sd/Download/Videos
 
-	AnnieVideoURL=$(whiptail --inputbox "Please enter a url.请输入视频链接,例如https://www.bilibili.com/video/av号,您可以在url前加--format参数来指定清晰度，-l来下载整个播放列表。Press Enter after the input is completed." 12 50 --title "请在方框内输入 视频链接" 3>&1 1>&2 2>&3)
+	AnnieVideoURL=$(whiptail --inputbox "Please enter a url.请输入视频链接,例如https://www.bilibili.com/video/av号,您可以在url前加--format参数来指定清晰度，-l来下载整个播放列表。Press Enter after the input is completed." 12 50 --title "请在地址栏内输入 视频链接" 3>&1 1>&2 2>&3)
 
 	echo ${AnnieVideoURL}
 	echo "正在解析中..."
@@ -540,7 +545,39 @@ pythonYOUGET() {
 	read
 	DOWNLOADvideo
 }
+############
+pythonYOUTUBEdl() {
+	if [ ! $(command -v youtube-dl) ]; then
+		echo "检测到您尚未安装youtube-dl,将为您跳转至更新管理中心"
+		INSTALLorRemoveVideoTOOL
+		exit 0
+	fi
 
+	if [ ! -e "${HOME}/sd/Download/Videos" ]; then
+		mkdir -p ${HOME}/sd/Download/Videos
+	fi
+
+	cd ${HOME}/sd/Download/Videos
+
+	AnnieVideoURL=$(whiptail --inputbox "Please enter a url.请输入视频链接,例如https://www.bilibili.com/video/av号,您可以在url前加--yes-playlist来下载整个播放列表。Press Enter after the input is completed." 12 50 --title "请在地址栏内输入 视频链接" 3>&1 1>&2 2>&3)
+
+	echo ${AnnieVideoURL}
+	echo "正在解析中..."
+	echo "Analyzing ..."
+	youtube-dl -e --get-description --get-duration ${AnnieVideoURL}
+	if [ -e "${HOME}/.config/tmoe-linux/videos.cookiepath" ]; then
+		VideoCookies=$(cat ${HOME}/.config/tmoe-linux/videos.cookiepath | head -n 1)
+		youtube-dl --merge-output-format mp4 --all-subs --cookies ${VideoCookies} -v ${AnnieVideoURL}
+	else
+		youtube-dl --merge-output-format mp4 --all-subs -v ${AnnieVideoURL}
+	fi
+	ls -lAth ./ | head -n 3
+	echo "视频文件默认下载至$(pwd)"
+	echo "Press enter to return。"
+	echo "${YELLOW}按回车键返回。${RESET} "
+	read
+	DOWNLOADvideo
+}
 #############
 cookiesREADME() {
 	cat <<-'EndOFcookies'
@@ -548,10 +585,10 @@ cookiesREADME() {
 		cookie文件包含了会员身份认证凭据，请勿将该文件泄露出去！
 		一个cookie文件可以包含多个网站的cookies，您只需要手动将包含cookie数据的纯文本复制至cookies.txt文件即可。
 		您需要安装浏览器扩展插件来导出cookie，安装完相关插件后，您还要手动配置该插件的导出格式为Netscape格式，并将后缀名修改为txt
+		不同平台(windows、linux和macos)导出的cookie文件，如需跨平台加载，则需要转换为相应系统的换行符。
 		浏览器商店中包含多个相关扩展插件
 		例如火狐扩展cookies-txt
 		https://addons.mozilla.org/zh-CN/firefox/addon/cookies-txt/
-
 		再次提醒，cookie非常重要，请仔细甄别优劣，防止恶意插件。
 	EndOFcookies
 	echo "Press enter to continue"
@@ -607,23 +644,32 @@ INSTALLorRemoveVideoTOOL() {
 		YouGetVersion='您尚未安装you-get'
 	fi
 
+	if [ $(command -v youtube-dl) ]; then
+		YOTUBEdlVersion=$(youtube-dl --version 2>&1 | head -n 1)
+	else
+		YOTUBEdlVersion='您尚未安装youtube-dl'
+	fi
+
 	cat <<-ENDofTable
-		╔═════╦═══════════════╦═══════════════════════════════╦═══════════════════════════════════
-		║     ║               ║                               ║                                   
-		║     ║ plugins and   ║    github url                 ║   本地版本 Local version          
-		║     ║ modules       ║                               ║                                   
-		║-----║---------------║-------------------------------║-----------------------------------
-		║ 1   ║     annie     ║ github.com/iawia002/annie     ║  ${AnnieVersion}
-		║     ║               ║                               ║
-		║-----║---------------║-------------------------------║-----------------------------------
-		║     ║               ║                               ║                                   
-		║ 2   ║    you-get    ║ github.com/soimort/you-get    ║  ${YouGetVersion}
+		╔═══╦════════════╦══════════════════════════════╦═══════════════════════════════════
+		║   ║            ║                              ║                                   
+		║   ║ plugins and║    github url                ║   本地版本 Local version          
+		║   ║ modules    ║                              ║                                   
+		║---║------------║------------------------------║-----------------------------------
+		║ 1 ║   annie    ║ github.com/iawia002/annie    ║  ${AnnieVersion}
+		║   ║            ║                              ║
+		║---║------------║------------------------------║-----------------------------------
+		║   ║            ║                              ║                                   
+		║ 2 ║  you-get   ║ github.com/soimort/you-get   ║  ${YouGetVersion}
+		║---║------------║------------------------------║-----------------------------------
+		║   ║            ║                              ║                                   
+		║ 3 ║ youtube-dl ║github.com/ytdl-org/youtube-dl║  ${YOTUBEdlVersion}
 
 	ENDofTable
 	#对原开发者iawia002的代码进行自动编译，并
 	echo "annie将于每月1号凌晨4点自动编译并发布最新版"
 	echo "您可以按回车键来获取更新，亦可前往原开发者的仓库来手动下载新版"
-	echo "${YELLOW}按回车键将同时更新annie和you-get${RESET}"
+	echo "${YELLOW}按回车键将同时更新annie、you-get和youtube-dl${RESET}"
 	echo 'Press Enter to update'
 	read
 	dependencies=""
@@ -690,8 +736,11 @@ INSTALLorRemoveVideoTOOL() {
 	pip3 install pip -U 2>/dev/null
 	pip3 install you-get -U
 	you-get -V
-	echo "安装完成，如需${YELLOW}卸载${RESET}annie,请输${YELLOW}rm /usr/local/bin/annie${RESET}"
+	pip3 install youtube-dl -U
+	youtube-dl -v 2>&1 | grep version
+	echo "更新完毕，如需${YELLOW}卸载${RESET}annie,请输${YELLOW}rm /usr/local/bin/annie${RESET}"
 	echo "如需卸载you-get,请输${YELLOW}pip3 uninstall you-get ; apt purge python3-pip${RESET}"
+	echo "如需卸载youtube-dl,请输${YELLOW}pip3 uninstall youtube-dl; apt purge python3-pip${RESET}"
 	echo 'Press Enter to start annie'
 	echo "${YELLOW}按回车键启动annie。${RESET}"
 	read

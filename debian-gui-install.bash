@@ -700,7 +700,7 @@ INSTALLorRemoveVideoTOOL() {
 	cat <<-ENDofTable
 		╔═══╦══════════╦═══════════════════╦════════════════════
 		║   ║          ║                   ║                    
-		║   ║ software ║    github url     ║   本地版本 🧪       
+		║   ║ software ║    github link    ║   本地版本 🎪
 		║   ║          ║      ✨           ║  Local version     
 		║---║----------║-------------------║--------------------
 		║ 1 ║   annie  ║        github.com/║  ${AnnieVersion}
@@ -1298,7 +1298,7 @@ installBROWSER() {
 				apt update
 				#分项安装，防止ubuntu安装失败
 				apt install -y firefox-esr
-				apt install -y firefox-esr-l10n-zh-cn
+				apt install -y firefox-esr-l10n-zh-cn 2>/dev/null
 				apt install -y firefox-esr-locale-zh-hans 2>/dev/null
 			elif [ "${LINUXDISTRO}" = "arch" ]; then
 				pacman -Sy --noconfirm firefox-esr-gtk2

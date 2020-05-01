@@ -824,8 +824,8 @@ INSTALLorRemoveVideoTOOL() {
 	pip3 install youtube-dl -U
 	youtube-dl -v 2>&1 | grep version
 	echo "更新完毕，如需${YELLOW}卸载${RESET}annie,请输${YELLOW}rm /usr/local/bin/annie${RESET}"
-	echo "如需卸载you-get,请输${YELLOW}pip3 uninstall you-get ; apt purge python3-pip${RESET}"
-	echo "如需卸载youtube-dl,请输${YELLOW}pip3 uninstall youtube-dl; apt purge python3-pip${RESET}"
+	echo "如需卸载you-get,请输${YELLOW}pip3 uninstall you-get${RESET}"
+	echo "如需卸载youtube-dl,请输${YELLOW}pip3 uninstall youtube-dl${RESET}"
 	echo 'Press Enter to start annie'
 	echo "${YELLOW}按回车键启动annie。${RESET}"
 	read

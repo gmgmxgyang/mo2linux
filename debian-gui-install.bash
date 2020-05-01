@@ -528,7 +528,7 @@ pythonYOUGET() {
 	else
 		you-get -d ${AnnieVideoURL}
 	fi
-	ls -lt ./ | head -n 1
+	ls -lAth ./ | head -n 3
 	echo "视频文件默认下载至$(pwd)"
 	echo "Press enter to return。"
 	echo "${YELLOW}按回车键返回。${RESET} "

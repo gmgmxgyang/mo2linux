@@ -469,11 +469,22 @@ golangANNIE() {
 
 	cd ${HOME}/sd/Download/Videos
 
-	AnnieVideoURL=$(whiptail --inputbox "Please enter a url.请输入视频链接,例如https://www.bilibili.com/video/av号,或者直接输入avxxx。您可以在url前加-f参数来指定清晰度，-p来下载整个播放列表。Press Enter after the input is completed." 12 50 --title "请在方框内输入 视频链接" 3>&1 1>&2 2>&3)
+	AnnieVideoURL=$(whiptail --inputbox "Please enter a url.请输入视频链接,例如https://www.bilibili.com/video/av号,或者直接输入avxxx(av号或BV号)。您可以在url前加-f参数来指定清晰度，-p来下载整个播放列表。Press Enter after the input is completed." 12 50 --title "请在地址栏内输入 视频链接" 3>&1 1>&2 2>&3)
 	# echo ${AnnieVideoURL} >> ${HOME}/.video_history
-	if [ $(echo ${AnnieVideoURL} | grep 'b23.tv') ]; then
-		AnnieVideoURL=$(echo ${AnnieVideoURL} | sed 's@b23.tv@www.bilibili.com/video@')
+	if [ "$(echo ${AnnieVideoURL} | grep 'b23.tv')" ]; then
+		AnnieVideoURL="$(echo ${AnnieVideoURL} | sed 's@b23.tv@www.bilibili.com/video@')"
+	elif [ "$(echo ${AnnieVideoURL} | grep '^BV')" ]; then
+		AnnieVideoURL="$(echo ${AnnieVideoURL} | sed 's@^BV@https://www.bilibili.com/video/&@')"
 	fi
+	#当未添加http时，将自动修复。
+	if [ "$(echo ${AnnieVideoURL} | grep -E 'www|com')" ] && [ ! "$(echo ${AnnieVideoURL} | grep 'http')" ]; then
+		ls
+		AnnieVideoURL=$(echo ${AnnieVideoURL} | sed 's@www@http://&@')
+	fi
+	echo ${AnnieVideoURL}
+	#if [ ! $(echo ${AnnieVideoURL} | grep -E '^BV|^av|^http') ]; then
+	#	AnnieVideoURL=$(echo ${AnnieVideoURL} | sed 's@^@http://&@')
+	#fi
 
 	annie -i ${AnnieVideoURL}
 	if [ -e "${HOME}/.config/tmoe-linux/videos.cookiepath" ]; then
@@ -483,7 +494,7 @@ golangANNIE() {
 		annie -d ${AnnieVideoURL}
 	fi
 	ls -lAth ./ | head -n 3
-	echo "视频文件已为您下载至$(pwd)"
+	echo "视频文件默认下载至$(pwd)"
 	echo "Press enter to return。"
 	echo "${YELLOW}按回车键返回。${RESET} "
 	read
@@ -513,7 +524,7 @@ pythonYOUGET() {
 		you-get -d ${AnnieVideoURL}
 	fi
 	ls -lt ./ | head -n 1
-	echo "视频文件已为您下载至$(pwd)"
+	echo "视频文件默认下载至$(pwd)"
 	echo "Press enter to return。"
 	echo "${YELLOW}按回车键返回。${RESET} "
 	read

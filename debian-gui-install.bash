@@ -740,6 +740,18 @@ INSTALLorRemoveVideoTOOL() {
 	fi
 
 	if [ ! $(command -v pip3) ]; then
+		apt update 2>/dev/null
+		apt install -y python3 python3-distutils 2>/dev/null
+		cd /tmp
+		curl -LO https://gitee.com/mo2/get-pip/raw/master/.get-pip.tar.gz.00
+		curl -LO https://gitee.com/mo2/get-pip/raw/master/.get-pip.tar.gz.01
+		cat .get-pip.tar.gz.* >.get-pip.tar.gz
+		tar -zxvf .get-pip.tar.gz
+		python3 get-pip.py -i https://pypi.tuna.tsinghua.edu.cn/simple
+		rm -f .get-pip.tar.gz* get-pip.py
+	fi
+	#检测两次
+	if [ ! $(command -v pip3) ]; then
 		dependencies="${dependencies} python3-pip"
 	fi
 
@@ -780,8 +792,21 @@ INSTALLorRemoveVideoTOOL() {
 
 	cd /tmp
 	if [ ! $(command -v pip3) ]; then
-		curl -O https://bootstrap.pypa.io/get-pip.py
-		python3 get-pip.py
+		curl -LO https://gitee.com/mo2/get-pip/raw/master/.get-pip.tar.gz.00
+		curl -LO https://gitee.com/mo2/get-pip/raw/master/.get-pip.tar.gz.01
+		cat .get-pip.tar.gz.* >.get-pip.tar.gz
+		tar -zxvf .get-pip.tar.gz
+		if [ -f "get-pip.py" ]; then
+			rm -f .get-pip.tar.gz*
+		else
+			curl -LO https://bootstrap.pypa.io/get-pip.py
+		fi
+		python3 get-pip.py -i https://pypi.tuna.tsinghua.edu.cn/simple
+		rm -f get-pip.py
+	fi
+
+	if [ ! $(command -v ffmpeg) ]; then
+		apt install -y ffmpeg
 	fi
 	rm -rf ./.ANNIETEMPFOLDER
 	git clone -b linux_${archtype} --depth=1 https://gitee.com/mo2/annie ./.ANNIETEMPFOLDER
@@ -803,8 +828,6 @@ INSTALLorRemoveVideoTOOL() {
 	read
 	golangANNIE
 }
-
-#################
 
 ##################
 WHICHVSCODEedition() {

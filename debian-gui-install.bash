@@ -487,6 +487,8 @@ golangANNIE() {
 		AnnieVideoURL=$(echo ${AnnieVideoURL} | sed 's@www@http://&@')
 	fi
 	echo ${AnnieVideoURL}
+	echo "正在解析中..."
+	echo "Analyzing ..."
 	#if [ ! $(echo ${AnnieVideoURL} | grep -E '^BV|^av|^http') ]; then
 	#	AnnieVideoURL=$(echo ${AnnieVideoURL} | sed 's@^@http://&@')
 	#fi
@@ -521,6 +523,9 @@ pythonYOUGET() {
 
 	AnnieVideoURL=$(whiptail --inputbox "Please enter a url.请输入视频链接,例如https://www.bilibili.com/video/av号,您可以在url前加--format参数来指定清晰度，-l来下载整个播放列表。Press Enter after the input is completed." 12 50 --title "请在方框内输入 视频链接" 3>&1 1>&2 2>&3)
 
+	echo ${AnnieVideoURL}
+	echo "正在解析中..."
+	echo "Analyzing ..."
 	you-get -i ${AnnieVideoURL}
 	if [ -e "${HOME}/.config/tmoe-linux/videos.cookiepath" ]; then
 		VideoCookies=$(cat ${HOME}/.config/tmoe-linux/videos.cookiepath | head -n 1)

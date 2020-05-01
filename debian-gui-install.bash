@@ -733,6 +733,7 @@ INSTALLorRemoveVideoTOOL() {
 			git clone -b linux_$(uname -m) --depth=1 https://gitee.com/mo2/ffmpeg.git ./.FFMPEGTEMPFOLDER
 			cd /usr/local/bin
 			tar -Jxvf /tmp/.FFMPEGTEMPFOLDER/ffmpeg.tar.xz ffmpeg
+			chmod +x ffmpeg
 			rm -rf /tmp/.FFMPEGTEMPFOLDER
 		else
 			dependencies="${dependencies} ffmpeg"
@@ -1325,7 +1326,11 @@ installBROWSER() {
 			sleep 1
 			if [ "${LINUXDISTRO}" = "debian" ]; then
 				apt update
-				apt install -y firefox || apt install -y firefox-esr firefox-esr-l10n-zh-cn
+				apt install -y firefox
+				if [ ! -e "/usr/bin/firefox" ]; then
+					apt install -y firefox-esr firefox-esr-l10n-zh-cn
+				fi
+				#两次检测
 				if [ -e "/usr/bin/firefox-esr" ]; then
 					echo "${YELLOW}对不起，我...我真的已经尽力了ヽ(*。>Д<)o゜！您的软件源仓库里容不下我，我只好叫妹妹ESR来代替了。${RESET}"
 				fi

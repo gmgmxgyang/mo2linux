@@ -305,13 +305,13 @@ CHECKdependencies() {
 DEBIANMENU() {
 	cd ${cur}
 	OPTION=$(
-		whiptail --title "Tmoe-linux Tool输debian-i启动(20200430-13)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.当前主菜单有十几个选项，请使用方向键或触屏上下滑动，按回车键确认。${TMOENODEBIAN} 更新日志:0411支持修复VNC闪退,0420增加其它版本的VSCode" 20 50 6 \
+		whiptail --title "Tmoe-linux Tool输debian-i启动(20200430-13)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.当前主菜单有十几个选项，请使用方向键或触屏上下滑动，按回车键确认。${TMOENODEBIAN} 更新日志:0430支持解析并下载B站、油管视频" 20 50 6 \
 			"1" "Install GUI 安装图形界面" \
 			"2" "Install browser 安装浏览器" \
 			"3" "Download theme 下载主题" \
 			"4" "Other software/games 其它软件/游戏" \
 			"5" "Modify VNC/XSDL/XRDP(远程桌面)conf" \
-			"6" "Modify to Kali sources list 配置kali源" \
+			"6" "Download video 解析视频链接" \
 			"7" "Update Debian tool 更新本工具" \
 			"8" "Install Chinese manual 安装中文手册" \
 			"9" "Enable zsh tool 启用zsh管理工具" \
@@ -319,7 +319,8 @@ DEBIANMENU() {
 			"11" "Remove GUI 卸载图形界面" \
 			"12" "Remove browser 卸载浏览器" \
 			"13" "FAQ 常见问题" \
-			"14" "Beta Features 测试版功能" \
+			"14" "Modify to Kali sources list 配置kali源" \
+			"15" "Beta Features 测试版功能" \
 			"0" "Exit 退出" \
 			3>&1 1>&2 2>&3
 	)
@@ -355,13 +356,12 @@ DEBIANMENU() {
 		MODIFYREMOTEDESKTOP
 		#MODIFYVNCORXSDLCONF
 	fi
-	############
-
+	####################
 	if [ "${OPTION}" == '6' ]; then
-
-		MODIFYTOKALISourcesList
-
+		DOWNLOADvideo
+		#MODIFYVNCORXSDLCONF
 	fi
+
 	###################################
 	if [ "${OPTION}" == '7' ]; then
 
@@ -410,14 +410,272 @@ DEBIANMENU() {
 		FrequentlyAskedQuestions
 
 	fi
-	###############################
+	############
 	if [ "${OPTION}" == '14' ]; then
+		MODIFYTOKALISourcesList
+	fi
+	###############################
+	if [ "${OPTION}" == '15' ]; then
 
 		BetaFeatures
 
 	fi
 }
 ############################
+DOWNLOADvideo() {
+	VIDEOTOOL=$(
+		whiptail --title "DOWNLOAD VIDEOS" --menu "你想要使用哪个工具来下载视频呢" 20 50 6 \
+			"1" "Annie" \
+			"2" "You-get" \
+			"3" "cookies说明" \
+			"4" "update更新下载工具" \
+			"0" "Back to the main menu 返回主菜单" \
+			3>&1 1>&2 2>&3
+	)
+	##############################
+	if [ "${VIDEOTOOL}" == '0' ]; then
+		DEBIANMENU
+	fi
+	##############################
+	if [ "${VIDEOTOOL}" == '1' ]; then
+		golangANNIE
+		#https://gitee.com/mo2/annie
+		#AnnieVersion=$(annie -v | cut -d ':' -f 2 | cut -d ',' -f 1 | awk -F ' ' '$0=$NF')
+	fi
+	##############################
+	if [ "${VIDEOTOOL}" == '2' ]; then
+		pythonYOUGET
+	fi
+	##############################
+	if [ "${VIDEOTOOL}" == '3' ]; then
+		cookiesREADME
+	fi
+	##############################
+	if [ "${VIDEOTOOL}" == '4' ]; then
+		INSTALLorRemoveVideoTOOL
+	fi
+}
+###########
+golangANNIE() {
+	if [ ! -e "/usr/local/bin/annie" ]; then
+		echo "检测到您尚未安装annie，将为您跳转至更新管理中心"
+		INSTALLorRemoveVideoTOOL
+		exit 0
+	fi
+
+	if [ ! -e "${HOME}/sd/Download/Videos" ]; then
+		mkdir -p ${HOME}/sd/Download/Videos
+	fi
+
+	cd ${HOME}/sd/Download/Videos
+
+	AnnieVideoURL=$(whiptail --inputbox "Please enter a url.请输入视频链接,例如https://www.bilibili.com/video/av号,或者直接输入avxxx。您可以在url前加-f参数来指定清晰度，-p来下载整个播放列表。Press Enter after the input is completed." 12 50 --title "请在方框内输入 视频链接" 3>&1 1>&2 2>&3)
+
+	annie -i ${AnnieVideoURL}
+	if [ -e "${HOME}/.config/tmoe-linux/videos.cookiepath" ]; then
+		VideoCookies=$(cat ${HOME}/.config/tmoe-linux/videos.cookiepath | head -n 1)
+		annie -c ${VideoCookies} -d ${AnnieVideoURL}
+	else
+		annie -d ${AnnieVideoURL}
+	fi
+	ls -lt ./ | head -n 1
+	echo "视频文件已为您下载至$(pwd)"
+	echo "Press enter to return。"
+	echo "${YELLOW}按回车键返回。${RESET} "
+	read
+	DOWNLOADvideo
+}
+###########
+pythonYOUGET() {
+	if [ ! $(command -v you-get) ]; then
+		echo "检测到您尚未安装you-get,将为您跳转至更新管理中心"
+		INSTALLorRemoveVideoTOOL
+		exit 0
+	fi
+
+	if [ ! -e "${HOME}/sd/Download/Videos" ]; then
+		mkdir -p ${HOME}/sd/Download/Videos
+	fi
+
+	cd ${HOME}/sd/Download/Videos
+
+	AnnieVideoURL=$(whiptail --inputbox "Please enter a url.请输入视频链接,例如https://www.bilibili.com/video/av号,您可以在url前加--format参数来指定清晰度，-l来下载整个播放列表。Press Enter after the input is completed." 12 50 --title "请在方框内输入 视频链接" 3>&1 1>&2 2>&3)
+
+	you-get -i ${AnnieVideoURL}
+	if [ -e "${HOME}/.config/tmoe-linux/videos.cookiepath" ]; then
+		VideoCookies=$(cat ${HOME}/.config/tmoe-linux/videos.cookiepath | head -n 1)
+		you-get -c ${VideoCookies} -d ${AnnieVideoURL}
+	else
+		you-get -d ${AnnieVideoURL}
+	fi
+	ls -lt ./ | head -n 1
+	echo "视频文件已为您下载至$(pwd)"
+	echo "Press enter to return。"
+	echo "${YELLOW}按回车键返回。${RESET} "
+	read
+	DOWNLOADvideo
+}
+
+#############
+cookiesREADME() {
+	cat <<-'EndOFcookies'
+		若您需要下载大会员视频，则需要指定cookie文件路径。
+		cookie文件包含了会员身份认证凭据，请勿将该文件泄露出去！
+		一个cookie文件可以包含多个网站的cookies，您只需要手动将包含cookie数据的纯文本复制至cookies.txt文件即可。
+		您需要安装浏览器扩展插件来导出cookie，安装完相关插件后，您还要手动配置该插件的导出格式为Netscape格式，并将后缀名修改为txt
+		浏览器商店中包含多个相关扩展插件
+		例如火狐扩展cookies-txt
+		https://addons.mozilla.org/zh-CN/firefox/addon/cookies-txt/
+
+		再次提醒，cookie非常重要，请仔细甄别优劣，防止恶意插件。
+	EndOFcookies
+	echo "Press enter to continue"
+	echo "${YELLOW}按回车键继续。${RESET} "
+	read
+	if [ -e "${HOME}/.config/tmoe-linux/videos.cookiepath" ]; then
+		COOKIESTATUS="检测到您已启用加载cookie功能"
+		CurrentCOOKIESpath="您当前的cookie路径为$(cat ${HOME}/.config/tmoe-linux/videos.cookiepath | head -n 1)"
+	else
+		COOKIESTATUS="检测到cookie处于禁用状态"
+	fi
+
+	mkdir -p "${HOME}/.config/tmoe-linux"
+	if (whiptail --title "modify cookie path and status" --yes-button '修改cookie path' --no-button 'disable禁用cookie' --yesno "您想要修改哪些配置信息？${COOKIESTATUS} What configuration do you want to modify?" 9 50); then
+		TARGET=$(whiptail --inputbox "请输入cookie文件路径,例如 /root/sd/Download/cookies.txt \n${CurrentCOOKIESpath} Press Enter after the input is completed." 16 50 --title "Press enter the cookie path" 3>&1 1>&2 2>&3)
+
+		exitstatus=$?
+		if [ $exitstatus = 0 ]; then
+			echo ${TARGET} >"${HOME}/.config/tmoe-linux/videos.cookiepath"
+			ls -a ${TARGET} >/dev/null
+			if [ $? != 0 ]; then
+				echo "没有指定有效的文件路径，请重新输入"
+			fi
+
+			if [ -e "${HOME}/.config/tmoe-linux/videos.cookiepath" ]; then
+				echo "您当前的cookie路径为$(cat ${HOME}/.config/tmoe-linux/videos.cookiepath | head -n 1)"
+			fi
+		fi
+
+	else
+
+		rm -f "${HOME}/.config/tmoe-linux/videos.cookiepath"
+		echo "已禁用加载cookie功能"
+	fi
+
+	echo "Press enter to return。"
+	echo "${YELLOW}按回车键返回。${RESET} "
+	read
+	DOWNLOADvideo
+}
+##################
+INSTALLorRemoveVideoTOOL() {
+
+	if [ -e "/usr/local/bin/annie" ]; then
+		AnnieVersion=$(annie -v | cut -d ':' -f 2 | cut -d ',' -f 1 | awk -F ' ' '$0=$NF')
+	else
+		AnnieVersion='您尚未安装annie'
+	fi
+
+	if [ $(command -v you-get) ]; then
+		YouGetVersion=$(you-get -V 2>&1 | head -n 1 | cut -d ':' -f 2 | cut -d ',' -f 1 | awk -F ' ' '$0=$NF')
+	else
+		YouGetVersion='您尚未安装you-get'
+	fi
+
+	cat <<-ENDofTable
+		╔═════╦═══════════════╦═══════════════════════════════╦═══════════════════════════════════
+		║     ║               ║                               ║                                   
+		║     ║ plugins and   ║    github url                 ║   本地版本 Local version          
+		║     ║ modules       ║                               ║                                   
+		║-----║---------------║-------------------------------║-----------------------------------
+		║ 1   ║     annie     ║ github.com/iawia002/annie     ║  ${AnnieVersion}
+		║     ║               ║                               ║
+		║-----║---------------║-------------------------------║-----------------------------------
+		║     ║               ║                               ║                                   
+		║ 2   ║    you-get    ║ github.com/soimort/you-get    ║  ${YouGetVersion}
+
+	ENDofTable
+	#对原开发者iawia002的代码进行自动编译，并
+	echo "annie将于每月1号凌晨4点自动编译并发布最新版"
+	echo "您可以按回车键来获取更新，亦可前往原开发者的仓库来手动下载新版"
+	echo "${YELLOW}按回车键将同时更新annie和you-get${RESET}"
+	echo 'Press Enter to update'
+	read
+	dependencies=""
+
+	if [ ! $(command -v python3) ]; then
+		dependencies="${dependencies} python3"
+	fi
+
+	if [ ! $(command -v ffmpeg) ]; then
+		dependencies="${dependencies} ffmpeg"
+	fi
+
+	if [ ! $(command -v pip3) ]; then
+		dependencies="${dependencies} python3-pip"
+	fi
+
+	if [ ! -z "${dependencies}" ]; then
+		echo "正在安装相关依赖..."
+
+		if [ "${LINUXDISTRO}" = "debian" ]; then
+			apt update
+			apt install -y ${dependencies}
+
+		elif [ "${LINUXDISTRO}" = "alpine" ]; then
+			apk update
+			apk add ${dependencies}
+
+		elif [ "${LINUXDISTRO}" = "arch" ]; then
+			pacman -Syu --noconfirm ${dependencies}
+
+		elif [ "${LINUXDISTRO}" = "redhat" ]; then
+			dnf install -y ${dependencies} || yum install -y ${dependencies}
+
+		elif [ "${LINUXDISTRO}" = "openwrt" ]; then
+			#opkg update
+			opkg install ${dependencies} || opkg install whiptail
+
+		elif [ "${LINUXDISTRO}" = "gentoo" ]; then
+			emerge -avk ${dependencies}
+
+		elif [ "${LINUXDISTRO}" = "suse" ]; then
+			zypper in -y ${dependencies}
+
+		elif [ "${LINUXDISTRO}" = "void" ]; then
+			xbps-install -S -y ${dependencies}
+		else
+			apt update
+			apt install -y ${dependencies} || port install ${dependencies} || zypper in ${dependencies} || guix package -i ${dependencies} || pkg install ${dependencies} || pkg_add ${dependencies} || pkgutil -i ${dependencies}
+		fi
+	fi
+
+	cd /tmp
+	if [ ! $(command -v pip3) ]; then
+		curl -O https://bootstrap.pypa.io/get-pip.py
+		python3 get-pip.py
+	fi
+	rm -rf ./.ANNIETEMPFOLDER
+	git clone -b linux_${archtype} --depth=1 https://gitee.com/mo2/annie ./.ANNIETEMPFOLDER
+	mv ./.ANNIETEMPFOLDER/annie /usr/local/bin/
+	chmod +x /usr/local/bin/annie
+	annie -v
+	rm -rf ./.ANNIETEMPFOLDER
+	pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+	pip3 install pip -U
+	pip3 install you-get -U
+	you-get -V
+	echo "安装完成，如需${YELLOW}卸载${RESET}annie,请输${YELLOW}rm /usr/local/bin/annie${RESET}"
+	echo "如需卸载you-get,请输${YELLOW}pip3 uninstall you-get ; apt purge python3-pip${RESET}"
+	echo 'Press Enter to start annie'
+	echo "${YELLOW}按回车键启动annie。${RESET}"
+	read
+	golangANNIE
+}
+
+#################
+
+##################
 WHICHVSCODEedition() {
 	ps -e >/dev/null 2>&1 || VSCODEtips=$(echo "检测到您无权读取/proc分区的部分内容，请选择Server版，或使用XSDL打开VSCode本地版")
 	VSCODEedition=$(whiptail --title "Visual Studio Code" --menu \

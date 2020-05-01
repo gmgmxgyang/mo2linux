@@ -662,7 +662,7 @@ INSTALLorRemoveVideoTOOL() {
 	annie -v
 	rm -rf ./.ANNIETEMPFOLDER
 	pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
-	pip3 install pip -U
+	pip3 install pip -U 2>/dev/null
 	pip3 install you-get -U
 	you-get -V
 	echo "安装完成，如需${YELLOW}卸载${RESET}annie,请输${YELLOW}rm /usr/local/bin/annie${RESET}"

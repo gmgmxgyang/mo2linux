@@ -470,6 +470,10 @@ golangANNIE() {
 	cd ${HOME}/sd/Download/Videos
 
 	AnnieVideoURL=$(whiptail --inputbox "Please enter a url.请输入视频链接,例如https://www.bilibili.com/video/av号,或者直接输入avxxx。您可以在url前加-f参数来指定清晰度，-p来下载整个播放列表。Press Enter after the input is completed." 12 50 --title "请在方框内输入 视频链接" 3>&1 1>&2 2>&3)
+	# echo ${AnnieVideoURL} >> ${HOME}/.video_history
+	if [ $(echo ${AnnieVideoURL} | grep 'b23.tv') ]; then
+		AnnieVideoURL=$(echo ${AnnieVideoURL} | sed 's@b23.tv@www.bilibili.com/video@')
+	fi
 
 	annie -i ${AnnieVideoURL}
 	if [ -e "${HOME}/.config/tmoe-linux/videos.cookiepath" ]; then

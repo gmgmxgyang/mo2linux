@@ -466,12 +466,9 @@ GNULINUX() {
 		fi
 
 		if (whiptail --title "您想要对这个小可爱做什么 " --yes-button "Tool" --no-button "Manager" --yesno "检测到您使用的是${OSRELEASE} ${WSL}您是想要启动software安装工具，还是system管理工具？ ♪(^∇^*) " 10 50); then
-			bash <(curl -LfsS 'https://gitee.com/mo2/linux/raw/master/debian-gui-install.bash')
-			exitstatus=$?
-			if [ $exitstatus != 0 ]; then
-				curl -sLo /tmp/.debian-gui-install.bash 'https://gitee.com/mo2/linux/raw/master/debian-gui-install.bash'
-				bash /tmp/.debian-gui-install.bash
-			fi
+			#bash <(curl -LfsS 'https://gitee.com/mo2/linux/raw/master/debian-gui-install.bash')
+			curl -sLo /tmp/.debian-gui-install.bash 'https://gitee.com/mo2/linux/raw/master/debian-gui-install.bash'
+			bash /tmp/.debian-gui-install.bash
 			exit 0
 		fi
 	fi

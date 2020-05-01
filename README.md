@@ -41,7 +41,7 @@ Support one-key installation Graphical User Interface.
 
 ![截图_2020-02-01_08-53-21.jpg](https://gitee.com/mo2/pic_api/raw/test/2020/02/16/yMgxSkGh0Tx4IJz0.jpg)
 
-🍸 🍸 Supported GUI/DE 目前支持的桌面环境：  
+🍸 Supported GUI/DE 目前支持的桌面环境：  
 （仅部分系统支持）
 
 - [x] **xfce4**
@@ -91,7 +91,7 @@ Containers other than debian may only support mainstream architectures, not s390
 
 #### 1.Windows10
 
-教程：Tutorial（教程）：  
+Tutorial（教程）：  
 ![我不知道怎么用](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/247f4fvoKnj56MwN.png)  
 Q:I don't know how to use it?  
 ![以admin身份运行powershell](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/h4IrTwyx4AaC8joE.png)  
@@ -205,8 +205,9 @@ wsl --set-default-version 2
 
 ```shell
     apk update
-    apk add wget
-    ash -c "$(wget -O- https://gitee.com/mo2/linux/raw/master/debian.sh)"
+    apk add wget bash
+    wget -O /tmp/.debian.sh https://gitee.com/mo2/linux/raw/master/debian.sh
+    bash /tmp/.debian.sh
 ```
 
 #### 8.Void
@@ -533,4 +534,3 @@ nano $(which startvnc)
 ##### 2020-05-01 更新日志
 
 - 1.支持解析视频网站链接，与原版 annie 最大的区别是支持解析 b23.tv 和 BV 号。
-- 用法：在视频地址栏内直接粘贴 BV 号再按回车即可。

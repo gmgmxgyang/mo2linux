@@ -427,7 +427,7 @@ DOWNLOADvideo() {
 		whiptail --title "DOWNLOAD VIDEOS" --menu "你想要使用哪个工具来下载视频呢" 20 50 6 \
 			"1" "Annie" \
 			"2" "You-get" \
-			"3" "cookies说明" \
+			"3" "cookie说明" \
 			"4" "update更新下载工具" \
 			"0" "Back to the main menu 返回主菜单" \
 			3>&1 1>&2 2>&3
@@ -454,6 +454,11 @@ DOWNLOADvideo() {
 	if [ "${VIDEOTOOL}" == '4' ]; then
 		INSTALLorRemoveVideoTOOL
 	fi
+	#########################
+	echo "${YELLOW}按回车键返回。${RESET}"
+	echo "Press enter to return."
+	read
+	DEBIANMENU
 }
 ###########
 golangANNIE() {

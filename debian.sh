@@ -869,7 +869,7 @@ REMOVESYSTEM() {
 	if [ "$?" = "0" ]; then
 		echo '检测到proot容器正在运行，请先输stopvnc停止运行'
 	fi
-	ls -l ${DebianCHROOT}/root/sd/*
+	ls -l ${DebianCHROOT}/root/sd/* 2>/dev/null
 	if [ "$?" = "0" ]; then
 		echo 'WARNING！检测到/root/sd 无法强制卸载，您当前使用的可能是chroot容器'
 		echo "若为误报，则请先停止容器进程，再手动移除${DebianCHROOT}/root/sd"
@@ -1735,7 +1735,8 @@ CHROOTINSTALLDebian() {
 #################################
 INSTALLDEBIANORDOWNLOADRECOVERYTARXZ() {
 	if [ ! -d "${DebianCHROOT}" ]; then
-		less -meQ <<-'EndOfFile'
+		#less -meQ
+		cat <<-'EndOfFile'
 			                              End-user license agreement 
 						   Tmoe-linux Tool（以下简称“本工具”）尊重并保护所有使用服务的用户的个人隐私权。
 						本工具遵循GNU General Public License v2.0 （开源许可协议）,旨在追求开放和自由。
@@ -1773,13 +1774,18 @@ INSTALLDEBIANORDOWNLOADRECOVERYTARXZ() {
 						(a)本工具安装的是原生GNU/Linux 系统，截至2020-03-12，默认没有开启安全保护和防火墙功能，请您妥善保管root密码及其它重要账号信息。
 						同时希望您能注意在信息网络上不存在“绝对完善的安全措施”。
 
-						7.其它说明
+						7.卸载说明
+						(a)您在移除容器前，必须先停止容器进程。
+						(b)由于在测试chroot容器的过程中，出现了部分已挂载目录无法强制卸载的情况，故本工具在移除容器前会进行检测，并给出相关提示。
+						建议您在移除前进行备份，若因操作不当而导致数据丢失，开发者概不负责！
+
+						8.其它说明
 						(a)若您需要在开源项目中引用本脚本，建议您先与原开发者联系，若无法联系，则只需附上本git-repo的链接gitee.com/mo2/linux
 						If you want to reference this script in an open source project,it is recommended that you contact the original developer.If you can't contact the developer, just attach the github link: https://github.com/2moe/tmoe-linux
 
-						8.最终用户许可协议的更改
+						9.最终用户许可协议的更改
 						(a)如果决定更改最终用户许可协议，我们会在本协议中、本工具网站中以及我们认为适当的位置发布这些更改，以便您了解如何保障我们双方的权益。
-						(b)本工具开发者保留随时修改本协议的权利，因此请经常查看。 
+						(b)本工具开发者保留随时修改本协议的权利。 
 						The developer of this tool reserves the right to modify this agreement at any time.
 		EndOfFile
 		echo 'You must agree to EULA to use this tool.'

@@ -3788,6 +3788,8 @@ filebrowser_restart() {
 	echo "正在为您启动filebrowser服务，本机默认访问地址为localhost:${FILEBROWSER_PORT}"
 	echo The LAN VNC address 局域网地址 $(ip -4 -br -c a | tail -n 1 | cut -d '/' -f 1 | cut -d 'P' -f 2):${FILEBROWSER_PORT}
 	echo The WAN VNC address 外网地址 $(curl -sL ip.sb | head -n 1):${FILEBROWSER_PORT}
+	echo "请使用浏览器打开"
+	echo "Please use your browser to open the access address"
 	service filebrowser status 2>/dev/null
 	if [ "$?" = "0" ]; then
 		echo "您可以输${YELLOW}service filebrowser stop${RESET}来停止进程"

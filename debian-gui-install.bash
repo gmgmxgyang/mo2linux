@@ -11,6 +11,9 @@ main() {
 	h | -h | --help)
 		FrequentlyAskedQuestions
 		;;
+	file | filebrowser)
+		filebrowser_restart
+		;;
 	*)
 		CHECK_ROOT
 		;;
@@ -3628,15 +3631,7 @@ install_filebrowser() {
 			sleep 2s
 			filebrowser_onekey
 		fi
-		pkill filebrowser
-		service filebrowser restart
-
-		FILEBROWSER_PORT=$(cat /etc/filebrowser.db | grep -a port | sed 's@,@\n@g' | grep -a port | head -n 1 | cut -d ':' -f 2 | cut -d '"' -f 2)
-		#nohup /usr/local/bin/filebrowser -d /etc/filebrowser.db & >/dev/null 2>&1
-		echo "正在为您启动filebrowser服务，本机默认访问地址为localhost:${FILEBROWSER_PORT}"
-		echo The LAN VNC address 局域网地址 $(ip -4 -br -c a | tail -n 1 | cut -d '/' -f 1 | cut -d 'P' -f 2):${FILEBROWSER_PORT}
-		service filebrowser status
-		#/etc/filebrowser.db
+		filebrowser_restart
 	else
 		configure_filebrowser
 	fi
@@ -3663,7 +3658,7 @@ configure_filebrowser() {
 	##############################
 	if [ "${OPTION}" == '1' ]; then
 		pkill filebrowser
-		service filebrowser stop
+		service filebrowser stop 2>/dev/null
 		filebrowser_onekey
 	fi
 	##############################
@@ -3693,7 +3688,7 @@ configure_filebrowser() {
 	##############################
 	if [ "${OPTION}" == '8' ]; then
 		pkill filebrowser
-		service filebrowser stop
+		service filebrowser stop 2>/dev/null
 		filebrowser_reset
 	fi
 	########################################
@@ -3754,19 +3749,45 @@ filebrowser_onekey() {
 		WantedBy=multi-user.target
 	EndOFsystemd
 	chmod +x /etc/systemd/system/filebrowser.service
-	systemctl daemon-reload
+	systemctl daemon-reload 2>/dev/null
 	#systemctl start filebrowser
-	service filebrowser start
+	#service filebrowser start
 	if (whiptail --title "systemctl enable filebrowser？" --yes-button 'Yes' --no-button 'No！' --yesno "是否需要将此服务设置为开机自启？" 9 50); then
 		systemctl enable filebrowser
 	fi
+	filebrowser_restart
+	########################################
+	echo 'Press Enter to return.'
+	echo "${YELLOW}按回车键返回。${RESET}"
+	read
+	configure_filebrowser
+	#此处的返回步骤并非多余
+}
+############
+filebrowser_restart() {
+	FILEBROWSER_PORT=$(cat /etc/filebrowser.db | grep -a port | sed 's@,@\n@g' | grep -a port | head -n 1 | cut -d ':' -f 2 | cut -d '"' -f 2)
+	service filebrowser restart 2>/dev/null
+	if [ "$?" != "0" ]; then
+		pkill filebrowser
+		nohup /usr/local/bin/filebrowser -d /etc/filebrowser.db 2>&1 >/var/log/filebrowser.log &
+		cat /var/log/filebrowser.log | head -n 20
+	fi
+	echo "正在为您启动filebrowser服务，本机默认访问地址为localhost:${FILEBROWSER_PORT}"
+	echo The LAN VNC address 局域网地址 $(ip -4 -br -c a | tail -n 1 | cut -d '/' -f 1 | cut -d 'P' -f 2):${FILEBROWSER_PORT}
+	echo The WAN VNC address 外网地址 $(curl -sL ip.sb | head -n 1):${FILEBROWSER_PORT}
+	service filebrowser status 2>/dev/null
+	if [ "$?" = "0" ]; then
+		echo "您可以输${YELLOW}service filebrowser stop${RESET}来停止进程"
+	else
+		echo "您可以输${YELLOW}pkill filebrowser${RESET}来停止进程"
+	fi
 	#systemctl status filebrowser
-	service filebrowser status
+	service filebrowser status 2>/dev/null
 }
 #############
 filebrowser_add_admin() {
 	pkill filebrowser
-	service filebrowser stop
+	service filebrowser stop 2>/dev/null
 	echo "Stopping filebrowser..."
 	echo "正在停止filebrowser进程..."
 	echo "正在检测您当前已创建的用户..."
@@ -3816,13 +3837,15 @@ filebrowser_logs() {
 		read
 		filebrowser -d /etc/filebrowser.db config set --log /var/log/filebrowser.log
 	fi
-
-	if [ $(command -v less) ]; then
-		cat /var/log/filebrowser.log | less -meQ
-	else
-		cat /var/log/filebrowser.log
-	fi
 	ls -lh /var/log/filebrowser.log
+	echo "按Ctrl+C退出日志追踪，press Ctrl+C to exit."
+	tail -Fvn 35 /var/log/filebrowser.log
+	#if [ $(command -v less) ]; then
+	#	cat /var/log/filebrowser.log | less -meQ
+	#else
+	#	cat /var/log/filebrowser.log
+	#fi
+
 }
 #################
 filebrowser_language() {
@@ -3853,24 +3876,28 @@ filebrowser_listen_ip() {
 ##################
 filebrowser_systemd() {
 	if [ -e "/tmp/.Chroot-Container-Detection-File" ]; then
-		echo "检测到您当前处于chroot容器环境下，无法使用systemd"
+		echo "检测到您当前处于chroot容器环境下，无法使用systemctl命令"
 	elif [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
-		echo "检测到您当前处于proot容器环境下，无法使用systemd"
+		echo "检测到您当前处于proot容器环境下，无法使用systemctl命令"
 	fi
+
 	cat <<-'EOF'
-		init.d管理
-		        输service filebrowser start启动
-				输service filebrowser stop停止
-				输service filebrowser status查看进程状态
-
 		systemd管理
-				输systemctl start filebrowser启动
-				输systemctl stop filebrowser停止
-				输systemctl status filebrowser查看进程状态
-				输systemctl enable filebrowser开机自启
-				输systemctl disable filebrowser禁用开机自启
-	EOF
+			输systemctl start filebrowser启动
+			输systemctl stop filebrowser停止
+			输systemctl status filebrowser查看进程状态
+			输systemctl enable filebrowser开机自启
+			输systemctl disable filebrowser禁用开机自启
 
+			service命令
+			输service filebrowser start启动
+			输service filebrowser stop停止
+			输service filebrowser status查看进程状态
+		        
+		    其它命令
+			输debian-i file启动
+			pkill filebrowser停止
+	EOF
 }
 ###############
 filebrowser_reset() {

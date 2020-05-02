@@ -821,11 +821,12 @@ INSTALLorRemoveVideoTOOL() {
 	chmod +x /usr/local/bin/annie
 	annie -v
 	rm -rf ./.ANNIETEMPFOLDER
+	#mkdir -p ${HOME}/.config
 	pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
-	pip3 install pip -U 2>/dev/null
-	pip3 install you-get -U
+	pip3 install pip -U -i https://pypi.tuna.tsinghua.edu.cn/simple 2>/dev/null
+	pip3 install you-get -U -i https://pypi.tuna.tsinghua.edu.cn/simple
 	you-get -V
-	pip3 install youtube-dl -U
+	pip3 install youtube-dl -U -i https://pypi.tuna.tsinghua.edu.cn/simple
 	youtube-dl -v 2>&1 | grep version
 	echo "更新完毕，如需${YELLOW}卸载${RESET}annie,请输${YELLOW}rm /usr/local/bin/annie${RESET}"
 	echo "如需卸载you-get,请输${YELLOW}pip3 uninstall you-get${RESET}"

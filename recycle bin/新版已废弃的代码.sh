@@ -1443,3 +1443,15 @@ echo "Do not upload video to platforms such as YouTube without authorization."
 if [ -d "${DebianCHROOT}/root/.vnc" ]; then
     tsudo chown root:root -R "${DebianCHROOT}/root/.vnc" 2>/dev/null || su -c "chown root:root -R ${DebianCHROOT}/root/.vnc"
 fi
+#################
+		if [ "$(uname -o)" = "Android" ]; then
+			echo "非常抱歉，本功能仅适配Linux系统，暂未适配Android。"
+			echo "Android系统请换用proot容器。"
+			echo "由于在测试过程中出现部分已挂载的目录无法强制卸载的情况，故建议您换用proot容器。"
+			echo "Press enter to return。"
+			echo "${YELLOW}按回车键返回。${RESET} "
+			read
+			MainMenu
+		else
+			CHROOTINSTALLDebian
+		fi

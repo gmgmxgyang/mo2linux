@@ -507,7 +507,7 @@ golangANNIE() {
 	fi
 	ls -lAth ./ | head -n 3
 	echo "视频文件默认下载至$(pwd)"
-	echo "Press enter to return。"
+	echo "Press enter to return."
 	echo "${YELLOW}按回车键返回。${RESET} "
 	read
 	DOWNLOADvideo
@@ -540,7 +540,7 @@ pythonYOUGET() {
 	fi
 	ls -lAth ./ | head -n 3
 	echo "视频文件默认下载至$(pwd)"
-	echo "Press enter to return。"
+	echo "Press enter to return."
 	echo "${YELLOW}按回车键返回。${RESET} "
 	read
 	DOWNLOADvideo
@@ -573,7 +573,7 @@ pythonYOUTUBEdl() {
 	fi
 	ls -lAth ./ | head -n 3
 	echo "视频文件默认下载至$(pwd)"
-	echo "Press enter to return。"
+	echo "Press enter to return."
 	echo "${YELLOW}按回车键返回。${RESET} "
 	read
 	DOWNLOADvideo
@@ -627,7 +627,7 @@ cookiesREADME() {
 		echo "已禁用加载cookie功能"
 	fi
 
-	echo "Press enter to return。"
+	echo "Press enter to return."
 	echo "${YELLOW}按回车键返回。${RESET} "
 	read
 	DOWNLOADvideo

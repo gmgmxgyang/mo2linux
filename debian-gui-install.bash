@@ -582,14 +582,17 @@ pythonYOUTUBEdl() {
 cookiesREADME() {
 	cat <<-'EndOFcookies'
 		若您需要下载大会员视频，则需要指定cookie文件路径。
+		加载cookie后，即使您不是大会员，也能提高部分网站的下载速度。
 		cookie文件包含了会员身份认证凭据，请勿将该文件泄露出去！
 		一个cookie文件可以包含多个网站的cookies，您只需要手动将包含cookie数据的纯文本复制至cookies.txt文件即可。
-		您需要安装浏览器扩展插件来导出cookie，安装完相关插件后，您还要手动配置该插件的导出格式为Netscape格式，并将后缀名修改为txt
-		不同平台(windows、linux和macos)导出的cookie文件，如需跨平台加载，则需要转换为相应系统的换行符。
-		浏览器商店中包含多个相关扩展插件
-		例如火狐扩展cookies-txt
+		您需要安装浏览器扩展插件来导出cookie，部分插件还需手动配置导出格式为Netscape，并将后缀名修改为txt
+		对于不同平台(windows、linux和macos)导出的cookie文件，如需跨平台加载，则需要转换为相应系统的换行符。
+		浏览器商店中包含多个相关扩展插件，但不同插件导出的cookie文件可能存在兼容性的差异。
+		例如火狐扩展cookies-txt（适用于you-get）
 		https://addons.mozilla.org/zh-CN/firefox/addon/cookies-txt/
-		再次提醒，cookie非常重要，请仔细甄别优劣，防止恶意插件。
+		再次提醒，cookie非常重要，请仔细甄别，堤防恶意插件。
+		同时希望您能够了解，将cookie文件泄露出去等同于账号泄密！
+		请妥善保管好该文件及相关数据！
 	EndOFcookies
 	echo "Press enter to continue"
 	echo "${YELLOW}按回车键继续。${RESET} "

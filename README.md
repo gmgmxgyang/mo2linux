@@ -533,4 +533,8 @@ nano $(which startvnc)
 
 ##### 2020-05-01 更新日志
 
-- 1.支持解析视频网站链接，与原版 annie 最大的区别是支持解析 b23.tv 和 BV 号。
+- 1.支持解析视频网站链接，与原版 [annie](https://github.com/iawia002/annie) 最大的区别是支持解析 b23.tv 和 BV 号。
+
+##### 2020-05-02 至 2020-05-03 更新日志
+
+- 1.支持搭建个人云网盘（来自 github 开源项目[filebrowser](https://github.com/filebrowser/filebrowser)），配合我写的配置脚本来实现简易化管理。

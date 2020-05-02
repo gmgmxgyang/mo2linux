@@ -6,7 +6,7 @@ main() {
 		DEBIANMENU
 		;;
 	up | -u)
-		UPDATEMANAGER
+		tmoe_linux_tool_upgrade
 		;;
 	h | -h | --help)
 		FrequentlyAskedQuestions
@@ -324,15 +324,15 @@ CHECKdependencies() {
 DEBIANMENU() {
 	cd ${cur}
 	OPTION=$(
-		whiptail --title "Tmoe-linux Tool输debian-i启动(20200502-18)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.当前主菜单有十几个选项，请使用方向键或触屏上下滑动，按回车键确认。${TMOENODEBIAN} 更新日志:0501支持解析并下载B站、油管视频,0502支持搭建个人云网盘" 20 50 6 \
+		whiptail --title "Tmoe-linux Tool输debian-i启动(20200503-02)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.当前主菜单有十几个选项，请使用方向键或触屏上下滑动，按回车键确认。${TMOENODEBIAN} 更新日志:0501支持解析并下载B站、油管视频,0502支持搭建个人云网盘" 20 50 7 \
 			"1" "Install GUI 安装图形界面" \
 			"2" "Install browser 安装浏览器" \
 			"3" "Download theme 下载主题" \
 			"4" "Other software/games 其它软件/游戏" \
 			"5" "Modify VNC/XSDL/XRDP(远程桌面)conf" \
 			"6" "Download video 解析视频链接" \
-			"7" "Update Debian tool 更新本工具" \
-			"8" "Install Chinese manual 安装中文手册" \
+			"7" "Filebrowser:简单轻量的个人网盘" \
+			"8" "Update Debian tool 更新本工具" \
 			"9" "Enable zsh tool 启用zsh管理工具" \
 			"10" "VSCode" \
 			"11" "Remove GUI 卸载图形界面" \
@@ -380,25 +380,17 @@ DEBIANMENU() {
 		DOWNLOADvideo
 		#MODIFYVNCORXSDLCONF
 	fi
+	#######################################
+	if [ "${OPTION}" == '7' ]; then
+		install_filebrowser
+	fi
 
 	###################################
-	if [ "${OPTION}" == '7' ]; then
-
-		curl -Lvo /usr/local/bin/debian-i 'https://gitee.com/mo2/linux/raw/master/debian-gui-install.bash'
-		echo 'Update completed, press Enter to return.'
-		echo "${YELLOW}更新完成，按回车键返回。${RESET}"
-		chmod +x /usr/local/bin/debian-i
-		read
-		#bash /usr/local/bin/debian-i
-		source /usr/local/bin/debian-i
-	fi
-	################
-
 	if [ "${OPTION}" == '8' ]; then
 
-		CHINESEMANPAGES
-
+		tmoe_linux_tool_upgrade
 	fi
+	################
 
 	#################################
 	if [ "${OPTION}" == '9' ]; then
@@ -441,6 +433,17 @@ DEBIANMENU() {
 	fi
 }
 ############################
+tmoe_linux_tool_upgrade() {
+	curl -Lvo /usr/local/bin/debian-i 'https://gitee.com/mo2/linux/raw/master/debian-gui-install.bash'
+	echo 'Update completed, press Enter to return.'
+	echo "${YELLOW}更新完成，按回车键返回。${RESET}"
+	chmod +x /usr/local/bin/debian-i
+	read
+	#bash /usr/local/bin/debian-i
+	source /usr/local/bin/debian-i
+}
+#####################
+
 DOWNLOADvideo() {
 	VIDEOTOOL=$(
 		whiptail --title "DOWNLOAD VIDEOS" --menu "你想要使用哪个工具来下载视频呢" 14 50 6 \
@@ -2021,7 +2024,6 @@ INSTALLsynaptic() {
 }
 ##########################################
 CHINESEMANPAGES() {
-
 	echo '即将为您安装 debian-reference-zh-cn、manpages、manpages-zh和man-db'
 	apt update
 	apt install -y debian-reference-zh-cn manpages manpages-zh man-db
@@ -2038,11 +2040,6 @@ CHINESEMANPAGES() {
 	echo "man a help manual software, which can help you understand the detailed usage of the command."
 	echo "您可以输${YELLOW}man 软件或命令名称${RESET}来获取帮助信息，例如${YELLOW}man bash${RESET}或${YELLOW}man zsh${RESET}"
 	echo "如需卸载，请手动输apt purge -y debian-reference-zh-cn manpages manpages-zh man-db "
-	echo 'Press Enter to return.'
-	echo "${YELLOW}按回车键返回。${RESET}"
-	read
-
-	DEBIANMENU
 }
 ########################################################################
 CONFIGTHEMES() {
@@ -2318,6 +2315,7 @@ OTHERSOFTWARE() {
 			"11" "网易云音乐(x86_64):专注于发现与分享的音乐产品" \
 			"12" "ADB:Android Debug Bridge" \
 			"13" "BleachBit:垃圾清理" \
+			"14" "Install Chinese manual 安装中文手册" \
 			"0" "Back to the main menu 返回主菜单" \
 			3>&1 1>&2 2>&3
 	)
@@ -2556,6 +2554,10 @@ OTHERSOFTWARE() {
 			bleachbit --help
 			echo "bleachbit安装完成，如需卸载，请手动输apt purge -y bleachbit"
 		fi
+	fi
+	########################
+	if [ "${SOFTWARE}" == '14' ]; then
+		CHINESEMANPAGES
 	fi
 	############################################
 	echo 'Press Enter to return.'
@@ -3306,7 +3308,6 @@ BetaFeatures() {
 			"14" "krita(数字绘画)" \
 			"15" "OBS-Studio(录屏软件)" \
 			"16" "fbreader(epub阅读器)" \
-			"17" "Filebrowser:简单轻量的个人网盘" \
 			"0" "Back to the main menu 返回主菜单" \
 			3>&1 1>&2 2>&3
 	)
@@ -3411,10 +3412,6 @@ BetaFeatures() {
 		apt update
 		apt install -y fbreader
 		echo "安装完成，如需卸载，请手动输apt purge -y fbreader"
-	fi
-	########################################
-	if [ "${TMOEBETA}" == '17' ]; then
-		install_filebrowser
 	fi
 	########################################
 	echo 'Press Enter to return.'
@@ -3638,6 +3635,8 @@ install_filebrowser() {
 }
 ############
 configure_filebrowser() {
+	#先进入etc目录，防止database加载失败
+	cd /etc
 	OPTION=$(
 		whiptail --title "CONFIGURE FILEBROWSER" --menu "您想要修改哪些配置？" 14 50 5 \
 			"1" "One-key conf 初始化一键配置" \
@@ -3647,7 +3646,8 @@ configure_filebrowser() {
 			"5" "language语言环境" \
 			"6" "listen addr/ip 监听ip" \
 			"7" "进程管理说明" \
-			"8" "reset 重置所有配置信息" \
+			"8" "stop 停止" \
+			"9" "reset 重置所有配置信息" \
 			"0" "Back to the main menu 返回主菜单" \
 			3>&1 1>&2 2>&3
 	)
@@ -3687,6 +3687,13 @@ configure_filebrowser() {
 	fi
 	##############################
 	if [ "${OPTION}" == '8' ]; then
+		echo "正在停止服务进程..."
+		echo "Stopping..."
+		pkill filebrowser
+		service filebrowser stop 2>/dev/null
+	fi
+	##############################
+	if [ "${OPTION}" == '9' ]; then
 		pkill filebrowser
 		service filebrowser stop 2>/dev/null
 		filebrowser_reset
@@ -3813,6 +3820,7 @@ filebrowser_add_admin() {
 		read
 		filebrowser_add_admin
 	fi
+	cd /etc
 	filebrowser users add ${TARGET_USERNAME} ${TARGET_USERPASSWD} --perm.admin
 }
 #################
@@ -3894,7 +3902,7 @@ filebrowser_systemd() {
 			输service filebrowser stop停止
 			输service filebrowser status查看进程状态
 		        
-		    其它命令
+		    其它命令(适用于service和systemctl都无法使用的情况)
 			输debian-i file启动
 			pkill filebrowser停止
 	EOF
@@ -3905,8 +3913,7 @@ filebrowser_reset() {
 	echo 'Press Enter to confirm,press Ctrl+C to cancel.'
 	echo "${YELLOW}按回车键确认${RESET}"
 	read
-	cd /etc
-	rm -f filebrowser.db
+	rm -vf filebrowser.db
 	filebrowser -d filebrowser.db config init
 }
 

@@ -535,6 +535,10 @@ nano $(which startvnc)
 
 - 1.支持解析视频网站链接，与原版 [annie](https://github.com/iawia002/annie) 最大的区别是支持解析 b23.tv 和 BV 号。
 
-##### 2020-05-02 至 2020-05-03 更新日志
+##### 2020-05-02 更新日志
 
 - 1.支持搭建个人云网盘（来自 github 开源项目[filebrowser](https://github.com/filebrowser/filebrowser)），配合我写的配置脚本来实现简易化管理。
+
+##### 2020-05-03 更新日志
+
+- 1.支持搭建并配置 WebDAV(nginx)服务，可以非常方便地配置和管理端口号、访问目录、访问账号、日志和进程等内容。

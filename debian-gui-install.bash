@@ -444,7 +444,6 @@ personal_netdisk() {
 		whiptail --title "FILE SHARE SERVER" --menu "你想要使用哪个软件来共享文件呢" 14 50 6 \
 			"1" "Filebrowser:简单轻量的个人网盘" \
 			"2" "Nginx WebDAV:适合播放视频" \
-			"3" "VSFTPD(FTP):适合传输文件" \
 			"0" "Back to the main menu 返回主菜单" \
 			3>&1 1>&2 2>&3
 	)
@@ -460,17 +459,50 @@ personal_netdisk() {
 	if [ "${WHICH_NETDISK}" == '2' ]; then
 		install_nginx_webdav
 	fi
-	############################
-	if [ "${WHICH_NETDISK}" == '3' ]; then
-		install_vsftpd
-	fi
 	#########################
 	echo "${YELLOW}按回车键返回。${RESET}"
 	echo "Press enter to return."
 	read
 	DEBIANMENU
 }
-#############
+################
+different_distro_software_install() {
+	if [ "${LINUXDISTRO}" = "debian" ]; then
+		apt update
+		apt install -y ${DEPENDENCY_01}
+		apt install -y ${DEPENDENCY_02}
+
+	elif [ "${LINUXDISTRO}" = "alpine" ]; then
+		apk update
+		apk add ${DEPENDENCY_01}
+		apk add ${DEPENDENCY_02}
+
+	elif [ "${LINUXDISTRO}" = "arch" ]; then
+		pacman -Syu --noconfirm ${DEPENDENCY_01}
+		pacman -Syu --noconfirm ${DEPENDENCY_02}
+
+	elif [ "${LINUXDISTRO}" = "redhat" ]; then
+		dnf install -y ${DEPENDENCY_01} || yum install -y ${DEPENDENCY_01}
+		dnf install -y ${DEPENDENCY_02} || yum install -y ${DEPENDENCY_02}
+	elif [ "${LINUXDISTRO}" = "openwrt" ]; then
+		#opkg update
+		opkg install ${DEPENDENCY_01}
+		opkg install ${DEPENDENCY_02}
+	elif [ "${LINUXDISTRO}" = "gentoo" ]; then
+		emerge -vk ${DEPENDENCY_01}
+		emerge -vk ${DEPENDENCY_02}
+	elif [ "${LINUXDISTRO}" = "suse" ]; then
+		zypper in -y ${DEPENDENCY_01}
+		zypper in -y ${DEPENDENCY_02}
+	elif [ "${LINUXDISTRO}" = "void" ]; then
+		xbps-install -S -y ${DEPENDENCY_01}
+		xbps-install -S -y ${DEPENDENCY_02}
+	else
+		apt update
+		apt install -y ${DEPENDENCY_01} || port install ${DEPENDENCY_01} || guix package -i ${DEPENDENCY_01} || pkg install ${DEPENDENCY_01} || pkg_add ${DEPENDENCY_01} || pkgutil -i ${DEPENDENCY_01}
+	fi
+}
+###################
 install_nginx_webdav() {
 
 	pgrep nginx &>/dev/null
@@ -493,14 +525,8 @@ install_nginx_webdav() {
 		configure_nginx_webdav
 	fi
 }
-############
-install_vsftpd() {
 
-	echo "此功能正在开发中。。。"
-
-}
-################
-
+#############
 configure_nginx_webdav() {
 	#进入nginx webdav配置文件目录
 	cd /etc/nginx/conf.d/
@@ -598,46 +624,25 @@ configure_nginx_webdav() {
 nginx_onekey() {
 	if [ -e "/tmp/.Chroot-Container-Detection-File" ] || [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
 		echo "检测到您处于chroot/proot容器环境下，部分功能可能出现异常。"
+		echo "部分系统可能会出现failed，但仍能正常连接。"
 		CHROOT_STATUS='1'
 	fi
 	echo "本服务依赖于软件源仓库的nginx,可能无法与宝塔等第三方面板的nginx相互兼容"
+	echo "若80和443端口被占用，则有可能导致nginx启动失败，请修改nginx为1000以上的高位端口。"
+	echo "安装完成后，若浏览器测试连接成功，则您可以换用文件管理器进行管理。"
+	echo "例如Android端的Solid Explorer,windows端的RaiDrive"
 	echo 'Press Enter to confirm.'
-	echo "默认webdav根目录为/media，请在安装完成后自行修改。"
+	echo "默认webdav根目录为/media，您可以在安装完成后自行修改。"
 	echo "${YELLOW}按回车键确认安装。${RESET}"
 	read
 
 	if [ "${LINUXDISTRO}" = "debian" ]; then
 		apt update
 		apt install -y nginx nginx-extras apache2-utils
-
-	elif [ "${LINUXDISTRO}" = "alpine" ]; then
-		apk update
-		apk add nginx
-		apk add apache2-utils
-
-	elif [ "${LINUXDISTRO}" = "arch" ]; then
-		pacman -Syu --noconfirm nginx
-		pacman -Syu --noconfirm apache2-utils
-	elif [ "${LINUXDISTRO}" = "redhat" ]; then
-		dnf install -y nginx || yum install -y nginx
-		dnf install -y apache2-utils || yum install -y apache2-utils
-	elif [ "${LINUXDISTRO}" = "openwrt" ]; then
-		#opkg update
-		opkg install nginx apache2-utils
-
-	elif [ "${LINUXDISTRO}" = "gentoo" ]; then
-		emerge -vk nginx
-		emerge -vk apache2-utils
-
-	elif [ "${LINUXDISTRO}" = "suse" ]; then
-		zypper in -y nginx apache2-utils
-
-	elif [ "${LINUXDISTRO}" = "void" ]; then
-		xbps-install -S -y nginx
-
 	else
-		apt update
-		apt install -y nginx nginx-extras apache2-utils || port install nginx || guix package -i nginx || pkg install nginx || pkg_add nginx || pkgutil -i nginx
+		DEPENDENCY_01='nginx'
+		DEPENDENCY_02='apache2-utils'
+		different_distro_software_install
 	fi
 
 	mkdir -p /media
@@ -857,12 +862,13 @@ nginx_systemd() {
 			输service nginx stop停止
 			输service nginx status查看进程状态
 
-		            init.d管理
+		    init.d管理
 			/etc/init.d/nginx start启动
 			/etc/init.d/nginx restart重启
 			/etc/init.d/nginx stop停止
 			/etc/init.d/nginx statuss查看进程状态
 			/etc/init.d/nginx reload重新加载
+
 	EOF
 }
 ###############

@@ -1455,3 +1455,16 @@ fi
 		else
 			CHROOTINSTALLDebian
 		fi
+        #############
+install_vsftpd() {
+	#dependencies='vsftpd'
+	DEPENDENCY_01='vsftpd'
+	DEPENDENCY_02=''
+	if [ "${LINUXDISTRO}" = 'debian' ]; then
+		apt update
+		apt install -y vsftpd
+	else
+		different_distro_software_install
+	fi
+	echo "此功能正在开发中。。。"
+}

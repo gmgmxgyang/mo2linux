@@ -494,9 +494,9 @@ install_nginx_webdav() {
 	fi
 }
 ############
-install_vsftpd(){
+install_vsftpd() {
 
-echo "此功能正在开发中。。。"
+	echo "此功能正在开发中。。。"
 
 }
 ################
@@ -605,8 +605,55 @@ nginx_onekey() {
 	echo "默认webdav根目录为/media，请在安装完成后自行修改。"
 	echo "${YELLOW}按回车键确认安装。${RESET}"
 	read
-	apt update
-	apt install -y nginx nginx-extras apache2-utils
+
+	if [ "${LINUXDISTRO}" = "debian" ]; then
+		apt update
+		apt install -y nginx nginx-extras apache2-utils
+
+	elif [ "${LINUXDISTRO}" = "alpine" ]; then
+		apk update
+		apk add nginx
+		apk add apache2-utils
+
+	elif [ "${LINUXDISTRO}" = "arch" ]; then
+		pacman -Syu --noconfirm nginx
+		pacman -Syu --noconfirm apache2-utils
+	elif [ "${LINUXDISTRO}" = "redhat" ]; then
+		dnf install -y nginx || yum install -y nginx
+		dnf install -y apache2-utils || yum install -y apache2-utils
+	elif [ "${LINUXDISTRO}" = "openwrt" ]; then
+		#opkg update
+		opkg install nginx apache2-utils
+
+	elif [ "${LINUXDISTRO}" = "gentoo" ]; then
+		emerge -vk nginx
+		emerge -vk apache2-utils
+
+	elif [ "${LINUXDISTRO}" = "suse" ]; then
+		zypper in -y nginx apache2-utils
+
+	elif [ "${LINUXDISTRO}" = "void" ]; then
+		xbps-install -S -y nginx
+
+	else
+		apt update
+		apt install -y nginx nginx-extras apache2-utils || port install nginx || guix package -i nginx || pkg install nginx || pkg_add nginx || pkgutil -i nginx
+	fi
+
+	mkdir -p /media
+	touch "/media/欢迎使用tmoe-linux-webdav_你可以将文件复制至根目录下的media文件夹"
+	if [ -e "/root/sd" ]; then
+		ln -sf /root/sd /media/
+	fi
+
+	if [ -e "/root/tf" ]; then
+		ln -sf /root/tf /media/
+	fi
+
+	if [ -e "/root/termux" ]; then
+		ln -sf /root/sd /media/
+	fi
+
 	if [ "${CHROOT_STATUS}" = "1" ]; then
 		echo "检测到您处于容器环境下"
 		cd /etc/nginx/sites-available
@@ -615,8 +662,8 @@ nginx_onekey() {
 		fi
 		tar -zxvf default.tar.gz default
 		ls -lh /etc/nginx/sites-available/default
-		sed -i 's@80 default_server@2086 default_server@g' webdav.conf
-		sed -i 's@443 ssl default_server@8443 ssl default_server@g' webdav.conf
+		sed -i 's@80 default_server@2086 default_server@g' default
+		sed -i 's@443 ssl default_server@8443 ssl default_server@g' default
 		echo "已将您的nginx的http端口从80修改为2086，https端口从443修改为8443"
 	fi
 
@@ -667,8 +714,8 @@ nginx_onekey() {
 	htpasswd -mbc /etc/nginx/conf.d/.htpasswd.webdav ${TARGET_USERNAME} ${TARGET_USERPASSWD}
 	nginx -t
 	if [ "$?" != "0" ]; then
-		sed -i 's@^dav_methods@# &@' webdav.conf
-		sed -i 's@^dav_ext_methods@# &@' webdav.conf
+		sed -i 's@dav_methods@# &@' webdav.conf
+		sed -i 's@dav_ext_methods@# &@' webdav.conf
 		nginx -t
 	fi
 	nginx_restart
@@ -698,7 +745,7 @@ nginx_restart() {
 	echo "正在为您启动nginx服务，本机默认访问地址为localhost:${NGINX_WEBDAV_PORT}"
 	echo The LAN VNC address 局域网地址 $(ip -4 -br -c a | tail -n 1 | cut -d '/' -f 1 | cut -d 'P' -f 2):${NGINX_WEBDAV_PORT}
 	echo The WAN VNC address 外网地址 $(curl -sL ip.sb | head -n 1):${NGINX_WEBDAV_PORT}
-	echo "${YELLOW}您可以使用文件管理器或浏览器打开WebDAV访问地址${RESET}"
+	echo "${YELLOW}您可以使用文件管理器或浏览器来打开WebDAV访问地址${RESET}"
 	echo "Please use your browser to open the access address"
 }
 #############

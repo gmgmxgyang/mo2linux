@@ -1444,27 +1444,35 @@ if [ -d "${DebianCHROOT}/root/.vnc" ]; then
     tsudo chown root:root -R "${DebianCHROOT}/root/.vnc" 2>/dev/null || su -c "chown root:root -R ${DebianCHROOT}/root/.vnc"
 fi
 #################
-		if [ "$(uname -o)" = "Android" ]; then
-			echo "非常抱歉，本功能仅适配Linux系统，暂未适配Android。"
-			echo "Android系统请换用proot容器。"
-			echo "由于在测试过程中出现部分已挂载的目录无法强制卸载的情况，故建议您换用proot容器。"
-			echo "Press enter to return。"
-			echo "${YELLOW}按回车键返回。${RESET} "
-			read
-			MainMenu
-		else
-			CHROOTINSTALLDebian
-		fi
-        #############
+if [ "$(uname -o)" = "Android" ]; then
+    echo "非常抱歉，本功能仅适配Linux系统，暂未适配Android。"
+    echo "Android系统请换用proot容器。"
+    echo "由于在测试过程中出现部分已挂载的目录无法强制卸载的情况，故建议您换用proot容器。"
+    echo "Press enter to return。"
+    echo "${YELLOW}按回车键返回。${RESET} "
+    read
+    MainMenu
+else
+    CHROOTINSTALLDebian
+fi
+#############
 install_vsftpd() {
-	#dependencies='vsftpd'
-	DEPENDENCY_01='vsftpd'
-	DEPENDENCY_02=''
-	if [ "${LINUXDISTRO}" = 'debian' ]; then
-		apt update
-		apt install -y vsftpd
-	else
-		different_distro_software_install
-	fi
-	echo "此功能正在开发中。。。"
+    #dependencies='vsftpd'
+    DEPENDENCY_01='vsftpd'
+    DEPENDENCY_02=''
+    if [ "${LINUXDISTRO}" = 'debian' ]; then
+        apt update
+        apt install -y vsftpd
+    else
+        different_distro_software_install
+    fi
+    echo "此功能正在开发中。。。"
 }
+###########
+if [ -e "/usr/local/bin/code-server-data/code-server" ]; then
+    VSCODEINSTALLSTATUS="检测到您已安装vscode."
+    VSCODESTART='Start启动'
+else
+    VSCODEINSTALLSTATUS="检测到您未安装vscode."
+    VSCODESTART='Install安装'
+fi

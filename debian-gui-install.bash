@@ -924,7 +924,7 @@ configure_vscode_server() {
 		vscode_server_password
 	fi
 	##############################
-	if [ "${CODE_SERVER_OPTION}" == '7' ]; then
+	if [ "${CODE_SERVER_OPTION}" == '3' ]; then
 		echo "正在停止服务进程..."
 		echo "Stopping..."
 		pkill code-server
@@ -932,7 +932,7 @@ configure_vscode_server() {
 		#service vscode_server status
 	fi
 	##############################
-	if [ "${CODE_SERVER_OPTION}" == '9' ]; then
+	if [ "${CODE_SERVER_OPTION}" == '4' ]; then
 		vscode_server_remove
 	fi
 	########################################

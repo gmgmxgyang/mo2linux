@@ -601,7 +601,7 @@ cookies_readme() {
 		例如火狐扩展cookies-txt（适用于you-get v0.4.1432，不适用于annie v0.9.8）
 		https://addons.mozilla.org/zh-CN/firefox/addon/cookies-txt/
 		再次提醒，cookie非常重要!
-		希望您请仔细甄别，堤防恶意插件。
+		希望您能仔细甄别，堤防恶意插件。
 		同时希望您能够了解，将cookie文件泄露出去等同于将账号泄密！
 		请妥善保管好该文件及相关数据！
 	EndOFcookies

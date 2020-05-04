@@ -1096,8 +1096,10 @@ cat >.profile <<-'EDITBASHPROFILE'
 	#############################
 	manjaro_mirror_list() {
 		if [ "$(uname -m)" = "aarch64" ]; then
-			sed -i 's/^Server/#&/g' /etc/pacman.d/mirrorlist
-			cat >>/etc/pacman.d/mirrorlist <<-'EndOfArchMirrors'
+			#sed -i 's/^Server/#&/g' /etc/pacman.d/mirrorlist
+			#manjaro精简容器竟然没grep和sed
+			cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
+			cat >/etc/pacman.d/mirrorlist <<-'EndOfArchMirrors'
 				#Server = https://mirror.archlinuxarm.org/$arch/$repo
 				#Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/$arch/$repo
 				Server = https://mirrors.tuna.tsinghua.edu.cn/manjaro/arm-stable/$repo/$arch
@@ -1128,8 +1130,8 @@ cat >.profile <<-'EDITBASHPROFILE'
 		fi
 
 		if [ -e "/etc/pacman.conf" ] && [ ! $(command -v grep) ]; then
-		pacman -Syu --noconfirm grep
-	  		fi
+		    pacman -Syu --noconfirm grep
+	  	fi
 	#######################
 	if grep -Eq 'Arch|Manjaro' /etc/os-release; then
 		arch_linux_yay

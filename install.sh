@@ -1037,6 +1037,10 @@ YELLOW=$(printf '\033[33m')
 RESET=$(printf '\033[m')
 cd ~
 #################
+if [ -e "/etc/pacman.conf" ] && [ ! $(command -v grep) ]; then
+	pacman -Sy --noconfirm grep
+fi
+###############
 #函数放在前面
 debian_sources_list() {
 	sed -i 's/^deb/##&/g' /etc/apt/sources.list

@@ -575,7 +575,6 @@ android_termux() {
 
 ########################################################################
 #-- 主菜单 main menu
-
 tmoe_manager_main_menu() {
 	OPTION=$(
 		whiptail --title "Tmoe-Debian GNU/Linux manager(20200504-01)" --backtitle "$(
@@ -601,120 +600,109 @@ tmoe_manager_main_menu() {
 			"0" "exit退出" \
 			3>&1 1>&2 2>&3
 	)
-
+	##########################
 	if [ "${OPTION}" == '1' ]; then
-		if [ "$(uname -o)" != "Android" ]; then
-			echo "非常抱歉，本功能仅适配安卓系统。"
-			echo "Linux系统请换用chroot容器。"
-			echo "Press enter to return."
-			echo "${YELLOW}按回车键返回。${RESET} "
-			read
-			tmoe_manager_main_menu
-
-		fi
-		rm -f ~/.Chroot-Container-Detection-File
-		rm -f "${DEBIAN_CHROOT}/tmp/.Chroot-Container-Detection-File" 2>/dev/null
-		touch ~/.Tmoe-Proot-Container-Detection-File
-		install_gnu_linux_container
-
+		install_proot_container
 	fi
-
+	##########################
 	if [ "${OPTION}" == '2' ]; then
-		if [ "$(uname -o)" = "Android" ]; then
-			echo Android :${ANDROIDVERSION}
-			echo "$(getprop ro.product.model)"
-			su -c "ls ${HOME} >/dev/null"
-			if [ "$?" != "0" ]; then
-				echo '检测到root权限授予失败，您无法安装chroot容器'
-			else
-				echo "检测到您使用的是Android系统"
-				echo "非常抱歉，本功能仅适配Linux系统，暂未适配Android。"
-				#echo "您在安装chroot容器前必须知悉已挂载目录无法强制卸载的严重性！"
-				echo "Android系统请换用proot容器。"
-			fi
-			echo "由于在测试过程中出现部分已挂载的目录无法强制卸载的情况，故建议您换用proot容器。"
-			echo "${YELLOW}按回车键返回。${RESET}"
-			echo "Press enter to return."
-			read
-			tmoe_manager_main_menu
-		else
-			chroot_install_debian
-		fi
+		install_chroot_container
 	fi
-
+	##########################
 	if [ "${OPTION}" == '3' ]; then
-
 		termux_install_xfce
 	fi
+	##########################
 	if [ "${OPTION}" == '4' ]; then
-
 		install_web_novnc
 	fi
-
+	##########################
 	if [ "${OPTION}" == '5' ]; then
-
 		remove_gnu_linux_container
-
 	fi
-
+	##########################
 	if [ "${OPTION}" == '6' ]; then
-
 		backup_system
-
 	fi
-
+	##########################
 	if [ "${OPTION}" == '7' ]; then
-
 		restore_gnu_linux_container
-
 	fi
-
+	##########################
 	if [ "${OPTION}" == '8' ]; then
-
 		space_occupation
-
 	fi
-
+	##########################
 	if [ "${OPTION}" == '9' ]; then
-
 		update_tmoe_linux_manager
 	fi
-
+	##########################
 	if [ "${OPTION}" == '10' ]; then
 		bash -c "$(curl -fLsS 'https://gitee.com/mo2/zsh/raw/master/zsh.sh')"
-
 	fi
-
+	##########################
 	if [ "${OPTION}" == '11' ]; then
-
 		download_vnc_apk
-
 	fi
-
+	##########################
 	if [ "${OPTION}" == '12' ]; then
 		start_vscode
-
 	fi
-
+	##########################
 	if [ "${OPTION}" == '13' ]; then
-
 		enable_root_mode
 	fi
-
+	##########################
 	if [ "${OPTION}" == '14' ]; then
-
 		download_video_tutorial
 	fi
-
+	##########################
 	if [ "${OPTION}" == '0' ]; then
 		exit
+	fi
+	########
+}
+##########################
+##########################
+install_proot_container() {
+	if [ "$(uname -o)" != "Android" ]; then
+		echo "非常抱歉，本功能仅适配安卓系统。"
+		echo "Linux系统请换用chroot容器。"
+		echo "Press enter to return."
+		echo "${YELLOW}按回车键返回。${RESET} "
+		read
+		tmoe_manager_main_menu
 
 	fi
-
+	rm -f ~/.Chroot-Container-Detection-File
+	rm -f "${DEBIAN_CHROOT}/tmp/.Chroot-Container-Detection-File" 2>/dev/null
+	touch ~/.Tmoe-Proot-Container-Detection-File
+	install_gnu_linux_container
 }
-
-########################################################################
-
+##########################
+install_chroot_container() {
+	if [ "$(uname -o)" = "Android" ]; then
+		echo Android :${ANDROIDVERSION}
+		echo "$(getprop ro.product.model)"
+		su -c "ls ${HOME} >/dev/null"
+		if [ "$?" != "0" ]; then
+			echo '检测到root权限授予失败，您无法安装chroot容器'
+		else
+			echo "检测到您使用的是Android系统"
+			echo "非常抱歉，本功能仅适配Linux系统，暂未适配Android。"
+			#echo "您在安装chroot容器前必须知悉已挂载目录无法强制卸载的严重性！"
+			echo "Android系统请换用proot容器。"
+		fi
+		echo "由于在测试过程中出现部分已挂载的目录无法强制卸载的情况，故建议您换用proot容器。"
+		echo "${YELLOW}按回车键返回。${RESET}"
+		echo "Press enter to return."
+		read
+		tmoe_manager_main_menu
+	else
+		chroot_install_debian
+	fi
+}
+########################
 install_gnu_linux_container() {
 	if [ -d ~/${DEBIAN_FOLDER} ]; then
 		if (whiptail --title "检测到您已安装GNU/Linux容器,请选择您需要执行的操作！" --yes-button 'Start启动o(*￣▽￣*)o' --no-button 'Reinstall重装(っ °Д °)' --yesno "Container has been installed, please choose what you need to do!" 7 60); then
@@ -753,13 +741,10 @@ install_gnu_linux_container() {
 	else
 		install_debian_or_download_recovery_pkg_tar_xz
 		#bash -c "$(curl -fLsS 'https://gitee.com/mo2/linux/raw/master/installDebian.sh')"
-
 	fi
 }
-
-########################################################################
-#
-
+################################################
+################################################
 enable_root_mode() {
 	if [ "$(uname -o)" != "Android" ]; then
 		echo "非常抱歉，本功能仅适配安卓系统。"
@@ -837,8 +822,8 @@ enable_root_mode() {
 	fi
 	#不要忘记此处的fi
 }
-########################################################################
-#
+################################
+################################
 remove_gnu_linux_container() {
 
 	cd ~
@@ -938,8 +923,8 @@ remove_gnu_linux_container() {
 	tmoe_manager_main_menu
 
 }
-########################################################################
-#
+#######################
+#######################
 backup_system() {
 	if [ -e "${DEBIAN_CHROOT}/tmp/.Chroot-Container-Detection-File" ]; then
 		su -c "umount -lf ${DEBIAN_CHROOT}/dev >/dev/null 2>&1"
@@ -958,123 +943,125 @@ backup_system() {
 		"2" "备份Termux" \
 		"3" "使用Timeshift备份宿主机系统" \
 		3>&1 1>&2 2>&3)
-	###########################################################################
+	#########################################
+	if [ "${OPTION}" == '0' ]; then
+		tmoe_manager_main_menu
+	fi
+	######################
 	if [ "${OPTION}" == '1' ]; then
-		if [ ! -d /sdcard/Download/backup ]; then
-			mkdir -p /sdcard/Download/backup && cd /sdcard/Download/backup
-		else
-			cd /sdcard/Download/backup
-		fi
-
-		ls -lth ./debian*.tar.* 2>/dev/null && echo '您之前所备份的(部分)文件如上所示'
-
-		echo "${YELLOW}按回车键选择压缩类型 Press enter to select compression type${RESET} "
-		read
-
-		echo $(date +%Y-%m-%d_%H-%M) >backuptime.tmp
-		TMPtime=debian_$(cat backuptime.tmp)
-
-		if (whiptail --title "Select compression type 选择压缩类型 " --yes-button "tar.xz" --no-button "tar.gz" --yesno "Which do yo like better? \n tar.xz压缩率高，但速度慢。tar.xz has a higher compression ration, but is slower.\n tar.gz速度快,但压缩率低。tar.gz compresses faster, but with a lower compression ratio.\n 压缩过程中，进度条倒着跑是正常现象。" 12 50); then
-
-			echo "您选择了tar.xz,即将为您备份至/sdcard/Download/backup/${TMPtime}.tar.xz"
-			echo "${YELLOW}按回车键开始备份,按Ctrl+C取消。Press Enter to start the backup.${RESET} "
-			read
-			tar -PJpcvf ${TMPtime}.tar.xz --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ~/${DEBIAN_FOLDER} ${PREFIX}/bin/debian ${PREFIX}/bin/startvnc ${PREFIX}/bin/stopvnc
-			#whiptail进度条已弃用
-			#tar -PJpcf - --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ~/${DEBIAN_FOLDER} ${PREFIX}/bin/debian | (pv -n >${TMPtime}.tar.xz) 2>&1 | whiptail --gauge "Packaging into tar.xz" 10 70
-
-			#xz -z -T0 -e -9 -f -v ${TMPtime}.tar
-			echo "Don't worry too much, it is normal for some directories to backup without permission."
-			echo "部分目录无权限备份是正常现象。"
-			rm -f backuptime.tmp
-			pwd
-			ls -lth ./*tar* | grep ^- | head -n 1
-			echo '备份完成,按回车键返回。'
-			read
-			tmoe_manager_main_menu
-
-		else
-
-			echo "您选择了tar.gz,即将为您备份至/sdcard/Download/backup/${TMPtime}.tar.gz"
-			echo "${YELLOW}按回车键开始备份,按Ctrl+C取消。Press Enter to start the backup.${RESET} "
-			read
-			if [ ! -z "$(command -v pv)" ]; then
-				tar -Ppczf - --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ~/${DEBIAN_FOLDER} ${PREFIX}/bin/debian ${PREFIX}/bin/startvnc ${PREFIX}/bin/stopvnc | (pv -p --timer --rate --bytes >${TMPtime}.tar.gz)
-			else
-				tar -Ppczvf ${TMPtime}.tar.gz --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ~/${DEBIAN_FOLDER} ${PREFIX}/bin/debian ${PREFIX}/bin/startvnc ${PREFIX}/bin/stopvnc
-			fi
-			#最新版弃用了whiptail的进度条！！！
-			#tar -Ppczf - --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ~/${DEBIAN_FOLDER} ${PREFIX}/bin/debian | (pv -n >${TMPtime}.tar.gz) 2>&1 | whiptail --gauge "Packaging into tar.gz \n正在打包成tar.gz" 10 70
-
-			echo "Don't worry too much, it is normal for some directories to backup without permission."
-			echo "部分目录无权限备份是正常现象。"
-			rm -f backuptime.tmp
-			#  whiptail --gauge "正在备份,可能需要几分钟的时间请稍后.........." 6 60 0
-			pwd
-			ls -lth ./*tar* | grep ^- | head -n 1
-			echo 'gzip压缩至60%完成是正常现象。'
-			echo '备份完成,按回车键返回。'
-			read
-			tmoe_manager_main_menu
-		fi
+		backup_gnu_linux_container
 	fi
 	###################
 	if [ "${OPTION}" == '2' ]; then
 		backup_termux
-
 	fi
 	###################
 	if [ "${OPTION}" == '3' ]; then
-		if [ "${LINUX_DISTRO}" = "Android" ]; then
-			echo 'Sorry,本功能不支持Android系统'
-			echo "${YELLOW}按回车键返回。${RESET}"
-			echo "Press enter to return."
-			read
-			tmoe_manager_main_menu
-		fi
-
-		if [ ! -e "/usr/bin/timeshift" ]; then
-			if [ "${LINUX_DISTRO}" = "debian" ]; then
-				apt update
-				apt install -y timeshift
-			elif [ "${LINUX_DISTRO}" = "arch" ]; then
-				pacman -Syu --noconfirm timeshift
-			elif [ "${LINUX_DISTRO}" = "redhat" ]; then
-				dnf install timeshift
-			fi
-		fi
-
-		if [ -e "/usr/bin/timeshift" ]; then
-			timeshift-launcher &
-			echo "安装完成，如需卸载，请手动输apt purge -y timeshift"
-			echo "${YELLOW}按回车键返回。${RESET}"
-			echo "Press enter to return."
-			read
-			backup_system
-		fi
+		install_timeshift
 	fi
-	##########################################
-	if [ "${OPTION}" == '0' ]; then
-
-		tmoe_manager_main_menu
-	fi
+	####################
+	#echo "${YELLOW}按回车键返回。${RESET}"
+	#echo "Press enter to return."
+	#read
 	tmoe_manager_main_menu
 }
+###########################
+backup_gnu_linux_container() {
+	if [ ! -d /sdcard/Download/backup ]; then
+		mkdir -p /sdcard/Download/backup && cd /sdcard/Download/backup
+	else
+		cd /sdcard/Download/backup
+	fi
 
+	ls -lth ./debian*.tar.* 2>/dev/null && echo '您之前所备份的(部分)文件如上所示'
+
+	echo "${YELLOW}按回车键选择压缩类型 Press enter to select compression type${RESET} "
+	read
+
+	echo $(date +%Y-%m-%d_%H-%M) >backuptime.tmp
+	TMPtime=debian_$(cat backuptime.tmp)
+
+	if (whiptail --title "Select compression type 选择压缩类型 " --yes-button "tar.xz" --no-button "tar.gz" --yesno "Which do yo like better? \n tar.xz压缩率高，但速度慢。tar.xz has a higher compression ration, but is slower.\n tar.gz速度快,但压缩率低。tar.gz compresses faster, but with a lower compression ratio.\n 压缩过程中，进度条倒着跑是正常现象。" 12 50); then
+
+		echo "您选择了tar.xz,即将为您备份至/sdcard/Download/backup/${TMPtime}.tar.xz"
+		echo "${YELLOW}按回车键开始备份,按Ctrl+C取消。Press Enter to start the backup.${RESET} "
+		read
+		tar -PJpcvf ${TMPtime}.tar.xz --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ~/${DEBIAN_FOLDER} ${PREFIX}/bin/debian ${PREFIX}/bin/startvnc ${PREFIX}/bin/stopvnc
+		#whiptail进度条已弃用
+		#tar -PJpcf - --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ~/${DEBIAN_FOLDER} ${PREFIX}/bin/debian | (pv -n >${TMPtime}.tar.xz) 2>&1 | whiptail --gauge "Packaging into tar.xz" 10 70
+
+		#xz -z -T0 -e -9 -f -v ${TMPtime}.tar
+		echo "Don't worry too much, it is normal for some directories to backup without permission."
+		echo "部分目录无权限备份是正常现象。"
+		rm -f backuptime.tmp
+		pwd
+		ls -lth ./*tar* | grep ^- | head -n 1
+		echo '备份完成,按回车键返回。'
+		read
+		tmoe_manager_main_menu
+
+	else
+
+		echo "您选择了tar.gz,即将为您备份至/sdcard/Download/backup/${TMPtime}.tar.gz"
+		echo "${YELLOW}按回车键开始备份,按Ctrl+C取消。Press Enter to start the backup.${RESET} "
+		read
+		if [ ! -z "$(command -v pv)" ]; then
+			tar -Ppczf - --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ~/${DEBIAN_FOLDER} ${PREFIX}/bin/debian ${PREFIX}/bin/startvnc ${PREFIX}/bin/stopvnc | (pv -p --timer --rate --bytes >${TMPtime}.tar.gz)
+		else
+			tar -Ppczvf ${TMPtime}.tar.gz --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ~/${DEBIAN_FOLDER} ${PREFIX}/bin/debian ${PREFIX}/bin/startvnc ${PREFIX}/bin/stopvnc
+		fi
+		#最新版弃用了whiptail的进度条！！！
+		#tar -Ppczf - --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ~/${DEBIAN_FOLDER} ${PREFIX}/bin/debian | (pv -n >${TMPtime}.tar.gz) 2>&1 | whiptail --gauge "Packaging into tar.gz \n正在打包成tar.gz" 10 70
+
+		echo "Don't worry too much, it is normal for some directories to backup without permission."
+		echo "部分目录无权限备份是正常现象。"
+		rm -f backuptime.tmp
+		#  whiptail --gauge "正在备份,可能需要几分钟的时间请稍后.........." 6 60 0
+		pwd
+		ls -lth ./*tar* | grep ^- | head -n 1
+		echo 'gzip压缩至60%完成是正常现象。'
+		echo '备份完成,按回车键返回。'
+		read
+		tmoe_manager_main_menu
+	fi
+}
+####################
+install_timeshift() {
+	if [ "${LINUX_DISTRO}" = "Android" ]; then
+		echo 'Sorry,本功能不支持Android系统'
+		echo "${YELLOW}按回车键返回。${RESET}"
+		echo "Press enter to return."
+		read
+		tmoe_manager_main_menu
+	fi
+
+	if [ ! -e "/usr/bin/timeshift" ]; then
+		if [ "${LINUX_DISTRO}" = "debian" ]; then
+			apt update
+			apt install -y timeshift
+		elif [ "${LINUX_DISTRO}" = "arch" ]; then
+			pacman -Syu --noconfirm timeshift
+		elif [ "${LINUX_DISTRO}" = "redhat" ]; then
+			dnf install timeshift
+		fi
+	fi
+
+	if [ -e "/usr/bin/timeshift" ]; then
+		timeshift-launcher &
+		echo "安装完成，如需卸载，请手动输apt purge -y timeshift"
+		echo "${YELLOW}按回车键返回。${RESET}"
+		echo "Press enter to return."
+		read
+		backup_system
+	fi
+}
+######################
 backup_termux() {
 	TERMUXBACKUP=$(whiptail --title "多项选择题" --checklist \
 		"您想要备份哪个目录？按空格键选择，*为选中状态，回车键确认 \n Which directory do you want to backup? Please press the space to select and press Enter to confirm." 15 60 4 \
 		"home" "Termux主目录,主要用来保存用户文件" ON \
 		"usr" "保存软件、命令和其它东西" OFF \
 		3>&1 1>&2 2>&3)
-
-	#####################################
-	#$TERMUXBACKUP=$(whiptail --title "选择您需要备份的目录" --menu "Choose your $TERMUXBACKUP" 15 60 4 \
-	#"0" "Back to previous menu 返回上层菜单" \
-	#"1" "备份home目录" \
-	#"2" "备份usr目录 " \
-	#"3" "我全都要" \
-	#3>&1 1>&2 2>&3)'
 	##########################
 	if [ "$TERMUXBACKUP" == 'home' ]; then
 
@@ -1134,9 +1121,7 @@ backup_termux() {
 			read
 			tmoe_manager_main_menu
 		fi
-
 	fi
-
 	##########################
 	if [ "$TERMUXBACKUP" == 'usr' ]; then
 
@@ -1206,9 +1191,7 @@ backup_termux() {
 			read
 			tmoe_manager_main_menu
 		fi
-
 	fi
-
 	##########################
 	if [ "$TERMUXBACKUP" == 'home usr' ]; then
 
@@ -1275,19 +1258,15 @@ backup_termux() {
 			read
 			tmoe_manager_main_menu
 		fi
-
 	fi
-
 	################################
-	if [ $exitstatus = 1 ]; then
+	exitstatus="$?"
+	if [ ${exitstatus} != 0 ]; then
 		backup_system
-
 	fi
-
 }
-
-########################################################################
-#
+##################################
+##################################
 restore_gnu_linux_container() {
 	if [ -e "${DEBIAN_CHROOT}/tmp/.Chroot-Container-Detection-File" ]; then
 		su -c "umount -lf ${DEBIAN_CHROOT}/dev >/dev/null 2>&1"
@@ -1420,18 +1399,18 @@ restore_gnu_linux_container() {
 		echo "${YELLOW}按回车键返回。Press enter to return.${RESET}"
 		read
 		tmoe_manager_main_menu
-
 	fi
 
-	#####################################
+	##########################
 	if [ "${OPTION}" == '0' ]; then
 
 		tmoe_manager_main_menu
 	fi
+	##########################
 	tmoe_manager_main_menu
 }
-
-########################################################################
+############################
+############################
 space_occupation() {
 	cd ~/..
 	OPTION=$(whiptail --title "Query space occupation ranking" --menu "查询空间占用排行" 15 60 4 \
@@ -2247,83 +2226,44 @@ termux_tuna_sources_list() {
 }
 ##################
 choose_which_gnu_linux_distro() {
-	SELECTgnu_linux=$(whiptail --title "GNU/Linux distros" --menu "Which distribution do you want to install? 您想要安装哪个GNU/Linux发行版?" 15 50 6 \
+	SELECTED_GNU_LINUX=$(whiptail --title "GNU/Linux distros" --menu "Which distribution do you want to install? 您想要安装哪个GNU/Linux发行版?" 15 50 6 \
 		"1" "Debian:最早的发行版之一" \
 		"2" "Ubuntu 20.04:我的存在是因為大家的存在" \
 		"3" "Kali Rolling:设计用于数字取证和渗透测试" \
 		"4" "Other其它系统(公测版新功能):mint,centos" \
-		"5" "fedora 32(红帽社区版,新技术试验场)" \
-		"6" "arch(系统设计以KISS为总体指导原则)" \
+		"5" "arch(系统设计以KISS为总体指导原则)" \
+		"6" "fedora 32(红帽社区版,新技术试验场)" \
 		"0" "Back to the main menu 返回主菜单" \
 		3>&1 1>&2 2>&3)
-
 	##############################
-	if [ "${SELECTgnu_linux}" == '0' ]; then
+	if [ "${SELECTED_GNU_LINUX}" == '0' ]; then
 		tmoe_manager_main_menu
 	fi
 	#########################
-	if [ "${SELECTgnu_linux}" == '1' ]; then
-
+	if [ "${SELECTED_GNU_LINUX}" == '1' ]; then
 		install_debian_gnu_linux_distro
 	fi
 	##############################
-	if [ "${SELECTgnu_linux}" == '2' ]; then
+	if [ "${SELECTED_GNU_LINUX}" == '2' ]; then
 		install_ubuntu_gnu_linux_2004_distro
 	fi
 	##############################
-	if [ "${SELECTgnu_linux}" == '3' ]; then
+	if [ "${SELECTED_GNU_LINUX}" == '3' ]; then
 		install_kali_rolling_gnu_linux_distro
 	fi
 	##############################
-	if [ "${SELECTgnu_linux}" == '4' ]; then
+	if [ "${SELECTED_GNU_LINUX}" == '4' ]; then
 		install_other_containers
 	fi
 	##############################
-	if [ "${SELECTgnu_linux}" == '5' ]; then
-		touch ~/.REDHATDetectionFILE
-		if [ "${ARCH_TYPE}" = 'armhf' ]; then
-			echo "检测到您使用的是armhf架构，将为您降级至Fedora 29"
-			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
-				sed 's/debian系统/fedora系统/g' |
-				sed 's/debian system/fedora system/g' |
-				sed 's:debian-sid:fedora-29:g' |
-				sed 's:debian/sid:fedora/29:g' |
-				sed 's:Debian GNU/Linux:Fedora GNU/Linux:g')"
-		elif [ "${ARCH_TYPE}" = 'i386' ]; then
-			echo "Fedora不支持您的架构"
-		else
-			if (whiptail --title "FEDORA VERSION" --yes-button '31' --no-button '32' --yesno "您想要安装哪个版本？Which version do you want to install?" 9 50); then
-				bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
-					sed 's/debian系统/fedora系统/g' |
-					sed 's/debian system/fedora system/g' |
-					sed 's:debian-sid:fedora-31:g' |
-					sed 's:debian/sid:fedora/31:g' |
-					sed 's:Debian GNU/Linux:Fedora GNU/Linux:g')"
-			else
-				bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
-					sed 's/debian系统/fedora系统/g' |
-					sed 's/debian system/fedora system/g' |
-					sed 's:debian-sid:fedora-32:g' |
-					sed 's:debian/sid:fedora/32:g' |
-					sed 's:Debian GNU/Linux:Fedora GNU/Linux:g')"
-			fi
-		fi
+	if [ "${SELECTED_GNU_LINUX}" == '5' ]; then
+		install_arch_linux_distro
 	fi
 	##############################
-	if [ "${SELECTgnu_linux}" == '6' ]; then
-		if [ "${ARCH_TYPE}" = 'armhf' ] || [ "${ARCH_TYPE}" = 'i386' ]; then
-			echo "检测到Arch Linux不支持您当前的架构"
-		else
-			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
-				sed 's/debian系统/arch系统/g' |
-				sed 's/debian system/arch system/g' |
-				sed 's:debian-sid:archlinux-current:g' |
-				sed 's:debian/sid:archlinux/current:g' |
-				sed 's:Debian GNU/Linux:Arch GNU/Linux:g')"
-		fi
+	if [ "${SELECTED_GNU_LINUX}" == '6' ]; then
+		install_fedora_gnu_linux_distro
 	fi
 	####################
-
 	echo 'Press Enter to return.'
 	echo "${YELLOW}按回车键返回。${RESET}"
 	read
@@ -2331,7 +2271,7 @@ choose_which_gnu_linux_distro() {
 }
 ##############################
 install_other_containers() {
-	BETASYSTEM=$(
+	BETA_SYSTEM=$(
 		whiptail --title "Beta features" --menu "WARNING！本功能仍处于测试阶段,可能无法正常运行。\nBeta features may not work properly." 17 55 7 \
 			"1" "Funtoo:专注于改进Gentoo" \
 			"2" "Void:基于xbps包管理器的独立发行版" \
@@ -2351,250 +2291,74 @@ install_other_containers() {
 			3>&1 1>&2 2>&3
 	)
 	##############################
-	if [ "${BETASYSTEM}" == '0' ]; then
+	if [ "${BETA_SYSTEM}" == '0' ]; then
 		tmoe_manager_main_menu
 	fi
 	####################
 
-	if [ "${BETASYSTEM}" == '1' ]; then
+	if [ "${BETA_SYSTEM}" == '1' ]; then
 		install_funtoo_linux_distro
 	fi
 	#############################
-	if [ "${BETASYSTEM}" == '2' ]; then
+	if [ "${BETA_SYSTEM}" == '2' ]; then
 		install_void_linux_distro
 	fi
 	####################
-	if [ "${BETASYSTEM}" == '3' ]; then
-		touch ~/.REDHATDetectionFILE
-		if [ "${ARCH_TYPE}" = 'armhf' ] || [ "${ARCH_TYPE}" = 'i386' ]; then
-			echo "检测到CentOS 8不支持您当前的架构，将为您降级至CentOS 7"
-			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
-				sed 's/debian系统/centos系统/g' |
-				sed 's/debian system/centos system/g' |
-				sed 's:debian-sid:centos-7:g' |
-				sed 's:debian/sid:centos/7:g' |
-				sed 's:Debian GNU/Linux:CentOS GNU/Linux:g')"
-		else
-			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
-				sed 's/debian系统/centos系统/g' |
-				sed 's/debian system/centos system/g' |
-				sed 's:debian-sid:centos-8:g' |
-				sed 's:debian/sid:centos/8:g' |
-				sed 's:Debian GNU/Linux:CentOS GNU/Linux:g')"
-		fi
+	if [ "${BETA_SYSTEM}" == '3' ]; then
+		install_centos_linux_distro
 	fi
 	####################
-	if [ "${BETASYSTEM}" == '4' ]; then
-		if [ "${ARCH_TYPE}" = 'arm64' ]; then
-			echo "检测到您当前使用的是arm64架构，将为您下载armhf版容器"
-			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
-				sed '72 a\ARCH_TYPE="armhf"' |
-				sed 's/debian系统/gentoo系统/g' |
-				sed 's/debian system/gentoo system/g' |
-				sed 's:debian-sid:gentoo-current:g' |
-				sed 's:debian/sid:gentoo/current:g' |
-				sed 's:Debian GNU/Linux:Gentoo GNU/Linux:g')"
-		else
-			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
-				sed 's/debian系统/gentoo系统/g' |
-				sed 's/debian system/gentoo system/g' |
-				sed 's:debian-sid:gentoo-current:g' |
-				sed 's:debian/sid:gentoo/current:g' |
-				sed 's:Debian GNU/Linux:Gentoo GNU/Linux:g')"
-		fi
-	fi
-
-	####################
-	if [ "${BETASYSTEM}" == '5' ]; then
-		touch ~/.ALPINELINUXDetectionFILE
-		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
-			sed 's/debian系统/alpine系统/g' |
-			sed 's/debian system/alpine system/g' |
-			sed 's:debian-sid:alpine-edge:g' |
-			sed 's:debian/sid:alpine/edge:g' |
-			sed 's:Debian GNU/Linux:Alpine Linux:g')"
+	if [ "${BETA_SYSTEM}" == '4' ]; then
+		install_gentoo_linux_distro
 	fi
 	####################
-	if [ "${BETASYSTEM}" == '6' ]; then
-		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
-			sed 's/debian系统/opensuse系统/g' |
-			sed 's/debian system/opensuse system/g' |
-			sed 's:debian-sid:opensuse-tumbleweed:g' |
-			sed 's:debian/sid:opensuse/tumbleweed:g' |
-			sed 's:Debian GNU/Linux:Opensuse GNU/Linux:g')"
+	if [ "${BETA_SYSTEM}" == '5' ]; then
+		install_alpine_linux_distro
 	fi
-
 	####################
-	if [ "${BETASYSTEM}" == '7' ]; then
-		if [ "${ARCH_TYPE}" != 'arm64' ] && [ "${ARCH_TYPE}" != 'armhf' ]; then
-			apt install -y qemu qemu-user-static debootstrap
-		fi
-		touch ~/.RASPBIANARMHFDetectionFILE
-		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
-			sed '72 a\ARCH_TYPE="armhf"' |
-			sed 's:/sid:/buster:g' |
-			sed 's:extract z:extract:' |
-			sed 's@#deb http@deb http@g' |
-			sed 's/.*sid main/#&/' |
-			sed 's/debian系统/raspbian系统/g' |
-			sed 's/debian system/raspbian system/g' |
-			sed 's:debian-sid:raspbian-buster:g' |
-			sed 's:debian/sid:debian/buster:g' |
-			sed 's:Debian GNU/Linux:Raspbian GNU/Linux:g')"
+	if [ "${BETA_SYSTEM}" == '6' ]; then
+		install_opensuse_linux_distro
+	fi
+	####################
+	if [ "${BETA_SYSTEM}" == '7' ]; then
+		install_raspbian_linux_distro
 	fi
 	#先下载debian buster容器镜像，再换源成树莓派。
 	####################
-	if [ "${BETASYSTEM}" == '8' ]; then
-		if [ "${ARCH_TYPE}" = 'amd64' ] || [ "${ARCH_TYPE}" = 'i386' ]; then
-
-			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
-				sed 's/debian系统/mint系统/g' |
-				sed 's/debian system/mint system/g' |
-				sed 's:debian-sid:mint-tricia:g' |
-				sed 's:debian/sid:mint/tricia:g' |
-				sed 's:Debian GNU/Linux:Mint GNU/Linux:g')"
-		else
-			echo "Linux Mint不支持您的架构"
-		fi
-	fi
-
-	####################
-	if [ "${BETASYSTEM}" == '9' ]; then
-		if [ ! -e "openwrt-snapshot-rootfs.tar.xz" ]; then
-			cd ~
-			if [ "${ARCH_TYPE}" = 'arm64' ]; then
-				aria2c -x 16 -s 16 -k 1M -o "openwrt-snapshot-rootfs.tar.xz" "https://cdn.tmoe.me/Tmoe-Debian-Tool/chroot/archive/openwrt_arm64.tar.xz" || aria2c -x 16 -s 16 -k 1M -o "openwrt-snapshot-rootfs.tar.xz" "https://m.tmoe.me/show/share/Tmoe-linux/chroot/openwrt_arm64.tar.xz"
-			fi
-		fi
-		touch ~/.ALPINELINUXDetectionFILE
-		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
-			sed 's/debian系统/openwrt系统/g' |
-			sed 's/debian system/openwrt system/g' |
-			sed 's:debian-sid:openwrt-snapshot:g' |
-			sed 's:debian/sid:openwrt/snapshot:g' |
-			sed 's:Debian GNU/Linux:OpenWRT Linux:g')"
+	if [ "${BETA_SYSTEM}" == '8' ]; then
+		install_mint_linux_distro
 	fi
 	####################
-	if [ "${BETASYSTEM}" == '10' ]; then
-		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
-			sed 's/debian系统/devuan系统/g' |
-			sed 's/debian system/devuan system/g' |
-			sed 's:debian-sid:devuan-ascii:g' |
-			sed 's:debian/sid:devuan/ascii:g' |
-			sed 's:Debian GNU/Linux:Devuan GNU/Linux:g')"
+	if [ "${BETA_SYSTEM}" == '9' ]; then
+		install_openwrt_linux_distro
 	fi
 	####################
-	if [ "${BETASYSTEM}" == '11' ]; then
-		if [ "${ARCH_TYPE}" = 'armhf' ] || [ "${ARCH_TYPE}" = 'i386' ]; then
-			echo "检测到apertis不支持您当前的架构"
-		else
-			touch ~/.ALPINELINUXDetectionFILE
-			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
-				sed 's/debian系统/apertis系统/g' |
-				sed 's/debian system/apertis system/g' |
-				sed 's:debian-sid:apertis-18.12:g' |
-				sed 's:debian/sid:apertis/18.12:g' |
-				sed 's:Debian GNU/Linux:Apertis Linux:g')"
-		fi
+	if [ "${BETA_SYSTEM}" == '10' ]; then
+		install_devuan_linux_distro
 	fi
 	####################
-	if [ "${BETASYSTEM}" == '12' ]; then
-		if [ "${ARCH_TYPE}" = 'armhf' ]; then
-			echo "检测到alt不支持您当前的架构"
-		else
-			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
-				sed 's/debian系统/alt系统/g' |
-				sed 's/debian system/alt system/g' |
-				sed 's:debian-sid:alt-p9:g' |
-				sed 's:debian/sid:alt/p9:g' |
-				sed 's:Debian GNU/Linux:Alt GNU/Linux:g')"
-		fi
+	if [ "${BETA_SYSTEM}" == '11' ]; then
+		install_apertis_linux_distro
+	fi
+	####################
+	if [ "${BETA_SYSTEM}" == '12' ]; then
+		install_alt_linux_distro
 	fi
 	###########################
-	if [ "${BETASYSTEM}" == '13' ]; then
-		cd ~
-		#touch .SLACKDetectionFILE
-		if [ "${ARCH_TYPE}" = 'amd64' ]; then
-			if [ ! -e "slackware-current-rootfs.tar.xz" ]; then
-				aria2c -x 16 -s 16 -k 1M -o "slackware-current-rootfs.tar.xz" "https://cdn.tmoe.me/Tmoe-Debian-Tool/chroot/archive/slackware_amd64.tar.xz" || aria2c -x 16 -s 16 -k 1M -o "slackware-current-rootfs.tar.xz" "https://m.tmoe.me/down/share/Tmoe-linux/chroot/slackware_amd64.tar.xz"
-			fi
-		else
-
-			if [ ! -e "slackware-current-rootfs.tar.xz" ]; then
-				LatestSlack="$(curl -L https://mirrors.tuna.tsinghua.edu.cn/slackwarearm/slackwarearm-devtools/minirootfs/roots/ | grep 'tar.xz' | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
-				aria2c -x 5 -s 5 -k 1M -o "slackware-current-rootfs.tar.xz" "https://mirrors.tuna.tsinghua.edu.cn/slackwarearm/slackwarearm-devtools/minirootfs/roots/${LatestSlack}"
-			fi
-		fi
-
-		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
-			sed 's/debian系统/slackware系统/g' |
-			sed 's/debian system/slackware system/g' |
-			sed 's:debian-sid:slackware-current:g' |
-			sed 's:debian/sid:slackware/current:g' |
-			sed 's:Debian GNU/Linux:Slackware GNU/Linux:g')"
+	if [ "${BETA_SYSTEM}" == '13' ]; then
+		install_slackware_linux_distro
 	fi
 	###########################
-	if [ "${BETASYSTEM}" == '14' ]; then
-		cd ~
-		#touch .SLACKDetectionFILE
-		if [ "${ARCH_TYPE}" != 'armhf' ] && [ "${ARCH_TYPE}" != 'arm64' ]; then
-			if [ ! -e "/usr/bin/qemu-arm-static" ]; then
-				apt update
-				apt install qemu-user-static
-			fi
-		fi
-		echo "armbian-bullseye-desktop已预装xfce4"
-		if [ ! -e "armbian-bullseye-rootfs.tar.lz4" ]; then
-			if [ "${ARCH_TYPE}" = 'armhf' ]; then
-				LatestARMbian="$(curl -L https://mirrors.tuna.tsinghua.edu.cn/armbian-releases/_rootfs/ | grep -E 'bullseye-desktop' | grep -v '.tar.lz4.asc' | grep 'armhf' | head -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
-				aria2c -x 5 -s 5 -k 1M -o "armbian-bullseye-rootfs.tar.lz4" "https://mirrors.tuna.tsinghua.edu.cn/armbian-releases/_rootfs/${LatestARMbian}"
-			else
-				LatestARMbian="$(curl -L https://mirrors.tuna.tsinghua.edu.cn/armbian-releases/_rootfs/ | grep -E 'bullseye-desktop' | grep -v '.tar.lz4.asc' | grep 'arm64' | head -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
-				aria2c -x 5 -s 5 -k 1M -o "armbian-bullseye-rootfs.tar.lz4" "https://mirrors.tuna.tsinghua.edu.cn/armbian-releases/_rootfs/${LatestARMbian}"
-			fi
-		fi
-
-		if [ ! -e "/usr/bin/lz4" ]; then
-			apt update 2>/dev/null
-			apt install -y lz4 2>/dev/null
-			pacman -Syu --noconfirm lz4 2>/dev/null
-			dnf install -y lz4 2>/dev/null
-			zypper in -y lz4 2>/dev/null
-		fi
-
-		mkdir -p ${DEBIAN_CHROOT}
-		rm -vf ~/armbian-bullseye-rootfs.tar
-		lz4 -d ~/armbian-bullseye-rootfs.tar.lz4
-		cd ${DEBIAN_CHROOT}
-		if [ "${LINUX_DISTRO}" = "Android" ]; then
-			pv ~/armbian-bullseye-rootfs.tar | proot --link2symlink tar -px
-		else
-			if [ -e "/usr/bin/pv" ]; then
-				pv ~/armbian-bullseye-rootfs.tar | tar -px
-			else
-				tar -pxvf ~/armbian-bullseye-rootfs.tar
-			fi
-		fi
-		#相对路径，不是绝对路径
-		sed -i 's/^deb/#&/g' ./etc/apt/sources.list.d/armbian.list
-		sed -i '$ a\deb http://mirrors.tuna.tsinghua.edu.cn/armbian/ bullseye main bullseye-utils bullseye-desktop' ./etc/apt/sources.list.d/armbian.list
-		rm -vf ~/armbian-bullseye-rootfs.tar
-
-		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
-			sed 's/debian系统/armbian系统/g' |
-			sed 's/debian system/armbian system/g' |
-			sed 's:debian-sid:armbian-bullseye:g' |
-			sed 's:debian/sid:armbian/bullseye:g' |
-			sed 's:rootfs.tar.xz:rootfs.tar.lz4:g' |
-			sed 's:Debian GNU/Linux:Armbian GNU/Linux:g')"
+	if [ "${BETA_SYSTEM}" == '14' ]; then
+		install_armbian_linux_distro
 	fi
 	####################
 	echo 'Press Enter to return.'
 	echo "${YELLOW}按回车键返回。${RESET}"
 	read
 	tmoe_manager_main_menu
+	####################
 }
-
 #########################
 install_debian_gnu_linux_distro() {
 	if (whiptail --title "Install GNU/Linux" --yes-button 'Software source' --no-button 'Download Rec pkg' --yesno "Do you want to install via Tsinghua University open source mirror station, or download the recovery package (debian-xfce.tar.xz) to install?The latter only supports arm64.您想要通过软件源镜像站来安装，还是在线下载恢复包来安装？软件源获取的是最新版镜像，且支持arm64,armhf,x86,x64等架构，安装基础系统速度很快，但安装gui速度较慢。恢复包非最新版,仅支持aarch(arm64)架构,但安装gui速度较快，且更加方便。若您无使用GUI的需求，建议选择前者。" 15 50); then
@@ -2609,15 +2373,12 @@ install_debian_gnu_linux_distro() {
 				un_xz_debian_recovery_kit
 			else
 				download_debian_xfce_tar_xz
-
 			fi
 		else
 			download_debian_xfce_tar_xz
-
 		fi
 	fi
 }
-
 ########################
 buster_or_sid() {
 	if (whiptail --title "Debian version" --yes-button 'Sid' --no-button 'Buster' --yesno "请选择您需要安装的debian版本，Please select the debian version you need to install.Buster为当前的stable版,sid为unstable。Buster更加稳定且bug较少,但buster的软件包较旧,而sid较新。Buster is more stable and has fewer bugs, but the packages inside the buster software source are older. The sid package is relatively new." 15 50); then
@@ -2660,6 +2421,50 @@ install_kali_rolling_gnu_linux_distro() {
 		sed 's/debian容器/kali容器/g' |
 		sed 's:Debian GNU/Linux:Kali GNU/Linux:g')"
 }
+#####################
+install_arch_linux_distro() {
+	if [ "${ARCH_TYPE}" = 'armhf' ] || [ "${ARCH_TYPE}" = 'i386' ]; then
+		echo "检测到Arch Linux不支持您当前的架构"
+	else
+		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+			sed 's/debian系统/arch系统/g' |
+			sed 's/debian system/arch system/g' |
+			sed 's:debian-sid:archlinux-current:g' |
+			sed 's:debian/sid:archlinux/current:g' |
+			sed 's:Debian GNU/Linux:Arch GNU/Linux:g')"
+	fi
+}
+######################
+install_fedora_gnu_linux_distro() {
+	touch ~/.REDHATDetectionFILE
+	if [ "${ARCH_TYPE}" = 'armhf' ]; then
+		echo "检测到您使用的是armhf架构，将为您降级至Fedora 29"
+		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+			sed 's/debian系统/fedora系统/g' |
+			sed 's/debian system/fedora system/g' |
+			sed 's:debian-sid:fedora-29:g' |
+			sed 's:debian/sid:fedora/29:g' |
+			sed 's:Debian GNU/Linux:Fedora GNU/Linux:g')"
+	elif [ "${ARCH_TYPE}" = 'i386' ]; then
+		echo "Fedora不支持您的架构"
+	else
+		if (whiptail --title "FEDORA VERSION" --yes-button '31' --no-button '32' --yesno "您想要安装哪个版本？Which version do you want to install?" 9 50); then
+			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+				sed 's/debian系统/fedora系统/g' |
+				sed 's/debian system/fedora system/g' |
+				sed 's:debian-sid:fedora-31:g' |
+				sed 's:debian/sid:fedora/31:g' |
+				sed 's:Debian GNU/Linux:Fedora GNU/Linux:g')"
+		else
+			bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+				sed 's/debian系统/fedora系统/g' |
+				sed 's/debian system/fedora system/g' |
+				sed 's:debian-sid:fedora-32:g' |
+				sed 's:debian/sid:fedora/32:g' |
+				sed 's:Debian GNU/Linux:Fedora GNU/Linux:g')"
+		fi
+	fi
+}
 ################
 install_funtoo_linux_distro() {
 	bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
@@ -2680,6 +2485,225 @@ install_void_linux_distro() {
 		sed 's/debian容器/void容器/g' |
 		sed 's:Debian GNU/Linux:Void GNU/Linux:g')"
 }
+##########################
+install_centos_linux_distro() {
+	touch ~/.REDHATDetectionFILE
+	if [ "${ARCH_TYPE}" = 'armhf' ] || [ "${ARCH_TYPE}" = 'i386' ]; then
+		echo "检测到CentOS 8不支持您当前的架构，将为您降级至CentOS 7"
+		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+			sed 's/debian系统/centos系统/g' |
+			sed 's/debian system/centos system/g' |
+			sed 's:debian-sid:centos-7:g' |
+			sed 's:debian/sid:centos/7:g' |
+			sed 's:Debian GNU/Linux:CentOS GNU/Linux:g')"
+	else
+		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+			sed 's/debian系统/centos系统/g' |
+			sed 's/debian system/centos system/g' |
+			sed 's:debian-sid:centos-8:g' |
+			sed 's:debian/sid:centos/8:g' |
+			sed 's:Debian GNU/Linux:CentOS GNU/Linux:g')"
+	fi
+}
+######################
+install_gentoo_linux_distro() {
+	if [ "${ARCH_TYPE}" = 'arm64' ]; then
+		echo "检测到您当前使用的是arm64架构，将为您下载armhf版容器"
+		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+			sed '72 a\ARCH_TYPE="armhf"' |
+			sed 's/debian系统/gentoo系统/g' |
+			sed 's/debian system/gentoo system/g' |
+			sed 's:debian-sid:gentoo-current:g' |
+			sed 's:debian/sid:gentoo/current:g' |
+			sed 's:Debian GNU/Linux:Gentoo GNU/Linux:g')"
+	else
+		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+			sed 's/debian系统/gentoo系统/g' |
+			sed 's/debian system/gentoo system/g' |
+			sed 's:debian-sid:gentoo-current:g' |
+			sed 's:debian/sid:gentoo/current:g' |
+			sed 's:Debian GNU/Linux:Gentoo GNU/Linux:g')"
+	fi
+}
+###########################
+install_alpine_linux_distro() {
+	touch ~/.ALPINELINUXDetectionFILE
+	bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+		sed 's/debian系统/alpine系统/g' |
+		sed 's/debian system/alpine system/g' |
+		sed 's:debian-sid:alpine-edge:g' |
+		sed 's:debian/sid:alpine/edge:g' |
+		sed 's:Debian GNU/Linux:Alpine Linux:g')"
+}
+#####################
+install_opensuse_linux_distro() {
+	bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+		sed 's/debian系统/opensuse系统/g' |
+		sed 's/debian system/opensuse system/g' |
+		sed 's:debian-sid:opensuse-tumbleweed:g' |
+		sed 's:debian/sid:opensuse/tumbleweed:g' |
+		sed 's:Debian GNU/Linux:Opensuse GNU/Linux:g')"
+}
+########################
+install_raspbian_linux_distro() {
+	if [ "${ARCH_TYPE}" != 'arm64' ] && [ "${ARCH_TYPE}" != 'armhf' ]; then
+		apt install -y qemu qemu-user-static debootstrap
+	fi
+	touch ~/.RASPBIANARMHFDetectionFILE
+	bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+		sed '72 a\ARCH_TYPE="armhf"' |
+		sed 's:/sid:/buster:g' |
+		sed 's:extract z:extract:' |
+		sed 's@#deb http@deb http@g' |
+		sed 's/.*sid main/#&/' |
+		sed 's/debian系统/raspbian系统/g' |
+		sed 's/debian system/raspbian system/g' |
+		sed 's:debian-sid:raspbian-buster:g' |
+		sed 's:debian/sid:debian/buster:g' |
+		sed 's:Debian GNU/Linux:Raspbian GNU/Linux:g')"
+}
+############################
+install_mint_linux_distro() {
+	if [ "${ARCH_TYPE}" = 'amd64' ] || [ "${ARCH_TYPE}" = 'i386' ]; then
+		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+			sed 's/debian系统/mint系统/g' |
+			sed 's/debian system/mint system/g' |
+			sed 's:debian-sid:mint-tricia:g' |
+			sed 's:debian/sid:mint/tricia:g' |
+			sed 's:Debian GNU/Linux:Mint GNU/Linux:g')"
+	else
+		echo "Linux Mint不支持您的架构"
+	fi
+}
+###############################
+install_openwrt_linux_distro() {
+	if [ ! -e "openwrt-snapshot-rootfs.tar.xz" ]; then
+		cd ~
+		if [ "${ARCH_TYPE}" = 'arm64' ]; then
+			aria2c -x 16 -s 16 -k 1M -o "openwrt-snapshot-rootfs.tar.xz" "https://cdn.tmoe.me/Tmoe-Debian-Tool/chroot/archive/openwrt_arm64.tar.xz" || aria2c -x 16 -s 16 -k 1M -o "openwrt-snapshot-rootfs.tar.xz" "https://m.tmoe.me/show/share/Tmoe-linux/chroot/openwrt_arm64.tar.xz"
+		fi
+	fi
+	touch ~/.ALPINELINUXDetectionFILE
+	bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+		sed 's/debian系统/openwrt系统/g' |
+		sed 's/debian system/openwrt system/g' |
+		sed 's:debian-sid:openwrt-snapshot:g' |
+		sed 's:debian/sid:openwrt/snapshot:g' |
+		sed 's:Debian GNU/Linux:OpenWRT Linux:g')"
+}
+######################
+install_devuan_linux_distro() {
+	bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+		sed 's/debian系统/devuan系统/g' |
+		sed 's/debian system/devuan system/g' |
+		sed 's:debian-sid:devuan-ascii:g' |
+		sed 's:debian/sid:devuan/ascii:g' |
+		sed 's:Debian GNU/Linux:Devuan GNU/Linux:g')"
+}
+######################
+install_apertis_linux_distro() {
+	if [ "${ARCH_TYPE}" = 'armhf' ] || [ "${ARCH_TYPE}" = 'i386' ]; then
+		echo "检测到apertis不支持您当前的架构"
+	else
+		touch ~/.ALPINELINUXDetectionFILE
+		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+			sed 's/debian系统/apertis系统/g' |
+			sed 's/debian system/apertis system/g' |
+			sed 's:debian-sid:apertis-18.12:g' |
+			sed 's:debian/sid:apertis/18.12:g' |
+			sed 's:Debian GNU/Linux:Apertis Linux:g')"
+	fi
+}
+################################
+install_alt_linux_distro() {
+	if [ "${ARCH_TYPE}" = 'armhf' ]; then
+		echo "检测到alt不支持您当前的架构"
+	else
+		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+			sed 's/debian系统/alt系统/g' |
+			sed 's/debian system/alt system/g' |
+			sed 's:debian-sid:alt-p9:g' |
+			sed 's:debian/sid:alt/p9:g' |
+			sed 's:Debian GNU/Linux:Alt GNU/Linux:g')"
+	fi
+}
+##################
+install_slackware_linux_distro() {
+	cd ~
+	#touch .SLACKDetectionFILE
+	if [ "${ARCH_TYPE}" = 'amd64' ]; then
+		if [ ! -e "slackware-current-rootfs.tar.xz" ]; then
+			aria2c -x 16 -s 16 -k 1M -o "slackware-current-rootfs.tar.xz" "https://cdn.tmoe.me/Tmoe-Debian-Tool/chroot/archive/slackware_amd64.tar.xz" || aria2c -x 16 -s 16 -k 1M -o "slackware-current-rootfs.tar.xz" "https://m.tmoe.me/down/share/Tmoe-linux/chroot/slackware_amd64.tar.xz"
+		fi
+	else
+		if [ ! -e "slackware-current-rootfs.tar.xz" ]; then
+			LatestSlack="$(curl -L https://mirrors.tuna.tsinghua.edu.cn/slackwarearm/slackwarearm-devtools/minirootfs/roots/ | grep 'tar.xz' | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
+			aria2c -x 5 -s 5 -k 1M -o "slackware-current-rootfs.tar.xz" "https://mirrors.tuna.tsinghua.edu.cn/slackwarearm/slackwarearm-devtools/minirootfs/roots/${LatestSlack}"
+		fi
+	fi
+	bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+		sed 's/debian系统/slackware系统/g' |
+		sed 's/debian system/slackware system/g' |
+		sed 's:debian-sid:slackware-current:g' |
+		sed 's:debian/sid:slackware/current:g' |
+		sed 's:Debian GNU/Linux:Slackware GNU/Linux:g')"
+}
+#########################
+install_armbian_linux_distro() {
+	cd ~
+	#touch .SLACKDetectionFILE
+	if [ "${ARCH_TYPE}" != 'armhf' ] && [ "${ARCH_TYPE}" != 'arm64' ]; then
+		if [ ! -e "/usr/bin/qemu-arm-static" ]; then
+			apt update
+			apt install qemu-user-static
+		fi
+	fi
+	echo "armbian-bullseye-desktop已预装xfce4"
+	if [ ! -e "armbian-bullseye-rootfs.tar.lz4" ]; then
+		if [ "${ARCH_TYPE}" = 'armhf' ]; then
+			LatestARMbian="$(curl -L https://mirrors.tuna.tsinghua.edu.cn/armbian-releases/_rootfs/ | grep -E 'bullseye-desktop' | grep -v '.tar.lz4.asc' | grep 'armhf' | head -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
+			aria2c -x 5 -s 5 -k 1M -o "armbian-bullseye-rootfs.tar.lz4" "https://mirrors.tuna.tsinghua.edu.cn/armbian-releases/_rootfs/${LatestARMbian}"
+		else
+			LatestARMbian="$(curl -L https://mirrors.tuna.tsinghua.edu.cn/armbian-releases/_rootfs/ | grep -E 'bullseye-desktop' | grep -v '.tar.lz4.asc' | grep 'arm64' | head -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
+			aria2c -x 5 -s 5 -k 1M -o "armbian-bullseye-rootfs.tar.lz4" "https://mirrors.tuna.tsinghua.edu.cn/armbian-releases/_rootfs/${LatestARMbian}"
+		fi
+	fi
+
+	if [ ! -e "/usr/bin/lz4" ]; then
+		apt update 2>/dev/null
+		apt install -y lz4 2>/dev/null
+		pacman -Syu --noconfirm lz4 2>/dev/null
+		dnf install -y lz4 2>/dev/null
+		zypper in -y lz4 2>/dev/null
+	fi
+
+	mkdir -p ${DEBIAN_CHROOT}
+	rm -vf ~/armbian-bullseye-rootfs.tar
+	lz4 -d ~/armbian-bullseye-rootfs.tar.lz4
+	cd ${DEBIAN_CHROOT}
+	if [ "${LINUX_DISTRO}" = "Android" ]; then
+		pv ~/armbian-bullseye-rootfs.tar | proot --link2symlink tar -px
+	else
+		if [ -e "/usr/bin/pv" ]; then
+			pv ~/armbian-bullseye-rootfs.tar | tar -px
+		else
+			tar -pxvf ~/armbian-bullseye-rootfs.tar
+		fi
+	fi
+	#相对路径，不是绝对路径
+	sed -i 's/^deb/#&/g' ./etc/apt/sources.list.d/armbian.list
+	sed -i '$ a\deb http://mirrors.tuna.tsinghua.edu.cn/armbian/ bullseye main bullseye-utils bullseye-desktop' ./etc/apt/sources.list.d/armbian.list
+	rm -vf ~/armbian-bullseye-rootfs.tar
+
+	bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/installDebian.sh |
+		sed 's/debian系统/armbian系统/g' |
+		sed 's/debian system/armbian system/g' |
+		sed 's:debian-sid:armbian-bullseye:g' |
+		sed 's:debian/sid:armbian/bullseye:g' |
+		sed 's:rootfs.tar.xz:rootfs.tar.lz4:g' |
+		sed 's:Debian GNU/Linux:Armbian GNU/Linux:g')"
+}
+#######################
 ######################
 gnu_linux_sources_list() {
 	cp -pf /etc/apt/sources.list /etc/apt/sources.list.bak

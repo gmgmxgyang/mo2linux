@@ -37,7 +37,7 @@ Supported containers:
 ![Capture__2020-02-16-02-23-49.png](https://gitee.com/mo2/pic_api/raw/test/2020/02/16/KtxgGq3bFSf4Uwvo.png)
 
 支持一键安装图形界面。
-Support one-key installation Graphical User Interface.
+Support one-key graphical user interface installation.
 
 ![截图_2020-02-01_08-53-21.jpg](https://gitee.com/mo2/pic_api/raw/test/2020/02/16/yMgxSkGh0Tx4IJz0.jpg)
 

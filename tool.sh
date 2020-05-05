@@ -617,7 +617,7 @@ cookies_readme() {
 
 	mkdir -p "${HOME}/.config/tmoe-linux"
 	if (whiptail --title "modify cookie path and status" --yes-button '修改cookie path' --no-button 'disable禁用cookie' --yesno "您想要修改哪些配置信息？${COOKIESTATUS} Which configuration do you want to modify?" 9 50); then
-		TARGET=$(whiptail --inputbox "请输入cookie文件路径,例如 /root/sd/Download/cookies.txt \n${CurrentCOOKIESpath} Press Enter after the input is completed." 16 50 --title "Press enter the cookie path" 3>&1 1>&2 2>&3)
+		TARGET=$(whiptail --inputbox "请输入cookie文件路径,例如 /root/sd/Download/cookies.txt \n${CurrentCOOKIESpath} Press Enter after the input is completed." 16 50 --title "Please enter the cookie path" 3>&1 1>&2 2>&3)
 
 		exitstatus=$?
 		if [ $exitstatus = 0 ]; then

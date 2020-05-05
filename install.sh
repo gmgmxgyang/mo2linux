@@ -802,9 +802,7 @@ cat >zsh.sh <<-'ADDZSHSHELL'
 	fi
 	chmod +x /usr/local/bin/debian-i
 	#########################
-	if [ ! -e "${HOME}/.oh-my-zsh/.git" ]; then
-		rm -rf ${HOME}/.oh-my-zsh
-	fi
+	rm -rf ${HOME}/.oh-my-zsh
 	#https://github.com/ohmyzsh/ohmyzsh
 	git clone --depth=1 https://gitee.com/mirrors/oh-my-zsh.git ${HOME}/.oh-my-zsh
 	#chmod 755 -R "${HOME}/.oh-my-zsh"
@@ -853,7 +851,8 @@ cat >zsh.sh <<-'ADDZSHSHELL'
 	###############
 	configure_power_level_10k() {
 		echo "Configuring zsh theme 正在配置zsh主题(powerlevel 10k)..."
-		cd ${HOME}/.oh-my-zsh/custom/themes || mkdir -p ${HOME}/.oh-my-zsh/custom/themes && cd ${HOME}/.oh-my-zsh/custom/themes
+		mkdir -p ${HOME}/.oh-my-zsh/custom/themes
+		cd ${HOME}/.oh-my-zsh/custom/themes
 		rm -rf "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k"
 		git clone --depth=1 https://gitee.com/mo2/powerlevel10k.git "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k" || git clone --depth=1 git://github.com/romkatv/powerlevel10k "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k"
 		sed -i '/^ZSH_THEME/d' "${HOME}/.zshrc"
@@ -980,7 +979,7 @@ cat >zsh.sh <<-'ADDZSHSHELL'
 	echo 'All optimization steps have been completed, enjoy it!'
 	echo 'zsh配置完成，2s后将为您启动Tmoe-linux工具'
 	echo "您也可以手动输${YELLOW}debian-i${RESET}进入"
-	echo 'After 2 seconds, Tmoe-linux manager will be launched.'
+	echo 'After 2 seconds, Tmoe-linux tool will be launched.'
 	echo 'You can also enter debian-i manually to start it.'
 	sleep 2
 	bash /usr/local/bin/debian-i

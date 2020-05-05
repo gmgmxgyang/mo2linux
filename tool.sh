@@ -3375,14 +3375,14 @@ first_configure_startvnc() {
 			grep -q 'LANG=\"zh_CN' "${HOME}/.zlogin" || echo 'export LANG="zh_CN.UTF-8"' >>"${HOME}/.zlogin"
 		fi
 	fi
-	echo 'The vnc service is about to start for you. The password you entered is hidden.'
-	echo '即将为您启动vnc服务，您需要输两遍（不可见的）密码。'
-	echo "When prompted for a view-only password, it is recommended that you enter 'n'"
-	echo '如果提示view-only,那么建议您输n,选择权在您自己的手上。'
-	echo '请输入6至8位密码'
+	echo "The vnc service is about to start for you. The password you entered is hidden."
+	echo "即将为您启动vnc服务，您需要输两遍${RED}（不可见的）${RESET}密码。"
+	echo "When prompted for a view-only password, it is recommended that you enter${YELLOW} 'n'${RESET}"
+	echo "如果提示${BLUE}view-only${RESET},那么建议您输${YELLOW}n${RESET},选择权在您自己的手上。"
+	echo "请输入${RED}6至8位${RESET}${BLUE}密码${RESET}"
 	startvnc
-	echo '您之后可以输startvnc来启动vnc服务，输stopvnc停止'
-	echo '您还可以在termux原系统或windows的linux子系统里输startxsdl来启动xsdl，按Ctrl+C或在termux原系统里输stopvnc来停止进程'
+	echo "您之后可以输${GREEN}startvnc${RESET}来${BLUE}启动${RESET}vnc服务，输${GREEN}stopvnc${RESET}${RED}停止${RESET}"
+	echo "您还可以在termux原系统或windows的linux子系统里输${GREEN}startxsdl${RESET}来启动xsdl，按${YELLOW}Ctrl+C${RESET}或在termux原系统里输${GREEN}stopvnc${RESET}来${RED}停止${RESET}进程"
 	if [ "${HOME}" != "/root" ]; then
 		cp -rpf ~/.vnc /root/ &
 		chown -R root:root /root/.vnc &

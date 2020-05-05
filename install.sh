@@ -1107,10 +1107,11 @@ cat >.profile <<-'EDITBASHPROFILE'
 				#Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/$arch/$repo
 				Server = https://mirrors.tuna.tsinghua.edu.cn/manjaro/arm-stable/$repo/$arch
 			EndOfArchMirrors
-			curl -Lo 'archlinuxarm-keyring.pkg.tar.xz' https://mirrors.tuna.tsinghua.edu.cn/manjaro/arm-stable/core/aarch64/archlinuxarm-keyring-20140119-1-any.pkg.tar.xz
+			#curl -Lo 'archlinuxarm-keyring.pkg.tar.xz' https://mirrors.tuna.tsinghua.edu.cn/manjaro/arm-stable/core/aarch64/archlinuxarm-keyring-20140119-1-any.pkg.tar.xz
 			pacman-key --init
-			pacman -U --noconfirm ./archlinuxarm-keyring.pkg.tar.xz
-			rm -fv ./archlinuxarm-keyring.pkg.tar.xz 
+			pacman-key --populate archlinux manjaro
+			#pacman -U --noconfirm ./archlinuxarm-keyring.pkg.tar.xz
+			#rm -fv ./archlinuxarm-keyring.pkg.tar.xz 
 			pacman -Sy --noconfirm archlinux-keyring
 		fi
 	}

@@ -298,7 +298,7 @@ check_dependencies() {
 		./busybox dpkg-deb -X .busybox.deb ./.busybox-static
 		mv -f ./.busybox-static/bin/busybox /usr/local/bin/
 		chmod +x /usr/local/bin/busybox
-		rm -rf busybox .busybox-static .busybox.deb
+		rm -rvf busybox .busybox-static .busybox.deb
 	fi
 
 	if [ "${LINUX_DISTRO}" = "debian" ]; then
@@ -341,7 +341,7 @@ check_dependencies() {
 tmoe_linux_tool_menu() {
 	cd ${cur}
 	TMOE_OPTION=$(
-		whiptail --title "Tmoe-linux Tool输debian-i启动(20200505-15)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.当前主菜单有十几个选项，请使用方向键或触屏上下滑动，按回车键确认。${TMOE_NOT_DEBIAN} 更新日志:0501支持解析并下载B站、油管视频,0502支持搭建个人云网盘,0503优化code-server的配置" 20 50 7 \
+		whiptail --title "Tmoe-linux Tool输debian-i启动(20200505-15)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.当前主菜单有十几个选项，请使用方向键和回车键操作。${TMOE_NOT_DEBIAN} 更新日志:0501支持解析并下载B站、油管视频,0502支持搭建个人云网盘,0503优化code-server的配置" 20 50 7 \
 			"1" "Install GUI 安装图形界面" \
 			"2" "Install browser 安装浏览器" \
 			"3" "Download theme 下载主题" \
@@ -434,6 +434,26 @@ tmoe_linux_tool_menu() {
 }
 ############################
 ############################
+do_you_want_to_continue() {
+	echo "${YELLOW}Do you want to continue?[Y/n]${RESET}"
+	echo "Press enter to continue,type n to return."
+	echo "按${GREEN}回车键${RESET}${RED}继续${RESET}，输${YELLOW}n${RESET}${BLUE}返回${RESET}"
+	read opt
+	case $opt in
+	y* | Y* | "") ;;
+
+	n* | N*)
+		echo "skipped."
+		${RETURN_TO_WHERE}
+		;;
+	*)
+		echo "Invalid choice. skipped."
+		${RETURN_TO_WHERE}
+		#beta_features
+		;;
+	esac
+}
+######################
 different_distro_software_install() {
 	if [ "${LINUX_DISTRO}" = "debian" ]; then
 		apt update
@@ -447,7 +467,7 @@ different_distro_software_install() {
 		################
 	elif [ "${LINUX_DISTRO}" = "arch" ]; then
 		pacman -Syu --noconfirm ${DEPENDENCY_01}
-		pacman -Syu --noconfirm ${DEPENDENCY_02}
+		pacman -S --noconfirm ${DEPENDENCY_02}
 		################
 	elif [ "${LINUX_DISTRO}" = "redhat" ]; then
 		dnf install -y ${DEPENDENCY_01} || yum install -y ${DEPENDENCY_01}
@@ -796,7 +816,9 @@ upgrade_video_download_tool() {
 	echo "您可以按回车键来获取更新，亦可前往原开发者的仓库来手动下载新版"
 	echo "${YELLOW}按回车键将同时更新annie、you-get和youtube-dl${RESET}"
 	echo 'Press Enter to update'
-	read
+	RETURN_TO_WHERE='download_videos'
+	do_you_want_to_continue
+	NON_DEBIAN=false
 	DEPENDENCY_01=""
 	DEPENDENCY_02=""
 
@@ -841,15 +863,7 @@ upgrade_video_download_tool() {
 	fi
 
 	if [ ! -z "${DEPENDENCY_01}" ] && [ ! -z "${DEPENDENCY_02}" ]; then
-		echo "正在安装相关依赖..."
-		if [ "${LINUX_DISTRO}" = "debian" ]; then
-			apt update
-			apt install -y ffmpeg
-			apt install -y python3 python3-distutils
-			apt install -y python3-pip
-		else
-			different_distro_software_install
-		fi
+		beta_features_quick_install
 	fi
 
 	cd /tmp
@@ -1027,9 +1041,8 @@ vscode_server_upgrade() {
 		║   ║ server   ║${LATEST_VSCODE_VERSION} 
 
 	ENDofTable
-	echo "${YELLOW}按回车键确认更新${RESET}"
-	echo 'Press Enter to confirm'
-	read
+	RETURN_TO_WHERE='configure_vscode_server'
+	do_you_want_to_continue
 	if [ ! -e "/tmp/sed-vscode.tmp" ]; then
 		cat >"/tmp/sed-vscode.tmp" <<-'EOF'
 			if [ -e "/tmp/startcode.tmp" ]; then
@@ -1130,9 +1143,10 @@ vscode_server_remove() {
 	echo "正在停止code-server进程..."
 	echo "Stopping code-server..."
 	#service vscode-server stop 2>/dev/null
-	echo "按回车键确认移除，按Ctrl+C取消。"
+	echo "按回车键确认移除"
 	echo "${YELLOW}Press enter to remove VSCode Server. ${RESET}"
-	read
+	RETURN_TO_WHERE='configure_vscode_server'
+	do_you_want_to_continue
 	sed -i '/export PASSWORD=/d' ~/.profile
 	sed -i '/export PASSWORD=/d' ~/.zshrc
 	rm -rvf /usr/local/bin/code-server-data/ /usr/local/bin/code-server /tmp/sed-vscode.tmp
@@ -1368,9 +1382,8 @@ nano_startvnc_manually() {
 	echo '若您想要修改分辨率，请将默认的720x1440（竖屏）改为其它您想要的分辨率，例如1920x1080（横屏）。'
 	echo "您当前分辨率为$(grep '\-geometry' "$(command -v startvnc)" | cut -d 'y' -f 2 | cut -d '-' -f 1)"
 	echo '改完后按Ctrl+S保存，Ctrl+X退出。'
-	echo "Press Enter to confirm."
-	echo "${YELLOW}按回车键确认编辑。${RESET}"
-	read
+	RETURN_TO_WHERE='modify_other_vnc_conf'
+	do_you_want_to_continue
 	nano /usr/local/bin/startvnc || nano $(command -v startvnc)
 	echo "您当前分辨率为$(grep '\-geometry' "$(command -v startvnc)" | cut -d 'y' -f 2 | cut -d '-' -f 1)"
 
@@ -1489,8 +1502,8 @@ install_firefox_esr_browser() {
 	if [ ! $(command -v firefox-esr) ]; then
 		echo "${YELLOW}对不起，我...我真的已经尽力了ヽ(*。>Д<)o゜！您的软件源仓库里容不下我，我只好叫姐姐来代替了。${RESET}"
 		echo 'Press Enter to confirm.'
-		echo "${YELLOW}按回车键确认。${RESET}"
-		read
+		RETURN_TO_WHERE='install_browser'
+		do_you_want_to_continue
 		install_firefox_browser
 	fi
 }
@@ -1524,9 +1537,8 @@ install_firefox_browser() {
 	################
 	if [ ! $(command -v firefox) ]; then
 		echo "${YELLOW}对不起，我...我真的已经尽力了ヽ(*。>Д<)o゜！您的软件源仓库里容不下我，我只好叫妹妹ESR来代替了。${RESET}"
-		echo 'Press Enter to confirm.'
-		echo "${YELLOW}按回车键确认。${RESET}"
-		read
+		RETURN_TO_WHERE='install_browser'
+		do_you_want_to_continue
 		install_firefox_esr_browser
 	fi
 }
@@ -1604,7 +1616,7 @@ install_gui() {
 	echo "${YELLOW}Press enter to continue.${RESET}"
 	read
 	INSTALLDESKTOP=$(whiptail --title "单项选择题" --menu \
-		"您想要安装哪个桌面？按方向键选择，回车键确认，一次只可以装一个桌面哦！仅xfce桌面支持在本工具内便捷下载主题。 \n Which desktop environment do you want to install? " 15 60 5 \
+		"您想要安装哪个桌面？按方向键选择，回车键确认！仅xfce桌面支持在本工具内便捷下载主题。 \n Which desktop environment do you want to install? " 15 60 5 \
 		"1" "xfce：兼容性高" \
 		"2" "lxde：轻量化桌面" \
 		"3" "mate：基于GNOME 2" \
@@ -1678,75 +1690,21 @@ other_desktop() {
 	read
 	tmoe_linux_tool_menu
 }
-##########################
-install_xfce4_desktop() {
-	if [ "${LINUX_DISTRO}" = "debian" ]; then
-		#apt-mark hold gvfs
-		apt update
-		apt-mark hold udisks2
-		echo '即将为您安装思源黑体(中文字体)、xfce4、xfce4-terminal、xfce4-goodies和tightvncserver等软件包。'
-		dpkg --configure -a
-		echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
-		echo "keyboard-configuration keyboard-configuration/layout select 'English (US)'" | debconf-set-selections
-		echo keyboard-configuration keyboard-configuration/layoutcode select 'us' | debconf-set-selections
-
-		apt install -y fonts-noto-cjk xfce4 xfce4-terminal xfce4-goodies
-		apt install -y dbus-x11
-		apt install -y tightvncserver
-		apt purge -y ^libfprint
-		apt install -y xcursor-themes
-		if [ "${DEBIAN_DISTRO}" = "kali" ]; then
-			apt install -y kali-menu
-			apt install -y kali-undercover
-			apt install -y zenmap
-			apt install -y kali-themes-common
-			if [ "${ARCH_TYPE}" = "arm64" ] || [ "${ARCH_TYPE}" = "armhf" ]; then
-				apt install -y kali-linux-arm
-			fi
-			apt install -y chromium-l10n
-			sed -i 's/chromium %U/chromium --no-sandbox %U/g' /usr/share/applications/chromium.desktop
-			grep 'chromium' /etc/profile || sed -i '$ a\alias chromium="chromium --no-sandbox"' /etc/profile
-			apt search kali-linux
-		fi
-		apt clean
-	elif [ "${LINUX_DISTRO}" = "redhat" ]; then
-		dnf groupinstall -y xfce || yum groupinstall -y xfce
-		dnf install -y tigervnc-server google-noto-cjk-fonts || yum install -y tigervnc-server google-noto-cjk-fonts
-		rm -rf /etc/xdg/autostart/xfce-polkit.desktop
-	elif [ "${LINUX_DISTRO}" = "arch" ]; then
-		pacman -Syu --noconfirm xfce4 xfce4-goodies
-		pacman -S --noconfirm tigervnc
-		pacman -S --noconfirm noto-fonts-cjk
-	elif [ "${LINUX_DISTRO}" = "void" ]; then
-		xbps-install -S -y xfce4 tigervnc
-	elif [ "${LINUX_DISTRO}" = "gentoo" ]; then
-		dispatch-conf
-		etc-update
-		emerge -avk xfce4-meta x11-terms/xfce4-terminal net-misc/tigervnc media-fonts/wqy-bitmapfont
-	elif [ "${LINUX_DISTRO}" = "suse" ]; then
-		zypper in -y tigervnc-x11vnc noto-sans-sc-fonts patterns-xfce-xfce xfce4-terminal
-	fi
-
-	if [ ! -e "/usr/share/desktop-base/kali-theme" ]; then
-		mkdir -p /tmp/.kali-themes-common
-		cd /tmp/.kali-themes-common
-		#rm -f ./kali-themes-common.deb 2>/dev/null
-		KaliTHEMElatestLINK="$(curl -L 'https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-themes/' | grep kali-themes-common | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
-		curl -Lo 'kali-themes-common.deb' "https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-themes/${KaliTHEMElatestLINK}"
-		busybox ar xv 'kali-themes-common.deb'
-		update-icon-caches /usr/share/icons/Flat-Remix-Blue-Dark /usr/share/icons/Flat-Remix-Blue-Light /usr/share/icons/desktop-base
-		#tar -Jxvf data.tar.xz -C /
-		cd /
-		tar -Jxvf /tmp/.kali-themes-common/data.tar.xz ./usr
-		rm -rf /tmp/.kali-themes-common
-	#apt install -y ./kali-themes-common.deb
-	#rm -f ./kali-themes-common.deb
-	fi
-	cd /usr/share/xfce4/terminal
-	echo "正在配置xfce4终端配色..."
-	curl -Lo "colorschemes.tar.xz" 'https://gitee.com/mo2/xfce-themes/raw/terminal/colorschemes.tar.xz'
-	tar -Jxvf "colorschemes.tar.xz"
-
+#####################
+#####################
+download_kali_themes_common() {
+	mkdir -p /tmp/.kali-themes-common
+	cd /tmp/.kali-themes-common
+	KaliTHEMElatestLINK="$(curl -L 'https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-themes/' | grep kali-themes-common | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
+	curl -Lvo 'kali-themes-common.deb' "https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-themes/${KaliTHEMElatestLINK}"
+	busybox ar xv 'kali-themes-common.deb'
+	update-icon-caches /usr/share/icons/Flat-Remix-Blue-Dark /usr/share/icons/Flat-Remix-Blue-Light /usr/share/icons/desktop-base
+	cd /
+	tar -Jxvf /tmp/.kali-themes-common/data.tar.xz ./usr
+	rm -rf /tmp/.kali-themes-common
+}
+################
+configure_xfce4_xstartup() {
 	mkdir -p ~/.vnc
 	cd ~/.vnc
 	cat >xstartup <<-'EndOfFile'
@@ -1763,36 +1721,88 @@ install_xfce4_desktop() {
 	#touch /tmp/.Tmoe-XFCE4-Desktop-Detection-FILE
 	first_configure_startvnc
 }
-####################
-install_lxde_desktop() {
+##########################
+kali_xfce4_extras() {
+	apt install -y kali-menu
+	apt install -y kali-undercover
+	apt install -y zenmap
+	apt install -y kali-themes-common
+	if [ "${ARCH_TYPE}" = "arm64" ] || [ "${ARCH_TYPE}" = "armhf" ]; then
+		apt install -y kali-linux-arm
+		apt install -y chromium-l10n
+		fix_chromium_root_no_sandbox
+		apt search kali-linux
+	fi
+}
+##################
+install_xfce4_desktop() {
+	NON_DEBIAN='false'
+	echo '即将为您安装思源黑体(中文字体)、xfce4、xfce4-terminal、xfce4-goodies和tightvncserver等软件包。'
+	DEPENDENCY_01="xfce4 xfce4-goodies xfce4-terminal"
+	DEPENDENCY_02="dbus-x11 fonts-noto-cjk tightvncserver"
+	#上面的依赖摆放的位置是有讲究的。
 	if [ "${LINUX_DISTRO}" = "debian" ]; then
-		apt update
+		#apt-mark hold gvfs
 		apt-mark hold udisks2
-		echo '即将为您安装思源黑体(中文字体)、lxde-core、lxterminal、tightvncserver。'
 		dpkg --configure -a
 		echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 		echo "keyboard-configuration keyboard-configuration/layout select 'English (US)'" | debconf-set-selections
 		echo keyboard-configuration keyboard-configuration/layoutcode select 'us' | debconf-set-selections
-		apt install -y fonts-noto-cjk lxde-core lxterminal tightvncserver
-		apt install -y dbus-x11
-		apt clean
+		##############
 	elif [ "${LINUX_DISTRO}" = "redhat" ]; then
-		dnf groupinstall -y lxde-desktop || yum groupinstall -y lxde-desktop
-		dnf install -y tigervnc-server google-noto-cjk-fonts || yum install -y tigervnc-server google-noto-cjk-fonts
+		DEPENDENCY_01="xfce4"
+		DEPENDENCY_02="tigervnc-server google-noto-cjk-fonts"
+		rm -rf /etc/xdg/autostart/xfce-polkit.desktop
+		##################
 	elif [ "${LINUX_DISTRO}" = "arch" ]; then
-		pacman -Syu --noconfirm lxde
-		pacman -S --noconfirm tigervnc
-		pacman -S --noconfirm noto-fonts-cjk
+		DEPENDENCY_01="xfce4 xfce4-terminal xfce4-goodies"
+		DEPENDENCY_02="noto-fonts-cjk tigervnc"
+		##################
 	elif [ "${LINUX_DISTRO}" = "void" ]; then
-		xbps-install -S -y lxde tigervnc
+		DEPENDENCY_01="xfce4"
+		DEPENDENCY_02="tigervnc"
+		#################
 	elif [ "${LINUX_DISTRO}" = "gentoo" ]; then
 		dispatch-conf
 		etc-update
-		emerge -avk lxde-base/lxde-meta net-misc/tigervnc media-fonts/wqy-bitmapfont
+		DEPENDENCY_01="xfce4-meta x11-terms/xfce4-terminal"
+		DEPENDENCY_02="net-misc/tigervnc media-fonts/wqy-bitmapfont"
+		#################
 	elif [ "${LINUX_DISTRO}" = "suse" ]; then
-		zypper in -y tigervnc-x11vnc noto-sans-sc-fonts patterns-lxde-lxde
+		DEPENDENCY_01="patterns-xfce-xfce xfce4-terminal"
+		DEPENDENCY_02="tigervnc-x11vnc noto-sans-sc-fonts"
+		##############
+	else
+		DEPENDENCY_01="xfce4"
+		DEPENDENCY_02="tigervnc"
+	fi
+	##################
+	beta_features_quick_install
+	####################
+	if [ "${LINUX_DISTRO}" = "debian" ]; then
+		if [ "${DEBIAN_DISTRO}" = "kali" ]; then
+			kali_xfce4_extras
+		fi
+		apt purge -y ^libfprint
+		apt clean
+	fi
+	#################
+	if [ ! -e "/usr/share/desktop-base/kali-theme" ]; then
+		download_kali_themes_common
 	fi
 
+	if [ ! -e "/usr/share/xfce4/terminal/colorschemes/Monokai Remastered.theme" ]; then
+		cd /usr/share/xfce4/terminal
+		echo "正在配置xfce4终端配色..."
+		curl -Lo "colorschemes.tar.xz" 'https://gitee.com/mo2/xfce-themes/raw/terminal/colorschemes.tar.xz'
+		tar -Jxvf "colorschemes.tar.xz"
+	fi
+	#########
+	configure_xfce4_xstartup
+}
+###############
+###############
+configure_lxde_xstartup() {
 	mkdir -p ~/.vnc
 	cd ~/.vnc
 	cat >xstartup <<-'EndOfFile'
@@ -1808,8 +1818,74 @@ install_lxde_desktop() {
 	touch /tmp/.Tmoe-LXDE-Desktop-Detection-FILE
 	first_configure_startvnc
 }
+###############
+install_lxde_desktop() {
+	NON_DEBIAN='false'
+	echo '即将为您安装思源黑体(中文字体)、lxde-core、lxterminal、tightvncserver。'
+	DEPENDENCY_01='lxde'
+	DEPENDENCY_02="tigervnc"
+	if [ "${LINUX_DISTRO}" = "debian" ]; then
+		apt-mark hold udisks2
+		dpkg --configure -a
+		echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+		echo "keyboard-configuration keyboard-configuration/layout select 'English (US)'" | debconf-set-selections
+		echo keyboard-configuration keyboard-configuration/layoutcode select 'us' | debconf-set-selections
+		DEPENDENCY_01="lxde-core lxterminal"
+		DEPENDENCY_02="dbus-x11 fonts-noto-cjk tightvncserver"
+		#apt clean
+		#############
+	elif [ "${LINUX_DISTRO}" = "redhat" ]; then
+		#dnf groupinstall -y lxde-desktop || yum groupinstall -y lxde-desktop
+		#dnf install -y tigervnc-server google-noto-cjk-fonts || yum install -y tigervnc-server google-noto-cjk-fonts
+		DEPENDENCY_01='@lxde-desktop'
+		DEPENDENCY_02="google-noto-cjk-fonts tigervnc-server"
+		#############
+	elif [ "${LINUX_DISTRO}" = "arch" ]; then
+		DEPENDENCY_01='lxde'
+		DEPENDENCY_02="noto-fonts-cjk tigervnc"
+		############
+	elif [ "${LINUX_DISTRO}" = "void" ]; then
+		DEPENDENCY_01='lxde'
+		DEPENDENCY_02=" tigervnc"
+		#############
+	elif [ "${LINUX_DISTRO}" = "gentoo" ]; then
+		dispatch-conf
+		etc-update
+		DEPENDENCY_01='media-fonts/wqy-bitmapfont lxde-base/lxde-meta'
+		DEPENDENCY_02="net-misc/tigervnc"
+		##################
+	elif [ "${LINUX_DISTRO}" = "suse" ]; then
+		DEPENDENCY_01='noto-sans-sc-fonts patterns-lxde-lxde'
+		DEPENDENCY_02="tigervnc-x11vnc"
+	fi
+	############
+	beta_features_quick_install
+	configure_lxde_xstartup
+}
+###########################
+configure_mate_xstartup() {
+	mkdir -p ~/.vnc
+	cd ~/.vnc
+	cat >xstartup <<-'EndOfFile'
+		#!/bin/bash
+		unset SESSION_MANAGER
+		unset DBUS_SESSION_BUS_ADDRESS
+		xrdb ${HOME}/.Xresources
+		export PULSE_SERVER=127.0.0.1
+		dbus-launch mate-session &
+	EndOfFile
+	chmod +x ./xstartup
+	rm -f /tmp/.Tmoe-*Desktop-Detection-FILE 2>/dev/null
+	touch /tmp/.Tmoe-MATE-Desktop-Detection-FILE
+	first_configure_startvnc
+}
 ############################
 install_mate_desktop() {
+	NON_DEBIAN='false'
+	echo '即将为您安装思源黑体(中文字体)、tightvncserver、mate-desktop-environment和mate-terminal等软件包'
+	DEPENDENCY_01='mate'
+	DEPENDENCY_02="tigervnc"
+
 	if [ "${LINUX_DISTRO}" = "debian" ]; then
 		apt-mark hold gvfs
 		apt update
@@ -1818,7 +1894,6 @@ install_mate_desktop() {
 			echo "" >/var/lib/dpkg/info/udisks2.postinst
 		fi
 		apt-mark hold udisks2
-		echo '即将为您安装思源黑体(中文字体)、tightvncserver、mate-desktop-environment和mate-terminal等软件包'
 		dpkg --configure -a
 		aptitude install -y mate-desktop-environment mate-terminal 2>/dev/null || apt install -y mate-desktop-environment-core mate-terminal
 		apt autopurge -y ^libfprint
@@ -1841,6 +1916,10 @@ install_mate_desktop() {
 	elif [ "${LINUX_DISTRO}" = "suse" ]; then
 		zypper in -y tigervnc-x11vnc noto-sans-sc-fonts patterns-mate-mate
 	fi
+	configure_mate_xstartup
+}
+#############
+configure_lxqt_xstartup() {
 	mkdir -p ~/.vnc
 	cd ~/.vnc
 	cat >xstartup <<-'EndOfFile'
@@ -1849,20 +1928,24 @@ install_mate_desktop() {
 		unset DBUS_SESSION_BUS_ADDRESS
 		xrdb ${HOME}/.Xresources
 		export PULSE_SERVER=127.0.0.1
-		dbus-launch mate-session &
+		dbus-launch startlxqt &
 	EndOfFile
 	chmod +x ./xstartup
-	rm -f /tmp/.Tmoe-*Desktop-Detection-FILE 2>/dev/null
-	touch /tmp/.Tmoe-MATE-Desktop-Detection-FILE
+	rm -f /tmp/.Tmoe-*Desktop-Detection-FILE 2>/dev/null 2>/dev/null
+	touch /tmp/.Tmoe-LXQT-Desktop-Detection-FILE
 	first_configure_startvnc
 }
-###########################
+######################
 install_lxqt_desktop() {
+	NON_DEBIAN='false'
+	DEPENDENCY_01=""
+	DEPENDENCY_02=""
+	echo '即将为您安装思源黑体(中文字体)、lxqt-core、lxqt-config、qterminal和tightvncserver等软件包。'
 	if [ "${LINUX_DISTRO}" = "debian" ]; then
 		#apt-mark hold gvfs
 		apt update
 		apt-mark hold udisks2
-		echo '即将为您安装思源黑体(中文字体)、lxqt-core、lxqt-config、qterminal和tightvncserver等软件包。'
+
 		dpkg --configure -a
 		echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 		echo "keyboard-configuration keyboard-configuration/layout select 'English (US)'" | debconf-set-selections
@@ -1891,7 +1974,10 @@ install_lxqt_desktop() {
 	elif [ "${LINUX_DISTRO}" = "suse" ]; then
 		zypper in -y tigervnc-x11vnc noto-sans-sc-fonts patterns-lxqt-lxqt
 	fi
-
+	configure_lxqt_xstartup
+}
+####################
+configure_kde_plasma5_xstartup() {
 	mkdir -p ~/.vnc
 	cd ~/.vnc
 	cat >xstartup <<-'EndOfFile'
@@ -1900,14 +1986,19 @@ install_lxqt_desktop() {
 		unset DBUS_SESSION_BUS_ADDRESS
 		xrdb ${HOME}/.Xresources
 		export PULSE_SERVER=127.0.0.1
-		dbus-launch startlxqt &
+		if command -v "startkde" >/dev/null; then
+			dbus-launch startkde &
+		else
+			dbus-launch startplasma-x11 &
+		fi
 	EndOfFile
+	#plasma_session
 	chmod +x ./xstartup
 	rm -f /tmp/.Tmoe-*Desktop-Detection-FILE 2>/dev/null 2>/dev/null
-	touch /tmp/.Tmoe-LXQT-Desktop-Detection-FILE
+	touch /tmp/.Tmoe-KDE-PLASMA5-Desktop-Detection-FILE
 	first_configure_startvnc
 }
-####################
+##################
 install_kde_plasma5_desktop() {
 	if [ "${LINUX_DISTRO}" = "debian" ]; then
 		#apt-mark hold gvfs
@@ -1952,26 +2043,7 @@ install_kde_plasma5_desktop() {
 	elif [ "${LINUX_DISTRO}" = "suse" ]; then
 		zypper in -y tigervnc-x11vnc noto-sans-sc-fonts patterns-kde-kde_plasma
 	fi
-
-	mkdir -p ~/.vnc
-	cd ~/.vnc
-	cat >xstartup <<-'EndOfFile'
-		#!/bin/bash
-		unset SESSION_MANAGER
-		unset DBUS_SESSION_BUS_ADDRESS
-		xrdb ${HOME}/.Xresources
-		export PULSE_SERVER=127.0.0.1
-		if command -v "startkde" >/dev/null; then
-			dbus-launch startkde &
-		else
-			dbus-launch startplasma-x11 &
-		fi
-	EndOfFile
-	#plasma_session
-	chmod +x ./xstartup
-	rm -f /tmp/.Tmoe-*Desktop-Detection-FILE 2>/dev/null 2>/dev/null
-	touch /tmp/.Tmoe-KDE-PLASMA5-Desktop-Detection-FILE
-	first_configure_startvnc
+	configure_kde_plasma5_xstartup
 }
 ####################
 install_gnome3_desktop() {
@@ -2184,9 +2256,10 @@ remove_gui() {
 	echo '"lxde" "很庆幸能与阁下相遇（；´д｀）ゞ "  '
 	echo '"mate" "喔...喔呜...我不舍得你走/(ㄒoㄒ)/~~"  '
 	#新功能预告：即将适配非deb系linux的gui卸载功能
-	echo "${YELLOW}按回车键确认卸载,按Ctrl+C取消${RESET}"
+	echo "${YELLOW}按回车键确认卸载${RESET}"
 	echo 'Press enter to confirm ,press Ctrl + C to cancel'
-	read
+	RETURN_TO_WHERE='tmoe_linux_tool_menu'
+	do_you_want_to_continue
 	if [ "${LINUX_DISTRO}" = "debian" ]; then
 		apt purge -y xfce4 xfce4-terminal tightvncserver xfce4-goodies
 		apt purge -y dbus-x11
@@ -2227,9 +2300,10 @@ remove_gui() {
 remove_browser() {
 	if (whiptail --title "请从两个小可爱中里选择一个 " --yes-button "Firefox" --no-button "chromium" --yesno '火狐娘:“虽然知道总有离别时，但我没想到这一天竟然会这么早。虽然很不舍，但还是很感激您曾选择了我。希望我们下次还会再相遇，呜呜...(;´༎ຶД༎ຶ`)”chromium娘：“哼(￢︿̫̿￢☆)，负心人，走了之后就别回来了！o(TヘTo) 。”  ✨请做出您的选择！' 10 60); then
 		echo '呜呜...我...我才...才不会为了这点小事而流泪呢！ヽ(*。>Д<)o゜'
-		echo "${YELLOW}按回车键确认卸载firefox,按Ctrl+C取消${RESET}"
-		echo 'Press enter to confirm uninstall firefox,press Ctrl + C to cancel'
-		read
+		echo "${YELLOW}按回车键确认卸载firefox${RESET}"
+		echo 'Press enter to remove firefox,press Ctrl + C to cancel'
+		RETURN_TO_WHERE='tmoe_linux_tool_menu'
+		do_you_want_to_continue
 		apt purge -y firefox-esr firefox-esr-l10n-zh-cn
 		apt purge -y firefox firefox-l10n-zh-cn
 		apt purge -y firefox-locale-zh-hans
@@ -2240,9 +2314,10 @@ remove_browser() {
 
 	else
 		echo '小声嘀咕：“妾身不在的时候，你一定要好好照顾好自己。” '
-		echo "${YELLOW}按回车键确认卸载chromium,按Ctrl+C取消${RESET}"
+		echo "${YELLOW}按回车键确认卸载chromium${RESET}"
 		echo 'Press enter to confirm uninstall chromium,press Ctrl + C to cancel'
-		read
+		RETURN_TO_WHERE='tmoe_linux_tool_menu'
+		do_you_want_to_continue
 		apt purge -y chromium chromium-l10n
 		apt-mark unhold chromium-browser chromium-browser-l10n chromium-codecs-ffmpeg-extra
 		apt purge -y chromium-browser chromium-browser-l10n
@@ -2356,15 +2431,7 @@ configure_theme() {
 	######################################
 	if [ "${INSTALL_THEME}" == '6' ]; then
 		if [ ! -e "/usr/share/desktop-base/kali-theme" ]; then
-			mkdir -p /tmp/.kali-themes-common
-			cd /tmp/.kali-themes-common
-			KaliTHEMElatestLINK="$(curl -L 'https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-themes/' | grep kali-themes-common | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
-			curl -Lvo 'kali-themes-common.deb' "https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-themes/${KaliTHEMElatestLINK}"
-			busybox ar xv 'kali-themes-common.deb'
-			update-icon-caches /usr/share/icons/Flat-Remix-Blue-Dark /usr/share/icons/Flat-Remix-Blue-Light /usr/share/icons/desktop-base
-			cd /
-			tar -Jxvf /tmp/.kali-themes-common/data.tar.xz ./usr
-			rm -rf /tmp/.kali-themes-common
+			download_kali_themes_common
 		fi
 		echo "Download completed.如需删除，请手动输rm -rf /usr/share/desktop-base/kali-theme /usr/share/icons/desktop-base /usr/share/icons/Flat-Remix-Blue-Light /usr/share/icons/Flat-Remix-Blue-Dark"
 	fi
@@ -2427,16 +2494,14 @@ modify_to_kali_sources_list() {
 	if ! grep -q "^deb.*kali" /etc/apt/sources.list; then
 		echo "检测到您当前为debian源，是否修改为kali源？"
 		echo "Detected that your current software sources list is debian, do you need to modify it to kali source?"
-		echo 'Press Enter to confirm.'
-		echo "${YELLOW}按回车键确认。${RESET}"
-		read
+		RETURN_TO_WHERE='tmoe_linux_tool_menu'
+		do_you_want_to_continue
 		kali_sources_list
 	else
 		echo "检测到您当前为kali源，是否修改为debian源？"
 		echo "Detected that your current software sources list is kali, do you need to modify it to debian source?"
-		echo 'Press Enter to confirm.'
-		echo "${YELLOW}按回车键确认。${RESET}"
-		read
+		RETURN_TO_WHERE='tmoe_linux_tool_menu'
+		do_you_want_to_continue
 		debian_sources_list
 	fi
 }
@@ -2700,8 +2765,8 @@ install_synaptic() {
 	else
 		echo "${YELLOW}您真的要离开我么？哦呜。。。${RESET}"
 		echo "Do you really want to remove synaptic?"
-		echo "按回车键继续，按Ctrl+C取消。"
-		echo "${YELLOW}Press enter to continue! ${RESET}"
+		RETURN_TO_WHERE='other_software'
+		do_you_want_to_continue
 		read
 		apt purge -y synaptic
 		apt purge -y gdebi
@@ -2741,10 +2806,9 @@ install_chinese_manpages() {
 #####################
 install_libre_office() {
 	#ps -e >/dev/null || echo "/proc分区未挂载，请勿安装libreoffice,赋予proot容器真实root权限可解决相关问题，但强烈不推荐！"
-	ps -e >/dev/null || echo "检测到/proc分区未挂载"
-	echo 'Press Enter to confirm，press Ctrl+C to cancel.'
-	echo "${YELLOW}按回车键确认安装,按Ctrl+C取消。${RESET}"
-	read
+	ps -e >/dev/null || echo "${RED}WARNING！${RESET}检测到您无权读取${GREEN}/proot${RESET}分区的某些数据！"
+	RETURN_TO_WHERE='other_software'
+	do_you_want_to_continue
 	if [ "${LINUX_DISTRO}" = "debian" ]; then
 		DEPENDENCY_01='--no-install-recommends libreoffice'
 	else
@@ -2903,9 +2967,9 @@ modify_vnc_conf() {
 	if [ ! -e /usr/local/bin/startvnc ]; then
 		echo "/usr/local/bin/startvnc is not detected, maybe you have not installed the graphical desktop environment, do you want to continue editing?"
 		echo '未检测到startvnc,您可能尚未安装图形桌面，是否继续编辑?'
-		echo "Press Enter to confirm."
 		echo "${YELLOW}按回车键确认编辑。${RESET}"
-		read
+		RETURN_TO_WHERE='modify_remote_desktop_config'
+		do_you_want_to_continue
 	fi
 
 	if (whiptail --title "modify vnc configuration" --yes-button '分辨率resolution' --no-button '其它other' --yesno "您想要修改哪项配置信息？Which configuration do you want to modify?" 9 50); then
@@ -2938,8 +3002,8 @@ modify_xsdl_conf() {
 	if [ ! -f /usr/local/bin/startxsdl ]; then
 		echo "/usr/local/bin/startxsdl is not detected, maybe you have not installed the graphical desktop environment, do you want to continue editing?"
 		echo '未检测到startxsdl,您可能尚未安装图形桌面，是否继续编辑。'
-		echo "${YELLOW}按回车键确认编辑。${RESET}"
-		read
+		RETURN_TO_WHERE='modify_remote_desktop_config'
+		do_you_want_to_continue
 	fi
 	XSDL_XSERVER=$(whiptail --title "Modify x server conf" --menu "Choose your option" 15 60 5 \
 		"1" "音频端口 Pulse server port " \
@@ -3446,8 +3510,8 @@ fix_vnc_dbus_launch() {
 		echo "检测到您当前可能处于非proot环境下，是否继续修复？"
 		echo "如需重新配置vnc启动脚本，请更新debian-i后再覆盖安装gui"
 	fi
-	echo "${YELLOW}按回车键继续，按Ctrl+C取消${RESET}"
-	echo "Press Enter to continue,press Ctrl+C to cancel."
+	RETURN_TO_WHERE='frequently_asked_questions'
+	do_you_want_to_continue
 	read
 
 	if grep 'dbus-launch' ~/.vnc/xstartup; then
@@ -3544,8 +3608,8 @@ press_enter_to_reinstall() {
 }
 ################
 press_enter_to_reinstall_yes_or_no() {
-	echo "按${YELLOW}回车键${RESET}重新安装,输${YELLOW}n${RESET}返回"
-	echo "输${YELLOW}m${RESET}打开管理菜单"
+	echo "按${GREEN}回车键${RESET}${RED}重新安装${RESET},输${YELLOW}n${RESET}${BLUE}返回${RESET}"
+	echo "输${YELLOW}m${RESET}打开${BLUE}管理菜单${RESET}"
 	echo "${YELLOW}Do you want to reinstall it?[Y/m/n]${RESET}"
 	echo "Press enter to reinstall,type n to return,type m to open management menu"
 	read opt
@@ -3613,10 +3677,10 @@ beta_features() {
 		whiptail --title "Beta features" --menu "测试版功能可能无法正常运行\nBeta features may not work properly." 15 60 5 \
 			"1" "sunpinyin+google拼音+搜狗拼音" \
 			"2" "WPS office(办公软件)" \
-			"3" "gparted:磁盘分区工具" \
-			"4" "gnome-system-monitor(资源监视器)" \
-			"5" "openshot(视频剪辑)" \
-			"6" "telegram(注重保护隐私的社交app)" \
+			"3" "docker-ce:知名容器软件" \
+			"4" "VirtualBox:甲骨文开源虚拟机" \
+			"5" "gparted:磁盘分区工具" \
+			"6" "OBS-Studio(录屏软件)" \
 			"7" "typora(markdown编辑器)" \
 			"8" "electronic-wechat(第三方微信客户端)" \
 			"9" "qbittorrent(P2P下载工具)" \
@@ -3625,8 +3689,10 @@ beta_features() {
 			"12" "calibre:电子书转换器和库管理" \
 			"13" "文件管理器:thunar/nautilus/dolphin" \
 			"14" "krita(数字绘画)" \
-			"15" "OBS-Studio(录屏软件)" \
+			"15" "openshot(视频剪辑)" \
 			"16" "fbreader(epub阅读器)" \
+			"17" "gnome-system-monitor(资源监视器)" \
+			"18" "telegram(注重保护隐私的社交app)" \
 			"0" "Back to the main menu 返回主菜单" \
 			3>&1 1>&2 2>&3
 	)
@@ -3638,28 +3704,25 @@ beta_features() {
 	if [ "${TMOE_BETA}" == '1' ]; then
 		install_pinyin_input_method
 	fi
-
-	##############################
+	####################
 	if [ "${TMOE_BETA}" == '2' ]; then
 		install_wps_office
 	fi
-	##############################
+	####################
 	if [ "${TMOE_BETA}" == '3' ]; then
+		install_docker_ce
+	fi
+	####################
+	if [ "${TMOE_BETA}" == '6' ]; then
+		install_virtual_box
+	fi
+	###################
+	if [ "${TMOE_BETA}" == '5' ]; then
 		install_gparted
 	fi
-	##############################
-	if [ "${TMOE_BETA}" == '4' ]; then
-		install_gnome_system_monitor
-	fi
-
-	################################
-	if [ "${TMOE_BETA}" == '5' ]; then
-		install_openshot
-	fi
-	# Blender在WSL2（Xserver）下测试失败，Kdenlive在VNC远程下测试成功。
-	############################
+	####################
 	if [ "${TMOE_BETA}" == '6' ]; then
-		install_telegram
+		install_obs_studio
 	fi
 	############################
 	if [ "${TMOE_BETA}" == '7' ]; then
@@ -3693,13 +3756,22 @@ beta_features() {
 	if [ "${TMOE_BETA}" == '14' ]; then
 		install_krita
 	fi
-	####################
+	################################
 	if [ "${TMOE_BETA}" == '15' ]; then
-		install_obs_studio
+		install_openshot
 	fi
+	# Blender在WSL2（Xserver）下测试失败，Kdenlive在VNC远程下测试成功。
 	##############################
 	if [ "${TMOE_BETA}" == '16' ]; then
 		install_fbreader
+	fi
+	##############################
+	if [ "${TMOE_BETA}" == '17' ]; then
+		install_gnome_system_monitor
+	fi
+	############################
+	if [ "${TMOE_BETA}" == '18' ]; then
+		install_telegram
 	fi
 	########################################
 	echo 'Press Enter to return.'
@@ -3723,9 +3795,9 @@ install_pinyin_input_method() {
 	fi
 	#################
 	non_debian_function
-	echo "检测到您的系统支持安装sogou-pinyin，${YELLOW}按回车键确认${RESET}"
-	echo "Press enter to confirm"
-	read
+	echo "检测到您的系统支持安装sogou-pinyin"
+	RETURN_TO_WHERE='beta_features'
+	do_you_want_to_continue
 	DEPENDENCY_02="${DEPENDENCY_02} sogoupinyin"
 	###################
 	if [ "${ARCH_TYPE}" = "amd64" ] || [ "${ARCH_TYPE}" = "i386" ]; then
@@ -3747,6 +3819,43 @@ install_gnome_system_monitor() {
 	DEPENDENCY_02=""
 	NON_DEBIAN='false'
 	beta_features_quick_install
+}
+#################
+install_docker_ce() {
+	if [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
+		echo "${RED}WARNING！${RESET}检测到您当前处于${GREEN}proot容器${RESET}环境下！"
+		echo "若您使用的是${BOLD}Android${RESET}系统，则请在安装前${BLUE}确保${RESET}您的Linux内核支持docker"
+		echo "否则请直接退出安装！！！"
+		RETURN_TO_WHERE='beta_features'
+		do_you_want_to_continue
+	fi
+
+	NON_DEBIAN='false'
+	if [ ! $(command -v gpg) ]; then
+		DEPENDENCY_02="gpg"
+		beta_features_quick_install
+	else
+		DEPENDENCY_02=""
+	fi
+	DEPENDENCY_01="docker-ce"
+	#apt remove docker docker-engine docker.io
+	if [ "${LINUX_DISTRO}" = 'debian' ]; then
+		curl -Lv https://download.docker.com/linux/debian/gpg | apt-key add -
+		cd /etc/apt/sources.list.d/
+		sed -i 's/^deb/# &/g' docker.list
+		echo "deb https://mirrors.tuna.tsinghua.edu.cn/docker-ce/linux/debian buster stable" >>docker.list
+	#$(#lsb_release -cs)
+	elif [ "${LINUX_DISTRO}" = 'redhat' ]; then
+		curl -Lvo /etc/yum.repos.d/docker-ce.repo "https://download.docker.com/linux/${REDHAT_DISTRO}/docker-ce.repo"
+		sed -i 's@download.docker.com@mirrors.tuna.tsinghua.edu.cn/docker-ce@g' /etc/yum.repos.d/docker-ce.repo
+	elif [ "${LINUX_DISTRO}" = 'arch' ]; then
+		DEPENDENCY_01="docker"
+	fi
+	beta_features_quick_install
+}
+###############
+install_virtual_box() {
+echo "正在开发中..."
 }
 ################
 install_gparted() {
@@ -3886,6 +3995,7 @@ install_openshot() {
 	DEPENDENCY_01="openshot"
 	DEPENDENCY_02=""
 	NON_DEBIAN='false'
+	echo "您亦可选择其他视频剪辑软件，Blender在Xserver下测试失败，Kdenlive在VNC远程下测试成功。"
 	beta_features_quick_install
 }
 ############################
@@ -4063,7 +4173,8 @@ configure_nginx_webdav() {
 		echo "是否继续卸载nginx?"
 		echo "您正在执行危险操作，卸载nginx将导致您部署的所有网站无法访问！！！"
 		echo "${YELLOW}This is a dangerous operation, you must press Enter to confirm${RESET}"
-		echo "${YELLOW}按回车键确认卸载。${RESET}"
+		RETURN_TO_WHERE='configure_nginx_webdav'
+		do_you_want_to_continue
 		service nginx restart
 		read
 		service nginx stop
@@ -4088,18 +4199,18 @@ nginx_onekey() {
 	echo "例如Android端的Solid Explorer,windows端的RaiDrive"
 	echo 'Press Enter to confirm.'
 	echo "默认webdav根目录为/media，您可以在安装完成后自行修改。"
-	echo "${YELLOW}按回车键确认安装。${RESET}"
-	read
+	RETURN_TO_WHERE='configure_nginx_webdav'
+	do_you_want_to_continue
+
+	DEPENDENCY_01='nginx'
+	DEPENDENCY_02='apache2-utils'
+	NON_DEBIAN='false'
 
 	if [ "${LINUX_DISTRO}" = "debian" ]; then
-		apt update
-		apt install -y nginx nginx-extras apache2-utils
-	else
-		DEPENDENCY_01='nginx'
-		DEPENDENCY_02='apache2-utils'
-		different_distro_software_install
+		DEPENDENCY_01="${DEPENDENCY_01} nginx-extras"
 	fi
-
+	beta_features_quick_install
+	##############
 	mkdir -p /media
 	touch "/media/欢迎使用tmoe-linux-webdav_你可以将文件复制至根目录下的media文件夹"
 	if [ -e "/root/sd" ]; then
@@ -4329,8 +4440,8 @@ nginx_systemd() {
 nginx_reset() {
 	echo "${YELLOW}WARNING！继续执行此操作将丢失nginx配置信息！${RESET}"
 	echo 'Press Enter to confirm,press Ctrl+C to cancel.'
-	echo "${YELLOW}按回车键确认${RESET}"
-	read
+	RETURN_TO_WHERE='configure_nginx_webdav'
+	do_you_want_to_continue
 	cd /etc/nginx/sites-available
 	tar zcvf default.tar.gz default
 }
@@ -4457,6 +4568,8 @@ configure_filebrowser() {
 	fi
 	##############################
 	if [ "${TMOE_OPTION}" == '10' ]; then
+		RETURN_TO_WHERE='configure_filebrowser'
+		do_you_want_to_continue
 		pkill filebrowser
 		service filebrowser stop 2>/dev/null
 		rm -fv /usr/local/bin/filebrowser
@@ -4676,8 +4789,8 @@ filebrowser_systemd() {
 filebrowser_reset() {
 	echo "${YELLOW}WARNING！继续执行此操作将丢失所有配置信息！${RESET}"
 	echo 'Press Enter to confirm,press Ctrl+C to cancel.'
-	echo "${YELLOW}按回车键确认${RESET}"
-	read
+	RETURN_TO_WHERE='configure_filebrowser'
+	do_you_want_to_continue
 	rm -vf filebrowser.db
 	filebrowser -d filebrowser.db config init
 }

@@ -575,7 +575,7 @@ golang_annie() {
 	ls -lAth ./ | head -n 3
 	echo "视频文件默认下载至$(pwd)"
 	echo "Press enter to return."
-	echo "${YELLOW}按回车键返回。${RESET} "
+	echo "${YELLOW}按回车键返回。${RESET}"
 	read
 	download_videos
 }
@@ -611,7 +611,7 @@ python_you_get() {
 	ls -lAth ./ | head -n 3
 	echo "视频文件默认下载至$(pwd)"
 	echo "Press enter to return."
-	echo "${YELLOW}按回车键返回。${RESET} "
+	echo "${YELLOW}按回车键返回。${RESET}"
 	read
 	download_videos
 }
@@ -647,7 +647,7 @@ python_youtube_dl() {
 	ls -lAth ./ | head -n 3
 	echo "视频文件默认下载至$(pwd)"
 	echo "Press enter to return."
-	echo "${YELLOW}按回车键返回。${RESET} "
+	echo "${YELLOW}按回车键返回。${RESET}"
 	read
 	download_videos
 }
@@ -669,7 +669,7 @@ cookies_readme() {
 		请妥善保管好该文件及相关数据！
 	EndOFcookies
 	echo "Press enter to continue"
-	echo "${YELLOW}按回车键继续。${RESET} "
+	echo "${YELLOW}按回车键继续。${RESET}"
 	read
 	if [ -e "${HOME}/.config/tmoe-linux/videos.cookiepath" ]; then
 		COOKIESTATUS="检测到您已启用加载cookie功能"
@@ -702,7 +702,7 @@ cookies_readme() {
 	fi
 
 	echo "Press enter to return."
-	echo "${YELLOW}按回车键返回。${RESET} "
+	echo "${YELLOW}按回车键返回。${RESET}"
 	read
 	download_videos
 }
@@ -1382,122 +1382,168 @@ nano_startvnc_manually() {
 }
 #############################################
 #############################################
+ubuntu_install_chromium_browser() {
+	if ! grep -q '^deb.*bionic-update' "/etc/apt/sources.list"; then
+		if [ "${ARCH_TYPE}" = "amd64" ] || [ "${ARCH_TYPE}" = "i386" ]; then
+			sed -i '$ a\deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-updates main restricted universe multiverse' "/etc/apt/sources.list"
+		else
+			sed -i '$ a\deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ bionic-updates main restricted universe multiverse' "/etc/apt/sources.list"
+		fi
+		DEPENDENCY_01="chromium-browser/bionic-updates"
+		DEPENDENCY_02="chromium-browser-l10n/bionic-updates"
+	fi
+}
+#########
+fix_chromium_root_no_sandbox() {
+	sed -i 's/chromium-browser %U/chromium-browser --no-sandbox %U/g' /usr/share/applications/chromium-browser.desktop
+	grep 'chromium-browser' /etc/profile || sed -i '$ a\alias chromium="chromium-browser --no-sandbox"' /etc/profile
+}
+#####################
+fix_chromium_root_ubuntu_no_sandbox() {
+	sed -i 's/chromium %U/chromium --no-sandbox %U/g' /usr/share/applications/chromium.desktop
+	grep 'chromium' /etc/profile || sed -i '$ a\alias chromium="chromium --no-sandbox"' /etc/profile
+}
+#################
+install_chromium_browser() {
+	echo "${YELLOW}妾身就知道你没有看走眼！${RESET}"
+	echo '要是下次见不到妾身，就关掉那个小沙盒吧！"chromium --no-sandbox"'
+	echo "1s后将自动开始安装"
+	sleep 1
+	NON_DEBIAN='false'
+	DEPENDENCY_01="chromium"
+	DEPENDENCY_02="chromium-l10n"
+
+	if [ "${LINUX_DISTRO}" = "debian" ]; then
+		#新版Ubuntu是从snap商店下载chromium的，为解决这一问题，将临时换源成ubuntu 18.04LTS.
+		if [ "${DEBIAN_DISTRO}" = "ubuntu" ]; then
+			ubuntu_install_chromium_browser
+		fi
+	elif [ "${LINUX_DISTRO}" = "gentoo" ]; then
+		dispatch-conf
+		DEPENDENCY_01="www-client/chromium"
+		DEPENDENCY_02=""
+	#emerge -avk www-client/google-chrome-unstable
+	elif [ "${LINUX_DISTRO}" = "suse" ]; then
+		DEPENDENCY_02="chromium-plugin-widevinecdm chromium-ffmpeg-extra"
+	fi
+	beta_features_quick_install
+	#####################
+	if [ "${DEBIAN_DISTRO}" = "ubuntu" ]; then
+		sed -i '$ d' "/etc/apt/sources.list"
+		apt-mark hold chromium-browser chromium-browser-l10n chromium-codecs-ffmpeg-extra
+		apt update
+	fi
+	####################
+	echo "请问您是否需要关闭沙盒模式？"
+	echo "若您需要以root权限运行chromium，则需要关闭，否则请保持开启状态。"
+	echo "${YELLOW}Do you need to turn off the sandbox mode?[Y/n]${RESET}"
+	echo "Press enter to close,type n to cancel."
+	echo "按${YELLOW}回车${RESET}键${RED}关闭${RESET}该模式，输${YELLOW}n${RESET}取消"
+	read opt
+	case $opt in
+	y* | Y* | "")
+		if [ "${DEBIAN_DISTRO}" = "ubuntu" ]; then
+			fix_chromium_root_ubuntu_no_sandbox
+		else
+			fix_chromium_root_no_sandbox
+		fi
+		;;
+	n* | N*)
+		echo "skipped."
+		;;
+	*)
+		echo "Invalid choice. skipped."
+		;;
+	esac
+}
+############
+install_firefox_esr_browser() {
+	echo 'Thank you for choosing me, I will definitely do better than my sister! ╰ (* ° ▽ ° *) ╯'
+	echo "${YELLOW} “谢谢您选择了我，我一定会比姐姐向您提供更好的上网服务的！”╰(*°▽°*)╯火狐ESR娘坚定地说道。 ${RESET}"
+	echo "1s后将自动开始安装"
+	sleep 1
+
+	NON_DEBIAN='false'
+	DEPENDENCY_01="firefox-esr"
+	DEPENDENCY_02="firefox-esr-l10n-zh-cn"
+
+	if [ "${LINUX_DISTRO}" = "debian" ]; then
+		if [ "${DEBIAN_DISTRO}" = "ubuntu" ]; then
+			add-apt-repository -y ppa:mozillateam/ppa
+			DEPENDENCY_02="firefox-esr-locale-zh-hans"
+		fi
+		#################
+	elif [ "${LINUX_DISTRO}" = "arch" ]; then
+		DEPENDENCY_01="firefox-esr-gtk2"
+		DEPENDENCY_02="firefox-esr-i18n-zh-cn"
+	elif [ "${LINUX_DISTRO}" = "gentoo" ]; then
+		dispatch-conf
+		DEPENDENCY_01='www-client/firefox'
+		DEPENDENCY_02=""
+	elif [ "${LINUX_DISTRO}" = "suse" ]; then
+		DEPENDENCY_01="MozillaFirefox-esr"
+		DEPENDENCY_02="MozillaFirefox-esr-translations-common"
+	fi
+	beta_features_quick_install
+	#################
+	if [ ! $(command -v firefox-esr) ]; then
+		echo "${YELLOW}对不起，我...我真的已经尽力了ヽ(*。>Д<)o゜！您的软件源仓库里容不下我，我只好叫姐姐来代替了。${RESET}"
+		echo 'Press Enter to confirm.'
+		echo "${YELLOW}按回车键确认。${RESET}"
+		read
+		install_firefox_browser
+	fi
+}
+#####################
+install_firefox_browser() {
+	echo 'Thank you for choosing me, I will definitely do better than my sister! ╰ (* ° ▽ ° *) ╯'
+	echo " ${YELLOW}“谢谢您选择了我，我一定会比妹妹向您提供更好的上网服务的！”╰(*°▽°*)╯火狐娘坚定地说道。${RESET}"
+	echo "1s后将自动开始安装"
+	sleep 1
+	NON_DEBIAN='false'
+	DEPENDENCY_01="firefox"
+	DEPENDENCY_02="firefox-l10n-zh-cn"
+
+	if [ "${LINUX_DISTRO}" = "debian" ]; then
+		if [ "${DEBIAN_DISTRO}" = "ubuntu" ]; then
+			DEPENDENCY_02="firefox-locale-zh-hans"
+		fi
+	elif [ "${LINUX_DISTRO}" = "arch" ]; then
+		DEPENDENCY_02="firefox-i18n-zh-cn"
+	elif [ "${LINUX_DISTRO}" = "redhat" ]; then
+		DEPENDENCY_02="firefox-x11"
+	elif [ "${LINUX_DISTRO}" = "gentoo" ]; then
+		dispatch-conf
+		DEPENDENCY_01="www-client/firefox-bin"
+		DEPENDENCY_02=""
+	elif [ "${LINUX_DISTRO}" = "suse" ]; then
+		DEPENDENCY_01="MozillaFirefox"
+		DEPENDENCY_02="MozillaFirefox-translations-common"
+	fi
+	beta_features_quick_install
+	################
+	if [ ! $(command -v firefox) ]; then
+		echo "${YELLOW}对不起，我...我真的已经尽力了ヽ(*。>Д<)o゜！您的软件源仓库里容不下我，我只好叫妹妹ESR来代替了。${RESET}"
+		echo 'Press Enter to confirm.'
+		echo "${YELLOW}按回车键确认。${RESET}"
+		read
+		install_firefox_esr_browser
+	fi
+}
+#####################
 install_browser() {
 	if (whiptail --title "请从两个小可爱中里选择一个 " --yes-button "Firefox" --no-button "chromium" --yesno "建议在安装完图形界面后，再来选择哦！(　o=^•ェ•)o　┏━┓\n我是火狐娘，选我啦！♪(^∇^*) \n妾身是chrome娘的姐姐chromium娘，妾身和那些妖艳的货色不一样，选择妾身就没错呢！(✿◕‿◕✿)✨\n请做出您的选择！ " 15 50); then
 
 		if (whiptail --title "请从两个小可爱中里选择一个 " --yes-button "Firefox-ESR" --no-button "Firefox" --yesno " 我是firefox，其实我还有个妹妹叫firefox-esr，您是选我还是选esr?\n “(＃°Д°)姐姐，我可是什么都没听你说啊！” 躲在姐姐背后的ESR瑟瑟发抖地说。\n✨请做出您的选择！ " 15 50); then
 			#echo 'esr可怜巴巴地说道:“我也想要得到更多的爱。”  '
 			#什么乱七八糟的，2333333戏份真多。
-			echo 'Thank you for choosing me, I will definitely do better than my sister! ╰ (* ° ▽ ° *) ╯'
-			echo "${YELLOW} “谢谢您选择了我，我一定会比姐姐向您提供更好的上网服务的！”╰(*°▽°*)╯火狐ESR娘坚定地说道。 ${RESET} "
-			echo "1s后将自动开始安装"
-			sleep 1
-			echo
-			if [ "${LINUX_DISTRO}" = "debian" ]; then
-				if [ "${DEBIAN_DISTRO}" = "ubuntu" ]; then
-					add-apt-repository -y ppa:mozillateam/ppa
-				fi
-				apt update
-				#分项安装，防止ubuntu安装失败
-				apt install -y firefox-esr
-				apt install -y firefox-esr-l10n-zh-cn 2>/dev/null
-				apt install -y firefox-esr-locale-zh-hans 2>/dev/null
-			elif [ "${LINUX_DISTRO}" = "arch" ]; then
-				pacman -Sy --noconfirm firefox-esr-gtk2
-				if [ ! -e "/usr/bin/firefox-esr" ]; then
-					echo "${YELLOW}对不起，我...我真的已经尽力了ヽ(*。>Д<)o゜！您的软件源仓库里容不下我，我只好叫姐姐来代替了。${RESET}"
-					pacman -Syu --noconfirm firefox firefox-i18n-zh-cn
-				fi
-
-			elif [ "${LINUX_DISTRO}" = "redhat" ]; then
-				dnf install -y firefox-esr || yum install -y firefox-esr
-				if [ ! -e "/usr/bin/firefox-esr" ]; then
-					echo "${YELLOW}对不起，我...我真的已经尽力了ヽ(*。>Д<)o゜！您的软件源仓库里容不下我，我只好叫姐姐来代替了。${RESET}"
-					dnf install -y firefox || yum install -y firefox
-				fi
-			elif [ "${LINUX_DISTRO}" = "gentoo" ]; then
-				dispatch-conf
-				emerge -avk www-client/firefox
-			elif [ "${LINUX_DISTRO}" = "suse" ]; then
-				zypper in -y MozillaFirefox MozillaFirefox-translations-common
-			fi
+			install_firefox_esr_browser
 		else
-			echo 'Thank you for choosing me, I will definitely do better than my sister! ╰ (* ° ▽ ° *) ╯'
-			echo " ${YELLOW}“谢谢您选择了我，我一定会比妹妹向您提供更好的上网服务的！”╰(*°▽°*)╯火狐娘坚定地说道。${RESET} "
-			echo "1s后将自动开始安装"
-			sleep 1
-			if [ "${LINUX_DISTRO}" = "debian" ]; then
-				apt update
-				apt install -y firefox
-				if [ ! -e "/usr/bin/firefox" ]; then
-					apt install -y firefox-esr firefox-esr-l10n-zh-cn
-				fi
-				#两次检测
-				if [ -e "/usr/bin/firefox-esr" ]; then
-					echo "${YELLOW}对不起，我...我真的已经尽力了ヽ(*。>Д<)o゜！您的软件源仓库里容不下我，我只好叫妹妹ESR来代替了。${RESET}"
-				fi
-				apt install -y firefox-l10n-zh-cn 2>/dev/null
-				apt install -y firefox-locale-zh-hans 2>/dev/null
-			elif [ "${LINUX_DISTRO}" = "arch" ]; then
-				pacman -Syu --noconfirm firefox firefox-i18n-zh-cn
-			elif [ "${LINUX_DISTRO}" = "redhat" ]; then
-				dnf install -y firefox || yum install -y firefox
-			elif [ "${LINUX_DISTRO}" = "gentoo" ]; then
-				dispatch-conf
-				emerge -avk www-client/firefox-bin
-			elif [ "${LINUX_DISTRO}" = "suse" ]; then
-				zypper in -y MozillaFirefox MozillaFirefox-translations-common
-			fi
+			install_firefox_browser
 		fi
 		echo "若无法正常加载HTML5视频，则您可能需要安装火狐扩展${YELLOW}User-Agent Switcher and Manager${RESET}，并将浏览器UA修改为windows版chrome"
 	else
-
-		echo "${YELLOW}妾身就知道你没有看走眼！${RESET}"
-		echo '要是下次见不到妾身，就关掉那个小沙盒吧！"chromium --no-sandbox"'
-		echo "1s后将自动开始安装"
-		sleep 1
-		if [ "${LINUX_DISTRO}" = "debian" ]; then
-			#新版Ubuntu是从snap商店下载chromium的，为解决这一问题，将临时换源成ubuntu 18.04LTS.
-			if [ "${DEBIAN_DISTRO}" = "ubuntu" ]; then
-				if ! grep -q '^deb.*bionic-update' "/etc/apt/sources.list"; then
-					if [ "${ARCH_TYPE}" = "amd64" ] || [ "${ARCH_TYPE}" = "i386" ]; then
-						sed -i '$ a\deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-updates main restricted universe multiverse' "/etc/apt/sources.list"
-					else
-						sed -i '$ a\deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ bionic-updates main restricted universe multiverse' "/etc/apt/sources.list"
-					fi
-					apt update
-					apt install -y chromium-browser/bionic-updates
-					apt install -y chromium-browser-l10n/bionic-updates
-					sed -i '$ d' "/etc/apt/sources.list"
-					apt-mark hold chromium-browser chromium-browser-l10n chromium-codecs-ffmpeg-extra
-					apt update
-				else
-					apt install -y chromium-browser chromium-browser-l10n
-				fi
-				sed -i 's/chromium-browser %U/chromium-browser --no-sandbox %U/g' /usr/share/applications/chromium-browser.desktop
-				grep 'chromium-browser' /etc/profile || sed -i '$ a\alias chromium="chromium-browser --no-sandbox"' /etc/profile
-			else
-				apt update
-				apt install -y chromium chromium-l10n
-				sed -i 's/chromium %U/chromium --no-sandbox %U/g' /usr/share/applications/chromium.desktop
-				grep 'chromium' /etc/profile || sed -i '$ a\alias chromium="chromium --no-sandbox"' /etc/profile
-			fi
-		#echo 'alias chromium="chromium --no-sandbox"' >>/etc/profile
-		elif [ "${LINUX_DISTRO}" = "arch" ]; then
-			pacman -Syu --noconfirm chromium
-			sed -i 's/chromium %U/chromium --no-sandbox %U/g' /usr/share/applications/chromium.desktop
-			grep 'chromium' /etc/profile || sed -i '$ a\alias chromium="chromium --no-sandbox"' /etc/profile
-		elif [ "${LINUX_DISTRO}" = "redhat" ]; then
-			dnf install -y chromium || yum install -y chromium
-			sed -i 's/chromium %U/chromium --no-sandbox %U/g' /usr/share/applications/chromium.desktop
-			grep 'chromium' /etc/profile || sed -i '$ a\alias chromium="chromium --no-sandbox"' /etc/profile
-		elif [ "${LINUX_DISTRO}" = "gentoo" ]; then
-			dispatch-conf
-			emerge -avk www-client/chromium
-		#emerge -avk www-client/google-chrome-unstable
-		elif [ "${LINUX_DISTRO}" = "suse" ]; then
-			zypper in -y chromium chromium-plugin-widevinecdm chromium-ffmpeg-extra
-		fi
+		install_chromium_browser
 	fi
 	echo 'Press enter to return.'
 	echo "${YELLOW}按回车键返回。${RESET}"
@@ -2138,7 +2184,7 @@ remove_gui() {
 	echo '"lxde" "很庆幸能与阁下相遇（；´д｀）ゞ "  '
 	echo '"mate" "喔...喔呜...我不舍得你走/(ㄒoㄒ)/~~"  '
 	#新功能预告：即将适配非deb系linux的gui卸载功能
-	echo "${YELLOW}按回车键确认卸载,按Ctrl+C取消${RESET} "
+	echo "${YELLOW}按回车键确认卸载,按Ctrl+C取消${RESET}"
 	echo 'Press enter to confirm ,press Ctrl + C to cancel'
 	read
 	if [ "${LINUX_DISTRO}" = "debian" ]; then
@@ -2181,7 +2227,7 @@ remove_gui() {
 remove_browser() {
 	if (whiptail --title "请从两个小可爱中里选择一个 " --yes-button "Firefox" --no-button "chromium" --yesno '火狐娘:“虽然知道总有离别时，但我没想到这一天竟然会这么早。虽然很不舍，但还是很感激您曾选择了我。希望我们下次还会再相遇，呜呜...(;´༎ຶД༎ຶ`)”chromium娘：“哼(￢︿̫̿￢☆)，负心人，走了之后就别回来了！o(TヘTo) 。”  ✨请做出您的选择！' 10 60); then
 		echo '呜呜...我...我才...才不会为了这点小事而流泪呢！ヽ(*。>Д<)o゜'
-		echo "${YELLOW}按回车键确认卸载firefox,按Ctrl+C取消${RESET} "
+		echo "${YELLOW}按回车键确认卸载firefox,按Ctrl+C取消${RESET}"
 		echo 'Press enter to confirm uninstall firefox,press Ctrl + C to cancel'
 		read
 		apt purge -y firefox-esr firefox-esr-l10n-zh-cn
@@ -2194,7 +2240,7 @@ remove_browser() {
 
 	else
 		echo '小声嘀咕：“妾身不在的时候，你一定要好好照顾好自己。” '
-		echo "${YELLOW}按回车键确认卸载chromium,按Ctrl+C取消${RESET} "
+		echo "${YELLOW}按回车键确认卸载chromium,按Ctrl+C取消${RESET}"
 		echo 'Press enter to confirm uninstall chromium,press Ctrl + C to cancel'
 		read
 		apt purge -y chromium chromium-l10n
@@ -2550,7 +2596,7 @@ install_mpv() {
 install_linux_qq() {
 	DEPENDENCY_01="linuxqq"
 	DEPENDENCY_02=""
-	if [ -e "/usr/share/tencent-qq" ]; then
+	if [ -e "/usr/share/applications/qq.desktop" ]; then
 		press_enter_to_reinstall
 	fi
 	cd /tmp
@@ -2645,7 +2691,18 @@ install_synaptic() {
 ##########################################
 install_chinese_manpages() {
 	echo '即将为您安装 debian-reference-zh-cn、manpages、manpages-zh和man-db'
-	DEPENDENCY_01="manpages manpages-zh man-db"
+
+	if [ "${LINUX_DISTRO}" = "debian" ]; then
+		DEPENDENCY_01="manpages manpages-zh man-db"
+
+	elif [ "${LINUX_DISTRO}" = "arch" ]; then
+		DEPENDENCY_01="man-pages-zh_cn man-pages-zh_tw"
+
+	elif [ "${LINUX_DISTRO}" = "redhat" ]; then
+		DEPENDENCY_01="man-pages-zh-CN"
+	else
+		DEPENDENCY_01="man-pages-zh-CN"
+	fi
 	DEPENDENCY_02="debian-reference-zh-cn"
 	NON_DEBIAN='false'
 	beta_features_quick_install
@@ -2661,7 +2718,6 @@ install_chinese_manpages() {
 	echo "man一款帮助手册软件，它可以帮助您了解关于命令的详细用法。"
 	echo "man a help manual software, which can help you understand the detailed usage of the command."
 	echo "您可以输${YELLOW}man 软件或命令名称${RESET}来获取帮助信息，例如${YELLOW}man bash${RESET}或${YELLOW}man zsh${RESET}"
-	beta_features_install_completed
 }
 #####################
 install_libre_office() {
@@ -3445,18 +3501,30 @@ non_debian_function() {
 		echo "非常抱歉，本功能仅适配deb系发行版"
 		echo "Sorry, this feature is only suitable for debian based distributions"
 		echo "Press enter to return"
-		echo "${YELLOW}按回车键退出。${RESET} "
+		echo "${YELLOW}按回车键退出。${RESET}"
 		read
 		beta_features
 	fi
 }
 ############
 press_enter_to_reinstall() {
-	echo "检测到${YELLOW}您已安装${RESET} ${GREEN} ${DEPENDENCY_01} ${RESET}"
+	echo "检测到${YELLOW}您已安装${RESET} ${GREEN} ${DEPENDENCY_01} ${DEPENDENCY_02} ${RESET}"
 	echo "如需${RED}卸载${RESET}，请手动输${BLUE} ${PACKAGES_REMOVE_COMMAND} ${DEPENDENCY_01} ${DEPENDENCY_02} ${RESET}"
-	echo "${YELLOW}按回车键重新安装,按Ctrl+C取消${RESET}"
-	echo "Press enter to reinstall,press Ctrl+C to cancel"
-	read
+	echo "按${YELLOW}回车键${RESET}重新安装,输${YELLOW}n${RESET}返回"
+	echo "${YELLOW}Do you want to reinstall it?[Y/n]${RESET}"
+	echo "Press enter to reinstall,type n to return"
+	read opt
+	case $opt in
+	y* | Y* | "") ;;
+	n* | N*)
+		echo "skipped."
+		beta_features
+		;;
+	*)
+		echo "Invalid choice. skipped."
+		beta_features
+		;;
+	esac
 }
 #######################
 beta_features_install_completed() {
@@ -3493,11 +3561,24 @@ beta_features_quick_install() {
 	############
 	if [ "${EXISTS_COMMAND}" = "true" ]; then
 		EXISTS_COMMAND='false'
-		echo "${YELLOW}按回车键重新安装,按Ctrl+C取消${RESET}"
-		echo "Press enter to reinstall,press Ctrl+C to cancel"
-		read
+		echo "按${YELLOW}回车键${RESET}重新安装,输${YELLOW}n${RESET}返回"
+		echo "${YELLOW}Do you want to reinstall it?[Y/n]${RESET}"
+		echo "Press enter to reinstall,type n to return"
+		read opt
+		case $opt in
+		y* | Y* | "") ;;
+		n* | N*)
+			echo "skipped."
+			beta_features
+			;;
+		*)
+			echo "Invalid choice. skipped."
+			beta_features
+			;;
+		esac
 		#上面不能调用press_enter_function
 	fi
+
 	############
 	different_distro_software_install
 	#############

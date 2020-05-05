@@ -617,7 +617,6 @@ EOF
 chmod +x remove-debian.sh
 
 ########################
-
 if [ ! -d "${DEBIAN_CHROOT}/usr/local/bin" ]; then
  mkdir -p ${DEBIAN_CHROOT}/usr/local/bin
 fi
@@ -661,7 +660,7 @@ elif [ -f "${HOME}/.MANJARO_ARM_DETECTION_FILE" ]; then
  rm -f ${HOME}/.MANJARO_ARM_DETECTION_FILE
  sed -i 's@^#SigLevel.*@SigLevel = Never@' "${DEBIAN_CHROOT}/etc/pacman.conf"
 fi
-
+########################
 #配置zsh
 cat >zsh.sh <<-'ADDZSHSHELL'
 	#!/bin/bash

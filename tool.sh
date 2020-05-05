@@ -37,39 +37,54 @@ check_root() {
 check_dependencies() {
 	if grep -Eq 'debian|ubuntu' "/etc/os-release"; then
 		LINUX_DISTRO='debian'
+		PACKAGES_INSTALL_COMMAND='apt install -y'
+		PACKAGES_REMOVE_COMMAND='apt purge -y'
 		if grep -q 'ubuntu' /etc/os-release; then
 			DEBIAN_DISTRO='ubuntu'
 		elif [ "$(cat /etc/issue | cut -c 1-4)" = "Kali" ]; then
 			DEBIAN_DISTRO='kali'
 		fi
-
+		###################
 	elif grep -Eq "opkg|entware" '/opt/etc/opkg.conf' 2>/dev/null || grep -q 'openwrt' "/etc/os-release"; then
 		LINUX_DISTRO='openwrt'
-
+		PACKAGES_INSTALL_COMMAND='opkg install'
+		PACKAGES_REMOVE_COMMAND='opkg remove'
+		##################
 	elif grep -Eqi "Fedora|CentOS|Red Hat|redhat" "/etc/os-release"; then
 		LINUX_DISTRO='redhat'
+		PACKAGES_INSTALL_COMMAND='dnf install -y'
+		PACKAGES_REMOVE_COMMAND='dnf remove -y'
 		if [ "$(cat /etc/os-release | grep 'ID=' | head -n 1 | cut -d '"' -f 2)" = "centos" ]; then
 			REDHAT_DISTRO='centos'
 		elif grep -q 'Fedora' "/etc/os-release"; then
 			REDHAT_DISTRO='fedora'
 		fi
-
+		###################
 	elif grep -q "Alpine" '/etc/issue' || grep -q "Alpine" "/etc/os-release"; then
 		LINUX_DISTRO='alpine'
-
+		PACKAGES_INSTALL_COMMAND='apk add'
+		PACKAGES_REMOVE_COMMAND='apk del'
+		######################
 	elif grep -Eq "Arch|Manjaro" '/etc/os-release' || grep -Eq "Arch|Manjaro" '/etc/issue'; then
 		LINUX_DISTRO='arch'
-
+		PACKAGES_INSTALL_COMMAND='pacman -Sy'
+		PACKAGES_REMOVE_COMMAND='pacman -Rsc'
+		######################
 	elif grep -Eq "gentoo|funtoo" "/etc/os-release"; then
 		LINUX_DISTRO='gentoo'
-
+		PACKAGES_INSTALL_COMMAND='pacman -vk'
+		PACKAGES_REMOVE_COMMAND='pacman -C'
+		########################
 	elif grep -qi 'suse' '/etc/os-release'; then
 		LINUX_DISTRO='suse'
-
+		PACKAGES_INSTALL_COMMAND='zypper in -y'
+		PACKAGES_REMOVE_COMMAND='zypper rm'
+		########################
 	elif [ "$(cat /etc/issue | cut -c 1-4)" = "Void" ]; then
 		LINUX_DISTRO='void'
+		PACKAGES_INSTALL_COMMAND='xbps-install -S -y'
+		PACKAGES_REMOVE_COMMAND='xbps-remove -R'
 	fi
-
 	#####################
 	DEPENDENCIES=""
 
@@ -312,8 +327,12 @@ check_dependencies() {
 	else
 		TMOE_NOT_DEBIAN=""
 	fi
-
+	##############
+	RED=$(printf '\033[31m')
+	GREEN=$(printf '\033[32m')
 	YELLOW=$(printf '\033[33m')
+	BLUE=$(printf '\033[34m')
+	BOLD=$(printf '\033[1m')
 	RESET=$(printf '\033[m')
 	cur=$(pwd)
 	tmoe_linux_tool_menu
@@ -322,7 +341,7 @@ check_dependencies() {
 tmoe_linux_tool_menu() {
 	cd ${cur}
 	TMOE_OPTION=$(
-		whiptail --title "Tmoe-linux Tool输debian-i启动(20200504-23)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.当前主菜单有十几个选项，请使用方向键或触屏上下滑动，按回车键确认。${TMOE_NOT_DEBIAN} 更新日志:0501支持解析并下载B站、油管视频,0502支持搭建个人云网盘,0503优化code-server的配置" 20 50 7 \
+		whiptail --title "Tmoe-linux Tool输debian-i启动(20200505-15)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.当前主菜单有十几个选项，请使用方向键或触屏上下滑动，按回车键确认。${TMOE_NOT_DEBIAN} 更新日志:0501支持解析并下载B站、油管视频,0502支持搭建个人云网盘,0503优化code-server的配置" 20 50 7 \
 			"1" "Install GUI 安装图形界面" \
 			"2" "Install browser 安装浏览器" \
 			"3" "Download theme 下载主题" \
@@ -413,6 +432,50 @@ tmoe_linux_tool_menu() {
 	read
 	tmoe_linux_tool_menu
 }
+############################
+############################
+different_distro_software_install() {
+	if [ "${LINUX_DISTRO}" = "debian" ]; then
+		apt update
+		apt install -y ${DEPENDENCY_01}
+		apt install -y ${DEPENDENCY_02}
+		################
+	elif [ "${LINUX_DISTRO}" = "alpine" ]; then
+		apk update
+		apk add ${DEPENDENCY_01}
+		apk add ${DEPENDENCY_02}
+		################
+	elif [ "${LINUX_DISTRO}" = "arch" ]; then
+		pacman -Syu --noconfirm ${DEPENDENCY_01}
+		pacman -Syu --noconfirm ${DEPENDENCY_02}
+		################
+	elif [ "${LINUX_DISTRO}" = "redhat" ]; then
+		dnf install -y ${DEPENDENCY_01} || yum install -y ${DEPENDENCY_01}
+		dnf install -y ${DEPENDENCY_02} || yum install -y ${DEPENDENCY_02}
+		################
+	elif [ "${LINUX_DISTRO}" = "openwrt" ]; then
+		#opkg update
+		opkg install ${DEPENDENCY_01}
+		opkg install ${DEPENDENCY_02}
+		################
+	elif [ "${LINUX_DISTRO}" = "gentoo" ]; then
+		emerge -vk ${DEPENDENCY_01}
+		emerge -vk ${DEPENDENCY_02}
+		################
+	elif [ "${LINUX_DISTRO}" = "suse" ]; then
+		zypper in -y ${DEPENDENCY_01}
+		zypper in -y ${DEPENDENCY_02}
+		################
+	elif [ "${LINUX_DISTRO}" = "void" ]; then
+		xbps-install -S -y ${DEPENDENCY_01}
+		xbps-install -S -y ${DEPENDENCY_02}
+		################
+	else
+		apt update
+		apt install -y ${DEPENDENCY_01} || port install ${DEPENDENCY_01} || guix package -i ${DEPENDENCY_01} || pkg install ${DEPENDENCY_01} || pkg_add ${DEPENDENCY_01} || pkgutil -i ${DEPENDENCY_01}
+	fi
+}
+############################
 ############################
 tmoe_linux_tool_upgrade() {
 	curl -Lvo /usr/local/bin/debian-i 'https://gitee.com/mo2/linux/raw/master/tool.sh'
@@ -1098,7 +1161,7 @@ install_vscodium() {
 		echo '检测到您已安装VSCodium,请手动输以下命令启动'
 		#echo 'codium --user-data-dir=${HOME}/.config/VSCodium'
 		echo "codium --user-data-dir=${HOME}"
-		echo "如需卸载，请手动输apt purge -y codium"
+		echo "如需卸载，请手动输${PACKAGES_REMOVE_COMMAND} codium"
 	elif [ -e "/usr/local/bin/vscodium-data/codium" ]; then
 		echo "检测到您已安装VSCodium,请输codium --no-sandbox启动"
 		echo "如需卸载，请手动输rm -rvf /usr/local/bin/vscodium-data/ /usr/local/bin/vscodium"
@@ -1138,7 +1201,7 @@ install_vscode_oss() {
 		echo "检测到您已安装VSCode OSS,请手动输以下命令启动"
 		#echo 'code-oss --user-data-dir=${HOME}/.config/Code\ -\ OSS\ \(headmelted\)'
 		echo "code-oss --user-data-dir=${HOME}"
-		echo "如需卸载，请手动输apt purge -y code-oss"
+		echo "如需卸载，请手动输${PACKAGES_REMOVE_COMMAND} code-oss"
 		echo "${YELLOW}按回车键返回。${RESET}"
 		echo "Press enter to return."
 		read
@@ -1160,7 +1223,7 @@ install_vscode_oss() {
 	fi
 	echo "安装完成,请手动输以下命令启动"
 	echo "code-oss --user-data-dir=${HOME}"
-	echo "如需卸载，请手动输apt purge -y code-oss"
+	echo "如需卸载，请手动输${PACKAGES_REMOVE_COMMAND} code-oss"
 	echo "${YELLOW}按回车键返回。${RESET}"
 	echo "Press enter to return."
 	read
@@ -1181,7 +1244,7 @@ install_vscode_official() {
 		echo '检测到您已安装VSCode,请手动输以下命令启动'
 		#echo 'code --user-data-dir=${HOME}/.vscode'
 		echo 'code --user-data-dir=${HOME}'
-		echo "如需卸载，请手动输apt purge -y code"
+		echo "如需卸载，请手动输${PACKAGES_REMOVE_COMMAND} code"
 		echo "${YELLOW}按回车键返回。${RESET}"
 		echo "Press enter to return."
 		read
@@ -2187,7 +2250,7 @@ configure_theme() {
 			echo '请前往外观设置手动修改图标'
 		fi
 		#gtk-update-icon-cache /usr/share/icons/ukui-icon-theme/ 2>/dev/null
-		echo "安装完成，如需卸载，请手动输apt purge -y ukui-themes"
+		echo "安装完成，如需卸载，请手动输${PACKAGES_REMOVE_COMMAND} ukui-themes"
 	fi
 
 	if [ "${INSTALL_THEME}" == '2' ]; then
@@ -2242,7 +2305,7 @@ configure_theme() {
 		apt install -y breeze-cursor-theme breeze-gtk-theme
 		apt install -y breeze-icon-theme
 		apt install -y xfwm4-theme-breeze
-		echo "Install completed.如需卸载，请手动输apt purge -y breeze-cursor-theme breeze-gtk-theme breeze-icon-theme xfwm4-theme-breeze"
+		echo "Install completed.如需卸载，请手动输${PACKAGES_REMOVE_COMMAND} breeze-cursor-theme breeze-gtk-theme breeze-icon-theme xfwm4-theme-breeze"
 	fi
 	######################################
 	if [ "${INSTALL_THEME}" == '6' ]; then
@@ -2293,7 +2356,7 @@ install_kali_undercover() {
 			#rm -f ./kali-undercover.deb
 		fi
 	fi
-	echo "安装完成，如需卸载，请手动输apt purge -y kali-undercover"
+	echo "安装完成，如需卸载，请手动输${PACKAGES_REMOVE_COMMAND} kali-undercover"
 	echo 'Press Enter to return.'
 	echo "${YELLOW}按回车键返回。${RESET}"
 	read
@@ -2414,7 +2477,7 @@ other_software() {
 	if [ "${SOFTWARE}" == '3' ]; then
 		apt update
 		apt install -y wesnoth
-		echo "安装完成，如需卸载，请手动输apt purge -y wesnoth"
+		echo "安装完成，如需卸载，请手动输${PACKAGES_REMOVE_COMMAND} wesnoth"
 	fi
 	##############################
 	if [ "${SOFTWARE}" == '4' ]; then
@@ -2433,7 +2496,7 @@ other_software() {
 		apt update
 		apt install -y gimp
 		gimp &
-		echo "安装完成，如需卸载，请手动输apt purge -y gimp"
+		echo "安装完成，如需卸载，请手动输${PACKAGES_REMOVE_COMMAND} gimp"
 	fi
 	##########################
 	if [ "${SOFTWARE}" == '8' ]; then
@@ -2443,7 +2506,7 @@ other_software() {
 	if [ "${SOFTWARE}" == '9' ]; then
 		apt update
 		apt install -y parole
-		echo "安装完成，如需卸载，请手动输apt purge -y parole"
+		echo "安装完成，如需卸载，请手动输${PACKAGES_REMOVE_COMMAND} parole"
 	fi
 	##########################
 	if [ "${SOFTWARE}" == '10' ]; then
@@ -2476,7 +2539,7 @@ other_software() {
 install_mpv() {
 	if [ -e "/usr/bin/mpv" ]; then
 		echo "检测到您已安装mpv,按回车键重新安装,按Ctrl+C取消"
-		echo "Press enter to continue."
+		echo "Press enter to reinstall."
 		read
 	fi
 
@@ -2488,14 +2551,14 @@ install_mpv() {
 	elif [ "${LINUX_DISTRO}" = "redhat" ]; then
 		dnf install -y kmplayer || yum install -y kmplayer
 	fi
-	echo "安装完成，如需卸载，请手动输apt purge -y mpv"
+	echo "安装完成，如需卸载，请手动输${PACKAGES_REMOVE_COMMAND} mpv"
 }
 #############
 install_linux_qq() {
 	cd /tmp
 	if [ -e "/usr/share/tencent-qq" ]; then
 		echo "检测到您已安装linuxQQ,按回车键重新安装,按Ctrl+C取消"
-		echo "Press enter to continue."
+		echo "Press enter to reinstall."
 		read
 	fi
 
@@ -2529,7 +2592,7 @@ install_linux_qq() {
 	echo "若安装失败，则请前往官网手动下载安装。"
 	echo "url: https://im.qq.com/linuxqq/download.html"
 	rm -fv ./LINUXQQ.deb ./LINUXQQ.sh 2>/dev/null
-	echo "安装完成，如需卸载，请手动输apt purge -y linuxqq"
+	echo "安装完成，如需卸载，请手动输${PACKAGES_REMOVE_COMMAND} linuxqq"
 }
 ###################
 install_nds_game_mayomonogatari() {
@@ -2556,7 +2619,7 @@ install_nds_game_mayomonogatari() {
 		rm -f slymkbr1.zip* mayomonogatari2.zip*
 	fi
 	echo "安装完成，您需要手动进入'/root/斯隆与马克贝尔的谜之物语'目录加载游戏"
-	echo "如需卸载，请手动输apt purge -y desmume ; rm -rf ~/斯隆与马克贝尔的谜之物语"
+	echo "如需卸载，请手动输${PACKAGES_REMOVE_COMMAND} desmume ; rm -rf ~/斯隆与马克贝尔的谜之物语"
 	echo 'Press enter to start the nds emulator.'
 	echo "${YELLOW}按回车键启动游戏。${RESET}"
 	read
@@ -2569,7 +2632,7 @@ install_game_cataclysm() {
 		apt install -y cataclysm-dda-curses cataclysm-dda-sdl
 	fi
 
-	echo "安装完成，如需卸载，请手动输apt purge -y ^cataclysm-dda"
+	echo "安装完成，如需卸载，请手动输${PACKAGES_REMOVE_COMMAND} ^cataclysm-dda"
 	echo "在终端环境下，您需要缩小显示比例，并输入cataclysm来启动字符版游戏。"
 	echo "在gui下，您需要输cataclysm-tiles来启动画面更为华丽的图形界面版游戏。"
 	echo 'Press Enter to return.'
@@ -2617,7 +2680,7 @@ install_chinese_manpages() {
 	echo "man一款帮助手册软件，它可以帮助您了解关于命令的详细用法。"
 	echo "man a help manual software, which can help you understand the detailed usage of the command."
 	echo "您可以输${YELLOW}man 软件或命令名称${RESET}来获取帮助信息，例如${YELLOW}man bash${RESET}或${YELLOW}man zsh${RESET}"
-	echo "如需卸载，请手动输apt purge -y debian-reference-zh-cn manpages manpages-zh man-db "
+	echo "如需卸载，请手动输${PACKAGES_REMOVE_COMMAND} debian-reference-zh-cn manpages manpages-zh man-db "
 }
 #####################
 install_libre_office() {
@@ -2636,7 +2699,7 @@ install_libre_office() {
 		curl -Lo 'oosplash' https://gitee.com/mo2/patch/raw/libreoffice/oosplash
 		chmod +x oosplash
 	fi
-	echo "安装完成，如需卸载，请手动输apt purge -y ^libreoffice"
+	echo "安装完成，如需卸载，请手动输${PACKAGES_REMOVE_COMMAND} ^libreoffice"
 }
 ###################
 install_baidu_netdisk() {
@@ -2649,7 +2712,7 @@ install_baidu_netdisk() {
 	fi
 	if [ -e "/usr/share/applications/baidunetdisk.desktop" ]; then
 		echo "检测到您已安装baidunetdisk,按回车键重新安装,按Ctrl+C取消"
-		echo "Press enter to continue."
+		echo "Press enter to reinstall."
 		read
 	fi
 	cd /tmp
@@ -2661,7 +2724,7 @@ install_baidu_netdisk() {
 	else
 		curl -Lvo baidunetdisk.deb "http://wppkg.baidupcs.com/issue/netdisk/LinuxGuanjia/3.0.1/baidunetdisk_linux_3.0.1.2.deb"
 		apt install -y ./baidunetdisk.deb
-		echo "安装完成，如需卸载，请手动输apt purge -y baidunetdisk"
+		echo "安装完成，如需卸载，请手动输${PACKAGES_REMOVE_COMMAND} baidunetdisk"
 		rm -fv ./baidunetdisk.deb
 	fi
 }
@@ -2676,7 +2739,7 @@ install_netease_163_cloud_music() {
 	fi
 	if [ -e "/usr/share/applications/netease-cloud-music.desktop" ]; then
 		echo "检测到您已安装netease-cloud-music,按回车键重新安装,按Ctrl+C取消"
-		echo "Press enter to continue."
+		echo "Press enter to reinstall."
 		read
 	fi
 	cd /tmp
@@ -2693,7 +2756,7 @@ install_netease_163_cloud_music() {
 			curl -Lvo netease-cloud-music.deb "http://mirrors.ustc.edu.cn/debiancn/pool/main/n/netease-cloud-music/netease-cloud-music_1.0.0%2Brepack.debiancn-1_i386.deb"
 		fi
 		apt install -y ./netease-cloud-music.deb
-		echo "安装完成，如需卸载，请手动输apt purge -y netease-cloud-music"
+		echo "安装完成，如需卸载，请手动输${PACKAGES_REMOVE_COMMAND} netease-cloud-music"
 		rm -fv ./netease-cloud-music.deb
 	fi
 	echo 'Press Enter to return.'
@@ -2719,7 +2782,7 @@ install_android_debug_bridge() {
 	if [ -e /usr/bin/adb ]; then
 		adb --help
 		echo "adb安装完成"
-		echo "如需卸载，请手动输apt purge -y adb"
+		echo "如需卸载，请手动输${PACKAGES_REMOVE_COMMAND} adb"
 		echo "正在重启进程,您也可以手动输adb devices来获取设备列表"
 		adb kill-server
 		adb devices -l
@@ -2744,7 +2807,7 @@ install_bleachbit_cleaner() {
 
 	if [ -e /usr/bin/bleachbit ]; then
 		bleachbit --help
-		echo "bleachbit安装完成，如需卸载，请手动输apt purge -y bleachbit"
+		echo "bleachbit安装完成，如需卸载，请手动输${PACKAGES_REMOVE_COMMAND} bleachbit"
 	fi
 }
 ##########################
@@ -3401,7 +3464,67 @@ fix_vnc_dbus_launch() {
 	read
 	tmoe_linux_tool_menu
 }
+###################
+###################
+non_debian_function() {
+	if [ "${LINUX_DISTRO}" != 'debian' ]; then
+		echo "非常抱歉，本功能仅适配deb系发行版"
+		echo "Sorry, this feature is only suitable for debian based distributions"
+		echo "Press enter to return"
+		echo "${YELLOW}按回车键退出。${RESET} "
+		read
+		beta_features
+	fi
+}
+############
+press_enter_to_reinstall() {
+	echo "${YELLOW}按回车键重新安装,按Ctrl+C取消${RESET}"
+	echo "Press enter to reinstall,press Ctrl+C to cancel"
+	read
+}
 ####################
+beta_features_quick_install() {
+	if [ "${NON_DEBIAN}" = 'true' ]; then
+		non_debian_function
+	fi
+	#############
+	if [ ! -z "${DEPENDENCY_01}" ]; then
+		DEPENDENCY_01_COMMAND=$(echo ${DEPENDENCY_01} | awk -F ' ' '$0=$NF')
+		if [ $(command -v ${DEPENDENCY_01_COMMAND}) ]; then
+			echo "检测到${YELLOW}您已安装${RESET} ${GREEN} ${DEPENDENCY_01} ${RESET}"
+			echo "如需${RED}卸载${RESET}，请手动输${BLUE} ${PACKAGES_REMOVE_COMMAND} ${DEPENDENCY_01} ${RESET}"
+			EXISTS_COMMAND='true'
+		fi
+	fi
+	#############
+	if [ ! -z "${DEPENDENCY_02}" ]; then
+		DEPENDENCY_02_COMMAND=$(echo ${DEPENDENCY_02} | awk -F ' ' '$0=$NF')
+		if [ $(command -v ${DEPENDENCY_02_COMMAND}) ]; then
+			echo "检测到${YELLOW}您已安装${RESET} ${GREEN} ${DEPENDENCY_02} ${RESET}"
+			echo "如需${RED}卸载${RESET}，请手动输${BLUE} ${PACKAGES_REMOVE_COMMAND} ${DEPENDENCY_02} ${RESET}"
+			EXISTS_COMMAND='true'
+		fi
+	fi
+	###############
+	echo "即将为您安装相关依赖..."
+	echo "${GREEN} ${PACKAGES_INSTALL_COMMAND} ${DEPENDENCY_01} ${DEPENDENCY_02} ${RESET}"
+	echo "Tmoe-linux tool will install relevant dependencies for you."
+	############
+	if [ "${EXISTS_COMMAND}" = "true" ]; then
+		EXISTS_COMMAND='false'
+		press_enter_to_reinstall
+	fi
+	############
+	different_distro_software_install
+	#############
+	echo "安装完成，如需${RED}卸载${RESET}，请手动输${BLUE} ${PACKAGES_REMOVE_COMMAND} ${DEPENDENCY_01} ${DEPENDENCY_02} ${RESET}"
+	echo "The installation is complete. If you want to uninstall, please enter the above highlighted command."
+}
+#######################
+beta_features_install_completed() {
+	echo "安装完成，如需${RED}卸载${RESET}，请手动输${BLUE} ${PACKAGES_REMOVE_COMMAND} ${DEPENDENCY_01} ${DEPENDENCY_02} sogoupinyin ${RESET}"
+	echo "The installation is complete. If you want to uninstall, please enter the above highlighted command."
+}
 ####################
 beta_features() {
 	TMOE_BETA=$(
@@ -3449,17 +3572,12 @@ beta_features() {
 
 	################################
 	if [ "${TMOE_BETA}" == '5' ]; then
-		apt update
-		apt install -y openshot
-		echo "安装完成，如需卸载，请手动输apt purge -y openshot"
+		install_openshot
 	fi
 	# Blender在WSL2（Xserver）下测试失败，Kdenlive在VNC远程下测试成功。
-
 	############################
 	if [ "${TMOE_BETA}" == '6' ]; then
-		apt update
-		apt install -y telegram-desktop
-		echo "安装完成，如需卸载，请手动输apt purge -y telegram-desktop"
+		install_telegram
 	fi
 	############################
 	if [ "${TMOE_BETA}" == '7' ]; then
@@ -3471,34 +3589,19 @@ beta_features() {
 	fi
 	##############################
 	if [ "${TMOE_BETA}" == '9' ]; then
-		apt update
-		apt install -y qbittorrent
-		echo "安装完成，如需卸载，请手动输apt purge -y qbittorrent"
+		install_qbitorrent
 	fi
 	##################################
 	if [ "${TMOE_BETA}" == '10' ]; then
-		if [ ! -e "/usr/bin/plasma-discover" ]; then
-			apt update
-			apt install -y plasma-discover
-		fi
-		plasma-discover &
-		echo "安装完成，如需卸载，请手动输apt purge -y plasma-discover"
+		install_plasma_discover
 	fi
 	##################################
 	if [ "${TMOE_BETA}" == '11' ]; then
-		if [ ! -e "/usr/bin/gnome-software" ]; then
-			apt update
-			apt install -y gnome-software
-		fi
-		gnome-software &
-		echo "安装完成，如需卸载，请手动输apt purge -y gnome-software"
+		install_gnome_software
 	fi
-
 	############################
 	if [ "${TMOE_BETA}" == '12' ]; then
-		apt update
-		apt install -y calibre
-		echo "安装完成，如需卸载，请手动输apt purge -y calibre"
+		install_calibre
 	fi
 	######################
 	if [ "${TMOE_BETA}" == '13' ]; then
@@ -3506,10 +3609,7 @@ beta_features() {
 	fi
 	##############################
 	if [ "${TMOE_BETA}" == '14' ]; then
-		apt update
-		apt install -y krita
-		apt install -y krita-l10n
-		echo "安装完成，如需卸载，请手动输apt purge -y ^krita"
+		install_krita
 	fi
 	####################
 	if [ "${TMOE_BETA}" == '15' ]; then
@@ -3517,9 +3617,7 @@ beta_features() {
 	fi
 	##############################
 	if [ "${TMOE_BETA}" == '16' ]; then
-		apt update
-		apt install -y fbreader
-		echo "安装完成，如需卸载，请手动输apt purge -y fbreader"
+		install_fbreader
 	fi
 	########################################
 	echo 'Press Enter to return.'
@@ -3529,17 +3627,25 @@ beta_features() {
 }
 ####################
 install_pinyin_input_method() {
-	apt update
-	apt install -y fcitx
-	apt install -y fcitx-sunpinyin
-	apt install -y fcitx-googlepinyin
+	DEPENDENCY_01="fcitx"
+	DEPENDENCY_02='fcitx-sunpinyin fcitx-googlepinyin'
+	NON_DEBIAN='false'
+	beta_features_quick_install
+	#apt install -y fcitx-sunpinyin  fcitx fcitx-googlepinyin
+	#################
 	if [ "${LINUX_DISTRO}" = "arch" ]; then
 		pacman -Syu --noconfirm fcitx-sogoupinyin
 		echo "fcitx-sogoupinyin安装完成,按回车键返回"
 		read
 		beta_features
 	fi
-
+	#################
+	non_debian_function
+	echo "检测到您的系统支持安装sogou-pinyin，${YELLOW}按回车键确认${RESET}"
+	echo "Press enter to confirm"
+	read
+	DEPENDENCY_02="${DEPENDENCY_02} sogoupinyin"
+	###################
 	if [ "${ARCH_TYPE}" = "amd64" ] || [ "${ARCH_TYPE}" = "i386" ]; then
 		cd /tmp
 		LatestSogouPinyinLink=$(curl -L 'https://pinyin.sogou.com/linux' | grep ${ARCH_TYPE} | grep 'deb' | head -n 1 | cut -d '=' -f 3 | cut -d '?' -f 1 | cut -d '"' -f 2)
@@ -3551,61 +3657,49 @@ install_pinyin_input_method() {
 	echo "若安装失败，则请前往官网手动下载安装。"
 	echo 'url: https://pinyin.sogou.com/linux/'
 	rm -fv sogou_pinyin.deb
-	echo "安装完成！"
-	echo "如需卸载，请手动输apt purge -y sogoupinyin fcitx-sunpinyin fcitx-googlepinyin fcitx"
+	beta_features_install_completed
 }
 ############
 install_gnome_system_monitor() {
-	if [ "${LINUX_DISTRO}" = "debian" ]; then
-		apt update
-		apt install -y gnome-system-monitor
-
-	elif [ "${LINUX_DISTRO}" = "alpine" ]; then
-		apk update
-		apk add gnome-system-monitor
-
-	elif [ "${LINUX_DISTRO}" = "arch" ]; then
-		pacman -Syu --noconfirm gnome-system-monitor
-
-	elif [ "${LINUX_DISTRO}" = "redhat" ]; then
-		dnf install -y gnome-system-monitor || yum install -y gnome-system-monitor
-
-	elif [ "${LINUX_DISTRO}" = "gentoo" ]; then
-		emerge -vk gnome-system-monitor
-	fi
-	echo "安装完成，如需卸载，请手动输apt purge -y gnome-system-monitor"
+	DEPENDENCY_01="gnome-system-monitor"
+	DEPENDENCY_02=""
+	NON_DEBIAN='false'
+	beta_features_quick_install
 }
 ################
 install_gparted() {
-	if [ ! -e "/usr/sbin/gparted" ]; then
-		apt update
-		apt install -y gparted
-		apt install -y baobab
-	fi
-	gparted &
-	echo "安装完成，如需卸载，请手动输apt purge -y gparted baobab"
+	DEPENDENCY_01="gparted"
+	DEPENDENCY_02="baobab"
+	NON_DEBIAN='false'
+	beta_features_quick_install
 }
 ################
 install_typora() {
+	DEPENDENCY_01="typora"
+	DEPENDENCY_02=""
+	NON_DEBIAN='true'
+	beta_features_quick_install
 	cd /tmp
 	if [ "$(uname -m)" = "x86_64" ]; then
 		curl -Lvo 'typora.deb' 'http://mirrors.ustc.edu.cn/debiancn/debiancn/pool/main/t/typora/typora_0.9.67-1_amd64.deb'
-	elif [ "$(uname -m)" = "aarch64" ] || [ "$(uname -m)" = "armv7l" ]; then
-		echo "非常抱歉，暂不支持您的架构"
 	elif [ "${ARCH_TYPE}" = "i386" ]; then
 		curl -Lvo 'typora.deb' 'https://mirrors.tuna.tsinghua.edu.cn/deepin/pool/non-free/t/typora/typora_0.9.22-1_i386.deb'
+	else
+		echo "非常抱歉，暂不支持您的架构"
 	fi
 	apt install -y ./typora.deb
 	rm -vf ./typora.deb
-	echo "安装完成，如需卸载，请手动输apt purge -y typora"
+	beta_features_install_completed
 }
 ####################
 install_wps_office() {
+	DEPENDENCY_01="wps-office"
+	DEPENDENCY_02=""
 	cd /tmp
 	if [ -e "/usr/share/applications/wps-office-wps.desktop" ]; then
-		echo "检测到您已安装WPS office,按回车键重新安装,按Ctrl+C取消"
-		echo "Press enter to continue."
-		read
+		echo "检测到${YELLOW}您已安装${RESET} ${GREEN} ${DEPENDENCY_01} ${RESET}"
+		echo "如需${RED}卸载${RESET}，请手动输${BLUE} ${PACKAGES_REMOVE_COMMAND} ${DEPENDENCY_01} ${RESET}"
+		press_enter_to_reinstall
 	fi
 
 	if [ "${LINUX_DISTRO}" = "debian" ]; then
@@ -3626,7 +3720,7 @@ install_wps_office() {
 	echo "若安装失败，则请前往官网手动下载安装。"
 	echo "url: https://linux.wps.cn"
 	rm -fv ./WPSoffice.deb ./WPSoffice.rpm 2>/dev/null
-	echo "安装完成，如需卸载，请手动输apt purge -y wps-office"
+	beta_features_install_completed
 }
 ###################
 thunar_nautilus_dolphion() {
@@ -3635,21 +3729,23 @@ thunar_nautilus_dolphion() {
 		echo "安装后将有可能导致VNC黑屏,按Ctrl+C取消"
 		echo "Press enter to continue,press Ctrl+C to canacel."
 		read
-	fi
-	DEPENDENCY_01="nautilus"
-	DEPENDENCY_02="dolphin"
-	if [ "${LINUX_DISTRO}" = "debian" ]; then
-		apt update
-		apt install -y thunar
-		apt install -y ${DEPENDENCY_01}
-		apt install -y ${DEPENDENCY_02}
+		DEPENDENCY_01="nautilus"
+		DEPENDENCY_02="thunar"
 	else
-		different_distro_software_install
+		DEPENDENCY_01="dolphin"
+		DEPENDENCY_02="thunar nautilus"
 	fi
-	echo "安装完成，如需卸载，请手动输apt purge -y nautilus dolphin"
+
+	NON_DEBIAN='false'
+	beta_features_quick_install
 }
 ##################
 install_electronic_wechat() {
+	DEPENDENCY_01="electronic-wechat"
+	DEPENDENCY_02=""
+	NON_DEBIAN='true'
+	beta_features_quick_install
+
 	cd /tmp
 	if [ "${ARCH_TYPE}" = "amd64" ]; then
 		curl -Lvo 'electronic-wechat.deb' 'http://mirrors.ustc.edu.cn/debiancn/debiancn/pool/main/e/electronic-wechat/electronic-wechat_2.0~repack0~debiancn0_amd64.deb'
@@ -3662,29 +3758,97 @@ install_electronic_wechat() {
 
 	apt install -y ./electronic-wechat.deb
 	rm -vf ./electronic-wechat.deb
-	if [ -e "/usr/bin/electronic-wechat" ]; then
-		echo "安装完成，如需卸载，请手动输apt purge -y electronic-wechat"
-	fi
+	beta_features_install_completed
+}
+#############
+install_gnome_software() {
+	DEPENDENCY_01="gnome-software"
+	DEPENDENCY_02=""
+	NON_DEBIAN='false'
+	beta_features_quick_install
 }
 #############
 install_obs_studio() {
-	if [ "${LINUX_DISTRO}" = "debian" ]; then
-		apt update
-		apt install -y ffmpeg obs-studio
+	if [ ! $(command -v ffmpeg) ]; then
+		DEPENDENCY_01="ffmpeg"
+	else
+		DEPENDENCY_01=""
+	fi
 
-	elif [ "${LINUX_DISTRO}" = "arch" ]; then
-		pacman -Syu --noconfirm obs-studio
+	if [ "${LINUX_DISTRO}" = "gentoo" ]; then
+		DEPENDENCY_02="media-video/obs-studio"
+	else
+		DEPENDENCY_02="obs-studio"
+	fi
 
-	elif [ "${LINUX_DISTRO}" = "redhat" ]; then
-		dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
-		dnf install -y obs-studio || yum install -y obs-studio
+	NON_DEBIAN='false'
+	beta_features_quick_install
+
+	if [ "${LINUX_DISTRO}" = "redhat" ]; then
+		if [ $(command -v dnf) ]; then
+			dnf install -y https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+			dnf install -y obs-studio
+		else
+			yum install -y https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+			yum install -y obs-studio
+		fi
 		#dnf install xorg-x11-drv-nvidia-cuda
-	elif [ "${LINUX_DISTRO}" = "gentoo" ]; then
-		emerge -vk media-video/obs-studio
 	fi
 	echo "若安装失败，则请前往官网阅读安装说明。"
 	echo "url: https://obsproject.com/wiki/install-instructions#linux"
-	echo "安装完成，如需卸载，请手动输apt purge -y ffmpeg obs-studio"
+	beta_features_install_completed
+}
+################
+install_openshot() {
+	DEPENDENCY_01="openshot"
+	DEPENDENCY_02=""
+	NON_DEBIAN='false'
+	beta_features_quick_install
+}
+############################
+install_telegram() {
+	DEPENDENCY_01="telegram-desktop"
+	DEPENDENCY_02=""
+	NON_DEBIAN='false'
+	beta_features_quick_install
+}
+############################
+install_qbitorrent() {
+	DEPENDENCY_01="qbittorrent"
+	DEPENDENCY_02=""
+	NON_DEBIAN='false'
+	beta_features_quick_install
+}
+
+############################
+install_plasma_discover() {
+	DEPENDENCY_01="plasma-discover"
+	DEPENDENCY_02=""
+	NON_DEBIAN='false'
+	beta_features_quick_install
+}
+
+############################
+install_calibre() {
+	DEPENDENCY_01="calibre"
+	DEPENDENCY_02=""
+	NON_DEBIAN='false'
+	beta_features_quick_install
+}
+
+############################
+install_krita() {
+	DEPENDENCY_01="krita"
+	DEPENDENCY_02="krita-l10n"
+	NON_DEBIAN='false'
+	beta_features_quick_install
+}
+############################
+install_fbreader() {
+	DEPENDENCY_01="fbreader"
+	DEPENDENCY_02=""
+	NON_DEBIAN='false'
+	beta_features_quick_install
 }
 ################
 ################
@@ -3712,44 +3876,8 @@ personal_netdisk() {
 	read
 	tmoe_linux_tool_menu
 }
-################
-different_distro_software_install() {
-	if [ "${LINUX_DISTRO}" = "debian" ]; then
-		apt update
-		apt install -y ${DEPENDENCY_01}
-		apt install -y ${DEPENDENCY_02}
-
-	elif [ "${LINUX_DISTRO}" = "alpine" ]; then
-		apk update
-		apk add ${DEPENDENCY_01}
-		apk add ${DEPENDENCY_02}
-
-	elif [ "${LINUX_DISTRO}" = "arch" ]; then
-		pacman -Syu --noconfirm ${DEPENDENCY_01}
-		pacman -Syu --noconfirm ${DEPENDENCY_02}
-
-	elif [ "${LINUX_DISTRO}" = "redhat" ]; then
-		dnf install -y ${DEPENDENCY_01} || yum install -y ${DEPENDENCY_01}
-		dnf install -y ${DEPENDENCY_02} || yum install -y ${DEPENDENCY_02}
-	elif [ "${LINUX_DISTRO}" = "openwrt" ]; then
-		#opkg update
-		opkg install ${DEPENDENCY_01}
-		opkg install ${DEPENDENCY_02}
-	elif [ "${LINUX_DISTRO}" = "gentoo" ]; then
-		emerge -vk ${DEPENDENCY_01}
-		emerge -vk ${DEPENDENCY_02}
-	elif [ "${LINUX_DISTRO}" = "suse" ]; then
-		zypper in -y ${DEPENDENCY_01}
-		zypper in -y ${DEPENDENCY_02}
-	elif [ "${LINUX_DISTRO}" = "void" ]; then
-		xbps-install -S -y ${DEPENDENCY_01}
-		xbps-install -S -y ${DEPENDENCY_02}
-	else
-		apt update
-		apt install -y ${DEPENDENCY_01} || port install ${DEPENDENCY_01} || guix package -i ${DEPENDENCY_01} || pkg install ${DEPENDENCY_01} || pkg_add ${DEPENDENCY_01} || pkgutil -i ${DEPENDENCY_01}
-	fi
-}
-###################
+################################
+################################
 install_nginx_webdav() {
 
 	pgrep nginx &>/dev/null

@@ -618,7 +618,7 @@ chmod +x remove-debian.sh
 
 ########################
 
-if [ -d "${DEBIAN_CHROOT}/usr/local/bin" ]; then
+if [ ! -d "${DEBIAN_CHROOT}/usr/local/bin" ]; then
  mkdir -p ${DEBIAN_CHROOT}/usr/local/bin
 fi
 
@@ -657,6 +657,9 @@ elif [ -f "${HOME}/.ALPINELINUXDetectionFILE" ]; then
  sed -i 's/bash --login/ash --login/g' $(command -v debian)
  sed -i 's/zsh --login/ash --login/g' $(command -v debian)
  mv -f "${HOME}/.ALPINELINUXDetectionFILE" ${DEBIAN_CHROOT}/tmp
+elif [ -f "${HOME}/.MANJARO_ARM_DETECTION_FILE" ]; then
+ rm -f ${HOME}/.MANJARO_ARM_DETECTION_FILE
+ sed -i 's@^#SigLevel.*@SigLevel = Never@' "${DEBIAN_CHROOT}/etc/pacman.conf"
 fi
 
 #配置zsh

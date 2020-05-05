@@ -776,8 +776,8 @@ upgrade_video_download_tool() {
 
 	ENDofTable
 
+	echo "正在${YELLOW}检测${RESET}${GREEN}版本信息${RESET}..."
 	if [ -e "/usr/local/bin/annie" ]; then
-		echo "正在检测版本信息..."
 		#AnnieVersion=$(annie -v | cut -d ':' -f 2 | cut -d ',' -f 1 | awk -F ' ' '$0=$NF')
 		AnnieVersion=$(cat ~/.config/tmoe-linux/annie_version.txt | head -n 1)
 	else

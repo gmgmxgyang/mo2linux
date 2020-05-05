@@ -2535,7 +2535,7 @@ other_software() {
 	fi
 	##############################
 	if [ "${SOFTWARE}" == '6' ]; then
-		install_synaptic
+		install_package_manager_gui
 	fi
 	###############################
 	if [ "${SOFTWARE}" == '7' ]; then
@@ -2670,6 +2670,25 @@ install_game_cataclysm() {
 	cataclysm
 }
 ##############################################################
+install_package_manager_gui() {
+	if [ "${LINUX_DISTRO}" = "debian" ]; then
+		install_synaptic
+	elif [ "${LINUX_DISTRO}" = "arch" ]; then
+		echo "检测到您使用的是arch系发行版，将为您安装pamac"
+		install_pamac_gtk
+	else
+		echo "检测到您使用的不是deb系发行版，将为您安装gnome_software"
+		install_gnome_software
+	fi
+}
+######################
+install_pamac_gtk() {
+	DEPENDENCY_01="pamac"
+	DEPENDENCY_02=""
+	NON_DEBIAN='false'
+	beta_features_quick_install
+}
+#####################
 install_synaptic() {
 	if (whiptail --title "您想要对这个小可爱做什么呢 " --yes-button "Install安装" --no-button "Remove移除" --yesno "新立德是一款使用apt的图形化软件包管理工具，您也可以把它理解为软件商店。Synaptic is a graphical package management program for apt. It provides the same features as the apt-get command line utility with a GUI front-end based on Gtk+.它提供与apt-get命令行相同的功能，并带有基于Gtk+的GUI前端。功能：1.安装、删除、升级和降级单个或多个软件包。 2.升级整个系统。 3.管理软件源列表。  4.自定义过滤器选择(搜索)软件包。 5.按名称、状态、大小或版本对软件包进行排序。 6.浏览与所选软件包相关的所有可用在线文档。♪(^∇^*) " 19 50); then
 		DEPENDENCY_01="synaptic"
@@ -2792,9 +2811,11 @@ install_netease_163_cloud_music() {
 	if [ "${LINUX_DISTRO}" = "arch" ]; then
 		pacman -Syu --noconfirm netease-cloud-music
 	elif [ "${LINUX_DISTRO}" = "redhat" ]; then
-		wget https://dl.senorsen.com/pub/package/linux/add_repo.sh -qO - | sudo sh
-		sudo dnf install http://dl-http.senorsen.com/pub/package/linux/rpm/senorsen-repo-0.0.1-1.noarch.rpm
-		sudo dnf install -y netease-cloud-music
+		curl -Lv https://dl.senorsen.com/pub/package/linux/add_repo.sh | sh -
+		dnf install http://dl-http.senorsen.com/pub/package/linux/rpm/senorsen-repo-0.0.1-1.noarch.rpm
+		dnf install -y netease-cloud-music
+		#https://github.com/ZetaoYang/netease-cloud-music-appimage/releases
+		#appimage格式
 	else
 		non_debian_function
 		if [ "${ARCH_TYPE}" = "amd64" ]; then
@@ -3496,6 +3517,15 @@ fix_vnc_dbus_launch() {
 }
 ###################
 ###################
+beta_features_management_menu() {
+	if (whiptail --title "您想要对这个小可爱做什么呢 " --yes-button "reinstall重装" --no-button "remove移除" --yesno "检测到您已安装${DEPENDENCY_01} ${DEPENDENCY_02} \nDo you want to reinstall or remove it? ♪(^∇^*) " 10 50); then
+		echo "${GREEN} ${PACKAGES_INSTALL_COMMAND} ${DEPENDENCY_01} ${DEPENDENCY_02} ${RESET}"
+		echo "即将为您重装..."
+	else
+		${PACKAGES_REMOVE_COMMAND} ${DEPENDENCY_01} ${DEPENDENCY_02}
+	fi
+}
+##############
 non_debian_function() {
 	if [ "${LINUX_DISTRO}" != 'debian' ]; then
 		echo "非常抱歉，本功能仅适配deb系发行版"
@@ -3510,15 +3540,23 @@ non_debian_function() {
 press_enter_to_reinstall() {
 	echo "检测到${YELLOW}您已安装${RESET} ${GREEN} ${DEPENDENCY_01} ${DEPENDENCY_02} ${RESET}"
 	echo "如需${RED}卸载${RESET}，请手动输${BLUE} ${PACKAGES_REMOVE_COMMAND} ${DEPENDENCY_01} ${DEPENDENCY_02} ${RESET}"
+	press_enter_to_reinstall_yes_or_no
+}
+################
+press_enter_to_reinstall_yes_or_no() {
 	echo "按${YELLOW}回车键${RESET}重新安装,输${YELLOW}n${RESET}返回"
-	echo "${YELLOW}Do you want to reinstall it?[Y/n]${RESET}"
-	echo "Press enter to reinstall,type n to return"
+	echo "输${YELLOW}m${RESET}打开管理菜单"
+	echo "${YELLOW}Do you want to reinstall it?[Y/m/n]${RESET}"
+	echo "Press enter to reinstall,type n to return,type m to open management menu"
 	read opt
 	case $opt in
 	y* | Y* | "") ;;
 	n* | N*)
 		echo "skipped."
 		beta_features
+		;;
+	m* | M*)
+		beta_features_management_menu
 		;;
 	*)
 		echo "Invalid choice. skipped."
@@ -3561,22 +3599,7 @@ beta_features_quick_install() {
 	############
 	if [ "${EXISTS_COMMAND}" = "true" ]; then
 		EXISTS_COMMAND='false'
-		echo "按${YELLOW}回车键${RESET}重新安装,输${YELLOW}n${RESET}返回"
-		echo "${YELLOW}Do you want to reinstall it?[Y/n]${RESET}"
-		echo "Press enter to reinstall,type n to return"
-		read opt
-		case $opt in
-		y* | Y* | "") ;;
-		n* | N*)
-			echo "skipped."
-			beta_features
-			;;
-		*)
-			echo "Invalid choice. skipped."
-			beta_features
-			;;
-		esac
-		#上面不能调用press_enter_function
+		press_enter_to_reinstall_yes_or_no
 	fi
 
 	############
@@ -3801,8 +3824,11 @@ install_electronic_wechat() {
 	DEPENDENCY_01="electronic-wechat"
 	DEPENDENCY_02=""
 	NON_DEBIAN='true'
+	if [ "${LINUX_DISTRO}" = "arch" ]; then
+		DEPENDENCY_01="electron-wechat"
+		NON_DEBIAN='false'
+	fi
 	beta_features_quick_install
-
 	cd /tmp
 	if [ "${ARCH_TYPE}" = "amd64" ]; then
 		curl -Lvo 'electronic-wechat.deb' 'http://mirrors.ustc.edu.cn/debiancn/debiancn/pool/main/e/electronic-wechat/electronic-wechat_2.0~repack0~debiancn0_amd64.deb'

@@ -1476,3 +1476,9 @@ else
     VSCODEINSTALLSTATUS="检测到您未安装vscode."
     VSCODESTART='Install安装'
 fi
+#######
+if [ "${LINUX_DISTRO}" != "debian" ]; then
+    TMOE_NOT_DEBIAN="$(echo WARNING！检测到您当前使用的不是deb系linux，可能无法正常运行！)"
+else
+    TMOE_NOT_DEBIAN=""
+fi

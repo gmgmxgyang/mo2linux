@@ -321,12 +321,6 @@ check_dependencies() {
 	if [ "$(uname -r | cut -d '-' -f 3)" = "Microsoft" ] || [ "$(uname -r | cut -d '-' -f 2)" = "microsoft" ]; then
 		WINDOWSDISTRO='WSL'
 	fi
-
-	if [ "${LINUX_DISTRO}" != "debian" ]; then
-		TMOE_NOT_DEBIAN="$(echo WARNING！检测到您当前使用的不是deb系linux，可能无法正常运行！)"
-	else
-		TMOE_NOT_DEBIAN=""
-	fi
 	##############
 	RED=$(printf '\033[31m')
 	GREEN=$(printf '\033[32m')
@@ -341,7 +335,7 @@ check_dependencies() {
 tmoe_linux_tool_menu() {
 	cd ${cur}
 	TMOE_OPTION=$(
-		whiptail --title "Tmoe-linux Tool输debian-i启动(20200505-15)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.当前主菜单有十几个选项，请使用方向键和回车键操作。${TMOE_NOT_DEBIAN} 更新日志:0501支持解析并下载B站、油管视频,0502支持搭建个人云网盘,0503优化code-server的配置" 20 50 7 \
+		whiptail --title "Tmoe-linux Tool输debian-i启动(20200505-15)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.当前主菜单有十几个选项，请使用方向键和回车键操作。更新日志:0501支持解析并下载B站、油管视频,0502支持搭建个人云网盘,0503优化code-server的配置" 20 50 7 \
 			"1" "Install GUI 安装图形界面" \
 			"2" "Install browser 安装浏览器" \
 			"3" "Download theme 下载主题" \
@@ -434,6 +428,13 @@ tmoe_linux_tool_menu() {
 }
 ############################
 ############################
+arch_does_not_support() {
+	echo "${RED}WARNING！${RESET}检测到${YELLOW}架构${RESET}${RED}不支持！${RESET}"
+	echo "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
+	echo "按${GREEN}回车键${RESET}${BLUE}返回${RESET}"
+	read
+}
+##########################
 do_you_want_to_continue() {
 	echo "${YELLOW}Do you want to continue?[Y/n]${RESET}"
 	echo "Press enter to continue,type n to return."
@@ -924,10 +925,8 @@ which_vscode_edition() {
 		else
 			echo "非常抱歉，Tmoe-linux的开发者未对您的架构进行适配。"
 			echo "请选择其它版本"
-			echo "${YELLOW}按回车键返回。${RESET}"
-			echo "Press enter to return."
-			read
-			tmoe_linux_tool_menu
+			arch_does_not_support
+			which_vscode_edition
 		fi
 	fi
 	##############################
@@ -1248,9 +1247,7 @@ install_vscode_official() {
 	cd /tmp
 	if [ "${ARCH_TYPE}" != 'amd64' ]; then
 		echo "当前仅支持x86_64架构"
-		echo "${YELLOW}按回车键返回。${RESET}"
-		echo "Press enter to return."
-		read
+		arch_does_not_support
 		which_vscode_edition
 	fi
 
@@ -2179,9 +2176,8 @@ install_deepin_desktop() {
 		#read
 		#tmoe_linux_tool_menu
 		echo "${YELLOW}警告！deepin桌面可能无法正常运行${RESET}"
-		echo 'Press Enter to continue，press Ctrl+C to cancel.'
-		echo "${YELLOW}按回车键继续安装，按Ctrl+C取消${RESET}"
-		read
+		arch_does_not_support
+		other_desktop
 	fi
 
 	if [ "${LINUX_DISTRO}" = "debian" ]; then
@@ -2767,7 +2763,6 @@ install_synaptic() {
 		echo "Do you really want to remove synaptic?"
 		RETURN_TO_WHERE='other_software'
 		do_you_want_to_continue
-		read
 		apt purge -y synaptic
 		apt purge -y gdebi
 	fi
@@ -2831,7 +2826,7 @@ install_baidu_netdisk() {
 	DEPENDENCY_01="baidunetdisk"
 	DEPENDENCY_02=""
 	if [ "${ARCH_TYPE}" != "amd64" ] && [ "${ARCH_TYPE}" != "i386" ]; then
-		echo "暂不支持您的架构"
+		arch_does_not_support
 		echo 'Press Enter to return.'
 		echo "${YELLOW}按回车键返回。${RESET}"
 		read
@@ -2862,7 +2857,7 @@ install_netease_163_cloud_music() {
 	DEPENDENCY_02=""
 
 	if [ "${ARCH_TYPE}" != "amd64" ] && [ "${ARCH_TYPE}" != "i386" ]; then
-		echo "暂不支持您的架构"
+		arch_does_not_support
 		echo 'Press Enter to return.'
 		echo "${YELLOW}按回车键返回。${RESET}"
 		read
@@ -3677,8 +3672,8 @@ beta_features() {
 		whiptail --title "Beta features" --menu "测试版功能可能无法正常运行\nBeta features may not work properly." 15 60 5 \
 			"1" "sunpinyin+google拼音+搜狗拼音" \
 			"2" "WPS office(办公软件)" \
-			"3" "docker-ce:知名容器软件" \
-			"4" "VirtualBox:甲骨文开源虚拟机" \
+			"3" "docker-ce:开源的应用容器引擎" \
+			"4" "VirtualBox:甲骨文开源虚拟机(x64)" \
 			"5" "gparted:磁盘分区工具" \
 			"6" "OBS-Studio(录屏软件)" \
 			"7" "typora(markdown编辑器)" \
@@ -3806,6 +3801,8 @@ install_pinyin_input_method() {
 		curl -Lvo 'sogou_pinyin.deb' "${LatestSogouPinyinLink}"
 	else
 		echo "架构不支持，跳过安装搜狗输入法。"
+		arch_does_not_support
+		beta_features
 	fi
 	apt install -y ./sogou_pinyin.deb
 	echo "若安装失败，则请前往官网手动下载安装。"
@@ -3820,6 +3817,34 @@ install_gnome_system_monitor() {
 	NON_DEBIAN='false'
 	beta_features_quick_install
 }
+###############
+debian_add_docker_gpg() {
+	if [ "${DEBIAN_DISTRO}" = 'ubuntu' ]; then
+		DOCKER_RELEASE='ubuntu'
+	else
+		DOCKER_RELEASE='debian'
+	fi
+
+	curl -Lv https://download.docker.com/linux/${DOCKER_RELEASE}/gpg | apt-key add -
+	cd /etc/apt/sources.list.d/
+	sed -i 's/^deb/# &/g' docker.list
+	DOCKER_CODE="$(lsb_release -cs)"
+
+	if [ ! $(command -v lsb_release) ]; then
+		DOCKER_CODE="buster"
+	fi
+
+	if [ "$(lsb_release -cs)" = "focal" ]; then
+		DOCKER_CODE="eoan"
+	#2020-05-05：暂没有focal的仓库
+	elif [ "$(lsb_release -cs)" = "bullseye" ]; then
+		DOCKER_CODE="buster"
+	elif [ "$(lsb_release -cs)" = "bookworm" ]; then
+		DOCKER_CODE="bullseye"
+	fi
+	echo "deb https://mirrors.tuna.tsinghua.edu.cn/docker-ce/linux/${DOCKER_RELEASE} ${DOCKER_CODE} stable" >>docker.list
+	#$(#lsb_release -cs)
+}
 #################
 install_docker_ce() {
 	if [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
@@ -3832,6 +3857,7 @@ install_docker_ce() {
 
 	NON_DEBIAN='false'
 	if [ ! $(command -v gpg) ]; then
+		DEPENDENCY_01=""
 		DEPENDENCY_02="gpg"
 		beta_features_quick_install
 	else
@@ -3840,11 +3866,7 @@ install_docker_ce() {
 	DEPENDENCY_01="docker-ce"
 	#apt remove docker docker-engine docker.io
 	if [ "${LINUX_DISTRO}" = 'debian' ]; then
-		curl -Lv https://download.docker.com/linux/debian/gpg | apt-key add -
-		cd /etc/apt/sources.list.d/
-		sed -i 's/^deb/# &/g' docker.list
-		echo "deb https://mirrors.tuna.tsinghua.edu.cn/docker-ce/linux/debian buster stable" >>docker.list
-	#$(#lsb_release -cs)
+		debian_add_docker_gpg
 	elif [ "${LINUX_DISTRO}" = 'redhat' ]; then
 		curl -Lvo /etc/yum.repos.d/docker-ce.repo "https://download.docker.com/linux/${REDHAT_DISTRO}/docker-ce.repo"
 		sed -i 's@download.docker.com@mirrors.tuna.tsinghua.edu.cn/docker-ce@g' /etc/yum.repos.d/docker-ce.repo
@@ -3852,10 +3874,102 @@ install_docker_ce() {
 		DEPENDENCY_01="docker"
 	fi
 	beta_features_quick_install
+	if [ ! $(command -v docker) ]; then
+		echo "安装失败，请执行${PACKAGES_INSTALL_COMMAND} docker.io"
+	fi
+
+}
+#################
+debian_add_virtual_box_gpg() {
+	if [ "${DEBIAN_DISTRO}" = 'ubuntu' ]; then
+		VBOX_RELEASE='bionic'
+	else
+		VBOX_RELEASE='buster'
+	fi
+	curl -Lv https://www.virtualbox.org/download/oracle_vbox_2016.asc | apt-key add -
+	cd /etc/apt/sources.list.d/
+	sed -i 's/^deb/# &/g' virtualbox.list
+	echo "deb http://mirrors.tuna.tsinghua.edu.cn/virtualbox/apt/ ${VBOX_RELEASE} contrib" >>virtualbox.list
+}
+###############
+get_debian_vbox_latest_url() {
+	TUNA_VBOX_LINK='https://mirrors.tuna.tsinghua.edu.cn/virtualbox/apt/pool/contrib/v/'
+	LATEST_VBOX_VERSION=$(curl -L ${TUNA_VBOX_LINK} | grep 'virtualbox-' | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)
+	if [ "${DEBIAN_DISTRO}" = 'ubuntu' ]; then
+		LATEST_VBOX_FILE=$(curl -L ${TUNA_VBOX_LINK}${LATEST_VBOX_VERSION} | grep -E "Ubuntu" | head -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)
+	else
+		LATEST_VBOX_FILE=$(curl -L ${TUNA_VBOX_LINK}${LATEST_VBOX_VERSION} | grep -E "Debian" | head -n 1 | cut -d '=' -f 7 | cut -d '"' -f 2)
+	fi
+	VBOX_DEB_FILE_URL="${TUNA_VBOX_LINK}${LATEST_VBOX_VERSION}${LATEST_VBOX_FILE}"
+	echo "获取到vbox的最新链接为${VBOX_DEB_FILE_URL},是否下载并安装？"
+	RETURN_TO_WHERE='beta_features'
+	do_you_want_to_continue
+	cd /tmp
+	curl -Lo .Oracle_VIRTUAL_BOX.deb "${VBOX_DEB_FILE_URL}"
+	apt install -y ./.Oracle_VIRTUAL_BOX.deb
+	rm -fv ./.Oracle_VIRTUAL_BOX.deb
+}
+################
+debian_download_latest_vbox_deb() {
+	if [ ! $(command -v virtualbox) ]; then
+		get_debian_vbox_latest_url
+	else
+		echo "检测到您已安装virtual box，是否将其添加到软件源？"
+		RETURN_TO_WHERE='beta_features'
+		do_you_want_to_continue
+		debian_add_virtual_box_gpg
+	fi
+}
+#############
+redhat_add_virtual_box_repo() {
+	cat >/etc/yum.repos.d/virtualbox.repo <<-'EndOFrepo'
+		[virtualbox]
+		name=Virtualbox Repository
+		baseurl=https://mirrors.tuna.tsinghua.edu.cn/virtualbox/rpm/el$releasever/
+		gpgcheck=0
+		enabled=1
+	EndOFrepo
 }
 ###############
 install_virtual_box() {
-echo "正在开发中..."
+	if [ "${ARCH_TYPE}" != "amd64" ]; then
+		arch_does_not_support
+		beta_features
+	fi
+
+	NON_DEBIAN='false'
+	if [ ! $(command -v gpg) ]; then
+		DEPENDENCY_01=""
+		DEPENDENCY_02="gpg"
+		beta_features_quick_install
+	else
+		DEPENDENCY_02=""
+		#linux-headers
+	fi
+	DEPENDENCY_01="virtualbox"
+	#apt remove docker docker-engine docker.io
+	if [ "${LINUX_DISTRO}" = 'debian' ]; then
+		debian_download_latest_vbox_deb
+	#$(#lsb_release -cs)
+	elif [ "${LINUX_DISTRO}" = 'redhat' ]; then
+		redhat_add_virtual_box_repo
+	elif [ "${LINUX_DISTRO}" = 'arch' ]; then
+		DEPENDENCY_01="virtualbox virtualbox-guest-iso"
+		DEPENDENCY_02="virtualbox-ext-oracle"
+		echo "您可以在安装完成后，输usermod -G vboxusers -a 当前用户名称"
+		echo "将当前用户添加至vboxusers用户组"
+		#
+	fi
+	echo "您可以输modprobe vboxdrv vboxnetadp vboxnetflt来加载内核模块"
+	beta_features_quick_install
+	####################
+	if [ ! $(command -v virtualbox) ]; then
+		echo "检测到virtual box安装失败，是否将其添加到软件源？"
+		RETURN_TO_WHERE='beta_features'
+		do_you_want_to_continue
+		debian_add_virtual_box_gpg
+		beta_features_quick_install
+	fi
 }
 ################
 install_gparted() {
@@ -3876,7 +3990,7 @@ install_typora() {
 	elif [ "${ARCH_TYPE}" = "i386" ]; then
 		curl -Lvo 'typora.deb' 'https://mirrors.tuna.tsinghua.edu.cn/deepin/pool/non-free/t/typora/typora_0.9.22-1_i386.deb'
 	else
-		echo "非常抱歉，暂不支持您的架构"
+		arch_does_not_support
 	fi
 	apt install -y ./typora.deb
 	rm -vf ./typora.deb
@@ -3945,7 +4059,7 @@ install_electronic_wechat() {
 	elif [ "${ARCH_TYPE}" = "i386" ]; then
 		curl -Lvo 'electronic-wechat.deb' 'http://archive.ubuntukylin.com:10006/ubuntukylin/pool/main/e/electronic-wechat/electronic-wechat_2.0.1_i386.deb'
 	else
-		echo "非常抱歉，暂不支持您的架构"
+		arch_does_not_support
 	fi
 
 	apt install -y ./electronic-wechat.deb
@@ -4173,10 +4287,9 @@ configure_nginx_webdav() {
 		echo "是否继续卸载nginx?"
 		echo "您正在执行危险操作，卸载nginx将导致您部署的所有网站无法访问！！！"
 		echo "${YELLOW}This is a dangerous operation, you must press Enter to confirm${RESET}"
+		service nginx restart
 		RETURN_TO_WHERE='configure_nginx_webdav'
 		do_you_want_to_continue
-		service nginx restart
-		read
 		service nginx stop
 		apt remove nginx nginx-extras
 	fi

@@ -728,9 +728,9 @@ cookies_readme() {
 	download_videos
 }
 #########
-check_latest_video_download_tool_version(){
-echo "正在${YELLOW}检测${RESET}${GREEN}版本信息${RESET}..."
-LATEST_ANNIE_VERSION=$(curl -LfsS https://gitee.com/mo2/annie/raw/linux_amd64/annie_version.txt | head -n 1)
+check_latest_video_download_tool_version() {
+	echo "正在${YELLOW}检测${RESET}${GREEN}版本信息${RESET}..."
+	LATEST_ANNIE_VERSION=$(curl -LfsS https://gitee.com/mo2/annie/raw/linux_amd64/annie_version.txt | head -n 1)
 
 	####################
 	if [ $(command -v you-get) ]; then
@@ -762,11 +762,11 @@ LATEST_ANNIE_VERSION=$(curl -LfsS https://gitee.com/mo2/annie/raw/linux_amd64/an
 		║ 2 ║ you-get  ║                   ║  
 		║---║----------║-------------------║--------------------
 		║   ║          ║                   ║  ${YOTUBEdlVersion}                  
-		║ 3 ║youtube-dl║${LATEST_YOUTUBE_DL_VERSION}          ║  
+		║ 3 ║youtube-dl║${LATEST_YOUTUBE_DL_VERSION}           ║  
 
-	如需${YELLOW}卸载${RESET}${BLUE}annie${RESET},请输${GREEN}rm /usr/local/bin/annie${RESET}
-	如需${YELLOW}卸载${RESET}${BLUE}you-get${RESET},请输${GREEN}pip3 uninstall you-get${RESET}
-	如需${YELLOW}卸载${RESET}${BLUE}youtube-dl${RESET},请输${GREEN}pip3 uninstall youtube-dl${RESET}
+		如需${YELLOW}卸载${RESET}${BLUE}annie${RESET},请输${GREEN}rm /usr/local/bin/annie${RESET}
+		如需${YELLOW}卸载${RESET}${BLUE}you-get${RESET},请输${GREEN}pip3 uninstall you-get${RESET}
+		如需${YELLOW}卸载${RESET}${BLUE}youtube-dl${RESET},请输${GREEN}pip3 uninstall youtube-dl${RESET}
 		annie: github.com/iawia002/annie
 		you-get : github.com/soimort/you-get
 		youtube-dl：github.com/ytdl-org/youtube-dl
@@ -825,17 +825,16 @@ upgrade_video_download_tool() {
 
 	ENDofTable
 
-	
 	if [ -e "/usr/local/bin/annie" ]; then
 		#AnnieVersion=$(annie -v | cut -d ':' -f 2 | cut -d ',' -f 1 | awk -F ' ' '$0=$NF')
 		AnnieVersion=$(cat ~/.config/tmoe-linux/annie_version.txt | head -n 1)
 		check_latest_video_download_tool_version
-		
+
 	else
 		AnnieVersion='您尚未安装annie'
 		echo "检测到您${RED}尚未安装${RESET}annie，跳过${GREEN}版本检测！${RESET}"
 	fi
-	
+
 	echo "按${GREEN}回车键${RESET}将同时更新${YELLOW}annie、you-get和youtube-dl${RESET}"
 	echo 'Press Enter to update'
 	RETURN_TO_WHERE='download_videos'

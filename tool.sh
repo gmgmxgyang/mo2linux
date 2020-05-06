@@ -293,12 +293,12 @@ check_dependencies() {
 		wget --no-check-certificate -O "busybox" "https://gitee.com/mo2/busybox/raw/master/busybox-$(uname -m)"
 		chmod +x busybox
 		LatestBusyboxDEB="$(curl -L https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/b/busybox/ | grep static | grep ${ARCH_TYPE} | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
-		curl -Lvo '.busybox.deb' "https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/b/busybox/${LatestBusyboxDEB}"
-		mkdir -p .busybox-static
-		./busybox dpkg-deb -X .busybox.deb ./.busybox-static
-		mv -f ./.busybox-static/bin/busybox /usr/local/bin/
+		curl -Lvo 'busybox.deb' "https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/b/busybox/${LatestBusyboxDEB}"
+		mkdir -p busybox-static
+		./busybox dpkg-deb -X busybox.deb ./busybox-static
+		mv -f ./busybox-static/bin/busybox /usr/local/bin/
 		chmod +x /usr/local/bin/busybox
-		rm -rvf busybox .busybox-static .busybox.deb
+		rm -rvf busybox busybox-static busybox.deb
 	fi
 
 	if [ "${LINUX_DISTRO}" = "debian" ]; then

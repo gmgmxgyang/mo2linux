@@ -791,14 +791,16 @@ upgrade_video_download_tool() {
 	else
 		YouGetVersion='您尚未安装you-get'
 	fi
-	LATEST_YOU_GET_VERSION=$(curl -LfsS https://github.com/soimort/you-get/releases | grep 'muted-link css-truncate' | head -n 1 | cut -d '=' -f 2 | cut -d '"' -f 2 | cut -d '/' -f 5)
+	#LATEST_YOU_GET_VERSION=$(curl -LfsS https://github.com/soimort/you-get/releases | grep 'muted-link css-truncate' | head -n 1 | cut -d '=' -f 2 | cut -d '"' -f 2 | cut -d '/' -f 5)
+
 	#######################
 	if [ $(command -v youtube-dl) ]; then
 		YOTUBEdlVersion=$(youtube-dl --version 2>&1 | head -n 1)
 	else
 		YOTUBEdlVersion='您尚未安装youtube-dl'
 	fi
-	LATEST_YOUTUBE_DL_VERSION=$(curl -LfsS https://github.com/ytdl-org/youtube-dl/releases | grep 'muted-link css-truncate' | head -n 1 | cut -d '=' -f 2 | cut -d '"' -f 2 | cut -d '/' -f 5)
+	#LATEST_YOUTUBE_DL_VERSION=$(curl -LfsS https://github.com/ytdl-org/youtube-dl/releases | grep 'muted-link css-truncate' | head -n 1 | cut -d '=' -f 2 | cut -d '"' -f 2 | cut -d '/' -f 5)
+	LATEST_YOUTUBE_DL_VERSION=$(curl -LfsS https://pypi.tuna.tsinghua.edu.cn/simple/youtube-dl/ | grep .whl | tail -n 1 | cut -d '=' -f 3 | cut -d '>' -f 2 | cut -d '<' -f 1 | cut -d '-' -f 2)
 	##################
 	cat <<-ENDofTable
 		╔═══╦══════════╦═══════════════════╦════════════════════
@@ -810,7 +812,7 @@ upgrade_video_download_tool() {
 		║   ║          ║${LATEST_ANNIE_VERSION}║
 		║---║----------║-------------------║--------------------
 		║   ║          ║                   ║ ${YouGetVersion}                   
-		║ 2 ║ you-get  ║${LATEST_YOU_GET_VERSION}          ║  
+		║ 2 ║ you-get  ║                   ║  
 		║---║----------║-------------------║--------------------
 		║   ║          ║                   ║  ${YOTUBEdlVersion}                  
 		║ 3 ║youtube-dl║${LATEST_YOUTUBE_DL_VERSION}         ║  
@@ -819,10 +821,11 @@ upgrade_video_download_tool() {
 		you-get : github.com/soimort/you-get
 		youtube-dl：github.com/ytdl-org/youtube-dl
 	ENDofTable
-	#对原开发者iawia002的代码进行自动编译，并
+	#对原开发者iawia002的代码进行自动编译
+	echo "为避免加载超时，故${RED}隐藏${RESET}了部分软件的${GREEN}版本信息。${RESET}"
 	echo "annie将于每月1号凌晨4点自动编译并发布最新版"
-	echo "您可以按回车键来获取更新，亦可前往原开发者的仓库来手动下载新版"
-	echo "${YELLOW}按回车键将同时更新annie、you-get和youtube-dl${RESET}"
+	echo "您可以按${GREEN}回车键${RESET}来${BLUE}获取更新${RESET}，亦可前往原开发者的仓库来${GREEN}手动下载${RESET}新版"
+	echo "按${GREEN}回车键${RESET}将同时更新${YELLOW}annie、you-get和youtube-dl${RESET}"
 	echo 'Press Enter to update'
 	RETURN_TO_WHERE='download_videos'
 	do_you_want_to_continue

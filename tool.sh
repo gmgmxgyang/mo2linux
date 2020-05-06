@@ -3560,7 +3560,7 @@ first_configure_startvnc() {
 		if [ "${LINUX_DISTRO}" = 'debian' ]; then
 			apt purge -y --allow-change-held-packages ^udisks2 ^gvfs
 		else
-			${PACKAGES_REMOVE_COMMAND} ^udisks2 ^gvfs
+			${PACKAGES_REMOVE_COMMAND} udisks2 gvfs
 		fi
 	fi
 
@@ -3719,7 +3719,7 @@ first_configure_startvnc() {
 
 	######################
 	chmod +x startvnc stopvnc startxsdl
-	dpkg --configure -a
+	dpkg --configure -a 2>/dev/null
 	#暂不卸载。若卸载则将破坏其依赖关系。
 	#umount .gvfs
 	#apt purge "gvfs*" "udisks2*"

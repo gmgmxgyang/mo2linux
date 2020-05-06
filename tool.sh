@@ -764,6 +764,9 @@ LATEST_ANNIE_VERSION=$(curl -LfsS https://gitee.com/mo2/annie/raw/linux_amd64/an
 		║   ║          ║                   ║  ${YOTUBEdlVersion}                  
 		║ 3 ║youtube-dl║${LATEST_YOUTUBE_DL_VERSION}          ║  
 
+	如需${YELLOW}卸载${RESET}${BLUE}annie${RESET},请输${GREEN}rm /usr/local/bin/annie${RESET}
+	如需${YELLOW}卸载${RESET}${BLUE}you-get${RESET},请输${GREEN}pip3 uninstall you-get${RESET}
+	如需${YELLOW}卸载${RESET}${BLUE}youtube-dl${RESET},请输${GREEN}pip3 uninstall youtube-dl${RESET}
 		annie: github.com/iawia002/annie
 		you-get : github.com/soimort/you-get
 		youtube-dl：github.com/ytdl-org/youtube-dl

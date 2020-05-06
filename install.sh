@@ -1118,7 +1118,9 @@ cat >.profile <<-'EDITBASHPROFILE'
 	#################
 	arch_linux_yay() {
 	    grep -q '^LANG=' /etc/locale.conf 2>/dev/null || echo 'LANG="zh_CN.UTF-8"' >>/etc/locale.conf
-	    pacman -Syyu --noconfirm
+	    pacman -Syy
+		#重复一遍，防止失败
+		pacman -Syyu --noconfirm
 	    if ! grep -q 'archlinuxcn' /etc/pacman.conf; then
 	        cat >>/etc/pacman.conf <<-'Endofpacman'
 				[archlinuxcn]

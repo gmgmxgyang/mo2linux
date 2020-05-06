@@ -3206,6 +3206,16 @@ first_configure_startvnc() {
 			sed -i 's:dbus-launch::' ~/.vnc/xstartup
 		fi
 	fi
+
+	if [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ] && [ ! -f "/tmp/.Tmoe-MATE-Desktop-Detection-FILE" ]; then
+		echo "检测到您处于${BLUE}proot容器${RESET}环境下，即将为您${RED}卸载${RESET}${YELLOW}udisk2${RESET}和${GREEN}gvfs${RESET}"
+		if [ "${LINUX_DISTRO}" = 'debian' ]; then
+			apt purge -y --allow-change-held-packages ^udisks2 ^gvfs
+		else
+			${PACKAGES_REMOVE_COMMAND} ^udisks2 ^gvfs
+		fi
+	fi
+
 	cd /usr/local/bin
 	cat >startvnc <<-'EndOfFile'
 		#!/bin/bash
@@ -3316,7 +3326,7 @@ first_configure_startvnc() {
 	EndOfFile
 
 	if [ -f "/tmp/.Tmoe-MATE-Desktop-Detection-FILE" ]; then
-		rm -f /tmp/.Tmoe-MATE-Desktop-Detection-FILE
+		#rm -f /tmp/.Tmoe-MATE-Desktop-Detection-FILE
 		sed -i '/dbus-launch/d' startxsdl
 		sed -i '$ a\dbus-launch mate-session' startxsdl
 	elif [ -f "/tmp/.Tmoe-LXDE-Desktop-Detection-FILE" ]; then
@@ -3518,7 +3528,7 @@ frequently_asked_questions() {
 }
 #################
 fix_vnc_dbus_launch() {
-	echo "由于在2020-0410至0411的更新中给所有系统的桌面都加入了dbus-launch，故在部分安卓设备的Proot容器上出现了兼容性问题。"
+	echo "由于在2020-0410至0411的更新中给所有系统的桌面都加入了dbus-launch，故在部分安卓设备的${BLUE}proot容器${RESET}上出现了兼容性问题。"
 	echo "注1：该操作在linux虚拟机及win10子系统上没有任何问题"
 	echo "注2：2020-0412更新的版本已加入检测功能，理论上不会再出现此问题。"
 	if [ ! -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
@@ -4048,7 +4058,7 @@ install_wps_office() {
 ###################
 thunar_nautilus_dolphion() {
 	if [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
-		echo "检测到您当前使用的是Proot容器，软件可能无法正常运行。"
+		echo "检测到您当前使用的是${BLUE}proot容器${RESET}，软件可能无法正常运行。"
 		echo "安装后将有可能导致VNC黑屏,按Ctrl+C取消"
 		echo "Press enter to continue,press Ctrl+C to canacel."
 		read
@@ -4322,7 +4332,7 @@ configure_nginx_webdav() {
 ##############
 nginx_onekey() {
 	if [ -e "/tmp/.Chroot-Container-Detection-File" ] || [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
-		echo "检测到您处于chroot/proot容器环境下，部分功能可能出现异常。"
+		echo "检测到您处于${BLUE}chroot/proot容器${RESET}环境下，部分功能可能出现异常。"
 		echo "部分系统可能会出现failed，但仍能正常连接。"
 		CHROOT_STATUS='1'
 	fi
@@ -4544,7 +4554,7 @@ nginx_systemd() {
 	if [ -e "/tmp/.Chroot-Container-Detection-File" ]; then
 		echo "检测到您当前处于chroot容器环境下，无法使用systemctl命令"
 	elif [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
-		echo "检测到您当前处于proot容器环境下，无法使用systemctl命令"
+		echo "检测到您当前处于${BLUE}proot容器${RESET}环境下，无法使用systemctl命令"
 	fi
 
 	cat <<-'EOF'
@@ -4897,7 +4907,7 @@ filebrowser_systemd() {
 	if [ -e "/tmp/.Chroot-Container-Detection-File" ]; then
 		echo "检测到您当前处于chroot容器环境下，无法使用systemctl命令"
 	elif [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
-		echo "检测到您当前处于proot容器环境下，无法使用systemctl命令"
+		echo "检测到您当前处于${BLUE}proot容器${RESET}环境下，无法使用systemctl命令"
 	fi
 
 	cat <<-'EOF'

@@ -1079,74 +1079,6 @@ cat >.profile <<-'EDITBASHPROFILE'
 			deb http://mirrors.huaweicloud.com/ubuntu/ bionic-security main restricted universe multiverse
 		EndOfSourcesList
 	}
-	###################
-	arch_linux_mirror_list() {
-	    sed -i 's/^Server/#&/g' /etc/pacman.d/mirrorlist
-	    if [ "$(uname -m)" = "aarch64" ] || [ "$(uname -m)" = "armv7l" ]; then
-	        cat >>/etc/pacman.d/mirrorlist <<-'EndOfArchMirrors'
-				#Server = https://mirror.archlinuxarm.org/$arch/$repo
-				Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/$arch/$repo
-			EndOfArchMirrors
-	    else
-	        cat >>/etc/pacman.d/mirrorlist <<-'EndOfArchMirrors'
-				#Server = http://mirrors.kernel.org/archlinux/$repo/os/$arch
-				#Server = https://mirrors.tuna.tsinghua.edu.cn/archlinux/$repo/os/$arch
-				Server = https://mirrors.huaweicloud.com/archlinux/$repo/os/$arch
-			EndOfArchMirrors
-	    fi
-	}
-	#############################
-	manjaro_mirror_list() {
-	    if [ "$(uname -m)" = "aarch64" ]; then
-	        #sed -i 's/^Server/#&/g' /etc/pacman.d/mirrorlist
-	        #清华镜像站的manjaro rootfs容器竟然没grep、awk和sed
-	        cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
-	        cat >/etc/pacman.d/mirrorlist <<-'EndOfArchMirrors'
-				#Server = https://mirror.archlinuxarm.org/$arch/$repo
-				#Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/$arch/$repo
-				#Server = https://mirrors.tuna.tsinghua.edu.cn/manjaro/arm-stable/$repo/$arch
-	                Server = https://mirrors.huaweicloud.com/manjaro/arm-stable/$repo/$arch
-			EndOfArchMirrors
-	        #curl -Lo 'archlinuxarm-keyring.pkg.tar.xz' https://mirrors.tuna.tsinghua.edu.cn/manjaro/arm-stable/core/aarch64/archlinuxarm-keyring-20140119-1-any.pkg.tar.xz
-	        #pacman-key --init
-	        #pacman -U --noconfirm ./archlinuxarm-keyring.pkg.tar.xz
-	        #rm -fv ./archlinuxarm-keyring.pkg.tar.xz
-	        #pacman-key --populate archlinux manjaro
-	        #pacman -Sy --noconfirm archlinux-keyring
-	    fi
-	}
-	#################
-	arch_linux_yay() {
-	    grep -q '^LANG=' /etc/locale.conf 2>/dev/null || echo 'LANG="zh_CN.UTF-8"' >>/etc/locale.conf
-	    pacman -Syy
-		#重复一遍，防止失败
-		pacman -Syyu --noconfirm
-	    if ! grep -q 'archlinuxcn' /etc/pacman.conf; then
-	        cat >>/etc/pacman.conf <<-'Endofpacman'
-				[archlinuxcn]
-				Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxcn/$arch
-			Endofpacman
-	    fi
-	    pacman -Syu --noconfirm archlinux-keyring
-	    pacman -Sy --noconfirm archlinuxcn-keyring
-	    pacman -S --noconfirm yay
-	    yay --aururl "https://aur.tuna.tsinghua.edu.cn" --save
-	}
-	#################
-	#################
-	if [ "$(cat /etc/issue | cut -c 1-4)" = "Arch" ]; then
-	    arch_linux_mirror_list
-	elif [ "$(cat /etc/issue | cut -c 1-7)" = "Manjaro" ]; then
-	    manjaro_mirror_list
-	    #pacman -Sy --noconfirm grep sed awk
-	fi
-
-	if [ -e "/etc/pacman.conf" ] && [ $(command -v grep) ]; then
-	    arch_linux_yay
-	fi
-	#######################
-	#if grep -Eq 'Arch|Manjaro' /etc/os-release; then
-	#fi
 	#################################
 	#配置国内镜像源
 	if [ "$(uname -m)" = "mips" ]; then
@@ -1181,6 +1113,71 @@ cat >.profile <<-'EDITBASHPROFILE'
 		nameserver 240c::6666
 	EndOfFile
 	######################
+	###################
+	###################
+	arch_linux_mirror_list() {
+	    sed -i 's/^Server/#&/g' /etc/pacman.d/mirrorlist
+	    if [ "$(uname -m)" = "aarch64" ] || [ "$(uname -m)" = "armv7l" ]; then
+	        cat >>/etc/pacman.d/mirrorlist <<-'EndOfArchMirrors'
+				#Server = https://mirror.archlinuxarm.org/$arch/$repo
+				Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/$arch/$repo
+			EndOfArchMirrors
+	    else
+	        cat >>/etc/pacman.d/mirrorlist <<-'EndOfArchMirrors'
+				#Server = http://mirrors.kernel.org/archlinux/$repo/os/$arch
+				#Server = https://mirrors.tuna.tsinghua.edu.cn/archlinux/$repo/os/$arch
+				Server = https://mirrors.huaweicloud.com/archlinux/$repo/os/$arch
+			EndOfArchMirrors
+	    fi
+	}
+	#############################
+	manjaro_mirror_list() {
+	    if [ "$(uname -m)" = "aarch64" ]; then
+	        #sed -i 's/^Server/#&/g' /etc/pacman.d/mirrorlist
+	        #清华镜像站的manjaro rootfs容器竟然没grep、awk和sed
+	        cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
+	        cat >/etc/pacman.d/mirrorlist <<-'EndOfArchMirrors'
+				#Server = https://mirror.archlinuxarm.org/$arch/$repo
+				#Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/$arch/$repo
+				#Server = https://mirrors.tuna.tsinghua.edu.cn/manjaro/arm-stable/$repo/$arch
+	            Server = https://mirrors.huaweicloud.com/manjaro/arm-stable/$repo/$arch
+			EndOfArchMirrors
+	        #curl -Lo 'archlinuxarm-keyring.pkg.tar.xz' https://mirrors.tuna.tsinghua.edu.cn/manjaro/arm-stable/core/aarch64/archlinuxarm-keyring-20140119-1-any.pkg.tar.xz
+	        #pacman-key --init
+	        #pacman -U --noconfirm ./archlinuxarm-keyring.pkg.tar.xz
+	        #rm -fv ./archlinuxarm-keyring.pkg.tar.xz
+	        #pacman-key --populate archlinux manjaro
+	        #pacman -Sy --noconfirm archlinux-keyring
+	    fi
+	}
+	#################
+	arch_linux_yay() {
+	    grep -q '^LANG=' /etc/locale.conf 2>/dev/null || echo 'LANG="zh_CN.UTF-8"' >>/etc/locale.conf
+		pacman -Syyu --noconfirm
+	    if ! grep -q 'archlinuxcn' /etc/pacman.conf; then
+	        cat >>/etc/pacman.conf <<-'Endofpacman'
+				[archlinuxcn]
+				Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxcn/$arch
+			Endofpacman
+	    fi
+	    pacman -Syu --noconfirm archlinux-keyring
+	    pacman -Sy --noconfirm archlinuxcn-keyring
+	    pacman -S --noconfirm yay
+	    yay --aururl "https://aur.tuna.tsinghua.edu.cn" --save
+	}
+	#################
+	#################
+	if [ "$(cat /etc/issue | cut -c 1-4)" = "Arch" ]; then
+	    arch_linux_mirror_list
+	elif [ "$(cat /etc/issue | cut -c 1-7)" = "Manjaro" ]; then
+	    manjaro_mirror_list
+	    #pacman -Sy --noconfirm grep sed awk
+	fi
+
+	if [ -e "/etc/pacman.conf" ] && [ $(command -v grep) ]; then
+	    arch_linux_yay
+	fi
+	#######################
 	alpine_linux_configure() {
 	    echo "检测到您使用的不是deb系linux，将不会为您配置额外优化步骤"
 	    if [ "$(sed -n 2p /etc/os-release | cut -d '=' -f 2)" = "alpine" ]; then

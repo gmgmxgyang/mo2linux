@@ -727,6 +727,52 @@ cookies_readme() {
 	read
 	download_videos
 }
+#########
+check_latest_video_download_tool_version(){
+echo "正在${YELLOW}检测${RESET}${GREEN}版本信息${RESET}..."
+LATEST_ANNIE_VERSION=$(curl -LfsS https://gitee.com/mo2/annie/raw/linux_amd64/annie_version.txt | head -n 1)
+
+	####################
+	if [ $(command -v you-get) ]; then
+		YouGetVersion=$(you-get -V 2>&1 | head -n 1 | cut -d ':' -f 2 | cut -d ',' -f 1 | awk -F ' ' '$0=$NF')
+	else
+		YouGetVersion='您尚未安装you-get'
+	fi
+	#LATEST_YOU_GET_VERSION=$(curl -LfsS https://github.com/soimort/you-get/releases | grep 'muted-link css-truncate' | head -n 1 | cut -d '=' -f 2 | cut -d '"' -f 2 | cut -d '/' -f 5)
+
+	#######################
+	if [ $(command -v youtube-dl) ]; then
+		YOTUBEdlVersion=$(youtube-dl --version 2>&1 | head -n 1)
+	else
+		YOTUBEdlVersion='您尚未安装youtube-dl'
+	fi
+	#LATEST_YOUTUBE_DL_VERSION=$(curl -LfsS https://github.com/ytdl-org/youtube-dl/releases | grep 'muted-link css-truncate' | head -n 1 | cut -d '=' -f 2 | cut -d '"' -f 2 | cut -d '/' -f 5)
+	LATEST_YOUTUBE_DL_VERSION=$(curl -LfsS https://pypi.tuna.tsinghua.edu.cn/simple/youtube-dl/ | grep .whl | tail -n 1 | cut -d '=' -f 3 | cut -d '>' -f 2 | cut -d '<' -f 1 | cut -d '-' -f 2)
+	##################
+	cat <<-ENDofTable
+		╔═══╦══════════╦═══════════════════╦════════════════════
+		║   ║          ║                   ║                    
+		║   ║ software ║ 最新版本          ║   本地版本 🎪
+		║   ║          ║latest      ✨    ║  Local version     
+		║---║----------║-------------------║--------------------
+		║ 1 ║   annie  ║                   ║  ${AnnieVersion}
+		║   ║          ║${LATEST_ANNIE_VERSION}║
+		║---║----------║-------------------║--------------------
+		║   ║          ║                   ║ ${YouGetVersion}                   
+		║ 2 ║ you-get  ║                   ║  
+		║---║----------║-------------------║--------------------
+		║   ║          ║                   ║  ${YOTUBEdlVersion}                  
+		║ 3 ║youtube-dl║${LATEST_YOUTUBE_DL_VERSION}          ║  
+
+		annie: github.com/iawia002/annie
+		you-get : github.com/soimort/you-get
+		youtube-dl：github.com/ytdl-org/youtube-dl
+	ENDofTable
+	#对原开发者iawia002的代码进行自动编译
+	echo "为避免加载超时，故${RED}隐藏${RESET}了部分软件的${GREEN}版本信息。${RESET}"
+	echo "annie将于每月1号凌晨4点自动编译并发布最新版"
+	echo "您可以按${GREEN}回车键${RESET}来${BLUE}获取更新${RESET}，亦可前往原开发者的仓库来${GREEN}手动下载${RESET}新版"
+}
 ##################
 upgrade_video_download_tool() {
 	cat <<-'ENDofTable'
@@ -776,55 +822,17 @@ upgrade_video_download_tool() {
 
 	ENDofTable
 
-	echo "正在${YELLOW}检测${RESET}${GREEN}版本信息${RESET}..."
+	
 	if [ -e "/usr/local/bin/annie" ]; then
 		#AnnieVersion=$(annie -v | cut -d ':' -f 2 | cut -d ',' -f 1 | awk -F ' ' '$0=$NF')
 		AnnieVersion=$(cat ~/.config/tmoe-linux/annie_version.txt | head -n 1)
+		check_latest_video_download_tool_version
+		
 	else
 		AnnieVersion='您尚未安装annie'
+		echo "检测到您${RED}尚未安装${RESET}annie，跳过${GREEN}版本检测！${RESET}"
 	fi
-	LATEST_ANNIE_VERSION=$(curl -LfsS https://gitee.com/mo2/annie/raw/linux_amd64/annie_version.txt | head -n 1)
-
-	####################
-	if [ $(command -v you-get) ]; then
-		YouGetVersion=$(you-get -V 2>&1 | head -n 1 | cut -d ':' -f 2 | cut -d ',' -f 1 | awk -F ' ' '$0=$NF')
-	else
-		YouGetVersion='您尚未安装you-get'
-	fi
-	#LATEST_YOU_GET_VERSION=$(curl -LfsS https://github.com/soimort/you-get/releases | grep 'muted-link css-truncate' | head -n 1 | cut -d '=' -f 2 | cut -d '"' -f 2 | cut -d '/' -f 5)
-
-	#######################
-	if [ $(command -v youtube-dl) ]; then
-		YOTUBEdlVersion=$(youtube-dl --version 2>&1 | head -n 1)
-	else
-		YOTUBEdlVersion='您尚未安装youtube-dl'
-	fi
-	#LATEST_YOUTUBE_DL_VERSION=$(curl -LfsS https://github.com/ytdl-org/youtube-dl/releases | grep 'muted-link css-truncate' | head -n 1 | cut -d '=' -f 2 | cut -d '"' -f 2 | cut -d '/' -f 5)
-	LATEST_YOUTUBE_DL_VERSION=$(curl -LfsS https://pypi.tuna.tsinghua.edu.cn/simple/youtube-dl/ | grep .whl | tail -n 1 | cut -d '=' -f 3 | cut -d '>' -f 2 | cut -d '<' -f 1 | cut -d '-' -f 2)
-	##################
-	cat <<-ENDofTable
-		╔═══╦══════════╦═══════════════════╦════════════════════
-		║   ║          ║                   ║                    
-		║   ║ software ║ 最新版本          ║   本地版本 🎪
-		║   ║          ║latest      ✨    ║  Local version     
-		║---║----------║-------------------║--------------------
-		║ 1 ║   annie  ║                   ║  ${AnnieVersion}
-		║   ║          ║${LATEST_ANNIE_VERSION}║
-		║---║----------║-------------------║--------------------
-		║   ║          ║                   ║ ${YouGetVersion}                   
-		║ 2 ║ you-get  ║                   ║  
-		║---║----------║-------------------║--------------------
-		║   ║          ║                   ║  ${YOTUBEdlVersion}                  
-		║ 3 ║youtube-dl║${LATEST_YOUTUBE_DL_VERSION}         ║  
-
-		annie: github.com/iawia002/annie
-		you-get : github.com/soimort/you-get
-		youtube-dl：github.com/ytdl-org/youtube-dl
-	ENDofTable
-	#对原开发者iawia002的代码进行自动编译
-	echo "为避免加载超时，故${RED}隐藏${RESET}了部分软件的${GREEN}版本信息。${RESET}"
-	echo "annie将于每月1号凌晨4点自动编译并发布最新版"
-	echo "您可以按${GREEN}回车键${RESET}来${BLUE}获取更新${RESET}，亦可前往原开发者的仓库来${GREEN}手动下载${RESET}新版"
+	
 	echo "按${GREEN}回车键${RESET}将同时更新${YELLOW}annie、you-get和youtube-dl${RESET}"
 	echo 'Press Enter to update'
 	RETURN_TO_WHERE='download_videos'

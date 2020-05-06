@@ -3459,7 +3459,8 @@ frequently_asked_questions() {
 		#echo "若无法打开，则请手动输rm -f ~/baidunetdisk/baidunetdiskdata.db"
 		echo "若无法打开，则请手动输rm -rf ~/baidunetdisk"
 		echo "${YELLOW}按回车键自动执行上述命令，按Ctrl+C取消${RESET}"
-		read
+		RETURN_TO_WHERE='frequently_asked_questions'
+		do_you_want_to_continue
 		rm -vf ~/baidunetdisk/baidunetdiskdata.db
 		echo "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
 		echo "${YELLOW}按回车键返回。${RESET}"

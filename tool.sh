@@ -4417,7 +4417,7 @@ thunar_nautilus_dolphion() {
 	DEPENDENCY_02=""
 	echo "${YELLOW}Which file manager do you want to install?[t/n/d/r]${RESET}"
 	echo "请选择您需要安装的${BLUE}文件管理器${RESET}，输${YELLOW}t${RESET}安装${GREEN}thunar${RESET},输${YELLOW}n${RESET}安装${GREEN}nautilus${RESET}，输${YELLOW}d${RESET}安装${GREEN}dolphion${RESET}，输${YELLOW}r${RESET}${BLUE}返回${RESET}。"
-	echo "Type t to install thunar,type n to install nautils,type d to install dolphin,type b to return."
+	echo "Type t to install thunar,type n to install nautils,type d to install dolphin,type r to return."
 	read opt
 	case $opt in
 	t* | T* | "")

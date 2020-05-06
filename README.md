@@ -555,4 +555,4 @@ nano $(which startvnc)
 - 2.在 beta_features 中支持 docker 和 virtualbox 的安装。
 - 其中，当 deb 系发行版初次安装后者时，将会自动获取清华源的最新 deb 包。第二次才会提示是否将其添加至软件源列表。
 
-- 3.对已支持的所有系统正式开放测试功能！但由于未作过多测试，故 gentoo 、opensuse 和 alpine 等发行版可能会出现未找到匹配软件的错误信息。
+- 3.对已支持的所有系统正式开放测试功能！但由于未做过多测试，故 gentoo 、opensuse 和 alpine 等发行版可能会出现未找到匹配软件的错误信息。

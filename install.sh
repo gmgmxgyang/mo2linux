@@ -1090,8 +1090,8 @@ cat >.profile <<-'EDITBASHPROFILE'
 	    else
 	        cat >>/etc/pacman.d/mirrorlist <<-'EndOfArchMirrors'
 				#Server = http://mirrors.kernel.org/archlinux/$repo/os/$arch
+				#Server = https://mirrors.tuna.tsinghua.edu.cn/archlinux/$repo/os/$arch
 				Server = https://mirrors.huaweicloud.com/archlinux/$repo/os/$arch
-				Server = https://mirrors.tuna.tsinghua.edu.cn/archlinux/$repo/os/$arch
 			EndOfArchMirrors
 	    fi
 	}

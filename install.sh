@@ -683,7 +683,7 @@ cat >zsh.sh <<-'ADDZSHSHELL'
 	elif grep -q "Alpine" '/etc/issue' || grep -q "Alpine" '/etc/os-release'; then
 		LINUX_DISTRO='alpine'
 
-	elif grep -Eq "Arch|Manjaro" '/etc/os-release' || grep -q 'Manjaro' '/etc/issue'; then
+	elif grep -Eq "Arch|Manjaro" '/etc/os-release' || grep -Eq "Arch|Manjaro" '/etc/issue'; then
 		LINUX_DISTRO='arch'
 
 	elif grep -qi 'Void' '/etc/issue'; then

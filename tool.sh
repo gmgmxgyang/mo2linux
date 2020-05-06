@@ -730,6 +730,12 @@ cookies_readme() {
 #########
 check_latest_video_download_tool_version() {
 	echo "正在${YELLOW}检测${RESET}${GREEN}版本信息${RESET}..."
+	cat <<-ENDofnote
+		如需${YELLOW}卸载${RESET}${BLUE}annie${RESET},请输${GREEN}rm /usr/local/bin/annie${RESET}
+		如需${YELLOW}卸载${RESET}${BLUE}you-get${RESET},请输${GREEN}pip3 uninstall you-get${RESET}
+		如需${YELLOW}卸载${RESET}${BLUE}youtube-dl${RESET},请输${GREEN}pip3 uninstall youtube-dl${RESET}
+	ENDofnote
+
 	LATEST_ANNIE_VERSION=$(curl -LfsS https://gitee.com/mo2/annie/raw/linux_amd64/annie_version.txt | head -n 1)
 
 	####################
@@ -753,7 +759,7 @@ check_latest_video_download_tool_version() {
 		╔═══╦══════════╦═══════════════════╦════════════════════
 		║   ║          ║                   ║                    
 		║   ║ software ║ 最新版本          ║   本地版本 🎪
-		║   ║          ║latest      ✨    ║  Local version     
+		║   ║          ║latest version✨   ║  Local version     
 		║---║----------║-------------------║--------------------
 		║ 1 ║   annie  ║                   ║  ${AnnieVersion}
 		║   ║          ║${LATEST_ANNIE_VERSION}║
@@ -764,9 +770,6 @@ check_latest_video_download_tool_version() {
 		║   ║          ║                   ║  ${YOTUBEdlVersion}                  
 		║ 3 ║youtube-dl║${LATEST_YOUTUBE_DL_VERSION}           ║  
 
-		如需${YELLOW}卸载${RESET}${BLUE}annie${RESET},请输${GREEN}rm /usr/local/bin/annie${RESET}
-		如需${YELLOW}卸载${RESET}${BLUE}you-get${RESET},请输${GREEN}pip3 uninstall you-get${RESET}
-		如需${YELLOW}卸载${RESET}${BLUE}youtube-dl${RESET},请输${GREEN}pip3 uninstall youtube-dl${RESET}
 		annie: github.com/iawia002/annie
 		you-get : github.com/soimort/you-get
 		youtube-dl：github.com/ytdl-org/youtube-dl

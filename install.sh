@@ -1105,7 +1105,7 @@ manjaro_mirror_list() {
 				#Server = https://mirror.archlinuxarm.org/$arch/$repo
 				#Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/$arch/$repo
 				#Server = https://mirrors.tuna.tsinghua.edu.cn/manjaro/arm-stable/$repo/$arch
-                Server = https://mirrors.huaweicloud.com/manjaro/arm-stable/$repo/os/$arch
+                Server = https://mirrors.huaweicloud.com/manjaro/arm-stable/$repo/$arch
 			EndOfArchMirrors
         #curl -Lo 'archlinuxarm-keyring.pkg.tar.xz' https://mirrors.tuna.tsinghua.edu.cn/manjaro/arm-stable/core/aarch64/archlinuxarm-keyring-20140119-1-any.pkg.tar.xz
         #pacman-key --init

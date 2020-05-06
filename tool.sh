@@ -467,8 +467,8 @@ different_distro_software_install() {
 		apk add ${DEPENDENCY_02}
 		################
 	elif [ "${LINUX_DISTRO}" = "arch" ]; then
-		pacman -Syu --noconfirm ${DEPENDENCY_01}
-		pacman -S --noconfirm ${DEPENDENCY_02}
+		pacman -Syu --noconfirm ${DEPENDENCY_01} || yay -Syu --noconfirm ${DEPENDENCY_01}
+		pacman -S --noconfirm ${DEPENDENCY_02} || yay -S --noconfirm ${DEPENDENCY_02}
 		################
 	elif [ "${LINUX_DISTRO}" = "redhat" ]; then
 		dnf install -y ${DEPENDENCY_01} || yum install -y ${DEPENDENCY_01}
@@ -4451,6 +4451,7 @@ install_electronic_wechat() {
 		NON_DEBIAN='false'
 	fi
 	beta_features_quick_install
+	non_debian_function
 	cd /tmp
 	if [ "${ARCH_TYPE}" = "amd64" ]; then
 		curl -Lvo 'electronic-wechat.deb' 'http://mirrors.ustc.edu.cn/debiancn/debiancn/pool/main/e/electronic-wechat/electronic-wechat_2.0~repack0~debiancn0_amd64.deb'

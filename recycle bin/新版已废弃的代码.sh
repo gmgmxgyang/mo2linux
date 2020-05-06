@@ -1482,3 +1482,13 @@ if [ "${LINUX_DISTRO}" != "debian" ]; then
 else
     TMOE_NOT_DEBIAN=""
 fi
+#################
+#manjaro从清华镜像站获取容器
+bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/install.sh |
+    sed 's@lxc-images/images/debian/sid.*xz@osdn/storage/g/m/ma/manjaro-arm/.rootfs/Manjaro-ARM-aarch64-latest.tar.gz@g' |
+    sed 's@tar \-pJx@tar \-pzx@g' |
+    sed 's/debian system/manjaro system/g' |
+    sed 's:debian-sid:manjaro-latest:g' |
+    sed 's:debian/sid:manjaro/latest:g' |
+    sed 's:rootfs.tar.xz:rootfs.tar.gz:g' |
+    sed 's:Debian GNU/Linux:manjaro GNU/Linux:g')"

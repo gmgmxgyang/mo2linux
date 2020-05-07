@@ -467,8 +467,8 @@ different_distro_software_install() {
 		apk add ${DEPENDENCY_02}
 		################
 	elif [ "${LINUX_DISTRO}" = "arch" ]; then
-		pacman -Syu --noconfirm ${DEPENDENCY_01} || yay -Syu --noconfirm ${DEPENDENCY_01}
-		pacman -S --noconfirm ${DEPENDENCY_02} || yay -S --noconfirm ${DEPENDENCY_02}
+		pacman -Syu --noconfirm ${DEPENDENCY_01} || yay -S ${DEPENDENCY_01}
+		pacman -S --noconfirm ${DEPENDENCY_02} || yay -S ${DEPENDENCY_02}
 		################
 	elif [ "${LINUX_DISTRO}" = "redhat" ]; then
 		dnf install -y ${DEPENDENCY_01} || yum install -y ${DEPENDENCY_01}
@@ -2362,94 +2362,38 @@ configure_theme() {
 		"6" "Kali：kali-Flat-Remix-Blue主题" \
 		"0" "我一个都不要 =￣ω￣=" \
 		3>&1 1>&2 2>&3)
-
+	########################
 	if [ "${INSTALL_THEME}" == '0' ]; then
 		tmoe_linux_tool_menu
 	fi
-
+	########################
 	if [ "${INSTALL_THEME}" == '1' ]; then
-		apt update
-		apt install ukui-themes
-
-		if [ ! -e '/usr/share/icons/ukui-icon-theme-default' ] && [ ! -e '/usr/share/icons/ukui-icon-theme' ]; then
-			mkdir -p /tmp/.ukui-gtk-themes
-			cd /tmp/.ukui-gtk-themes
-			UKUITHEME="$(curl -LfsS 'https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/u/ukui-themes/' | grep all.deb | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
-			curl -Lvo 'ukui-themes.deb' "https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/u/ukui-themes/${UKUITHEME}"
-			busybox ar xv 'ukui-themes.deb'
-			cd /
-			tar -Jxvf /tmp/.ukui-gtk-themes/data.tar.xz ./usr
-			#if which update-icon-caches >/dev/null 2>&1; then
-			update-icon-caches /usr/share/icons/ukui-icon-theme-basic /usr/share/icons/ukui-icon-theme-classical /usr/share/icons/ukui-icon-theme-default
-			update-icon-caches /usr/share/icons/ukui-icon-theme
-			#fi
-			rm -rf /tmp/.ukui-gtk-themes
-			#apt install -y ./ukui-themes.deb
-			#rm -f ukui-themes.deb
-			apt install -y ukui-greeter
-		else
-			echo '请前往外观设置手动修改图标'
-		fi
-		#gtk-update-icon-cache /usr/share/icons/ukui-icon-theme/ 2>/dev/null
-		echo "安装完成，如需卸载，请手动输${PACKAGES_REMOVE_COMMAND} ukui-themes"
+		download_ukui_theme
 	fi
-
+	######################
 	if [ "${INSTALL_THEME}" == '2' ]; then
 		install_kali_undercover
 	fi
-
+	##########################
 	if [ "${INSTALL_THEME}" == '3' ]; then
-		if [ -d "/usr/share/themes/Mojave-dark" ]; then
-			echo "检测到主题已下载，是否继续。"
-			RETURN_TO_WHERE='configure_theme'
-			do_you_want_to_continue
-		fi
-
-		if [ -d "/tmp/McMojave" ]; then
-			rm -rf /tmp/McMojave
-		fi
-
-		git clone -b McMojave --depth=1 https://gitee.com/mo2/xfce-themes.git /tmp/McMojave
-		cd /tmp/McMojave
-		cat url.txt
-		tar -Jxvf 01-Mojave-dark.tar.xz -C /usr/share/themes 2>/dev/null
-		tar -Jxvf 01-McMojave-circle.tar.xz -C /usr/share/icons 2>/dev/null
-		rm -rf /tmp/McMojave
-		echo "Download completed.如需删除，请手动输rm -rf /usr/share/themes/Mojave-dark /usr/share/icons/McMojave-circle-dark /usr/share/icons/McMojave-circle"
+		download_macos_mojave_theme
 	fi
 	##########################
 	if [ "${INSTALL_THEME}" == '4' ]; then
-		if [ -d "/usr/share/icons/Uos" ]; then
-			echo "检测到Uos图标包已下载，是否继续。"
-			RETURN_TO_WHERE='configure_theme'
-			do_you_want_to_continue
-		fi
-
-		if [ -d "/tmp/UosICONS" ]; then
-			rm -rf /tmp/UosICONS
-		fi
-
-		git clone -b Uos --depth=1 https://gitee.com/mo2/xfce-themes.git /tmp/UosICONS
-		cd /tmp/UosICONS
-		cat url.txt
-		tar -Jxvf Uos.tar.xz -C /usr/share/icons 2>/dev/null
-		rm -rf /tmp/UosICONS
-		apt update
-		apt install -y deepin-icon-theme
-		echo "Download completed.如需删除，请手动输rm -rf /usr/share/icons/Uos ; apt purge -y deepin-icon-theme"
+		download_uos_icon_theme
 	fi
 	###########################################
 	if [ "${INSTALL_THEME}" == '5' ]; then
-		apt update
-		apt install -y breeze-cursor-theme breeze-gtk-theme
-		apt install -y breeze-icon-theme
-		apt install -y xfwm4-theme-breeze
-		echo "Install completed.如需卸载，请手动输${PACKAGES_REMOVE_COMMAND} breeze-cursor-theme breeze-gtk-theme breeze-icon-theme xfwm4-theme-breeze"
+		install_breeze_theme
 	fi
 	######################################
 	if [ "${INSTALL_THEME}" == '6' ]; then
 		if [ ! -e "/usr/share/desktop-base/kali-theme" ]; then
 			download_kali_themes_common
+		else
+			echo "检测到kali_themes_common已下载，是否重新下载？"
+			RETURN_TO_WHERE='configure_theme'
+			do_you_want_to_continue
 		fi
 		echo "Download completed.如需删除，请手动输rm -rf /usr/share/desktop-base/kali-theme /usr/share/icons/desktop-base /usr/share/icons/Flat-Remix-Blue-Light /usr/share/icons/Flat-Remix-Blue-Dark"
 	fi
@@ -2460,6 +2404,90 @@ configure_theme() {
 	tmoe_linux_tool_menu
 }
 ################################
+download_uos_icon_theme() {
+	DEPENDENCY_01="deepin-icon-theme"
+	DEPENDENCY_02=""
+	NON_DEBIAN='false'
+	beta_features_quick_install
+
+	if [ -d "/usr/share/icons/Uos" ]; then
+		echo "检测到Uos图标包已下载，是否继续。"
+		RETURN_TO_WHERE='configure_theme'
+		do_you_want_to_continue
+	fi
+
+	if [ -d "/tmp/UosICONS" ]; then
+		rm -rf /tmp/UosICONS
+	fi
+
+	git clone -b Uos --depth=1 https://gitee.com/mo2/xfce-themes.git /tmp/UosICONS
+	cd /tmp/UosICONS
+	cat url.txt
+	tar -Jxvf Uos.tar.xz -C /usr/share/icons 2>/dev/null
+	rm -rf /tmp/UosICONS
+	echo "Download completed.如需删除，请手动输rm -rf /usr/share/icons/Uos ; apt purge -y deepin-icon-theme"
+}
+#####################
+download_macos_mojave_theme() {
+	if [ -d "/usr/share/themes/Mojave-dark" ]; then
+		echo "检测到主题已下载，是否继续。"
+		RETURN_TO_WHERE='configure_theme'
+		do_you_want_to_continue
+	fi
+
+	if [ -d "/tmp/McMojave" ]; then
+		rm -rf /tmp/McMojave
+	fi
+
+	git clone -b McMojave --depth=1 https://gitee.com/mo2/xfce-themes.git /tmp/McMojave
+	cd /tmp/McMojave
+	cat url.txt
+	tar -Jxvf 01-Mojave-dark.tar.xz -C /usr/share/themes 2>/dev/null
+	tar -Jxvf 01-McMojave-circle.tar.xz -C /usr/share/icons 2>/dev/null
+	rm -rf /tmp/McMojave
+	echo "Download completed.如需删除，请手动输rm -rf /usr/share/themes/Mojave-dark /usr/share/icons/McMojave-circle-dark /usr/share/icons/McMojave-circle"
+}
+#######################
+download_ukui_theme() {
+	DEPENDENCY_01="ukui-themes"
+	DEPENDENCY_02="ukui-greeter"
+	NON_DEBIAN='false'
+	beta_features_quick_install
+
+	if [ ! -e '/usr/share/icons/ukui-icon-theme-default' ] && [ ! -e '/usr/share/icons/ukui-icon-theme' ]; then
+		mkdir -p /tmp/.ukui-gtk-themes
+		cd /tmp/.ukui-gtk-themes
+		UKUITHEME="$(curl -LfsS 'https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/u/ukui-themes/' | grep all.deb | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
+		curl -Lvo 'ukui-themes.deb' "https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/u/ukui-themes/${UKUITHEME}"
+		busybox ar xv 'ukui-themes.deb'
+		cd /
+		tar -Jxvf /tmp/.ukui-gtk-themes/data.tar.xz ./usr
+		#if which update-icon-caches >/dev/null 2>&1; then
+		update-icon-caches /usr/share/icons/ukui-icon-theme-basic /usr/share/icons/ukui-icon-theme-classical /usr/share/icons/ukui-icon-theme-default
+		update-icon-caches /usr/share/icons/ukui-icon-theme
+		#fi
+		rm -rf /tmp/.ukui-gtk-themes
+		#apt install -y ./ukui-themes.deb
+		#rm -f ukui-themes.deb
+		#apt install -y ukui-greeter
+	else
+		echo '请前往外观设置手动修改图标'
+	fi
+	#gtk-update-icon-cache /usr/share/icons/ukui-icon-theme/ 2>/dev/null
+	#echo "安装完成，如需卸载，请手动输${PACKAGES_REMOVE_COMMAND} ukui-themes"
+}
+#################################
+install_breeze_theme() {
+	DEPENDENCY_01="breeze-icon-theme"
+	DEPENDENCY_02="breeze-cursor-theme breeze-gtk-theme xfwm4-theme-breeze"
+	NON_DEBIAN='false'
+
+	if [ "${LINUX_DISTRO}" = "arch" ]; then
+		DEPENDENCY_01="breeze-icons"
+	fi
+	beta_features_quick_install
+}
+#######################
 install_kali_undercover() {
 
 	if [ -e "/usr/share/icons/Windows-10-Icons" ]; then
@@ -2802,7 +2830,7 @@ install_chinese_manpages() {
 		DEPENDENCY_01="manpages manpages-zh man-db"
 
 	elif [ "${LINUX_DISTRO}" = "arch" ]; then
-		DEPENDENCY_01="man-pages-zh_cn man-pages-zh_tw"
+		DEPENDENCY_01="man-pages-zh_cn"
 
 	elif [ "${LINUX_DISTRO}" = "redhat" ]; then
 		DEPENDENCY_01="man-pages-zh-CN"

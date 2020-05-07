@@ -2430,7 +2430,7 @@ download_uos_icon_theme() {
 #####################
 download_macos_mojave_theme() {
 	if [ -d "/usr/share/themes/Mojave-dark" ]; then
-		echo "检测到主题已下载，是否继续。"
+		echo "检测到主题已下载，是否重新下载？"
 		RETURN_TO_WHERE='configure_theme'
 		do_you_want_to_continue
 	fi
@@ -2487,39 +2487,41 @@ install_breeze_theme() {
 	fi
 	beta_features_quick_install
 }
-#######################
+####################
 install_kali_undercover() {
-
 	if [ -e "/usr/share/icons/Windows-10-Icons" ]; then
 		echo "检测到您已安装win10主题"
-	else
-		#if [ "$(cat /etc/issue | cut -c 1-4)" = "Kali" ]; then
-		if grep -q 'kali' '/etc/apt/sources.list'; then
-			apt update
-			apt install -y kali-undercover
-		else
-			mkdir -p /tmp/.kali-undercover-win10-theme
-			cd /tmp/.kali-undercover-win10-theme
-			UNDERCOVERlatestLINK="$(curl -LfsS 'https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-undercover/' | grep all.deb | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
-			curl -Lvo kali-undercover.deb "https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-undercover/${UNDERCOVERlatestLINK}"
-			apt install -y ./kali-undercover.deb
-			if [ ! -e "/usr/share/icons/Windows-10-Icons" ]; then
-				busybox ar xv kali-undercover.deb
-				cd /
-				tar -Jxvf /tmp/.kali-undercover-win10-theme/data.tar.xz ./usr
-				#if which update-icon-caches >/dev/null 2>&1; then
-				update-icon-caches /usr/share/icons/Windows-10-Icons
-				#fi
-			fi
-			rm -rf /tmp/.kali-undercover-win10-theme
-			#rm -f ./kali-undercover.deb
-		fi
+		echo "如需移除，请手动输${PACKAGES_REMOVE_COMMAND} kali-undercover;rm -rf /usr/share/icons/Windows-10-Icons"
+		echo "是否重新下载？"
+		RETURN_TO_WHERE='configure_theme'
+		do_you_want_to_continue
 	fi
-	echo "安装完成，如需卸载，请手动输${PACKAGES_REMOVE_COMMAND} kali-undercover"
-	echo "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
-	echo "${YELLOW}按回车键返回。${RESET}"
-	read
-	tmoe_linux_tool_menu
+	DEPENDENCY_01="kali-undercover"
+	DEPENDENCY_02=""
+	NON_DEBIAN='false'
+	if [ "${LINUX_DISTRO}" = "debian" ]; then
+		beta_features_quick_install
+	fi
+	#此处需做两次判断
+	if [ "${DEBIAN_DISTRO}" = "kali" ]; then
+		beta_features_quick_install
+	else
+		mkdir -p /tmp/.kali-undercover-win10-theme
+		cd /tmp/.kali-undercover-win10-theme
+		UNDERCOVERlatestLINK="$(curl -LfsS 'https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-undercover/' | grep all.deb | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
+		curl -Lvo kali-undercover.deb "https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-undercover/${UNDERCOVERlatestLINK}"
+		apt install -y ./kali-undercover.deb
+		if [ ! -e "/usr/share/icons/Windows-10-Icons" ]; then
+			busybox ar xv kali-undercover.deb
+			cd /
+			tar -Jxvf /tmp/.kali-undercover-win10-theme/data.tar.xz ./usr
+			#if which update-icon-caches >/dev/null 2>&1; then
+			update-icon-caches /usr/share/icons/Windows-10-Icons
+			#fi
+		fi
+		rm -rf /tmp/.kali-undercover-win10-theme
+		#rm -f ./kali-undercover.deb
+	fi
 }
 ############################################
 modify_to_kali_sources_list() {

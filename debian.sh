@@ -2709,7 +2709,6 @@ install_armbian_linux_distro() {
 }
 #######################
 install_mint_linux_distro() {
-	ARCH_TYPE=arm64
 	if [ "${ARCH_TYPE}" = 'amd64' ] || [ "${ARCH_TYPE}" = 'i386' ]; then
 		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/install.sh |
 			sed 's/debian系统/mint系统/g' |

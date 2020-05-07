@@ -1429,12 +1429,12 @@ ubuntu_install_chromium_browser() {
 	fi
 }
 #########
-fix_chromium_root_no_sandbox() {
+fix_chromium_root_ubuntu_no_sandbox() {
 	sed -i 's/chromium-browser %U/chromium-browser --no-sandbox %U/g' /usr/share/applications/chromium-browser.desktop
 	grep 'chromium-browser' /etc/profile || sed -i '$ a\alias chromium="chromium-browser --no-sandbox"' /etc/profile
 }
 #####################
-fix_chromium_root_ubuntu_no_sandbox() {
+fix_chromium_root_no_sandbox() {
 	sed -i 's/chromium %U/chromium --no-sandbox %U/g' /usr/share/applications/chromium.desktop
 	grep 'chromium' /etc/profile || sed -i '$ a\alias chromium="chromium --no-sandbox"' /etc/profile
 }

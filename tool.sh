@@ -439,8 +439,8 @@ arch_does_not_support() {
 ##########################
 do_you_want_to_continue() {
 	echo "${YELLOW}Do you want to continue?[Y/n]${RESET}"
-	echo "Press ${GREEN}enter${RESET} to ${RED}continue${RESET},type ${YELLOW}n${RESET} to ${BLUE}return.${RESET}"
-	echo "按${GREEN}回车键${RESET}${RED}继续${RESET}，输${YELLOW}n${RESET}${BLUE}返回${RESET}"
+	echo "Press ${GREEN}enter${RESET} to ${BLUE}continue${RESET},type ${YELLOW}n${RESET} to ${BLUE}return.${RESET}"
+	echo "按${GREEN}回车键${RESET}${BLUE}继续${RESET}，输${YELLOW}n${RESET}${BLUE}返回${RESET}"
 	read opt
 	case $opt in
 	y* | Y* | "") ;;

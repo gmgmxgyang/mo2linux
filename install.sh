@@ -950,6 +950,11 @@ cat >zsh.sh <<-'ADDZSHSHELL'
 	#echo -e "\nsource ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" >> ${HOME}/.zshrc
 	#####################################
 	configure_fzf_tab_plugin() {
+	#此功能隐藏！
+	echo "正在克隆fzf-tab插件..."
+	if [ "${LINUX_DISTRO}" = "debian" ] || [ "${LINUX_DISTRO}" = "alpine" ] || [ "${LINUX_DISTRO}" = "arch" ]; then
+		#configure_fzf_tab_plugin
+	fi
 		if [ -e /usr/bin/fzf ] || [ -e /bin/fzf ]; then
 			rm -rf ${HOME}/.oh-my-zsh/custom/plugins/fzf-tab 2>/dev/null
 			git clone --depth=1 https://gitee.com/mo2/fzf-tab.git ${HOME}/.oh-my-zsh/custom/plugins/fzf-tab || git clone --depth=1 git://github.com/Aloxaf/fzf-tab.git ${HOME}/.oh-my-zsh/custom/plugins/fzf-tab
@@ -957,11 +962,6 @@ cat >zsh.sh <<-'ADDZSHSHELL'
 			grep -q 'custom/plugins/fzf-tab/fzf-tab.zsh' "${HOME}/.zshrc" >/dev/null 2>&1 || sed -i "$ a\source ${HOME}/.oh-my-zsh/custom/plugins/fzf-tab/fzf-tab.zsh" ${HOME}/.zshrc
 		fi
 	}
-	#############
-	echo "正在克隆fzf-tab插件..."
-	if [ "${LINUX_DISTRO}" = "debian" ] || [ "${LINUX_DISTRO}" = "alpine" ] || [ "${LINUX_DISTRO}" = "arch" ]; then
-		configure_fzf_tab_plugin
-	fi
 	#######################
 	if [ "${LINUX_DISTRO}" = "debian" ] || [ "${LINUX_DISTRO}" = "arch" ]; then
 		sed -i 's/plugins=(git)/plugins=(git extract z)/g' ~/.zshrc

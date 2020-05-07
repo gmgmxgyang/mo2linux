@@ -2520,7 +2520,10 @@ install_breeze_theme() {
 
 	if [ "${LINUX_DISTRO}" = "arch" ]; then
 		DEPENDENCY_01="breeze-icons breeze-gtk"
-		DEPENDENCY_02="breeze-grub xfwm4-theme-breeze"
+		DEPENDENCY_02="xfwm4-theme-breeze"
+		if [ $(command -v grub-install) ]; then
+			DEPENDENCY_02="${DEPENDENCY_02} breeze-grub"
+		fi
 	fi
 	beta_features_quick_install
 }

@@ -1148,7 +1148,7 @@ cat >.profile <<-'EDITBASHPROFILE'
 	        #rm -fv ./archlinuxarm-keyring.pkg.tar.xz
 	        #pacman-key --populate archlinux manjaro
 	        #pacman -Sy --noconfirm archlinux-keyring
-			pacman -S --noconfirm iputils
+			#pacman -S --noconfirm iputils
 	    fi
 	}
 	#################
@@ -1165,7 +1165,7 @@ cat >.profile <<-'EDITBASHPROFILE'
 	    pacman -Sy --noconfirm archlinuxcn-keyring
 	    pacman -S --noconfirm yay
 	    yay --aururl "https://aur.tuna.tsinghua.edu.cn" --save
-		pacman -S --noconfirm diffutils
+		pacman -S --noconfirm diffutils iproute
 	}
 	#################
 	#################

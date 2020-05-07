@@ -1643,7 +1643,7 @@ install_gui() {
 	echo "按${GREEN}回车键${RESET}${RED}选择${RESET}您需要${YELLOW}安装${RESET}的${BLUE}图形桌面环境${RESET}"
 	RETURN_TO_WHERE="tmoe_linux_tool_menu"
 	do_you_want_to_continue
-	tmoe_linux_tool_menu
+	standand_desktop_install
 }
 ########################
 standand_desktop_install() {

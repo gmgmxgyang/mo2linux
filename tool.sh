@@ -437,7 +437,7 @@ arch_does_not_support() {
 ##########################
 do_you_want_to_continue() {
 	echo "${YELLOW}Do you want to continue?[Y/n]${RESET}"
-	echo "Press enter to continue,type n to return."
+	echo "Press ${GREEN}enter${RESET} to ${RED}continue${RESET},type ${YELLOW}n${RESET} to ${BLUE}return.${RESET}"
 	echo "按${GREEN}回车键${RESET}${RED}继续${RESET}，输${YELLOW}n${RESET}${BLUE}返回${RESET}"
 	read opt
 	case $opt in
@@ -1641,12 +1641,13 @@ install_gui() {
 	#curl -LfsS 'https://gitee.com/mo2/pic_api/raw/test/2020/03/15/a7IQ9NnfgPckuqRt.jpg' | catimg -
 	#echo "建议缩小屏幕字体，并重新加载图片，以获得更优的显示效果。"
 	echo "按${GREEN}回车键${RESET}${RED}选择${RESET}您需要${YELLOW}安装${RESET}的${BLUE}图形桌面环境${RESET}"
-	echo "Press ${GREEN}enter${RESET} to ${BLUE}continue.${RESET}"
-	read
-	standand_desktop_install
+	RETURN_TO_WHERE="tmoe_linux_tool_menu"
+	do_you_want_to_continue
+	tmoe_linux_tool_menu
 }
 ########################
 standand_desktop_install() {
+	NON_DEBIAN='false'
 	INSTALLDESKTOP=$(whiptail --title "单项选择题" --menu \
 		"您想要安装哪个桌面？按方向键选择，回车键确认！仅xfce桌面支持在本工具内便捷下载主题。 \n Which desktop environment do you want to install? " 15 60 5 \
 		"1" "xfce：兼容性高" \
@@ -1682,6 +1683,12 @@ standand_desktop_install() {
 	tmoe_linux_tool_menu
 }
 #######################
+auto_select_keyboard_layout() {
+	echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+	echo "keyboard-configuration keyboard-configuration/layout select 'English (US)'" | debconf-set-selections
+	echo keyboard-configuration keyboard-configuration/layoutcode select 'us' | debconf-set-selections
+}
+##################
 other_desktop() {
 	BETA_DESKTOP=$(whiptail --title "Alpha features" --menu \
 		"WARNING！本功能仍处于测试阶段,可能无法正常运行。部分桌面依赖systemd,无法在chroot环境中运行\nBeta features may not work properly." 15 60 6 \
@@ -1768,7 +1775,7 @@ kali_xfce4_extras() {
 }
 ##################
 install_xfce4_desktop() {
-	NON_DEBIAN='false'
+
 	echo '即将为您安装思源黑体(中文字体)、xfce4、xfce4-terminal、xfce4-goodies和tightvncserver等软件包。'
 	DEPENDENCY_01="xfce4 xfce4-goodies xfce4-terminal"
 	DEPENDENCY_02="dbus-x11 fonts-noto-cjk tightvncserver"
@@ -1777,9 +1784,7 @@ install_xfce4_desktop() {
 		#apt-mark hold gvfs
 		#apt-mark hold udisks2
 		dpkg --configure -a
-		echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
-		echo "keyboard-configuration keyboard-configuration/layout select 'English (US)'" | debconf-set-selections
-		echo keyboard-configuration keyboard-configuration/layoutcode select 'us' | debconf-set-selections
+		auto_select_keyboard_layout
 		##############
 	elif [ "${LINUX_DISTRO}" = "redhat" ]; then
 		DEPENDENCY_01="xfce4"
@@ -1859,9 +1864,7 @@ install_lxde_desktop() {
 	if [ "${LINUX_DISTRO}" = "debian" ]; then
 		#apt-mark hold udisks2
 		dpkg --configure -a
-		echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
-		echo "keyboard-configuration keyboard-configuration/layout select 'English (US)'" | debconf-set-selections
-		echo keyboard-configuration keyboard-configuration/layoutcode select 'us' | debconf-set-selections
+		auto_select_keyboard_layout
 		DEPENDENCY_01="lxde-core lxterminal"
 		DEPENDENCY_02="dbus-x11 fonts-noto-cjk tightvncserver"
 		#apt clean
@@ -2011,10 +2014,7 @@ install_lxqt_desktop() {
 		#apt-mark hold udisks2
 
 		dpkg --configure -a
-		echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
-		echo "keyboard-configuration keyboard-configuration/layout select 'English (US)'" | debconf-set-selections
-		echo keyboard-configuration keyboard-configuration/layoutcode select 'us' | debconf-set-selections
-
+		auto_select_keyboard_layout
 		apt install -y fonts-noto-cjk lxqt-core lxqt-config qterminal
 		apt install -y dbus-x11
 		apt install -y tightvncserver
@@ -2070,9 +2070,7 @@ install_kde_plasma5_desktop() {
 		#apt-mark hold udisks2
 		echo '即将为您安装思源黑体(中文字体)、kde-plasma-desktop和tightvncserver等软件包。'
 		dpkg --configure -a
-		echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
-		echo "keyboard-configuration keyboard-configuration/layout select 'English (US)'" | debconf-set-selections
-		echo keyboard-configuration keyboard-configuration/layoutcode select 'us' | debconf-set-selections
+		auto_select_keyboard_layout
 		aptitude install -y kde-plasma-desktop || apt install -y kde-plasma-desktop
 		apt install -y fonts-noto-cjk dbus-x11
 		apt install -y tightvncserver
@@ -2130,9 +2128,7 @@ install_gnome3_desktop() {
 		#apt-mark hold udisks2
 		echo '即将为您安装思源黑体(中文字体)、gnome-session、gnome-menus、gnome-tweak-tool、gnome-shell和tightvncserver等软件包。'
 		dpkg --configure -a
-		echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
-		echo "keyboard-configuration keyboard-configuration/layout select 'English (US)'" | debconf-set-selections
-		echo keyboard-configuration keyboard-configuration/layoutcode select 'us' | debconf-set-selections
+		auto_select_keyboard_layout
 		#aptitude install -y task-gnome-desktop || apt install -y task-gnome-desktop
 		apt install --no-install-recommends xorg gnome-session gnome-menus gnome-tweak-tool gnome-shell || aptitude install -y gnome-core
 		apt install -y fonts-noto-cjk
@@ -2188,9 +2184,7 @@ install_cinnamon_desktop() {
 		#apt-mark hold udisks2
 		echo '即将为您安装思源黑体(中文字体)、cinnamon和tightvncserver等软件包。'
 		dpkg --configure -a
-		echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
-		echo "keyboard-configuration keyboard-configuration/layout select 'English (US)'" | debconf-set-selections
-		echo keyboard-configuration keyboard-configuration/layoutcode select 'us' | debconf-set-selections
+		auto_select_keyboard_layout
 		#task-cinnamon-desktop
 		aptitude install -y cinnamon
 		aptitude install -y cinnamon-desktop-environment
@@ -2271,9 +2265,7 @@ install_deepin_desktop() {
 		apt update
 		echo '即将为您安装思源黑体(中文字体)、和tightvncserver等软件包。'
 		dpkg --configure -a
-		echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
-		echo "keyboard-configuration keyboard-configuration/layout select 'English (US)'" | debconf-set-selections
-		echo keyboard-configuration keyboard-configuration/layoutcode select 'us' | debconf-set-selections
+		auto_select_keyboard_layout
 		aptitude install -y dde
 		sed -i 's/^deb/#&/g' /etc/apt/sources.list.d/deepin.list
 		apt update

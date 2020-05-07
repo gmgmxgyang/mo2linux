@@ -2997,7 +2997,8 @@ modify_remote_desktop_config() {
 		"您想要修改哪个远程桌面的配置？\nWhich remote desktop configuration do you want to modify?" 15 60 4 \
 		"1" "VNC" \
 		"2" "XSDL" \
-		"3" "RDP" \
+		"3" "XRDP" \
+		"4" "Xwayland" \
 		"0" "Back to the main menu 返回主菜单" \
 		3>&1 1>&2 2>&3)
 	##############################
@@ -3015,6 +3016,10 @@ modify_remote_desktop_config() {
 	##########################
 	if [ "${REMOTE_DESKTOP}" == '3' ]; then
 		modify_xrdp_conf
+	fi
+	##########################
+	if [ "${REMOTE_DESKTOP}" == '4' ]; then
+		modify_xwayland_conf
 	fi
 	#######################
 	echo "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
@@ -3175,6 +3180,11 @@ modify_xsdl_ip_address() {
 	fi
 }
 #############################################
+press_enter_to_return() {
+	echo "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
+	echo "${YELLOW}按回车键返回。${RESET}"
+	read
+}
 #############################################
 press_enter_to_return_configure_xrdp() {
 	echo "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
@@ -3183,6 +3193,202 @@ press_enter_to_return_configure_xrdp() {
 	configure_xrdp
 }
 ##############
+modify_xwayland_conf() {
+	if [ ! -e "/etc/xwayland" ] && [ ! -L "/etc/xwayland" ]; then
+		echo "${RED}WARNING！${RESET}检测到xwayland目录${YELLOW}不存在${RESET}"
+		echo "请先在termux里进行配置，再返回此处选择您需要配置的桌面环境"
+		echo "若您无root权限，则有可能配置失败！"
+		press_enter_to_return
+		modify_remote_desktop_config
+	fi
+	if (whiptail --title "你想要对这个小可爱做什么" --yes-button "启动" --no-button 'Configure配置' --yesno "您是想要启动服务还是配置服务？" 9 50); then
+		if [ ! -e "/usr/local/bin/startw" ]; then
+			echo "未检测到启动脚本，请重新配置"
+			echo "Please reconfigure xwayland"
+			sleep 2s
+			xwayland_onekey
+		fi
+		/usr/local/bin/startw
+	else
+		configure_xwayland
+	fi
+}
+##################
+#############
+press_enter_to_return_configure_xwayland() {
+	echo "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
+	echo "${YELLOW}按回车键返回。${RESET}"
+	read
+	configure_xwayland
+}
+#######################
+xwayland_desktop_enviroment() {
+	X11_OR_WAYLAND_DESKTOP='xwayland'
+	configure_remote_desktop_enviroment
+}
+#############
+configure_xwayland() {
+	#进入xwayland配置文件目录
+	cd /etc/xwayland/
+	TMOE_OPTION=$(
+		whiptail --title "CONFIGURE xwayland" --menu "您想要修改哪项配置？" 14 50 5 \
+			"1" "One-key conf 初始化一键配置" \
+			"2" "指定xwayland桌面环境" \
+			"3" "pulse_server音频服务" \
+			"4" "remove 卸载/移除" \
+			"0" "Return to previous menu 返回上级菜单" \
+			3>&1 1>&2 2>&3
+	)
+	##############################
+	if [ "${TMOE_OPTION}" == '0' ]; then
+		#tmoe_linux_tool_menu
+		modify_remote_desktop_config
+	fi
+	##############################
+	if [ "${TMOE_OPTION}" == '1' ]; then
+		xwayland_onekey
+	fi
+	##############################
+	if [ "${TMOE_OPTION}" == '2' ]; then
+		xwayland_desktop_enviroment
+	fi
+	##############################
+	if [ "${TMOE_OPTION}" == '3' ]; then
+		xwayland_pulse_server
+	fi
+	##############################
+	if [ "${TMOE_OPTION}" == '4' ]; then
+		echo "${YELLOW}This is a dangerous operation, you must press Enter to confirm${RESET}"
+		#service xwayland restart
+		RETURN_TO_WHERE='configure_xwayland'
+		do_you_want_to_continue
+		DEPENDENCY_01='weston'
+		DEPENDENCY_02='xwayland'
+		NON_DEBIAN='false'
+		if [ "${LINUX_DISTRO}" = "arch" ]; then
+			DEPENDENCY_02='xorg-server-xwayland'
+		fi
+		rm -fv /etc/xwayland/startw
+		echo "${YELLOW}已删除xwayland启动脚本${RESET}"
+		echo "即将为您卸载..."
+		${PACKAGES_REMOVE_COMMAND} ${DEPENDENCY_01} ${DEPENDENCY_02}
+	fi
+	########################################
+	press_enter_to_return_configure_xwayland
+}
+#####################
+##############
+xwayland_pulse_server() {
+	cd /usr/local/bin/
+	TARGET=$(whiptail --inputbox "若您需要转发音频到其它设备,那么请可在此处修改。当前为$(grep 'PULSE_SERVER' startw | grep -v '^#' | cut -d '=' -f 2) \n若您曾在音频服务端（接收音频的设备）上运行过Tmoe-linux,并配置允许局域网连接,则只需输入该设备ip,无需加端口号。注：win10需手动打开'C:\Users\Public\Downloads\pulseaudio\pulseaudio.bat'" 15 50 --title "MODIFY PULSE SERVER ADDRESS" 3>&1 1>&2 2>&3)
+	exitstatus=$?
+	if [ $exitstatus = 0 ]; then
+		if grep '^export.*PULSE_SERVER' startw; then
+			sed -i "s@export.*PULSE_SERVER=.*@export PULSE_SERVER=$TARGET@" startw
+		else
+			sed -i "3 a\export PULSE_SERVER=$TARGET" startw
+		fi
+		echo 'Your current PULSEAUDIO SERVER address has been modified.'
+		echo '您当前的音频地址已修改为'
+		echo $(grep 'PULSE_SERVER' startw | grep -v '^#' | cut -d '=' -f 2)
+		press_enter_to_return_configure_xwayland
+	else
+		configure_xwayland
+	fi
+}
+##############
+xwayland_onekey() {
+	RETURN_TO_WHERE='configure_xwayland'
+	do_you_want_to_continue
+
+	DEPENDENCY_01='weston'
+	DEPENDENCY_02='xwayland'
+	NON_DEBIAN='false'
+	if [ "${LINUX_DISTRO}" = "debian" ]; then
+		if [ $(command -v startplasma-x11) ]; then
+			DEPENDENCY_02='xwayland plasma-workspace-wayland'
+		fi
+	fi
+	if [ "${LINUX_DISTRO}" = "arch" ]; then
+		DEPENDENCY_02='xorg-server-xwayland'
+	fi
+	beta_features_quick_install
+	###################
+	cat >${HOME}/.config/weston.ini <<-'EndOFweston'
+		[core]
+		### uncomment this line for xwayland support ###
+		modules=xwayland.so
+
+		[shell]
+		background-image=/usr/share/backgrounds/gnome/Aqua.jpg
+		background-color=0xff002244
+		panel-color=0x90ff0000
+		locking=true
+		animation=zoom
+		#binding-modifier=ctrl
+		#num-workspaces=6
+		### for cursor themes install xcursor-themes pkg from Extra. ###
+		#cursor-theme=whiteglass
+		#cursor-size=24
+
+		### tablet options ###
+		#lockscreen-icon=/usr/share/icons/gnome/256x256/actions/lock.png
+		#lockscreen=/usr/share/backgrounds/gnome/Garden.jpg
+		#homescreen=/usr/share/backgrounds/gnome/Blinds.jpg
+		#animation=fade
+
+		[keyboard]
+		keymap_rules=evdev
+		#keymap_layout=gb
+		#keymap_options=caps:ctrl_modifier,shift:both_capslock_cancel
+		### keymap_options from /usr/share/X11/xkb/rules/base.lst ###
+
+		[terminal]
+		#font=DroidSansMono
+		#font-size=14
+
+		[screensaver]
+		# Uncomment path to disable screensaver
+		path=/usr/libexec/weston-screensaver
+		duration=600
+
+		[input-method]
+		path=/usr/libexec/weston-keyboard
+
+		###  for Laptop displays  ###
+		#[output]
+		#name=LVDS1
+		#mode=1680x1050
+		#transform=90
+
+		#[output]
+		#name=VGA1
+		# The following sets the mode with a modeline, you can get modelines for your preffered resolutions using the cvt utility
+		#mode=173.00 1920 2048 2248 2576 1080 1083 1088 1120 -hsync +vsync
+		#transform=flipped
+
+		#[output]
+		#name=X1
+		mode=1440x720
+		#transform=flipped-270
+	EndOFweston
+	cd /usr/local/bin
+	cat >startw <<-'EndOFwayland'
+		#!/bin/bash
+		chmod +x -R /etc/xwayland
+		XDG_RUNTIME_DIR=/etc/xwayland Xwayland &
+		export PULSE_SERVER=127.0.0.1:0
+		export DISPLAY=127.0.0.1:0
+		startxfce4
+	EndOFwayland
+	chmod +x startw
+	xwayland_desktop_enviroment
+	###########################
+	press_enter_to_return_configure_xwayland
+	#此处的返回步骤并非多余
+}
+###########
+##################
 modify_xrdp_conf() {
 	if [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
 		echo "${RED}WARNING！${RESET}检测到您当前处于${GREEN}proot容器${RESET}环境下！"
@@ -3376,24 +3582,21 @@ configure_remote_desktop_enviroment() {
 	modify_remote_desktop_config
 }
 ##############
-configure_remote_desktop_session() {
-	if [ "${X11_OR_WAYLAND_DESKTOP}" == 'xrdp' ]; then
-		echo "${REMOTE_DESKTOP_SESSION}" >~/.xsession
-		#touch ~/.session
-		sed -i '/X11\/Xsession/d' startwm.sh
-		cat >>startwm.sh <<-'EnfOfStartWM'
-			test -x /etc/X11/Xsession && exec /etc/X11/Xsession
-			exec /bin/sh /etc/X11/Xsession
-		EnfOfStartWM
-		sed -i "s:exec /bin/sh.*/etc/X11/Xsession:exec /bin/sh ${REMOTE_DESKTOP_SESSION} /etc/X11/Xsession:g" /etc/xrdp/startwm.sh
-	fi
+configure_xrdp_remote_desktop_session() {
+	echo "${REMOTE_DESKTOP_SESSION}" >~/.xsession
+	#touch ~/.session
+	sed -i '/X11\/Xsession/d' startwm.sh
+	cat >>startwm.sh <<-'EnfOfStartWM'
+		test -x /etc/X11/Xsession && exec /etc/X11/Xsession
+		exec /bin/sh /etc/X11/Xsession
+	EnfOfStartWM
+	sed -i "s:exec /bin/sh.*/etc/X11/Xsession:exec /bin/sh ${REMOTE_DESKTOP_SESSION} /etc/X11/Xsession:g" /etc/xrdp/startwm.sh
 	echo "修改完成，若无法生效，则请使用强制配置功能[Y/f]"
 	echo "输f启用，一般情况下无需启用，因为这可能会造成一些问题。"
 	echo "若root用户无法连接，则请使用${GREEN}adduser${RESET}命令新建一个普通用户"
 	echo 'If the configuration fails, please use the mandatory configuration function！'
 	echo "Press enter to return,type f to force congigure."
 	echo "按${GREEN}回车键${RESET}${RED}返回${RESET}，输${YELLOW}f${RESET}启用${BLUE}强制配置功能${RESET}"
-
 	read opt
 	case $opt in
 	y* | Y* | "") ;;
@@ -3408,6 +3611,31 @@ configure_remote_desktop_session() {
 	esac
 	service xrdp restart
 	service xrdp status
+}
+##############
+configure_xwayland_remote_desktop_session() {
+	cat >startw <<-EndOFwayland
+		#!/bin/bash
+		chmod +x -R /etc/xwayland
+		XDG_RUNTIME_DIR=/etc/xwayland Xwayland &
+		export PULSE_SERVER=127.0.0.1:0
+		export DISPLAY=127.0.0.1:0
+		${REMOTE_DESKTOP_SESSION}
+	EndOFwayland
+	chmod +x startw
+	echo "配置完成，请先打开sparkle app，点击Start"
+	echo "然后在GNU/Linux容器里输startw启动xwayland"
+	echo "在使用过程中，您可以按音量+调出键盘"
+	read
+	startw
+}
+#################
+configure_remote_desktop_session() {
+	if [ "${X11_OR_WAYLAND_DESKTOP}" == 'xrdp' ]; then
+		configure_xrdp_remote_desktop_session
+	elif [ "${X11_OR_WAYLAND_DESKTOP}" == 'xwayland' ]; then
+		configure_xwayland_remote_desktop_session
+	fi
 }
 #####################
 xrdp_pulse_server() {
@@ -3428,7 +3656,6 @@ xrdp_pulse_server() {
 	else
 		configure_xrdp
 	fi
-
 }
 ##############
 xrdp_onekey() {

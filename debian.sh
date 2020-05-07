@@ -1571,6 +1571,7 @@ xwayland_warning() {
 	echo "由于目前在Android设备上只能靠软件来渲染，故实际体验将会非常糟糕！"
 	echo "同时，由于触控操作体验极差。若您无蓝牙鼠标等外接设备，则不建议您配置本服务。"
 	echo "您在安装完apk后，还需进入GNU/Linux容器内，输debian-i，并选择配置xwayland的选项"
+	download_xwayland_apk
 }
 ################
 download_xwayland_apk() {
@@ -1590,7 +1591,7 @@ download_xwayland_apk() {
 		echo '解压成功，请进入下载目录手动安装。'
 		echo '文件名称 Sparkle*.apk'
 		am start -n com.android.documentsui/com.android.documentsui.ViewDownloadsActivity
-		echo "按回车键启用root权限"
+		echo "请在安装完成后，按回车键启用root权限"
 		read
 		su -c "ln -sf /data/data/com.sion.sparkle/files ${DEBIAN_CHROOT}/etc/xwayland"
 		enable_root_mode
@@ -1619,11 +1620,11 @@ download_vnc_apk() {
 		3>&1 1>&2 2>&3)
 	##########################
 	if [ "${OPTION}" == '0' ]; then
-		download_vnc_or_xsdl_apk
+		tmoe_manager_main_menu
 	fi
 	####################
 	if [ "${OPTION}" == '1' ]; then
-		tmoe_manager_main_menu
+		download_vnc_or_xsdl_apk
 	fi
 	##################
 	if [ "${OPTION}" == '2' ]; then

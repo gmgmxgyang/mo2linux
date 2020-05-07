@@ -1576,7 +1576,7 @@ configure_termux_xwayland_mount() {
 	GET_DEBIAN_BIND_LINE=$(cat $PREFIX/bin/debian | grep -n 'command+=" -b /data' | cut -d ':' -f 1 | head -n 1)
 	sed -i '/com.sion.sparkle/d' $PREFIX/bin/debian
 	rm ${DEBIAN_CHROOT}/etc/xwayland || tsudo rm ${DEBIAN_CHROOT}/etc/xwayland
-	sed -i "${GET_DEBIAN_BIND_LINE} i\ command+=\" -b /data/data/com.sion.sparkle/files:${DEBIAN_CHROOT}/etc/xwayland\"" $PREFIX/bin/debian
+	sed -i "${GET_DEBIAN_BIND_LINE} i\ command+=\" -b /data/data/com.sion.sparkle/files:/etc/xwayland\"" $PREFIX/bin/debian
 }
 ################
 download_xwayland_apk() {
@@ -1605,7 +1605,7 @@ download_xwayland_apk() {
 	c* | C*)
 		#tsudo ln -sf /data/data/com.sion.sparkle/files ${DEBIAN_CHROOT}/etc/xwayland || su -c "ln -sf /data/data/com.sion.sparkle/files ${DEBIAN_CHROOT}/etc/xwayland"
 		configure_termux_xwayland_mount
-		tsudo ls ${DEBIAN_CHROOT}/etc/xwayland/* >/dev/null || echo "配置${RED}失败${RESET}，请检查root权限设置"
+		#tsudo ls ${DEBIAN_CHROOT}/etc/xwayland/* >/dev/null || echo "配置${RED}失败${RESET}，请检查root权限设置"
 		press_enter_to_return
 		;;
 	n* | N*)

@@ -1591,11 +1591,12 @@ download_xwayland_apk() {
 		am start -n com.android.documentsui/com.android.documentsui.ViewDownloadsActivity
 		echo "请在安装完成后，按回车键启用root权限"
 		read
-		su -c "ln -sf /data/data/com.sion.sparkle/files ${DEBIAN_CHROOT}/etc/xwayland"
+		echo "本功能正在测试中..."
+		#su -c "ln -sf /data/data/com.sion.sparkle/files ${DEBIAN_CHROOT}/etc/xwayland"
 		enable_root_mode
 		;;
 	c* | C*)
-		tsudo ln -sf /data/data/com.sion.sparkle/files ${DEBIAN_CHROOT}/etc/xwayland || su -c "ln -sf /data/data/com.sion.sparkle/files ${DEBIAN_CHROOT}/etc/xwayland"
+		#tsudo ln -sf /data/data/com.sion.sparkle/files ${DEBIAN_CHROOT}/etc/xwayland || su -c "ln -sf /data/data/com.sion.sparkle/files ${DEBIAN_CHROOT}/etc/xwayland"
 		tsudo ls ${DEBIAN_CHROOT}/etc/xwayland/* >/dev/null || echo "配置${RED}失败${RESET}，请检查root权限设置"
 		press_enter_to_return
 		;;

@@ -1573,10 +1573,10 @@ xwayland_warning() {
 }
 ############
 configure_termux_xwayland_mount() {
-	GET_DEBIAN_BIND_LINE=$(cat $(command -v debian) | grep -n 'command+=" -b /data' | cut -d ':' -f 1)
-	sed -i '/com.sion.sparkle/d' $(command -v debian)
+	GET_DEBIAN_BIND_LINE=$(cat $PREFIX/bin/debian | grep -n 'command+=" -b /data' | cut -d ':' -f 1)
+	sed -i '/com.sion.sparkle/d' $PREFIX/bin/debian
 	rm ${DEBIAN_CHROOT}/etc/xwayland || tsudo rm ${DEBIAN_CHROOT}/etc/xwayland
-	sed -i "${GET_DEBIAN_BIND_LINE} i\ command+=\" -b /data/data/com.sion.sparkle/files:${DEBIAN_CHROOT}/etc/xwayland\"" $(command -v debian)
+	sed -i "${GET_DEBIAN_BIND_LINE} i\ command+=\" -b /data/data/com.sion.sparkle/files:${DEBIAN_CHROOT}/etc/xwayland\"" $PREFIX/bin/debian
 }
 ################
 download_xwayland_apk() {

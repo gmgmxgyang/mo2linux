@@ -1598,9 +1598,6 @@ download_xwayland_apk() {
 		am start -n com.android.documentsui/com.android.documentsui.ViewDownloadsActivity
 		echo "请在安装完成后，按回车键启用root权限"
 		read
-		sed -i '/com.sion.sparkle/d' $(command -v debian)
-		rm ${DEBIAN_CHROOT}/etc/xwayland
-		sed -i "${GET_DEBIAN_BIND_LINE} i\ command+=\" -b /data/data/com.sion.sparkle/files:${DEBIAN_CHROOT}/etc/xwayland\"" $(command -v debian)
 		#su -c "ln -sf /data/data/com.sion.sparkle/files ${DEBIAN_CHROOT}/etc/xwayland"
 		configure_termux_xwayland_mount
 		enable_root_mode

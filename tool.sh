@@ -156,6 +156,8 @@ check_dependencies() {
 	if [ ! -e /usr/bin/mkfontscale ]; then
 		if [ "${LINUX_DISTRO}" = "debian" ]; then
 			DEPENDENCIES="${DEPENDENCIES} xfonts-utils"
+		elif [ "${LINUX_DISTRO}" = "arch" ]; then
+			DEPENDENCIES="${DEPENDENCIES} xorg-mkfontscale"
 		fi
 	fi
 	#####################

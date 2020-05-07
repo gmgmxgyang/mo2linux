@@ -1461,12 +1461,13 @@ cat >.profile <<-'EDITBASHPROFILE'
 	    curl -o /etc/yum.repos.d/fedora-updates.repo http://mirrors.aliyun.com/repo/fedora-updates.repo
 	}
 	###########
+	#fedora清华源mirrors.tuna.tsinghua.edu.cn/fedora/releases/
 	fedora_32_repos() {
 	    cat >/etc/yum.repos.d/fedora.repo <<-'EndOfYumRepo'
 			[fedora]
 			name=Fedora $releasever - $basearch
 			failovermethod=priority
-			baseurl=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/$releasever/Everything/$basearch/os/
+			baseurl=https://mirrors.huaweicloud.com/fedora/releases/$releasever/Everything/$basearch/os/
 			metadata_expire=28d
 			gpgcheck=1
 			gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$releasever-$basearch
@@ -1477,7 +1478,7 @@ cat >.profile <<-'EDITBASHPROFILE'
 			[updates]
 			name=Fedora $releasever - $basearch - Updates
 			failovermethod=priority
-			baseurl=https://mirrors.tuna.tsinghua.edu.cn/fedora/updates/$releasever/Everything/$basearch/
+			baseurl=https://mirrors.huaweicloud.com/fedora/updates/$releasever/Everything/$basearch/
 			enabled=1
 			gpgcheck=1
 			metadata_expire=6h
@@ -1491,7 +1492,7 @@ cat >.profile <<-'EDITBASHPROFILE'
 			[fedora-modular]
 			name=Fedora Modular $releasever - $basearch
 			failovermethod=priority
-			baseurl=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/$releasever/Modular/$basearch/os/
+			baseurl=https://mirrors.huaweicloud.com/fedora/releases/$releasever/Modular/$basearch/os/
 			enabled=1
 			metadata_expire=7d
 			gpgcheck=1
@@ -1503,7 +1504,7 @@ cat >.profile <<-'EDITBASHPROFILE'
 			[updates-modular]
 			name=Fedora Modular $releasever - $basearch - Updates
 			failovermethod=priority
-			baseurl=https://mirrors.tuna.tsinghua.edu.cn/fedora/updates/$releasever/Modular/$basearch/
+			baseurl=https://mirrors.huaweicloud.com/fedora/updates/$releasever/Modular/$basearch/
 			enabled=1
 			gpgcheck=1
 			metadata_expire=6h

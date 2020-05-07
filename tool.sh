@@ -2324,12 +2324,12 @@ remove_browser() {
 		echo 'Press enter to remove firefox,press Ctrl + C to cancel'
 		RETURN_TO_WHERE='tmoe_linux_tool_menu'
 		do_you_want_to_continue
-		apt purge -y firefox-esr firefox-esr-l10n-zh-cn
-		apt purge -y firefox firefox-l10n-zh-cn
-		apt purge -y firefox-locale-zh-hans
-		apt autopurge
-		dnf remove -y firefox 2>/dev/null
-		pacman -Rsc firefox 2>/dev/null
+		${PACKAGES_REMOVE_COMMAND} firefox-esr firefox-esr-l10n-zh-cn
+		${PACKAGES_REMOVE_COMMAND} firefox firefox-l10n-zh-cn
+		${PACKAGES_REMOVE_COMMAND} firefox-locale-zh-hans
+		apt autopurge 2>/dev/null
+		#dnf remove -y firefox 2>/dev/null
+		#pacman -Rsc firefox 2>/dev/null
 		emerge -C firefox-bin firefox 2>/dev/null
 
 	else
@@ -2338,9 +2338,9 @@ remove_browser() {
 		echo 'Press enter to confirm uninstall chromium,press Ctrl + C to cancel'
 		RETURN_TO_WHERE='tmoe_linux_tool_menu'
 		do_you_want_to_continue
-		apt purge -y chromium chromium-l10n
+		${PACKAGES_REMOVE_COMMAND} chromium chromium-l10n
 		apt-mark unhold chromium-browser chromium-browser-l10n chromium-codecs-ffmpeg-extra
-		apt purge -y chromium-browser chromium-browser-l10n
+		${PACKAGES_REMOVE_COMMAND} chromium-browser chromium-browser-l10n
 		apt autopurge
 		dnf remove -y chromium 2>/dev/null
 		pacman -Rsc chromium 2>/dev/null
@@ -2425,7 +2425,7 @@ download_uos_icon_theme() {
 	cat url.txt
 	tar -Jxvf Uos.tar.xz -C /usr/share/icons 2>/dev/null
 	rm -rf /tmp/UosICONS
-	echo "Download completed.如需删除，请手动输rm -rf /usr/share/icons/Uos ; apt purge -y deepin-icon-theme"
+	echo "Download completed.如需删除，请手动输rm -rf /usr/share/icons/Uos ; ${PACKAGES_REMOVE_COMMAND} deepin-icon-theme"
 }
 #####################
 download_macos_mojave_theme() {
@@ -2483,8 +2483,8 @@ install_breeze_theme() {
 	NON_DEBIAN='false'
 
 	if [ "${LINUX_DISTRO}" = "arch" ]; then
-		DEPENDENCY_01="breeze-icons xfwm4-theme-breeze breeze-gtk"
-		DEPENDENCY_02="breeze-grub"
+		DEPENDENCY_01="breeze-icons breeze-gtk"
+		DEPENDENCY_02="breeze-grub xfwm4-theme-breeze"
 	fi
 	beta_features_quick_install
 }
@@ -2821,8 +2821,8 @@ install_synaptic() {
 		echo "Do you really want to remove synaptic?"
 		RETURN_TO_WHERE='other_software'
 		do_you_want_to_continue
-		apt purge -y synaptic
-		apt purge -y gdebi
+		${PACKAGES_REMOVE_COMMAND} synaptic
+		${PACKAGES_REMOVE_COMMAND} gdebi
 	fi
 }
 ##########################################
@@ -3864,7 +3864,7 @@ frequently_asked_questions() {
 		echo "${YELLOW}按回车键卸载gvfs和udisks2${RESET}"
 		RETURN_TO_WHERE='frequently_asked_questions'
 		do_you_want_to_continue
-		apt purge -y --allow-change-held-packages ^udisks2 ^gvfs
+		${PACKAGES_REMOVE_COMMAND} --allow-change-held-packages ^udisks2 ^gvfs
 		tmoe_linux_tool_menu
 	fi
 	############################

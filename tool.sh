@@ -2483,7 +2483,8 @@ install_breeze_theme() {
 	NON_DEBIAN='false'
 
 	if [ "${LINUX_DISTRO}" = "arch" ]; then
-		DEPENDENCY_01="breeze-icons"
+		DEPENDENCY_01="breeze-icons xfwm4-theme-breeze breeze-gtk"
+		DEPENDENCY_02="breeze-grub"
 	fi
 	beta_features_quick_install
 }

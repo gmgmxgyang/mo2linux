@@ -1571,6 +1571,13 @@ xwayland_warning() {
 	echo "您在安装完apk后，还需进入GNU/Linux容器内，输debian-i，并选择配置xwayland的选项"
 	download_xwayland_apk
 }
+############
+configure_termux_xwayland_mount() {
+	GET_DEBIAN_BIND_LINE=$(cat $(command -v debian) | grep -n 'command+=" -b /data' | cut -d ':' -f 1)
+	sed -i '/com.sion.sparkle/d' $(command -v debian)
+	rm ${DEBIAN_CHROOT}/etc/xwayland
+	sed -i "${GET_DEBIAN_BIND_LINE} i\ command+=\" -b /data/data/com.sion.sparkle/files:${DEBIAN_CHROOT}/etc/xwayland\"" $(command -v debian)
+}
 ################
 download_xwayland_apk() {
 	echo "${YELLOW}Do you want to continue?[Y/n]${RESET}"
@@ -1591,12 +1598,16 @@ download_xwayland_apk() {
 		am start -n com.android.documentsui/com.android.documentsui.ViewDownloadsActivity
 		echo "请在安装完成后，按回车键启用root权限"
 		read
-		echo "本功能正在测试中..."
+		sed -i '/com.sion.sparkle/d' $(command -v debian)
+		rm ${DEBIAN_CHROOT}/etc/xwayland
+		sed -i "${GET_DEBIAN_BIND_LINE} i\ command+=\" -b /data/data/com.sion.sparkle/files:${DEBIAN_CHROOT}/etc/xwayland\"" $(command -v debian)
 		#su -c "ln -sf /data/data/com.sion.sparkle/files ${DEBIAN_CHROOT}/etc/xwayland"
+		configure_termux_xwayland_mount
 		enable_root_mode
 		;;
 	c* | C*)
 		#tsudo ln -sf /data/data/com.sion.sparkle/files ${DEBIAN_CHROOT}/etc/xwayland || su -c "ln -sf /data/data/com.sion.sparkle/files ${DEBIAN_CHROOT}/etc/xwayland"
+		configure_termux_xwayland_mount
 		tsudo ls ${DEBIAN_CHROOT}/etc/xwayland/* >/dev/null || echo "配置${RED}失败${RESET}，请检查root权限设置"
 		press_enter_to_return
 		;;
@@ -1609,7 +1620,6 @@ download_xwayland_apk() {
 		download_vnc_apk
 		;;
 	esac
-
 }
 #################################
 download_vnc_apk() {

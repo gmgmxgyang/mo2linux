@@ -1573,6 +1573,13 @@ xwayland_warning() {
 }
 ############
 configure_termux_xwayland_mount() {
+	su -c "ls /data/data/com.sion.sparkle"
+	exitstatus=$?
+	if [ $exitstatus != 0 ]; then
+		echo "配置${RED}失败！${RESET}请先安装sparkle，并检查root权限设置"
+		press_enter_to_return
+		download_vnc_apk
+	fi
 	GET_DEBIAN_BIND_LINE=$(cat $PREFIX/bin/debian | grep -n 'command+=" -b /data' | cut -d ':' -f 1 | head -n 1)
 	sed -i '/com.sion.sparkle/d' $PREFIX/bin/debian
 	#rm ${DEBIAN_CHROOT}/etc/xwayland || tsudo rm ${DEBIAN_CHROOT}/etc/xwayland

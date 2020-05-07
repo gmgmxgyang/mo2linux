@@ -1492,3 +1492,19 @@ bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/install.sh |
     sed 's:debian/sid:manjaro/latest:g' |
     sed 's:rootfs.tar.xz:rootfs.tar.gz:g' |
     sed 's:Debian GNU/Linux:manjaro GNU/Linux:g')"
+##########
+#2020-05-07移除功能：fzf-tab插件
+configure_fzf_tab_plugin() {
+    #此功能隐藏！
+    echo "正在克隆fzf-tab插件..."
+    if [ -e /usr/bin/fzf ] || [ -e /bin/fzf ]; then
+        rm -rf ${HOME}/.oh-my-zsh/custom/plugins/fzf-tab 2>/dev/null
+        git clone --depth=1 https://gitee.com/mo2/fzf-tab.git ${HOME}/.oh-my-zsh/custom/plugins/fzf-tab || git clone --depth=1 git://github.com/Aloxaf/fzf-tab.git ${HOME}/.oh-my-zsh/custom/plugins/fzf-tab
+
+        grep -q 'custom/plugins/fzf-tab/fzf-tab.zsh' "${HOME}/.zshrc" >/dev/null 2>&1 || sed -i "$ a\source ${HOME}/.oh-my-zsh/custom/plugins/fzf-tab/fzf-tab.zsh" ${HOME}/.zshrc
+    fi
+}
+if [ "${LINUX_DISTRO}" = "debian" ] || [ "${LINUX_DISTRO}" = "alpine" ] || [ "${LINUX_DISTRO}" = "arch" ]; then
+    configure_fzf_tab_plugin
+fi
+#######################

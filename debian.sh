@@ -1485,9 +1485,7 @@ space_occupation() {
 
 		tmoe_manager_main_menu
 	fi
-
 	tmoe_manager_main_menu
-
 }
 
 ########################################################################
@@ -1577,7 +1575,7 @@ xwayland_warning() {
 download_xwayland_apk() {
 	echo "${YELLOW}Do you want to continue?[Y/n]${RESET}"
 	echo "Press ${GREEN}enter${RESET} to ${BLUE}download apk${RESET},type c to configure，type ${YELLOW}n${RESET} to ${BLUE}return.${RESET}"
-	echo "按${GREEN}回车键${RESET}${BLUE}下载apk${RESET}，输c配置，输${YELLOW}n${RESET}${BLUE}返回${RESET}"
+	echo "按${GREEN}回车键${RESET}${BLUE}下载apk${RESET}，输${YELLOW}c${RESET}配置，输${YELLOW}n${RESET}${BLUE}返回${RESET}"
 	read opt
 	case $opt in
 	y* | Y* | "")
@@ -1598,6 +1596,8 @@ download_xwayland_apk() {
 		;;
 	c* | C*)
 		tsudo ln -sf /data/data/com.sion.sparkle/files ${DEBIAN_CHROOT}/etc/xwayland || su -c "ln -sf /data/data/com.sion.sparkle/files ${DEBIAN_CHROOT}/etc/xwayland"
+		tsudo ls ${DEBIAN_CHROOT}/etc/xwayland/* >/dev/null || echo "配置${RED}失败${RESET}，请检查root权限设置"
+		press_enter_to_return
 		;;
 	n* | N*)
 		echo "skipped."

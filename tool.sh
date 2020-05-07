@@ -3626,8 +3626,8 @@ first_configure_startvnc() {
 		echo "检测到您处于${BLUE}proot容器${RESET}环境下，即将为您${RED}卸载${RESET}${YELLOW}udisk2${RESET}和${GREEN}gvfs${RESET}"
 		if [ "${LINUX_DISTRO}" = 'debian' ]; then
 			apt purge -y --allow-change-held-packages ^udisks2 ^gvfs
-		else
-			${PACKAGES_REMOVE_COMMAND} udisks2 gvfs
+		#else
+		#	${PACKAGES_REMOVE_COMMAND} udisks2 gvfs
 		fi
 	fi
 

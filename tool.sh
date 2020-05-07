@@ -1789,7 +1789,7 @@ install_xfce4_desktop() {
 		auto_select_keyboard_layout
 		##############
 	elif [ "${LINUX_DISTRO}" = "redhat" ]; then
-		DEPENDENCY_01="@xfce4"
+		DEPENDENCY_01="@xfce"
 		DEPENDENCY_02="tigervnc-server google-noto-cjk-fonts"
 		rm -rf /etc/xdg/autostart/xfce-polkit.desktop
 		##################

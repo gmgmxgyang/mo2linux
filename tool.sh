@@ -3268,6 +3268,8 @@ configure_xwayland() {
 		NON_DEBIAN='false'
 		if [ "${LINUX_DISTRO}" = "arch" ]; then
 			DEPENDENCY_02='xorg-server-xwayland'
+		elif [ "${LINUX_DISTRO}" = "redhat" ]; then
+			DEPENDENCY_02='xorg-x11-server-Xwayland'
 		fi
 		rm -fv /etc/xwayland/startw
 		echo "${YELLOW}已删除xwayland启动脚本${RESET}"

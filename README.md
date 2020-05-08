@@ -561,3 +561,20 @@ nano $(which startvnc)
 
 - 1.自动修复 proot 容器环境下，gvfs 和 udisks2 配置失败的问题，原先是需要在 FAQ 里手动修复的。
 - 2.添加 xrdp 的配置选项，并适配更多桌面。
+
+##### 2020-05-07 至 2020-05-08 更新日志
+
+- 1.支持给所有已支持的桌面配置 xwayland！（仅支持 Android，不支持 win10）
+- **说明**：
+- 需要先在 termux 进行配置，并安装 wayland 服务端软件，再进入 GNU/Linux 容器内选择需要配置的桌面环境。
+- 其中，后者在我之前写的 xorg+xrdp 的配置方案上进行了修改。
+- 配置完成后，需要先打开 wayland 服务端，点击`start`,然后在容器内输`startw`启动。
+- 注：我仅测试了 xfce4。未测试的桌面可以配置，但可能存在无法连接的问题。
+- 特点：可以打开 X11VNC 无法打开的某些应用，但是 bug 超级多。
+- 由于 bug 实在过多，故我已经不想维护了。
+  ![Screenshot_20200507-193422_1.png](https://i.loli.net/2020/05/08/JhLxPTor1GiDgtY.png)
+  ![Screenshot_20200507-222532.png](https://i.loli.net/2020/05/08/QJp8LelVakxyqA5.png)
+  触控操作体验极差！建议使用蓝牙鼠标进行操作！  
+  由于目前在 Android 手机上暂时无法使用 gpu 硬件渲染加速，故实际体验非常糟糕！
+  不建议配置该服务!  
+  等 wayland 完善之后，再来继续优化吧！

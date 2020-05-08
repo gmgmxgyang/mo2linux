@@ -3250,6 +3250,7 @@ configure_xwayland() {
 	fi
 	##############################
 	if [ "${TMOE_OPTION}" == '2' ]; then
+		#X11_OR_WAYLAND_DESKTOP='xwayland'
 		xwayland_desktop_enviroment
 	fi
 	##############################
@@ -3585,12 +3586,15 @@ configure_remote_desktop_enviroment() {
 configure_xrdp_remote_desktop_session() {
 	echo "${REMOTE_DESKTOP_SESSION}" >~/.xsession
 	#touch ~/.session
-	sed -i '/X11\/Xsession/d' startwm.sh
+	cd /etc/xrdp
+	sed -i '/session/d' startwm.sh
+	sed -i '/start/d' startwm.sh
+	#sed -i '/X11\/Xsession/d' startwm.sh
 	cat >>startwm.sh <<-'EnfOfStartWM'
 		test -x /etc/X11/Xsession && exec /etc/X11/Xsession
 		exec /bin/sh /etc/X11/Xsession
 	EnfOfStartWM
-	sed -i "s:exec /bin/sh.*/etc/X11/Xsession:exec /bin/sh ${REMOTE_DESKTOP_SESSION} /etc/X11/Xsession:g" /etc/xrdp/startwm.sh
+	sed -i "s:exec /bin/sh.*/etc/X11/Xsession:exec /bin/sh ${REMOTE_DESKTOP_SESSION}:g" /etc/xrdp/startwm.sh
 	echo "修改完成，若无法生效，则请使用强制配置功能[Y/f]"
 	echo "输f启用，一般情况下无需启用，因为这可能会造成一些问题。"
 	echo "若root用户无法连接，则请使用${GREEN}adduser${RESET}命令新建一个普通用户"
@@ -3622,6 +3626,7 @@ configure_xwayland_remote_desktop_session() {
 		export DISPLAY=:0
 		${REMOTE_DESKTOP_SESSION}
 	EndOFwayland
+	echo ${REMOTE_DESKTOP_SESSION} 
 	chmod +x startw
 	echo "配置完成，请先打开sparkle app，点击Start"
 	echo "然后在GNU/Linux容器里输startw启动xwayland"

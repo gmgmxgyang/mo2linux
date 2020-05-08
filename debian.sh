@@ -1584,6 +1584,7 @@ configure_termux_xwayland_mount() {
 	sed -i '/com.sion.sparkle/d' $PREFIX/bin/debian
 	#rm ${DEBIAN_CHROOT}/etc/xwayland || tsudo rm ${DEBIAN_CHROOT}/etc/xwayland
 	sed -i "${GET_DEBIAN_BIND_LINE} i\ command+=\" -b /data/data/com.sion.sparkle/files:/etc/xwayland\"" $PREFIX/bin/debian
+	echo "termux配置完成，sparkle您还需要进入GNU/Linux容器环境内，单独选择xwayland桌面配置选项!"
 }
 ################
 download_xwayland_apk() {

@@ -3202,7 +3202,7 @@ modify_xwayland_conf() {
 		modify_remote_desktop_config
 	fi
 	if (whiptail --title "你想要对这个小可爱做什么" --yes-button "启动" --no-button 'Configure配置' --yesno "您是想要启动服务还是配置服务？" 9 50); then
-		if [ ! -e "/usr/local/bin/startw" ]; then
+		if [ ! -e "/usr/local/bin/startw" ] || [ ! $(command -v weston) ]; then
 			echo "未检测到启动脚本，请重新配置"
 			echo "Please reconfigure xwayland"
 			sleep 2s

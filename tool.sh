@@ -1786,7 +1786,7 @@ configure_xfce4_xstartup() {
 	#dbus-launch startxfce4 &
 	chmod +x ./xstartup
 	rm -f /tmp/.Tmoe-*Desktop-Detection-FILE 2>/dev/null 2>/dev/null
-	#touch /tmp/.Tmoe-XFCE4-Desktop-Detection-FILE
+	touch /tmp/.Tmoe-XFCE4-Desktop-Detection-FILE
 	first_configure_startvnc
 }
 ##########################
@@ -3838,7 +3838,7 @@ first_configure_startvnc() {
 		fi
 	fi
 
-	if [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ] && [ ! -f "/tmp/.Tmoe-MATE-Desktop-Detection-FILE" ]; then
+	if [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ] && [ -f "/tmp/.Tmoe-XFCE4-Desktop-Detection-FILE" ]; then
 		echo "检测到您处于${BLUE}proot容器${RESET}环境下，即将为您${RED}卸载${RESET}${YELLOW}udisk2${RESET}和${GREEN}gvfs${RESET}"
 		if [ "${LINUX_DISTRO}" = 'debian' ]; then
 			apt purge -y --allow-change-held-packages ^udisks2 ^gvfs
@@ -3957,7 +3957,7 @@ first_configure_startvnc() {
 	EndOfFile
 
 	if [ -f "/tmp/.Tmoe-MATE-Desktop-Detection-FILE" ]; then
-		#rm -f /tmp/.Tmoe-MATE-Desktop-Detection-FILE
+		rm -f /tmp/.Tmoe-MATE-Desktop-Detection-FILE
 		sed -i '/dbus-launch/d' startxsdl
 		sed -i '$ a\dbus-launch mate-session' startxsdl
 	elif [ -f "/tmp/.Tmoe-LXDE-Desktop-Detection-FILE" ]; then

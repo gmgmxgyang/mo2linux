@@ -1517,7 +1517,6 @@ install_firefox_esr_browser() {
 		fi
 		#################
 	elif [ "${LINUX_DISTRO}" = "arch" ]; then
-		DEPENDENCY_01="firefox-esr-gtk2"
 		DEPENDENCY_02="firefox-esr-i18n-zh-cn"
 	elif [ "${LINUX_DISTRO}" = "gentoo" ]; then
 		dispatch-conf

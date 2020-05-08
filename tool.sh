@@ -3280,7 +3280,7 @@ configure_xwayland() {
 ##############
 xwayland_pulse_server() {
 	cd /usr/local/bin/
-	TARGET=$(whiptail --inputbox "若您需要转发音频到其它设备,那么请可在此处修改。当前为$(grep 'PULSE_SERVER' startw | grep -v '^#' | cut -d '=' -f 2) \n若您曾在音频服务端（接收音频的设备）上运行过Tmoe-linux,并配置允许局域网连接,则只需输入该设备ip,无需加端口号。注：win10需手动打开'C:\Users\Public\Downloads\pulseaudio\pulseaudio.bat'" 15 50 --title "MODIFY PULSE SERVER ADDRESS" 3>&1 1>&2 2>&3)
+	TARGET=$(whiptail --inputbox "若您需要转发音频到其它设备,那么请可在此处修改。当前为$(grep 'PULSE_SERVER' startw | grep -v '^#' | cut -d '=' -f 2) \n若您曾在音频服务端（接收音频的设备,仅限）上运行过Tmoe-linux,并配置允许局域网连接,则只需输入该设备ip,无需加端口号。注：win10需手动打开'C:\Users\Public\Downloads\pulseaudio\pulseaudio.bat'" 15 50 --title "MODIFY PULSE SERVER ADDRESS" 3>&1 1>&2 2>&3)
 	exitstatus=$?
 	if [ $exitstatus = 0 ]; then
 		if grep '^export.*PULSE_SERVER' startw; then
@@ -3378,7 +3378,7 @@ xwayland_onekey() {
 		chmod +x -R /etc/xwayland
 		XDG_RUNTIME_DIR=/etc/xwayland Xwayland &
 		export PULSE_SERVER=127.0.0.1:0
-		export DISPLAY=127.0.0.1:0
+		export DISPLAY=:0
 		startxfce4
 	EndOFwayland
 	chmod +x startw
@@ -3619,7 +3619,7 @@ configure_xwayland_remote_desktop_session() {
 		chmod +x -R /etc/xwayland
 		XDG_RUNTIME_DIR=/etc/xwayland Xwayland &
 		export PULSE_SERVER=127.0.0.1:0
-		export DISPLAY=127.0.0.1:0
+		export DISPLAY=:0
 		${REMOTE_DESKTOP_SESSION}
 	EndOFwayland
 	chmod +x startw

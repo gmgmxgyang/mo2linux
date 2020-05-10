@@ -750,11 +750,10 @@ install_gnu_linux_container() {
 enable_root_mode() {
 	if [ "$(uname -o)" != "Android" ]; then
 		echo "非常抱歉，本功能仅适配安卓系统。"
-		echo "chroot容器默认即为真实root权限。"
+		echo "Linux系统请自行使用sudo，并修改相应目录的文件权限。"
 		press_enter_to_return
 		tmoe_manager_main_menu
 	fi
-
 	if (whiptail --title "您真的要开启root模式吗" --yes-button '好哒o(*￣▽￣*)o' --no-button '不要(っ °Д °；)っ' --yesno "开启后将无法撤销，除非重装容器，建议您在开启前进行备份。若您的手机存在外置tf卡，则在开启后，会挂载整张卡。若无法备份和还原，请输tsudo debian-i启动本管理器。开启root模式后，绝对不要输破坏系统的危险命令！若在容器内输rm -rf /*删除根目录（格式化）命令，将有可能导致安卓原系统崩溃！！！请在本管理器内正常移除容器。" 10 60); then
 
 		if [ ! -f ${PREFIX}/bin/tsu ]; then
@@ -805,7 +804,7 @@ enable_root_mode() {
 		sed -i '$ a\alias debian="pulseaudio --kill 2>/dev/null;pulseaudio --start 2>/dev/null;tsudo debian"' profile
 		#grep 'alias debian-rm=' profile >/dev/null 2>&1 ||
 		sed -i '$ a\alias debian-rm="tsudo debian-rm"' profile
-		source profile >/dev/null 2>&1
+		#source profile >/dev/null 2>&1
 		alias debian="tsudo debian"
 		alias debian-rm="tsudo debian-rm"
 		echo "Modifying folder permissions"

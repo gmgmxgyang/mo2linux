@@ -337,7 +337,7 @@ check_dependencies() {
 tmoe_linux_tool_menu() {
 	cd ${cur}
 	TMOE_OPTION=$(
-		whiptail --title "Tmoe-linux Tool输debian-i启动(20200508-08)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.当前主菜单有十几个选项，请使用方向键和回车键操作。更新日志:0501支持解析并下载B站视频,0502支持搭建个人云网盘,0503优化code-server的配置,0507支持配置wayland" 20 50 7 \
+		whiptail --title "Tmoe-linux Tool输debian-i启动(20200510-11)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.当前主菜单有十几个选项，请使用方向键和回车键操作。更新日志:0501支持解析并下载B站视频,0502支持搭建个人云网盘,0503优化code-server的配置,0507支持配置wayland,0511更新文件选择功能" 20 50 7 \
 			"1" "Install GUI 安装图形界面" \
 			"2" "Install browser 安装浏览器" \
 			"3" "Download theme 下载主题" \
@@ -675,6 +675,103 @@ python_youtube_dl() {
 	download_videos
 }
 #############
+check_file_selection_items() {
+	if [[ -d "${SELECTION}" ]]; then # 目录是否已被选择
+		tmoe_file "$1" "${SELECTION}"
+	elif [[ -f "${SELECTION}" ]]; then # 文件已被选择？
+		if [[ ${SELECTION} == *${FILE_EXT_01} ]] || [[ ${SELECTION} == *${FILE_EXT_02} ]]; then
+			# 检查文件扩展名
+			#if (whiptail --title "modify cookie path and status" --yes-button '修改cookie path' --no-button 'disable禁用cookie' --yesno "您想要修改哪些配置信息？${COOKIESTATUS} Which configuration do you want to modify?" 9 50); then
+			#fi
+			if (whiptail --title "Confirm Selection" --yes-button "Confirm确认" --no-button "Back返回" --yesno "目录: $CURRENT_DIR\n文件: ${SELECTION}" 0 0); then
+				FILE_NAME="${SELECTION}"
+				FILE_PATH="${CURRENT_DIR}"
+				#将文件路径作为已经选择的变量
+			else
+				tmoe_file "$1" "$CURRENT_DIR"
+			fi
+		else
+			whiptail --title "WARNING: File Must have ${FILE_EXT_01} or ${FILE_EXT_02} Extension" \
+				--msgbox "${SELECTION}\n您必须选择${FILE_EXT_01}或${FILE_EXT_02}格式的文件。You Must Select a ${FILE_EXT_01} or ${FILE_EXT_02} file" 0 0
+			tmoe_file "$1" "$CURRENT_DIR"
+		fi
+	else
+		whiptail --title "WARNING: Selection Error" \
+			--msgbox "无法选择该文件或文件夹，请返回。Error Changing to Path ${SELECTION}" 0 0
+		tmoe_file "$1" "$CURRENT_DIR"
+	fi
+}
+#####################
+tmoe_file() {
+	if [ -z $2 ]; then
+		DIR_LIST=$(ls -lhp | awk -F ' ' ' { print $9 " " $5 } ')
+	else
+		cd "$2"
+		DIR_LIST=$(ls -lhp | awk -F ' ' ' { print $9 " " $5 } ')
+	fi
+	###########################
+	CURRENT_DIR=$(pwd)
+	# 检测是否为根目录
+	if [ "$CURRENT_DIR" == "/" ]; then
+		SELECTION=$(whiptail --title "$1" \
+			--menu "${MENU_01}\n$CURRENT_DIR" 0 0 0 \
+			--cancel-button Cancel取消 \
+			--ok-button Select选择 $DIR_LIST 3>&1 1>&2 2>&3)
+	else
+		SELECTION=$(whiptail --title "$1" \
+			--menu "${MENU_01}\n$CURRENT_DIR" 0 0 0 \
+			--cancel-button Cancel取消 \
+			--ok-button Select选择 ../ 返回 $DIR_LIST 3>&1 1>&2 2>&3)
+	fi
+	########################
+	EXIT_STATUS=$?
+	if [ ${EXIT_STATUS} = 1 ]; then # 用户是否取消操作？
+		return 1
+	elif [ ${EXIT_STATUS} = 0 ]; then
+		check_file_selection_items
+	fi
+	############
+}
+################
+tmoe_file_manager() {
+	#START_DIR="/root"
+	#FILE_EXT_01='tar.gz'
+	#FILE_EXT_02='tar.xz'
+	TMOE_TITLE="${FILE_EXT_01} & ${FILE_EXT_02} 文件选择Tmoe-linux管理器"
+	MENU_01="请使用方向键和回车键进行操作"
+	########################################
+	#-bak_rootfs.tar.xz
+	###################
+	#tmoe_file
+	###############
+	tmoe_file "$TMOE_TITLE" "$START_DIR"
+
+	EXIT_STATUS=$?
+	if [ ${EXIT_STATUS} -eq 0 ]; then
+		if [ "${SELECTION}" == "" ]; then
+			echo "检测到您取消了操作,User Pressed Esc with No File Selection"
+		else
+			whiptail --msgbox "文件属性 :  $(ls -lh ${FILE_NAME})\n路径 : ${FILE_PATH}" 0 0
+			COOKIE_FILE_PATH="${CURRENT_DIR}/${SELECTION}"
+			#uncompress_tar_file
+		fi
+	else
+		echo "检测到您取消了操作，没有文件被选择,with No File Selected."
+		#press_enter_to_return
+	fi
+}
+###########
+where_is_start_dir() {
+	if [ -d "/root/sd" ]; then
+		START_DIR='/root/sd/Download'
+	elif [ -d "/sdcard" ]; then
+		START_DIR='/sdcard/'
+	else
+		START_DIR="$(pwd)"
+	fi
+	tmoe_file_manager
+}
+###################################
 cookies_readme() {
 	cat <<-'EndOFcookies'
 		若您需要下载大会员视频，则需要指定cookie文件路径。
@@ -691,6 +788,9 @@ cookies_readme() {
 		同时希望您能够了解，将cookie文件泄露出去等同于将账号泄密！
 		请妥善保管好该文件及相关数据！
 	EndOFcookies
+	if [ -e "${HOME}/.config/tmoe-linux/videos.cookiepath" ]; then
+		echo "您当前的cookie路径为$(cat ${HOME}/.config/tmoe-linux/videos.cookiepath | head -n 1)"
+	fi
 	RETURN_TO_WHERE='download_videos'
 	do_you_want_to_continue
 	if [ -e "${HOME}/.config/tmoe-linux/videos.cookiepath" ]; then
@@ -701,31 +801,22 @@ cookies_readme() {
 	fi
 
 	mkdir -p "${HOME}/.config/tmoe-linux"
-	if (whiptail --title "modify cookie path and status" --yes-button '修改cookie path' --no-button 'disable禁用cookie' --yesno "您想要修改哪些配置信息？${COOKIESTATUS} Which configuration do you want to modify?" 9 50); then
-		TARGET=$(whiptail --inputbox "请输入cookie文件路径,例如 /root/sd/Download/cookies.txt \n${CurrentCOOKIESpath} Press Enter after the input is completed." 16 50 --title "Please enter the cookie path" 3>&1 1>&2 2>&3)
-
-		exitstatus=$?
-		if [ $exitstatus = 0 ]; then
-			echo ${TARGET} >"${HOME}/.config/tmoe-linux/videos.cookiepath"
-			ls -a ${TARGET} >/dev/null
-			if [ $? != 0 ]; then
-				echo "没有指定有效的文件路径，请重新输入"
-			fi
-
-			if [ -e "${HOME}/.config/tmoe-linux/videos.cookiepath" ]; then
-				echo "您当前的cookie路径为$(cat ${HOME}/.config/tmoe-linux/videos.cookiepath | head -n 1)"
-			fi
+	if (whiptail --title "modify cookie path and status" --yes-button '指定cookie file' --no-button 'disable禁用cookie' --yesno "您想要修改哪些配置信息？${COOKIESTATUS} Which configuration do you want to modify?" 9 50); then
+		FILE_EXT_01='txt'
+		FILE_EXT_02='sqlite'
+		where_is_start_dir
+		echo ${COOKIE_FILE_PATH} >"${HOME}/.config/tmoe-linux/videos.cookiepath"
+		if [ -z ${COOKIE_FILE_PATH} ]; then
+			echo "没有指定有效的文件，请重新选择"
+		else
+			echo "您已成功修改cookie文件路径"
+			ls -lah ${COOKIE_FILE_PATH}
 		fi
-
 	else
-
 		rm -f "${HOME}/.config/tmoe-linux/videos.cookiepath"
 		echo "已禁用加载cookie功能"
 	fi
-
-	echo "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
-	echo "按${GREEN}回车键${RESET}${BLUE}返回${RESET}"
-	read
+	press_enter_to_return
 	download_videos
 }
 #########
@@ -3243,7 +3334,7 @@ modify_xsdl_ip_address() {
 #############################################
 press_enter_to_return() {
 	echo "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
-	echo "${YELLOW}按回车键返回。${RESET}"
+	echo "按${GREEN}回车键${RESET}${BLUE}返回${RESET}"
 	read
 }
 #############################################

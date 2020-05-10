@@ -88,7 +88,7 @@ if [ ! -z "${DEPENDENCIES}" ]; then
 
     if [ "${LINUX_DISTRO}" = "debian" ]; then
         apt update
-        apt install -y ${DEPENDENCIES} || apt install -y command-not-found zsh git wget whiptail command-not-found
+        apt install -y ${DEPENDENCIES} || apt install -y command-not-found zsh git wget whiptail
 
     elif [ "${LINUX_DISTRO}" = "alpine" ]; then
         apk add ${DEPENDENCIES}

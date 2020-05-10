@@ -1105,12 +1105,12 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	    xbps-install -y wget curl
 	    #wget -qO- 'https://gitee.com/mirrors/neofetch/raw/master/neofetch' | bash -
 	    neofetch
-	    rm -f vnc* zsh* .profile
-	    mv -f .profile.bak .profile 2>/dev/null
+	    #rm -f vnc* zsh* .profile
+	    #mv -f .profile.bak .profile 2>/dev/null
 	    #wget -qO zsh.sh 'https://gitee.com/mo2/zsh/raw/master/zsh.sh'
 	    #sed -i '1 c\#!/bin/bash' zsh.sh
 	    #chmod +x zsh.sh
-	    echo '检测到您当前的系统为Void GNU/Linux,将不会为您继续配置任何优化步骤！'
+	    echo '检测到您当前的系统为Void GNU/Linux,若配置出错，则请手动输debian-i'
 	    #zsh 2>/dev/null || bash
 	    #exit 0
 	}

@@ -2043,8 +2043,8 @@ install_lxde_desktop() {
 	elif [ "${LINUX_DISTRO}" = "suse" ]; then
 		DEPENDENCY_01='noto-sans-sc-fonts patterns-lxde-lxde'
 	elif [ "${LINUX_DISTRO}" = "alpine" ]; then
-		DEPENDENCY_01="i3wm"
-		REMOTE_DESKTOP_SESSION='i3'
+		DEPENDENCY_01="openbox lxterminal"
+		REMOTE_DESKTOP_SESSION='openbox'
 	###################
 	fi
 	############

@@ -1312,6 +1312,8 @@ select_file_manually() {
 		elif (($number >= 0 && $number <= $count)); then
 			eval RESTORE=${restore_file_name[number]}
 			# cp -fr "${START_DIR}/$choice" "$DIR/restore_file.properties"
+			RETURN_TO_WHERE='restore_gnu_linux_container'
+			do_you_want_to_continue
 			uncompress_tar_file
 			break
 		else
@@ -1336,6 +1338,9 @@ restore_the_latest_backup_file() {
 		# tmoe_file_manager
 	else
 		ls -lh ${RESTORE}
+		RETURN_TO_WHERE='restore_gnu_linux_container'
+		do_you_want_to_continue
+		uncompress_tar_file
 	fi
 	press_enter_to_return
 	restore_gnu_linux_container
@@ -1353,6 +1358,27 @@ unmount_proc_dev() {
 		su -c "umount -lf ${DEBIAN_CHROOT}/root/tf  >/dev/null 2>&1"
 		su -c "umount -lf ${DEBIAN_CHROOT}/root/termux >/dev/null 2>&1"
 	fi
+}
+
+##########################
+do_you_want_to_continue() {
+	echo "${YELLOW}Do you want to continue?[Y/n]${RESET}"
+	echo "Press ${GREEN}enter${RESET} to ${BLUE}continue${RESET},type ${YELLOW}n${RESET} to ${BLUE}return.${RESET}"
+	echo "按${GREEN}回车键${RESET}${BLUE}继续${RESET}，输${YELLOW}n${RESET}${BLUE}返回${RESET}"
+	read opt
+	case $opt in
+	y* | Y* | "") ;;
+
+	n* | N*)
+		echo "skipped."
+		${RETURN_TO_WHERE}
+		;;
+	*)
+		echo "Invalid choice. skipped."
+		${RETURN_TO_WHERE}
+		#beta_features
+		;;
+	esac
 }
 #########################
 where_is_start_dir() {

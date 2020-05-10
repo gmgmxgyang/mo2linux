@@ -3221,9 +3221,12 @@ modify_remote_desktop_config() {
 #########################
 #########################
 modify_vnc_conf() {
-	if [ ! -e /bin/nano ]; then
-		apt update
-		apt install -y nano
+	if [ ! $(command -v nano) ]; then
+		DEPENDENCY_01='nano'
+		apt update 2>/dev/null
+		echo "即将为你安装nano"
+		echo "${GREEN} ${PACKAGES_INSTALL_COMMAND} ${DEPENDENCY_01} ${RESET}"
+		${PACKAGES_INSTALL_COMMAND} ${DEPENDENCY_01}
 	fi
 
 	if [ ! -e /usr/local/bin/startvnc ]; then

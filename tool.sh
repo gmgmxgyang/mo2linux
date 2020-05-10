@@ -1758,7 +1758,7 @@ preconfigure_gui_dependecies_02() {
 		DEPENDENCY_02="noto-fonts-cjk tigervnc"
 		##################
 	elif [ "${LINUX_DISTRO}" = "void" ]; then
-		DEPENDENCY_02="xorg tigervnc"
+		DEPENDENCY_02="xorg tigervnc wqy-microhei"
 		#################
 	elif [ "${LINUX_DISTRO}" = "gentoo" ]; then
 		dispatch-conf

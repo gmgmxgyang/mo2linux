@@ -2411,7 +2411,7 @@ install_alpha_containers() {
 		install_void_linux_distro
 	fi
 	####################
-	if [ "${BETA_SYSTEM}" == '3' ]; then
+	if [ "${ALPHA_SYSTEM}" == '3' ]; then
 		install_opensuse_linux_distro
 	fi
 	####################

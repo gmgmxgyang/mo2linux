@@ -1091,7 +1091,7 @@ backup_termux() {
 			echo "部分目录无权限备份是正常现象。"
 			rm -f backuptime.tmp
 			pwd
-			ls -lth ./termux-home*tar* | grep ^- | head -n 1
+			ls -lth ./*termux_home*tar* | grep ^- | head -n 1
 			echo "备份${GREEN}完成${RESET}"
 			press_enter_to_return
 			tmoe_manager_main_menu
@@ -1109,7 +1109,7 @@ backup_termux() {
 			rm -f backuptime.tmp
 			#  whiptail --gauge "正在备份,可能需要几分钟的时间请稍后.........." 6 60 0
 			pwd
-			ls -lth ./termux-home*tar* | grep ^- | head -n 1
+			ls -lth ./*termux-home*tar* | grep ^- | head -n 1
 			echo '备份完成'
 			press_enter_to_return
 			tmoe_manager_main_menu
@@ -1148,7 +1148,7 @@ backup_termux() {
 			echo "部分目录无权限备份是正常现象。"
 			rm -f backuptime.tmp
 			pwd
-			ls -lth ./termux-usr*tar* | grep ^- | head -n 1
+			ls -lth ./*termux_usr*tar* | grep ^- | head -n 1
 			echo "备份${GREEN}完成${RESET}"
 			press_enter_to_return
 			tmoe_manager_main_menu
@@ -1208,7 +1208,7 @@ backup_termux() {
 			echo "部分目录无权限备份是正常现象。"
 			rm -f backuptime.tmp
 			pwd
-			ls -lth ./termux-home+usr*tar* | grep ^- | head -n 1
+			ls -lth ./*termux_home+usr*tar* | grep ^- | head -n 1
 			echo "备份${GREEN}完成${RESET}"
 			press_enter_to_return
 			tmoe_manager_main_menu
@@ -1232,7 +1232,7 @@ backup_termux() {
 			rm -f backuptime.tmp
 			#  whiptail --gauge "正在备份,可能需要几分钟的时间请稍后.........." 6 60 0
 			pwd
-			ls -lth ./termux-home+usr*tar* | grep ^- | head -n 1
+			ls -lth ./*termux-home+usr*tar* | grep ^- | head -n 1
 			echo "备份${GREEN}完成${RESET}"
 			press_enter_to_return
 			tmoe_manager_main_menu
@@ -1311,14 +1311,16 @@ select_file_manually() {
 			echo "请输正确的数字编号!"
 		elif (($number >= 0 && $number <= $count)); then
 			eval RESTORE=${restore_file_name[number]}
-			uncompress_tar_file
 			# cp -fr "${START_DIR}/$choice" "$DIR/restore_file.properties"
+			uncompress_tar_file
 			break
 		else
 			echo "Please enter the right number!"
 			echo "请输正确的数字编号!"
 		fi
 	done
+	press_enter_to_return
+	restore_gnu_linux_container
 }
 ################
 restore_the_latest_backup_file() {
@@ -1335,22 +1337,6 @@ restore_the_latest_backup_file() {
 	else
 		ls -lh ${RESTORE}
 	fi
-	echo $(pwd)
-	echo "${YELLOW}即将为您还原${RESTORE}，请问是否确认？[Y/n]${RESET} "
-	#printf之后分行
-	echo 'Do you want to restore it?[Y/n]'
-
-	read opt
-	case $opt in
-	y* | Y* | "")
-		uncompress_tar_file
-		;;
-	n* | N*) echo "skipped." ;;
-	*) echo "Invalid choice. skipped." ;;
-
-		#tar xfv $pathTar -C $path
-		#(pv -n $pathTar | tar xfv $pathTar -C $path ) 2>&1 | dialog --gauge "Extracting file..." 6 50
-	esac
 	press_enter_to_return
 	restore_gnu_linux_container
 }

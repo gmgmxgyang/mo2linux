@@ -1418,7 +1418,7 @@ restore_gnu_linux_container() {
 	OPTION=$(whiptail --title "Restore System" --menu "你想要恢复哪个小可爱到之前的备份状态" 15 55 4 \
 		"1" "Restore GNU/Linux container容器" \
 		"2" "Restore termux" \
-		"3" "select manually手动选择文件" \
+		"3" "select path manually手动选择路径" \
 		"0" "Back to the main menu 返回主菜单" \
 		3>&1 1>&2 2>&3)
 	###########################################################################

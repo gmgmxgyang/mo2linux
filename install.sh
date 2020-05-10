@@ -878,7 +878,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	fi
 	#######################
 	alpine_linux_configure() {
-	    echo "检测到您使用的不是deb系linux，优化步骤可能会出错，您可以单独输${YELLOW}debian-i{RESET}来启动软件安装工具。"
+	    echo "检测到您使用的不是deb系linux，优化步骤可能会出错，您可以单独输${YELLOW}debian-i${RESET}来启动软件安装工具。"
 	    if [ "$(sed -n 2p /etc/os-release | cut -d '=' -f 2)" = "alpine" ]; then
 	        sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 	        apk update

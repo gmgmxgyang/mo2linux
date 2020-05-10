@@ -199,7 +199,7 @@ gnu_linux() {
 		fi
 	fi
 
-	if [ ! -e /bin/grep ] && [ ! -e /usr/bin/grep ]; then
+	if [ ! $(command -v grep) ]; then
 		if [ "${LINUX_DISTRO}" = "gentoo" ]; then
 			DEPENDENCIES="${DEPENDENCIES} sys-apps/grep"
 		else
@@ -272,7 +272,7 @@ gnu_linux() {
 		fi
 	fi
 	#####################
-	if [ ! -e /usr/bin/whiptail ] && [ ! -e /bin/whiptail ]; then
+	if [ ! $(command -v whiptail) ]; then
 		if [ "${LINUX_DISTRO}" = "debian" ]; then
 			DEPENDENCIES="${DEPENDENCIES} whiptail"
 		elif [ "${LINUX_DISTRO}" = "arch" ]; then

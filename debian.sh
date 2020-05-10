@@ -2684,8 +2684,6 @@ install_gentoo_linux_distro() {
 ###########################
 install_alpine_linux_distro() {
 	touch ~/.ALPINELINUXDetectionFILE
-	wget https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/alpine/
-
 	bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/install.sh |
 		sed 's/debian系统/alpine系统/g' |
 		sed 's/debian system/alpine system/g' |

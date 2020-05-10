@@ -1244,6 +1244,12 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	elif [ "$(cat /etc/os-release | grep 'ID=' | head -n 1 | cut -d '=' -f 2)" = "centos" ]; then
 	    cp /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak
 	    curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-8.repo
+		dnf install -y epel-release
+		cp -a /etc/yum.repos.d/epel.repo /etc/yum.repos.d/epel.repo.backup
+	    mv /etc/yum.repos.d/epel-testing.repo /etc/yum.repos.d/epel-testing.repo.backup
+	    sed -i "s/#baseurl/baseurl/g" /etc/yum.repos.d/epel.repo
+	    sed -i "s/metalink/#metalink/g" /etc/yum.repos.d/epel.repo
+	    sed -i "s@http://download.fedoraproject.org/pub@https://mirrors.huaweicloud.com@g" /etc/yum.repos.d/epel.repo
 	fi
 	############################
 	note_of_non_debian() {

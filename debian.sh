@@ -2773,7 +2773,7 @@ install_apertis_linux_distro() {
 	if [ "${ARCH_TYPE}" = 'i386' ]; then
 		echo "检测到apertis不支持您当前的架构"
 	else
-		touch ~/.ALPINELINUXDetectionFILE ~/.APERTIS_DECTION_FILE
+		touch ~/.ALPINELINUXDetectionFILE
 		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/install.sh |
 			sed 's/debian系统/apertis系统/g' |
 			sed 's/debian system/apertis system/g' |

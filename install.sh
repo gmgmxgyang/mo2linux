@@ -679,16 +679,7 @@ elif [ -f "${HOME}/.MANJARO_ARM_DETECTION_FILE" ]; then
 	sed -i 's@^#SigLevel.*@SigLevel = Never@' "${DEBIAN_CHROOT}/etc/pacman.conf"
 fi
 ########
-#两次检测
-if [ -f "${HOME}/.APERTIS_DECTION_FILE" ]; then
-	rm -f "${HOME}/.APERTIS_DECTION_FILE"
-	debian_stable_sources_list_and_gpg_key
-	cd ~/${DEBIAN_FOLDER}/etc/apt/
-	sed -i '$ a\deb https://repositories.apertis.org/apertis/ v2020 target' sources.list
-	sed -i '/raspbian/d' sources.list
-	rm sources.list.d/*
-	cd ${DEBIAN_CHROOT}/root
-fi
+
 ########################
 #配置zsh
 curl -Lo zsh.sh 'https://gitee.com/mo2/linux/raw/master/zsh.sh'
@@ -893,8 +884,8 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	fi
 	#######################
 	alpine_linux_configure() {
-	    echo "检测到您使用的不是deb系linux，优化步骤可能会出错，您可以单独输${YELLOW}debian-i${RESET}来启动软件安装工具。"
 	    if [ "$(sed -n 2p /etc/os-release | cut -d '=' -f 2)" = "alpine" ]; then
+		    echo "检测到您使用的不是deb系linux，优化步骤可能会出错，您可以单独输${YELLOW}debian-i${RESET}来启动软件安装工具。"
 	        sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 	        apk update
 	        apk add bash

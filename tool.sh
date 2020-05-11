@@ -3246,7 +3246,7 @@ modify_remote_desktop_config() {
 #########################
 modify_x11vnc_conf() {
 	if [ ! $(command -v x11vnc) ]; then
-		DEPENDENCY_01='X11vnc'
+		DEPENDENCY_01='x11vnc'
 		DEPENDENCY_02=''
 		NON_DEBIAN='false'
 		beta_features_quick_install

@@ -593,7 +593,7 @@ android_termux() {
 #-- 主菜单 main menu
 tmoe_manager_main_menu() {
 	OPTION=$(
-		whiptail --title "GNU/Linux Tmoe manager(20200510-17)" --backtitle "$(
+		whiptail --title "GNU/Linux Tmoe manager(20200511-10)" --backtitle "$(
 			base64 -d <<-'DoYouWantToSeeWhatIsInside'
 				6L6TZGViaWFuLWnlkK/liqjmnKznqIvluo8sVHlwZSBkZWJpYW4taSB0byBzdGFydCB0aGUgdG9v
 				bCzokIzns7vnlJ/niannoJTnqbblkZgK
@@ -2338,7 +2338,7 @@ choose_which_gnu_linux_distro() {
 		"2" "Ubuntu 20.04:我的存在是因為大家的存在" \
 		"3" "Kali Rolling:设计用于数字取证和渗透测试" \
 		"4" "beta公测版:manjaro,centos" \
-		"5" "alpha内测版:gentoo,void" \
+		"5" "alpha内测版:gentoo,armbian" \
 		"6" "arch(系统设计以KISS为总体指导原则)" \
 		"7" "fedora 32(红帽社区版,新技术试验场)" \
 		"0" "Back to the main menu 返回主菜单" \

@@ -1245,6 +1245,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	    cp /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak
 	    curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-8.repo
 		dnf install -y epel-release
+		dnf update
 		cp -a /etc/yum.repos.d/epel.repo /etc/yum.repos.d/epel.repo.backup
 	    mv /etc/yum.repos.d/epel-testing.repo /etc/yum.repos.d/epel-testing.repo.backup
 	    sed -i "s/#baseurl/baseurl/g" /etc/yum.repos.d/epel.repo

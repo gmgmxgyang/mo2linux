@@ -654,12 +654,16 @@ curl -sLo zsh-i.sh 'https://gitee.com/mo2/zsh/raw/master/zsh.sh'
 sed -i 's:#!/data/data/com.termux/files/usr/bin/bash:#!/bin/bash:' zsh-i.sh
 chmod +x zsh-i.sh
 ###########
-if [ -f "${HOME}/.RASPBIANARMHFDetectionFILE" ] || [ -f "${HOME}/.APERTIS_DECTION_FILE" ]; then
-	mv -f "${HOME}/.RASPBIANARMHFDetectionFILE" "${DEBIAN_CHROOT}/tmp/"
-	#树莓派换源
+debian_stable_sources_list_and_gpg_key() {
 	curl -Lo "raspbian-sources-gpg.tar.xz" 'https://gitee.com/mo2/patch/raw/raspbian/raspbian-sources-gpg.tar.xz'
 	tar -Jxvf "raspbian-sources-gpg.tar.xz" -C ~/${DEBIAN_FOLDER}/etc/apt/
 	rm -f "raspbian-sources-gpg.tar.xz"
+}
+############
+if [ -f "${HOME}/.RASPBIANARMHFDetectionFILE" ]; then
+	mv -f "${HOME}/.RASPBIANARMHFDetectionFILE" "${DEBIAN_CHROOT}/tmp/"
+	#树莓派换源
+	debian_stable_sources_list_and_gpg_key
 elif [ -f "${HOME}/.REDHATDetectionFILE" ]; then
 	rm -f "${HOME}/.REDHATDetectionFILE"
 	chmod u+w "${DEBIAN_CHROOT}/root"
@@ -678,7 +682,7 @@ fi
 #两次检测
 if [ -f "${HOME}/.APERTIS_DECTION_FILE" ]; then
 	rm -f "${HOME}/.APERTIS_DECTION_FILE"
-	rm -f "${DEBIAN_CHROOT}/tmp/.RASPBIANARMHFDetectionFILE"
+	debian_stable_sources_list_and_gpg_key
 	cd ~/${DEBIAN_FOLDER}/etc/apt/
 	sed -i '$ a\deb https://repositories.apertis.org/apertis/ v2020 target' sources.list
 	sed -i '/raspbian/d' sources.list

@@ -3410,6 +3410,12 @@ modify_xsdl_ip_address() {
 		modify_xsdl_conf
 	fi
 }
+#################
+press_enter_to_continue() {
+	echo "Press ${GREEN}enter${RESET} to ${BLUE}continue.${RESET}"
+	echo "按${GREEN}回车键${RESET}${BLUE}继续${RESET}"
+	read
+}
 #############################################
 press_enter_to_return() {
 	echo "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"

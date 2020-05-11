@@ -654,7 +654,7 @@ curl -sLo zsh-i.sh 'https://gitee.com/mo2/zsh/raw/master/zsh.sh'
 sed -i 's:#!/data/data/com.termux/files/usr/bin/bash:#!/bin/bash:' zsh-i.sh
 chmod +x zsh-i.sh
 ###########
-if [ -f "${HOME}/.RASPBIANARMHFDetectionFILE" ]; then
+if [ -f "${HOME}/.RASPBIANARMHFDetectionFILE" ] || [ -f "${HOME}/.APERTIS_DECTION_FILE" ]; then
 	mv -f "${HOME}/.RASPBIANARMHFDetectionFILE" "${DEBIAN_CHROOT}/tmp/"
 	#树莓派换源
 	curl -Lo "raspbian-sources-gpg.tar.xz" 'https://gitee.com/mo2/patch/raw/raspbian/raspbian-sources-gpg.tar.xz'
@@ -673,6 +673,16 @@ elif [ -f "${HOME}/.ALPINELINUXDetectionFILE" ]; then
 elif [ -f "${HOME}/.MANJARO_ARM_DETECTION_FILE" ]; then
 	rm -f ${HOME}/.MANJARO_ARM_DETECTION_FILE
 	sed -i 's@^#SigLevel.*@SigLevel = Never@' "${DEBIAN_CHROOT}/etc/pacman.conf"
+fi
+########
+#两次检测
+if [ -f "${HOME}/.APERTIS_DECTION_FILE" ]; then
+    rm -f "${HOME}/.APERTIS_DECTION_FILE"
+	cd ~/${DEBIAN_FOLDER}/etc/apt/
+	sed -i '$ a\deb https://repositories.apertis.org/apertis/ v2020 target' sources.list
+	sed -i '/raspbian/d' sources.list
+	rm sources.list.d/*
+	cd ${DEBIAN_CHROOT}/root
 fi
 ########################
 #配置zsh

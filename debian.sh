@@ -2391,7 +2391,7 @@ install_alpha_containers() {
 			"6" "slackware(armhf,x64)" \
 			"8" "Funtoo:专注于改进Gentoo" \
 			"9" "openwrt(常见于路由器,arm64,x64)" \
-			"10" "apertis 18.12" \
+			"10" "apertis v2020.0" \
 			"11" "alt p9" \
 			"0" "Return to previous menu 返回上级菜单" \
 			3>&1 1>&2 2>&3
@@ -2773,7 +2773,7 @@ install_apertis_linux_distro() {
 	if [ "${ARCH_TYPE}" = 'i386' ]; then
 		echo "检测到apertis不支持您当前的架构"
 	else
-		touch ~/.ALPINELINUXDetectionFILE
+		touch ~/.ALPINELINUXDetectionFILE ~/.APERTIS_DECTION_FILE
 		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/install.sh |
 			sed 's/debian系统/apertis系统/g' |
 			sed 's/debian system/apertis system/g' |

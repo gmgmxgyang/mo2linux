@@ -142,7 +142,13 @@ check_dependencies() {
 		fi
 	fi
 	###################
-
+	#manjaro基础容器里无grep
+	if [ ! $(command -v grep) ]; then
+		if [ "${LINUX_DISTRO}" != "gentoo" ]; then
+			DEPENDENCIES="${DEPENDENCIES} grep"
+		fi
+	fi
+	####################
 	if [ ! -e /usr/bin/git ]; then
 		if [ "${LINUX_DISTRO}" = "openwrt" ]; then
 			DEPENDENCIES="${DEPENDENCIES} git git-http"
@@ -182,6 +188,13 @@ check_dependencies() {
 	if [ ! -e /usr/bin/sudo ]; then
 		if [ "${LINUX_DISTRO}" != "gentoo" ]; then
 			DEPENDENCIES="${DEPENDENCIES} sudo"
+		fi
+	fi
+	###################
+	#centos8基础容器里无tar
+	if [ ! $(command -v tar) ]; then
+		if [ "${LINUX_DISTRO}" != "gentoo" ]; then
+			DEPENDENCIES="${DEPENDENCIES} tar"
 		fi
 	fi
 	#####################
@@ -1752,7 +1765,7 @@ preconfigure_gui_dependecies_02() {
 		#上面的依赖摆放的位置是有讲究的。
 		##############
 	elif [ "${LINUX_DISTRO}" = "redhat" ]; then
-		DEPENDENCY_02="tigervnc-server google-noto-cjk-fonts"
+		DEPENDENCY_02="tigervnc-server google-noto-sans-cjk-ttc-fonts"
 		##################
 	elif [ "${LINUX_DISTRO}" = "arch" ]; then
 		DEPENDENCY_02="noto-fonts-cjk tigervnc"

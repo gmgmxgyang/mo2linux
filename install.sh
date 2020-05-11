@@ -1241,7 +1241,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	        fedora_3x_repos
 	    fi
 
-	elif [ "$(cat /etc/os-release | grep 'ID=' | head -n 1 | cut -d '=' -f 2)" = "centos" ]; then
+	elif grep -q 'CentOS' /etc/os-release; then
 	    cp /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak
 	    curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-8.repo
 		dnf install -y epel-release

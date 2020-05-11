@@ -1228,7 +1228,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	    #dnf clean packages
 	}
 	######################
-	if [ "$(cat /etc/os-release | grep 'ID=' | head -n 1 | cut -d '=' -f 2)" = "fedora" ]; then
+	if [ "$(cat /etc/os-release | grep 'ID=' | head -n 1 | cut -d '=' -f 2 |cut -d '"' -f 2)" = "fedora" ]; then
 	    tar -Ppzcf ~/yum.repos.d-backup.tar.gz /etc/yum.repos.d
 	    mv -f ~/yum.repos.d-backup.tar.gz /etc/yum.repos.d
 	    FEDORA_VERSION="$(cat /etc/os-release | grep 'VERSION_ID' | cut -d '=' -f 2)"
@@ -1243,14 +1243,17 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 
 	elif grep -q 'CentOS' /etc/os-release; then
 	    cp /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak
-	    curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-8.repo
+	    #curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-8.repo
+		#curl -Lo /etc/yum.repos.d/CentOS-Base.repo https://mirrors.huaweicloud.com/repository/conf/CentOS-8-anon.repo
 		dnf install -y epel-release
-		dnf update
+		#dnf update
 		cp -a /etc/yum.repos.d/epel.repo /etc/yum.repos.d/epel.repo.backup
-	    mv /etc/yum.repos.d/epel-testing.repo /etc/yum.repos.d/epel-testing.repo.backup
-	    sed -i "s/#baseurl/baseurl/g" /etc/yum.repos.d/epel.repo
-	    sed -i "s/metalink/#metalink/g" /etc/yum.repos.d/epel.repo
-	    sed -i "s@http://download.fedoraproject.org/pub@https://mirrors.huaweicloud.com@g" /etc/yum.repos.d/epel.repo
+	    cp -a /etc/yum.repos.d/epel-testing.repo /etc/yum.repos.d/epel-testing.repo.backup
+	   sed -e 's!^metalink=!#metalink=!g' \
+	    -e 's!^#baseurl=!baseurl=!g' \
+	    -e 's!//download\.fedoraproject\.org/pub!//mirrors.tuna.tsinghua.edu.cn!g' \
+	    -e 's!http://mirrors\.tuna!https://mirrors.tuna!g' \
+	    -i /etc/yum.repos.d/epel.repo /etc/yum.repos.d/epel-testing.repo
 	fi
 	############################
 	note_of_non_debian() {

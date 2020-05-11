@@ -585,4 +585,8 @@ nano $(which startvnc)
 - 2.优化 cookie 文件选择功能，支持图形化文件浏览。
   因为改了太多内容了，也没有继续做兼容性测试，所以不确定路由器等嵌入式设备还能不能继续兼容。
 - 3.修复 Android-Termux 赋予 proot 容器真实 root 权限的功能，原因是 termux 更新了 tsu，将 tsudo 切换至 sudo。
-- 4.deb系Linux现在也可以用proot容器啦！
+- 4.deb 系 Linux 现在也可以用 proot 容器啦！
+
+##### 2020-05-11 更新日志
+
+- 支持配置 X11vnc 服务

@@ -350,7 +350,7 @@ check_dependencies() {
 tmoe_linux_tool_menu() {
 	cd ${cur}
 	TMOE_OPTION=$(
-		whiptail --title "Tmoe-linux Tool输debian-i启动(20200510-21)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.当前主菜单有十几个选项，请使用方向键和回车键操作。更新日志:0501支持解析并下载B站视频,0502支持搭建个人云网盘,0503优化code-server的配置,0507支持配置wayland,0510更新文件选择功能" 20 50 7 \
+		whiptail --title "Tmoe-linux Tool输debian-i启动(20200510-21)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.请使用方向键和回车键操作,更新日志:0501支持解析并下载B站视频,0502支持搭建个人云网盘,0503优化code-server的配置,0507支持配置wayland,0510更新文件选择功能,0511支持配置x11vnc" 20 50 7 \
 			"1" "Install GUI 安装图形界面" \
 			"2" "Install browser 安装浏览器" \
 			"3" "Download theme 下载主题" \
@@ -1516,8 +1516,8 @@ modify_vnc_pulse_audio() {
 ##################
 nano_startvnc_manually() {
 	echo '您可以手动修改vnc的配置信息'
-	echo 'If you want to modify the resolution, please change the 720x1440 (default resolution , vertical screen) to another resolution, such as 1920x1080 (landscape).'
-	echo '若您想要修改分辨率，请将默认的720x1440（竖屏）改为其它您想要的分辨率，例如1920x1080（横屏）。'
+	echo 'If you want to modify the resolution, please change the 1440x720 (default resolution，landscape) to another resolution, such as 1920x1080 (vertical screen).'
+	echo '若您想要修改分辨率，请将默认的1440x720（横屏）改为其它您想要的分辨率，例如720x1440（竖屏）。'
 	echo "您当前分辨率为$(grep '\-geometry' "$(command -v startvnc)" | cut -d 'y' -f 2 | cut -d '-' -f 1)"
 	echo '改完后按Ctrl+S保存，Ctrl+X退出。'
 	RETURN_TO_WHERE='modify_other_vnc_conf'
@@ -1903,10 +1903,11 @@ configure_xfce4_xstartup() {
 	first_configure_startvnc
 }
 ####################
-configure_alpine_x11vnc() {
+configure_x11vnc_remote_desktop_session() {
 	cd /usr/local/bin/
 	cat >startvnc <<-EOF
 		#!/bin/bash
+		stopvnc
 		export PULSE_SERVER=127.0.0.1
 		export DISPLAY=:1
 		/usr/bin/Xvfb :1 -screen 0 1440x720x24 -ac +extension GLX +render -noreset & 
@@ -1923,15 +1924,14 @@ configure_alpine_x11vnc() {
 		pkill Xvfb
 		pkill pulse
 	EOF
-	cat >vncpasswd <<-'EOF'
+	cat >x11vncpasswd <<-'EOF'
 		#!/bin/bash
 		read -sp "请输入6至8位密码，Please enter the new VNC password: " PASSWORD
 		mkdir -p ${HOME}/.vnc
 		x11vnc -storepasswd $PASSWORD ${HOME}/.vnc/passwd
 	EOF
-	configure_startxsdl
 	chmod +x ./*
-	vncpasswd
+	x11vncpasswd
 	startvnc
 }
 ##########################
@@ -2009,7 +2009,8 @@ install_xfce4_desktop() {
 	fi
 	#########
 	if [ "${LINUX_DISTRO}" = "alpine" ]; then
-		configure_alpine_x11vnc
+		configure_x11vnc_remote_desktop_session
+		configure_startxsdl
 	else
 		configure_xfce4_xstartup
 	fi
@@ -2064,7 +2065,8 @@ install_lxde_desktop() {
 	beta_features_quick_install
 	apt_purge_libfprint
 	if [ "${LINUX_DISTRO}" = "alpine" ]; then
-		configure_alpine_x11vnc
+		configure_x11vnc_remote_desktop_session
+		configure_startxsdl
 	else
 		configure_lxde_xstartup
 	fi
@@ -2151,7 +2153,8 @@ install_mate_desktop() {
 	beta_features_quick_install
 	apt_purge_libfprint
 	if [ "${LINUX_DISTRO}" = "alpine" ]; then
-		configure_alpine_x11vnc
+		configure_x11vnc_remote_desktop_session
+		configure_startxsdl
 	else
 		configure_mate_xstartup
 	fi
@@ -2198,7 +2201,8 @@ install_lxqt_desktop() {
 	beta_features_quick_install
 	apt_purge_libfprint
 	if [ "${LINUX_DISTRO}" = "alpine" ]; then
-		configure_alpine_x11vnc
+		configure_x11vnc_remote_desktop_session
+		configure_startxsdl
 	else
 		configure_lxqt_xstartup
 	fi
@@ -2262,7 +2266,8 @@ install_kde_plasma5_desktop() {
 	beta_features_quick_install
 	apt_purge_libfprint
 	if [ "${LINUX_DISTRO}" = "alpine" ]; then
-		configure_alpine_x11vnc
+		configure_x11vnc_remote_desktop_session
+		configure_startxsdl
 	else
 		configure_kde_plasma5_xstartup
 	fi
@@ -2346,7 +2351,8 @@ install_gnome3_desktop() {
 	beta_features_quick_install
 	apt_purge_libfprint
 	if [ "${LINUX_DISTRO}" = "alpine" ]; then
-		configure_alpine_x11vnc
+		configure_x11vnc_remote_desktop_session
+		configure_startxsdl
 	else
 		configure_gnome3_xstartup
 	fi
@@ -3199,10 +3205,11 @@ install_bleachbit_cleaner() {
 modify_remote_desktop_config() {
 	REMOTE_DESKTOP=$(whiptail --title "远程桌面" --menu \
 		"您想要修改哪个远程桌面的配置？\nWhich remote desktop configuration do you want to modify?" 15 60 4 \
-		"1" "VNC" \
-		"2" "XSDL" \
-		"3" "XRDP" \
-		"4" "Xwayland" \
+		"1" "tightvnc/tigervnc" \
+		"2" "x11vnc" \
+		"3" "XSDL" \
+		"4" "XRDP" \
+		"5" "Xwayland(测试版)" \
 		"0" "Back to the main menu 返回主菜单" \
 		3>&1 1>&2 2>&3)
 	##############################
@@ -3215,14 +3222,18 @@ modify_remote_desktop_config() {
 	fi
 	##########################
 	if [ "${REMOTE_DESKTOP}" == '2' ]; then
-		modify_xsdl_conf
+		modify_x11vnc_conf
 	fi
 	##########################
 	if [ "${REMOTE_DESKTOP}" == '3' ]; then
-		modify_xrdp_conf
+		modify_xsdl_conf
 	fi
 	##########################
 	if [ "${REMOTE_DESKTOP}" == '4' ]; then
+		modify_xrdp_conf
+	fi
+	##########################
+	if [ "${REMOTE_DESKTOP}" == '5' ]; then
 		modify_xwayland_conf
 	fi
 	#######################
@@ -3233,6 +3244,19 @@ modify_remote_desktop_config() {
 }
 #########################
 #########################
+modify_x11vnc_conf() {
+	if [ ! $(command -v x11vnc) ]; then
+		DEPENDENCY_01='X11vnc'
+		DEPENDENCY_02=''
+		NON_DEBIAN='false'
+		beta_features_quick_install
+	fi
+	echo "配置x11vnc后，startvnc命令将被替换为x11vnc服务启动脚本，如需还原tightvnc，请覆盖安装gui"
+	press_enter_to_continue
+	X11_OR_WAYLAND_DESKTOP='x11vnc'
+	configure_remote_desktop_enviroment
+}
+######################
 modify_vnc_conf() {
 	if [ ! $(command -v nano) ]; then
 		DEPENDENCY_01='nano'
@@ -3251,7 +3275,7 @@ modify_vnc_conf() {
 	fi
 
 	if (whiptail --title "modify vnc configuration" --yes-button '分辨率resolution' --no-button '其它other' --yesno "您想要修改哪项配置信息？Which configuration do you want to modify?" 9 50); then
-		TARGET=$(whiptail --inputbox "Please enter a resolution,请输入分辨率,例如2880x1440,2400x1200,1920x1080,1920x960,1440x720,1280x1024,1280x960,1280x720,1024x768,800x680等等,默认为720x1440,当前为$(grep '\-geometry' "$(command -v startvnc)" | cut -d 'y' -f 2 | cut -d '-' -f 1) 。分辨率可自定义，但建议您根据屏幕比例来调整，输入完成后按回车键确认，修改完成后将自动停止VNC服务。注意：x为英文小写，不是乘号。Press Enter after the input is completed." 16 50 --title "请在方框内输入 水平像素x垂直像素 (数字x数字) " 3>&1 1>&2 2>&3)
+		TARGET=$(whiptail --inputbox "Please enter a resolution,请输入分辨率,例如2880x1440,2400x1200,1920x1080,1920x960,720x1140,1280x1024,1280x960,1280x720,1024x768,800x680等等,默认为1440x720,当前为$(grep '\-geometry' "$(command -v startvnc)" | cut -d 'y' -f 2 | cut -d '-' -f 1) 。分辨率可自定义，但建议您根据屏幕比例来调整，输入完成后按回车键确认，修改完成后将自动停止VNC服务。注意：x为英文小写，不是乘号。Press Enter after the input is completed." 16 50 --title "请在方框内输入 水平像素x垂直像素 (数字x数字) " 3>&1 1>&2 2>&3)
 		exitstatus=$?
 		if [ $exitstatus = 0 ]; then
 			sed -i '/vncserver -geometry/d' "$(command -v startvnc)"
@@ -3786,9 +3810,7 @@ configure_remote_desktop_enviroment() {
 	fi
 	##########################
 	configure_remote_desktop_session
-	echo "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
-	echo "${YELLOW}按回车键返回。${RESET}"
-	read
+	press_enter_to_return
 	modify_remote_desktop_config
 }
 ##############
@@ -3858,6 +3880,8 @@ configure_remote_desktop_session() {
 		configure_xrdp_remote_desktop_session
 	elif [ "${X11_OR_WAYLAND_DESKTOP}" == 'xwayland' ]; then
 		configure_xwayland_remote_desktop_session
+	elif [ "${X11_OR_WAYLAND_DESKTOP}" == 'x11vnc' ]; then
+		configure_x11vnc_remote_desktop_session
 	fi
 }
 #####################
@@ -4151,7 +4175,7 @@ configure_startvnc() {
 		echo The LAN VNC address 局域网地址 $(ip -4 -br -c a | tail -n 1 | cut -d '/' -f 1 | cut -d 'P' -f 2):5901
 		export LANG="zh_CN.UTF8"
 		#启动VNC服务的命令为最后一行
-		vncserver -geometry 720x1440 -depth 24 -name tmoe-linux :1
+		vncserver -geometry 1440x720 -depth 24 -name tmoe-linux :1
 	EndOfFile
 	##############
 	cat >stopvnc <<-'EndOfFile'

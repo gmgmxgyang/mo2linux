@@ -1119,7 +1119,7 @@ check_vscode_server_status() {
 ###############
 configure_vscode_server() {
 	CODE_SERVER_OPTION=$(
-		whiptail --title "CONFIGURE VSCODE_SERVER" --menu "您想要修改哪项配置？" 14 50 5 \
+		whiptail --title "CONFIGURE VSCODE_SERVER" --menu "您想要修改哪项配置？Which configuration do you want to modify?" 14 50 5 \
 			"1" "upgrade code-server更新/升级" \
 			"2" "password 设定密码" \
 			"3" "stop 停止" \
@@ -1905,7 +1905,7 @@ configure_xfce4_xstartup() {
 ####################
 configure_x11vnc_remote_desktop_session() {
 	cd /usr/local/bin/
-	cat >startvnc <<-EOF
+	cat >startx11vnc <<-EOF
 		#!/bin/bash
 		stopvnc
 		export PULSE_SERVER=127.0.0.1
@@ -1913,12 +1913,13 @@ configure_x11vnc_remote_desktop_session() {
 		/usr/bin/Xvfb :1 -screen 0 1440x720x24 -ac +extension GLX +render -noreset & 
 		sleep 1s
 		${REMOTE_DESKTOP_SESSION} &
-		echo "正在启动vnc服务,本机默认vnc地址localhost:5901"
+		echo "正在启动x11vnc服务,本机默认vnc地址localhost:5901"
+		echo "您之后可以输startx11vnc启动，stopx11vnc停止"
 		echo The LAN VNC address 局域网地址 \$(ip -4 -br -c a | tail -n 1 | cut -d '/' -f 1 | cut -d 'P' -f 2):5901
 		#export LANG="zh_CN.UTF8"
 		x11vnc -xkb -noxrecord -noxfixes -noxdamage -display :1 -forever -bg -rfbauth \${HOME}/.vnc/passwd -users \$(whoami) -rfbport 5901 -noshm &
 	EOF
-	cat >stopvnc <<-'EOF'
+	cat >stopx11vnc <<-'EOF'
 		#!/bin/bash
 		pkill dbus
 		pkill Xvfb
@@ -1932,7 +1933,7 @@ configure_x11vnc_remote_desktop_session() {
 	EOF
 	chmod +x ./*
 	x11vncpasswd
-	startvnc
+	startx11vnc
 }
 ##########################
 kali_xfce4_extras() {
@@ -3203,6 +3204,13 @@ install_bleachbit_cleaner() {
 ##########################
 ##########################
 modify_remote_desktop_config() {
+	if [ ! $(command -v nano) ]; then
+		DEPENDENCY_01='nano'
+		DEPENDENCY_02=""
+		NON_DEBIAN='false'
+		beta_features_quick_install
+	fi
+	##################
 	REMOTE_DESKTOP=$(whiptail --title "远程桌面" --menu \
 		"您想要修改哪个远程桌面的配置？\nWhich remote desktop configuration do you want to modify?" 15 60 4 \
 		"1" "tightvnc/tigervnc" \
@@ -3222,7 +3230,7 @@ modify_remote_desktop_config() {
 	fi
 	##########################
 	if [ "${REMOTE_DESKTOP}" == '2' ]; then
-		modify_x11vnc_conf
+		configure_x11vnc
 	fi
 	##########################
 	if [ "${REMOTE_DESKTOP}" == '3' ]; then
@@ -3237,35 +3245,135 @@ modify_remote_desktop_config() {
 		modify_xwayland_conf
 	fi
 	#######################
-	echo "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
-	echo "${YELLOW}按回车键返回。${RESET}"
-	read
+	press_enter_to_return
 	modify_remote_desktop_config
 }
 #########################
-#########################
-modify_x11vnc_conf() {
+configure_x11vnc() {
+	TMOE_OPTION=$(
+		whiptail --title "CONFIGURE x11vnc" --menu "您想要修改哪项配置？Which configuration do you want to modify?" 14 50 5 \
+			"1" "one-key configure初始化一键配置" \
+			"2" "pulse_server音频服务" \
+			"3" "resolution分辨率" \
+			"4" "startx11vnc启动脚本" \
+			"5" "stopx11vnc停止脚本" \
+			"6" "remove 卸载/移除" \
+			"7" "readme 进程管理说明" \
+			"0" "Return to previous menu 返回上级菜单" \
+			3>&1 1>&2 2>&3
+	)
+	##############################
+	if [ "${TMOE_OPTION}" == '0' ]; then
+		#tmoe_linux_tool_menu
+		modify_remote_desktop_config
+	fi
+	##############################
+	if [ "${TMOE_OPTION}" == '1' ]; then
+		x11vnc_onekey
+	fi
+	##############################
+	if [ "${TMOE_OPTION}" == '2' ]; then
+		x11vnc_pulse_server
+	fi
+	##############################
+	if [ "${TMOE_OPTION}" == '3' ]; then
+		x11vnc_resolution
+	fi
+	##############################
+	if [ "${TMOE_OPTION}" == '4' ]; then
+		nano /usr/local/bin/startx11vnc
+	fi
+	##############################
+	if [ "${TMOE_OPTION}" == '5' ]; then
+		nano /usr/local/bin/stopx11vnc
+	fi
+	###################
+	if [ "${TMOE_OPTION}" == '6' ]; then
+		remove_X11vnc
+	fi
+	##############################
+	if [ "${TMOE_OPTION}" == '7' ]; then
+		echo "输startx11vnc启动x11vnc"
+		echo "输stop11vnc停止x11vnc"
+	fi
+	########################################
+	press_enter_to_return
+	configure_x11vnc
+	####################
+}
+############
+x11vnc_onekey() {
+	echo "配置完x11vnc后，输startx11vnc启动,stopx11vnc停止"
+	RETURN_TO_WHERE='configure_x11vnc'
+	do_you_want_to_continue
+	NON_DEBIAN='false'
+	DEPENDENCY_01=''
+	DEPENDENCY_02=''
 	if [ ! $(command -v x11vnc) ]; then
 		DEPENDENCY_01='x11vnc'
-		DEPENDENCY_02=''
-		NON_DEBIAN='false'
+	fi
+	#注意下面那处的大小写
+	if [ ! $(command -v xvfb) ] && [ ! $(command -v Xvfb) ]; then
+		DEPENDENCY_02='xvfb'
+	fi
+
+	if [ ! -z "${DEPENDENCY_01}" ] || [ ! -z "${DEPENDENCY_02}" ]; then
 		beta_features_quick_install
 	fi
-	echo "配置x11vnc后，startvnc命令将被替换为x11vnc服务启动脚本，如需还原tightvnc，请覆盖安装gui"
-	press_enter_to_continue
+	################
 	X11_OR_WAYLAND_DESKTOP='x11vnc'
 	configure_remote_desktop_enviroment
 }
+#############
+remove_X11vnc() {
+	echo "正在停止x11vnc进程..."
+	echo "Stopping x11vnc..."
+	stopx11vnc
+	echo "${YELLOW}This is a dangerous operation, you must press Enter to confirm${RESET}"
+	RETURN_TO_WHERE='configure_x11vnc'
+	do_you_want_to_continue
+	rm -rfv /usr/local/bin/startx11vnc /usr/local/bin/stopx11vnc
+	echo "即将为您卸载..."
+	${PACKAGES_REMOVE_COMMAND} x11vnc
+}
+################
+x11vnc_pulse_server() {
+	cd /usr/local/bin/
+	TARGET=$(whiptail --inputbox "若您需要转发音频到其它设备,那么您可在此处修改。当前为$(grep 'PULSE_SERVER' startx11vnc | grep -v '^#' | cut -d '=' -f 2) \n若您曾在音频服务端（接收音频的设备）上运行过Tmoe-linux(仅限Android和win10),并配置允许局域网连接,则只需输入该设备ip,无需加端口号。注：win10需手动打开'C:\Users\Public\Downloads\pulseaudio\pulseaudio.bat'" 15 50 --title "MODIFY PULSE SERVER ADDRESS" 3>&1 1>&2 2>&3)
+	exitstatus=$?
+	if [ $exitstatus = 0 ]; then
+		if grep '^export.*PULSE_SERVER' startx11vnc; then
+			sed -i "s@export.*PULSE_SERVER=.*@export PULSE_SERVER=$TARGET@" startx11vnc
+		else
+			sed -i "3 a\export PULSE_SERVER=$TARGET" startx11vnc
+		fi
+		echo 'Your current PULSEAUDIO SERVER address has been modified.'
+		echo '您当前的音频地址已修改为'
+		echo $(grep 'PULSE_SERVER' startx11vnc | grep -v '^#' | cut -d '=' -f 2)
+	else
+		configure_x11vnc
+	fi
+}
+##################
+x11vnc_resolution() {
+	TARGET=$(whiptail --inputbox "Please enter a resolution,请输入分辨率,例如2880x1440,2400x1200,1920x1080,1920x960,720x1140,1280x1024,1280x960,1280x720,1024x768,800x680等等,默认为1440x720,当前为$(cat $(command -v startx11vnc) | grep '/usr/bin/Xvfb' | head -n 1 | cut -d ':' -f 2 | cut -d '+' -f 1 | cut -d '-' -f 2 | cut -d 'x' -f -2 | awk -F ' ' '$0=$NF')。分辨率可自定义，但建议您根据屏幕比例来调整，输入完成后按回车键确认，修改完成后将自动停止VNC服务。注意：x为英文小写，不是乘号。Press Enter after the input is completed." 16 50 --title "请在方框内输入 水平像素x垂直像素 (数字x数字) " 3>&1 1>&2 2>&3)
+	exitstatus=$?
+	if [ $exitstatus = 0 ]; then
+		#/usr/bin/Xvfb :1 -screen 0 1440x720x24 -ac +extension GLX +render -noreset &
+		sed -i "s@^/usr/bin/Xvfb.*@/usr/bin/Xvfb :1 -screen 0 ${TARGET}x24 -ac +extension GLX +render -noreset \&@" "$(command -v startx11vnc)"
+		echo 'Your current resolution has been modified.'
+		echo '您当前的分辨率已经修改为'
+		echo $(cat $(command -v startx11vnc) | grep '/usr/bin/Xvfb' | head -n 1 | cut -d ':' -f 2 | cut -d '+' -f 1 | cut -d '-' -f 2 | cut -d 'x' -f -2 | awk -F ' ' '$0=$NF')
+		#echo $(sed -n \$p "$(command -v startx11vnc)" | cut -d 'y' -f 2 | cut -d '-' -f 1)
+		#$p表示最后一行，必须用反斜杠转义。
+		stopx11vnc
+	else
+		echo "您当前的分辨率为$(cat $(command -v startx11vnc) | grep '/usr/bin/Xvfb' | head -n 1 | cut -d ':' -f 2 | cut -d '+' -f 1 | cut -d '-' -f 2 | cut -d 'x' -f -2 | awk -F ' ' '$0=$NF')"
+	fi
+}
+############################
 ######################
 modify_vnc_conf() {
-	if [ ! $(command -v nano) ]; then
-		DEPENDENCY_01='nano'
-		apt update 2>/dev/null
-		echo "即将为你安装nano"
-		echo "${GREEN} ${PACKAGES_INSTALL_COMMAND} ${DEPENDENCY_01} ${RESET}"
-		${PACKAGES_INSTALL_COMMAND} ${DEPENDENCY_01}
-	fi
-
 	if [ ! -e /usr/local/bin/startvnc ]; then
 		echo "/usr/local/bin/startvnc is not detected, maybe you have not installed the graphical desktop environment, do you want to continue editing?"
 		echo '未检测到startvnc,您可能尚未安装图形桌面，是否继续编辑?'
@@ -3468,7 +3576,7 @@ configure_xwayland() {
 	#进入xwayland配置文件目录
 	cd /etc/xwayland/
 	TMOE_OPTION=$(
-		whiptail --title "CONFIGURE xwayland" --menu "您想要修改哪项配置？" 14 50 5 \
+		whiptail --title "CONFIGURE xwayland" --menu "您想要修改哪项配置？Which configuration do you want to modify?" 14 50 5 \
 			"1" "One-key conf 初始化一键配置" \
 			"2" "指定xwayland桌面环境" \
 			"3" "pulse_server音频服务" \
@@ -3520,7 +3628,7 @@ configure_xwayland() {
 ##############
 xwayland_pulse_server() {
 	cd /usr/local/bin/
-	TARGET=$(whiptail --inputbox "若您需要转发音频到其它设备,那么请可在此处修改。当前为$(grep 'PULSE_SERVER' startw | grep -v '^#' | cut -d '=' -f 2) \n若您曾在音频服务端（接收音频的设备,仅限）上运行过Tmoe-linux,并配置允许局域网连接,则只需输入该设备ip,无需加端口号。注：win10需手动打开'C:\Users\Public\Downloads\pulseaudio\pulseaudio.bat'" 15 50 --title "MODIFY PULSE SERVER ADDRESS" 3>&1 1>&2 2>&3)
+	TARGET=$(whiptail --inputbox "若您需要转发音频到其它设备,那么您可以在此处修改。当前为$(grep 'PULSE_SERVER' startw | grep -v '^#' | cut -d '=' -f 2) \n若您曾在音频服务端（接收音频的设备）上运行过Tmoe-linux(仅限Android和win10),并配置允许局域网连接,则只需输入该设备ip,无需加端口号。注：win10需手动打开'C:\Users\Public\Downloads\pulseaudio\pulseaudio.bat'" 15 50 --title "MODIFY PULSE SERVER ADDRESS" 3>&1 1>&2 2>&3)
 	exitstatus=$?
 	if [ $exitstatus = 0 ]; then
 		if grep '^export.*PULSE_SERVER' startw; then
@@ -3668,7 +3776,7 @@ configure_xrdp() {
 	#进入xrdp配置文件目录
 	cd /etc/xrdp/
 	TMOE_OPTION=$(
-		whiptail --title "CONFIGURE XRDP" --menu "您想要修改哪项配置？" 14 50 5 \
+		whiptail --title "CONFIGURE XRDP" --menu "您想要修改哪项配置？Which configuration do you want to modify?" 14 50 5 \
 			"1" "One-key conf 初始化一键配置" \
 			"2" "指定xrdp桌面环境" \
 			"3" "xrdp port 修改xrdp端口" \
@@ -3893,7 +4001,7 @@ configure_remote_desktop_session() {
 #####################
 xrdp_pulse_server() {
 	cd /etc/xrdp
-	TARGET=$(whiptail --inputbox "若您需要转发音频到其它设备,那么请可在此处修改。linux默认为127.0.0.1,WSL2默认为宿主机ip,当前为$(grep 'PULSE_SERVER' startwm.sh | grep -v '^#' | cut -d '=' -f 2) \n若您曾在音频服务端（接收音频的设备）上运行过Tmoe-linux,并配置允许局域网连接,则只需输入该设备ip,无需加端口号。注：win10需手动打开'C:\Users\Public\Downloads\pulseaudio\pulseaudio.bat'" 15 50 --title "MODIFY PULSE SERVER ADDRESS" 3>&1 1>&2 2>&3)
+	TARGET=$(whiptail --inputbox "若您需要转发音频到其它设备,那么您可在此处修改。linux默认为127.0.0.1,WSL2默认为宿主机ip,当前为$(grep 'PULSE_SERVER' startwm.sh | grep -v '^#' | cut -d '=' -f 2) \n若您曾在音频服务端（接收音频的设备）上运行过Tmoe-linux(仅限Android和win10),并配置允许局域网连接,则只需输入该设备ip,无需加端口号。注：win10需手动打开'C:\Users\Public\Downloads\pulseaudio\pulseaudio.bat'" 15 50 --title "MODIFY PULSE SERVER ADDRESS" 3>&1 1>&2 2>&3)
 	exitstatus=$?
 	if [ $exitstatus = 0 ]; then
 
@@ -5162,7 +5270,7 @@ install_nginx_webdav() {
 configure_nginx_webdav() {
 	#进入nginx webdav配置文件目录
 	cd /etc/nginx/conf.d/
-	TMOE_OPTION=$(whiptail --title "CONFIGURE WEBDAV" --menu "您想要修改哪项配置？" 14 50 5 \
+	TMOE_OPTION=$(whiptail --title "CONFIGURE WEBDAV" --menu "您想要修改哪项配置？Which configuration do you want to modify?" 14 50 5 \
 		"1" "One-key conf 初始化一键配置" \
 		"2" "管理访问账号" \
 		"3" "view logs 查看日志" \

@@ -2259,8 +2259,8 @@ configure_x11vnc_remote_desktop_session() {
 		sleep 2s
 		echo "正在启动x11vnc服务,本机默认vnc地址localhost:5901"
 		echo The LAN VNC address 局域网地址 \$(ip -4 -br -c a | tail -n 1 | cut -d '/' -f 1 | cut -d 'P' -f 2):5901
-		echo "您可能会经历长达30s的黑屏,请20s后再来尝试连接"
-		echo "You may experience a black screen for up to 30 seconds, please try to connect after 20s"
+		echo "您可能会经历长达10多秒的黑屏"
+		echo "You may experience a black screen for up to 10 seconds."
 		echo "您之后可以输startx11vnc启动，stopx11vnc停止"
 		echo "You can type startx11vnc to start x11vnc,type stopx11vnc to stop it."
 	EOF

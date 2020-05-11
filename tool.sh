@@ -350,7 +350,7 @@ check_dependencies() {
 tmoe_linux_tool_menu() {
 	cd ${cur}
 	TMOE_OPTION=$(
-		whiptail --title "Tmoe-linux Tool输debian-i启动(20200511-13)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.请使用方向键和回车键操作,更新日志:0501支持解析并下载B站视频,0502支持搭建个人云网盘,0503优化code-server的配置,0507支持配置wayland,0510更新文件选择功能,0511支持配置x11vnc" 20 50 7 \
+		whiptail --title "Tmoe-linux Tool输debian-i启动(20200511-13)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.请使用方向键和回车键操作,更新日志:0501支持解析并下载B站视频,0502支持搭建个人云网盘,0503优化code-server的配置,0507支持配置wayland,0510更新文件选择功能,0511支持配置x11vnc,支持WM" 20 50 7 \
 			"1" "Install GUI 安装图形界面" \
 			"2" "Install browser 安装浏览器" \
 			"3" "Download theme 下载主题" \
@@ -1696,14 +1696,16 @@ install_browser() {
 	else
 		install_chromium_browser
 	fi
-	echo "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
-	echo "${YELLOW}按回车键返回。${RESET}"
-	read
+	press_enter_to_return
 	tmoe_linux_tool_menu
 }
 ######################################################
 ######################################################
 install_gui() {
+	#该字体检测两次
+	if [ -f '/usr/share/fonts/Iosevka.ttf' ]; then
+		standand_desktop_install
+	fi
 	cd /tmp
 	echo 'lxde预览截图'
 	#curl -LfsS 'https://gitee.com/mo2/pic_api/raw/test/2020/03/15/BUSYeSLZRqq3i3oM.png' | catimg -
@@ -1758,13 +1760,18 @@ install_gui() {
 }
 ########################
 preconfigure_gui_dependecies_02() {
-	NON_DEBIAN='false'
 	DEPENDENCY_02="tigervnc"
 	if [ "${LINUX_DISTRO}" = "debian" ]; then
+		if [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
+			NON_DBUS='true'
+		fi
 		DEPENDENCY_02="dbus-x11 fonts-noto-cjk tightvncserver"
 		#上面的依赖摆放的位置是有讲究的。
 		##############
 	elif [ "${LINUX_DISTRO}" = "redhat" ]; then
+		if [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
+			NON_DBUS='true'
+		fi
 		DEPENDENCY_02="tigervnc-server google-noto-sans-cjk-ttc-fonts"
 		##################
 	elif [ "${LINUX_DISTRO}" = "arch" ]; then
@@ -1789,6 +1796,7 @@ preconfigure_gui_dependecies_02() {
 }
 ########################
 standand_desktop_install() {
+	NON_DEBIAN='false'
 	preconfigure_gui_dependecies_02
 	INSTALLDESKTOP=$(whiptail --title "单项选择题" --menu \
 		"您想要安装哪个桌面？按方向键选择，回车键确认！仅xfce桌面支持在本工具内便捷下载主题。 \n Which desktop environment do you want to install? " 15 60 5 \
@@ -1796,6 +1804,7 @@ standand_desktop_install() {
 		"2" "lxde：轻量化桌面" \
 		"3" "mate：基于GNOME 2" \
 		"4" "Other其它桌面(内测版新功能):lxqt,kde" \
+		"5" "window manager窗口管理器(公测):fvwm,openbox" \
 		"0" "我一个都不要 =￣ω￣=" \
 		3>&1 1>&2 2>&3)
 	##########################
@@ -1814,14 +1823,16 @@ standand_desktop_install() {
 	if [ "$INSTALLDESKTOP" == '4' ]; then
 		other_desktop
 	fi
+	#########################
+	if [ "$INSTALLDESKTOP" == '5' ]; then
+		windows_manager_install
+	fi
 	##########################
 	if [ "$INSTALLDESKTOP" == '0' ]; then
 		tmoe_linux_tool_menu
 	fi
 	##########################
-	echo "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
-	echo "${YELLOW}按回车键返回。${RESET}"
-	read
+	press_enter_to_return
 	tmoe_linux_tool_menu
 }
 #######################
@@ -1831,14 +1842,324 @@ auto_select_keyboard_layout() {
 	echo keyboard-configuration keyboard-configuration/layoutcode select 'us' | debconf-set-selections
 }
 ##################
+#################
+will_be_installed_for_you() {
+	echo "即将为您安装思源黑体(中文字体)、${REMOTE_DESKTOP_SESSION_01}、tightvncserver等软件包"
+}
+########################
+#####################
+windows_manager_install() {
+	NON_DBUS='true'
+	REMOTE_DESKTOP_SESSION_02='x-window-manager'
+	BETA_DESKTOP=$(
+		whiptail --title "WINDOW MANAGER" --menu \
+			"WARNING！本功能仍处于测试阶段哟！\nwindow manager窗口管理器(简称WM)是一种比桌面环境更轻量化的图形界面.\n您想要安装哪个WM呢?\nBeta features may not work properly.\nWhich WM do you want to install?" 0 0 0 "01" "fvwm(twm基础上开发的的虚拟WM)" \
+			"02" "openbox(快速,轻巧,可扩展)" \
+			"03" "i3(改进的动态平铺WM)" \
+			"04" "awesome(平铺式WM)" \
+			"05" "ice(wonderful Win95-OS/2-Motif-like)" \
+			"06" "fluxbox(高度可配置,低资源占用)" \
+			"07" "dwm(dynamic window manager)" \
+			"08" "xmonad(基于Haskell开发的平铺式WM)" \
+			"09" "9wm(X11 WM inspired by Plan 9's rio)" \
+			"10" "metacity(轻量的GTK+ WM)" \
+			"11" "twm(Tab WM)" \
+			"12" "aewm(极简主义WM for X11)" \
+			"13" "aewm++(最小的 WM written in C++)" \
+			"14" "afterstep(拥有NEXTSTEP风格的WM)" \
+			"15" "blackbox(WM for X)" \
+			"16" "enlightenment(X11 WM based on EFL)" \
+			"17" "mutter(轻量的GTK+ WM)" \
+			"18" "bspwm(Binary space partitioning WM)" \
+			"19" "clfswm(Another Common Lisp FullScreen WM)" \
+			"20" "ctwm(Claude's Tab WM)" \
+			"21" "evilwm(极简主义WM for X11)" \
+			"22" "flwm(Fast Light WM)" \
+			"23" "herbstluftwm(manual tiling WM for X11)" \
+			"24" "jwm(very small & pure轻量,纯净)" \
+			"25" "kwin-x11(KDE默认WM,X11 version)" \
+			"26" "lwm(轻量化WM)" \
+			"27" "marco(轻量化GTK+ WM for MATE)" \
+			"28" "matchbox-window-manager(WM for resource-limited systems)" \
+			"29" "miwm(极简主义WM with virtual workspaces)" \
+			"30" "muffin(轻量化window and compositing manager)" \
+			"31" "mwm(Motif WM)" \
+			"32" "oroborus(a 轻量化 themeable WM)" \
+			"33" "pekwm(very light)" \
+			"34" "ratpoison(keyboard-only WM)" \
+			"35" "sapphire(a 最小的 but configurable X11R6 WM)" \
+			"36" "sawfish" \
+			"37" "spectrwm(dynamic tiling WM)" \
+			"38" "stumpwm(tiling,keyboard driven Common Lisp)" \
+			"39" "subtle(grid-based manual tiling)" \
+			"40" "sugar-session(Sugar Learning Platform)" \
+			"41" "tinywm" \
+			"42" "ukwm(轻量化 GTK+ WM)" \
+			"43" "vdesk(manages virtual desktops for 最小的WM)" \
+			"44" "vtwm(Virtual Tab WM)" \
+			"45" "w9wm(enhanced WM based on 9wm)" \
+			"46" "wm2(small,unconfigurable)" \
+			"47" "wmaker(NeXTSTEP-like WM for X)" \
+			"48" "wmii(轻量化 tabbed and tiled WM)" \
+			"49" "xfwm4(xfce4默认WM)" \
+			"0" "Return to previous menu 返回上级菜单" \
+			3>&1 1>&2 2>&3
+	)
+	##################
+	case "${BETA_DESKTOP}" in
+	0) standand_desktop_install ;;
+	01)
+		DEPENDENCY_01='fvwm'
+		REMOTE_DESKTOP_SESSION_01='fvwm'
+		if [ "${LINUX_DISTRO}" = "debian" ]; then
+			DEPENDENCY_01='fvwm fvwm-crystal fvwm-icons'
+		fi
+		;;
+	02)
+		DEPENDENCY_01='openbox'
+		REMOTE_DESKTOP_SESSION_01='openbox-session'
+		REMOTE_DESKTOP_SESSION_02='openbox'
+		if [ "${LINUX_DISTRO}" = "debian" ]; then
+			DEPENDENCY_01='openbox obmenu openbox-menu'
+		fi
+		;;
+	03)
+		DEPENDENCY_01='i3'
+		REMOTE_DESKTOP_SESSION_01='i3'
+		if [ "${LINUX_DISTRO}" = "debian" ]; then
+			DEPENDENCY_01='i3 i3-wm i3blocks'
+		fi
+		;;
+	04)
+		DEPENDENCY_01='awesome'
+		REMOTE_DESKTOP_SESSION_01='awesome'
+		if [ "${LINUX_DISTRO}" = "debian" ]; then
+			DEPENDENCY_01='awesome awesome-extra'
+		fi
+		;;
+	05)
+		DEPENDENCY_01='ice'
+		REMOTE_DESKTOP_SESSION_01='ice'
+		;;
+	06)
+		DEPENDENCY_01='xmonad'
+		REMOTE_DESKTOP_SESSION_01='xmonad'
+		if [ "${LINUX_DISTRO}" = "debian" ]; then
+			DEPENDENCY_01='xmobar dmenu xmonad'
+		fi
+		;;
+	07)
+		DEPENDENCY_01='dwm'
+		REMOTE_DESKTOP_SESSION_01='dwm'
+		;;
+	08)
+		DEPENDENCY_01='fluxbox'
+		REMOTE_DESKTOP_SESSION_01='fluxbox'
+		if [ "${LINUX_DISTRO}" = "debian" ]; then
+			DEPENDENCY_01='bbmail bbpager bbtime fbpager flubox'
+		fi
+		;;
+	09)
+		DEPENDENCY_01='9wm'
+		REMOTE_DESKTOP_SESSION_01='9wm'
+		;;
+	10)
+		DEPENDENCY_01='metacity'
+		REMOTE_DESKTOP_SESSION_01='metacity'
+		;;
+	11)
+		DEPENDENCY_01='twm'
+		REMOTE_DESKTOP_SESSION_01='twm'
+		;;
+	12)
+		DEPENDENCY_01='aewm'
+		REMOTE_DESKTOP_SESSION_01='aewm'
+		;;
+	13)
+		DEPENDENCY_01='aewm++'
+		REMOTE_DESKTOP_SESSION_01='aewm++'
+		;;
+	14)
+		DEPENDENCY_01='afterstep'
+		REMOTE_DESKTOP_SESSION_01='afterstep'
+		;;
+	15)
+		DEPENDENCY_01='blackbox'
+		REMOTE_DESKTOP_SESSION_01='blackbox'
+		if [ "${LINUX_DISTRO}" = "debian" ]; then
+			DEPENDENCY_01='bbmail bbpager bbtime fbpager blackbox'
+		fi
+		;;
+	16)
+		DEPENDENCY_01='enlightenment'
+		REMOTE_DESKTOP_SESSION_01='enlightenment'
+		;;
+	17)
+		DEPENDENCY_01='mutter'
+		REMOTE_DESKTOP_SESSION_01='mutter'
+		;;
+	18)
+		DEPENDENCY_01='bspwm'
+		REMOTE_DESKTOP_SESSION_01='bspwm'
+		;;
+	19)
+		DEPENDENCY_01='clfswm'
+		REMOTE_DESKTOP_SESSION_01='clfswm'
+		;;
+	20)
+		DEPENDENCY_01='ctwm'
+		REMOTE_DESKTOP_SESSION_01='ctwm'
+		;;
+	21)
+		DEPENDENCY_01='evilwm'
+		REMOTE_DESKTOP_SESSION_01='evilwm'
+		;;
+	22)
+		DEPENDENCY_01='flwm'
+		REMOTE_DESKTOP_SESSION_01='flwm'
+		;;
+	23)
+		DEPENDENCY_01='herbstluftwm'
+		REMOTE_DESKTOP_SESSION_01='herbstluftwm'
+		;;
+	24)
+		DEPENDENCY_01='jwm'
+		REMOTE_DESKTOP_SESSION_01='jwm'
+		;;
+	25)
+		DEPENDENCY_01='kwin-x11'
+		REMOTE_DESKTOP_SESSION_01='kwin-x11'
+		;;
+	26)
+		DEPENDENCY_01='lwm'
+		REMOTE_DESKTOP_SESSION_01='lwm'
+		;;
+	27)
+		DEPENDENCY_01='marco'
+		REMOTE_DESKTOP_SESSION_01='marco'
+		;;
+	28)
+		DEPENDENCY_01='matchbox-window-manager'
+		REMOTE_DESKTOP_SESSION_01='matchbox-window-manager'
+		if [ "${LINUX_DISTRO}" = "debian" ]; then
+			DEPENDENCY_01='matchbox-themes-extra matchbox-window-manager'
+		fi
+		;;
+	29)
+		DEPENDENCY_01='miwm'
+		REMOTE_DESKTOP_SESSION_01='miwm'
+		;;
+	30)
+		DEPENDENCY_01='muffin'
+		REMOTE_DESKTOP_SESSION_01='muffin'
+		if [ "${LINUX_DISTRO}" = "debian" ]; then
+			DEPENDENCY_01='murrine-themes muffin'
+		fi
+		;;
+	31)
+		DEPENDENCY_01='mwm'
+		REMOTE_DESKTOP_SESSION_01='mwm'
+		;;
+	32)
+		DEPENDENCY_01='oroborus'
+		REMOTE_DESKTOP_SESSION_01='oroborus'
+		;;
+	33)
+		DEPENDENCY_01='pekwm'
+		REMOTE_DESKTOP_SESSION_01='pekwm'
+		if [ "${LINUX_DISTRO}" = "debian" ]; then
+			DEPENDENCY_01='pekwm-themes pekwm'
+		fi
+		;;
+	34)
+		DEPENDENCY_01='ratpoison'
+		REMOTE_DESKTOP_SESSION_01='ratpoison'
+		;;
+	35)
+		DEPENDENCY_01='sapphire'
+		REMOTE_DESKTOP_SESSION_01='sapphire'
+		;;
+	36)
+		DEPENDENCY_01='sawfish'
+		REMOTE_DESKTOP_SESSION_01='sawfish'
+		if [ "${LINUX_DISTRO}" = "debian" ]; then
+			DEPENDENCY_01='sawfish-themes sawfish'
+		fi
+		;;
+	37)
+		DEPENDENCY_01='spectrwm'
+		REMOTE_DESKTOP_SESSION_01='spectrwm'
+		;;
+	38)
+		DEPENDENCY_01='stumpwm'
+		REMOTE_DESKTOP_SESSION_01='stumpwm'
+		;;
+	39)
+		DEPENDENCY_01='subtle'
+		REMOTE_DESKTOP_SESSION_01='subtle'
+		;;
+	40)
+		DEPENDENCY_01='sugar-session'
+		REMOTE_DESKTOP_SESSION_01='sugar-session'
+		;;
+	41)
+		DEPENDENCY_01='tinywm'
+		REMOTE_DESKTOP_SESSION_01='tinywm'
+		;;
+	42)
+		DEPENDENCY_01='ukwm'
+		REMOTE_DESKTOP_SESSION_01='ukwm'
+		;;
+	43)
+		DEPENDENCY_01='vdesk'
+		REMOTE_DESKTOP_SESSION_01='vdesk'
+		;;
+	44)
+		DEPENDENCY_01='vtwm'
+		REMOTE_DESKTOP_SESSION_01='vtwm'
+		;;
+	45)
+		DEPENDENCY_01='w9wm'
+		REMOTE_DESKTOP_SESSION_01='w9wm'
+		;;
+	46)
+		DEPENDENCY_01='wm2'
+		REMOTE_DESKTOP_SESSION_01='wm2'
+		;;
+	47)
+		DEPENDENCY_01='wmaker'
+		REMOTE_DESKTOP_SESSION_01='wmaker'
+		;;
+	48)
+		DEPENDENCY_01='wmii'
+		REMOTE_DESKTOP_SESSION_01='wmii'
+		;;
+	49)
+		DEPENDENCY_01='xfwm4'
+		REMOTE_DESKTOP_SESSION_01='xfwm4'
+		;;
+	esac
+	##########################
+	if [ "$?" = '255' ]; then
+		standand_desktop_install
+	fi
+	#############
+	will_be_installed_for_you
+	beta_features_quick_install
+	configure_vnc_xstartup
+	press_enter_to_return
+	tmoe_linux_tool_menu
+}
+##########################
+###################
 other_desktop() {
 	BETA_DESKTOP=$(whiptail --title "Alpha features" --menu \
-		"WARNING！本功能仍处于测试阶段,可能无法正常运行。部分桌面依赖systemd,无法在chroot环境中运行\nBeta features may not work properly." 15 60 6 \
-		"1" "lxqt" \
-		"2" "kde plasma 5" \
-		"3" "gnome 3" \
-		"4" "cinnamon" \
-		"5" "dde (deepin desktop)" \
+		"WARNING！本功能仍处于测试阶段,可能无法正常运行。部分桌面依赖systemd,无法在chroot环境中运行\nAlpha features may not work properly." 15 60 6 \
+		"1" "lxqt(lxde原作者基于QT开发的桌面)" \
+		"2" "kde plasma5(风格华丽的桌面环境)" \
+		"3" "gnome3(GNU项目的一部分)" \
+		"4" "cinnamon(肉桂类似于GNOME2,对用户友好)" \
+		"5" "dde(国产deepin系统桌面)" \
 		"0" "Return to previous menu 返回上级菜单" \
 		3>&1 1>&2 2>&3)
 	##############################
@@ -1866,9 +2187,7 @@ other_desktop() {
 		install_deepin_desktop
 	fi
 	##########################
-	echo "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
-	echo "${YELLOW}按回车键返回。${RESET}"
-	read
+	press_enter_to_return
 	tmoe_linux_tool_menu
 }
 #####################
@@ -1900,6 +2219,9 @@ configure_vnc_xstartup() {
 			dbus-launch ${REMOTE_DESKTOP_SESSION_02} &
 		fi
 	EndOfFile
+	if [ "${NON-DBUS}" = "true" ]; then
+		sed -i 's:dbus-launch::' ~/.vnc/xstartup
+	fi
 	#dbus-launch startxfce4 &
 	chmod +x ./xstartup
 	first_configure_startvnc
@@ -2061,7 +2383,7 @@ install_lxde_desktop() {
 		DEPENDENCY_01='media-fonts/wqy-bitmapfont lxde-base/lxde-meta'
 		##################
 	elif [ "${LINUX_DISTRO}" = "suse" ]; then
-		DEPENDENCY_01='noto-sans-sc-fonts patterns-lxde-lxde'
+		DEPENDENCY_01='patterns-lxde-lxde'
 	elif [ "${LINUX_DISTRO}" = "alpine" ]; then
 		DEPENDENCY_01="fvwm"
 		REMOTE_DESKTOP_SESSION='fvwm'
@@ -4223,12 +4545,6 @@ configure_startvnc() {
 }
 ###############
 first_configure_startvnc() {
-	if [ "${LINUX_DISTRO}" = "debian" ] || [ "${LINUX_DISTRO}" = "redhat" ]; then
-		if [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
-			sed -i 's:dbus-launch::' ~/.vnc/xstartup
-		fi
-	fi
-	############
 	#卸载udisks2，会破坏mate和plasma的依赖关系。
 	if [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ] && [ ${REMOTE_DESKTOP_SESSION_01} = 'startxfce4' ]; then
 		if [ "${LINUX_DISTRO}" = 'debian' ]; then

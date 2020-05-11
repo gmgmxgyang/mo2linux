@@ -589,4 +589,7 @@ nano $(which startvnc)
 
 ##### 2020-05-11 更新日志
 
-- 支持配置 X11vnc 服务
+- 1.支持配置 X11vnc 服务
+- 2.支持安装窗口管理器
+  ![Snipaste_2020-05-11_21-36-18.png](https://i.loli.net/2020/05/11/ZIF7G9jApySEDeV.png)
+  在安装时会自动配置 vnc 服务，我没有为它们写单独的 rdp 配置步骤。

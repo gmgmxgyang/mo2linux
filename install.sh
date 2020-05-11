@@ -577,11 +577,14 @@ cat >${PREFIX}/bin/startvnc <<-EndOfFile
 	/data/data/com.termux/files/usr/bin/debian
 EndOfFile
 ###############
-cat >${PREFIX}/bin/stopvnc <<-'EndOfFile'
-	#!/data/data/com.termux/files/usr/bin/bash
-	#pkill -u $(whoami)
-	sh -c "$(ps -e | grep -Ev "sshd|pkill|systemd" | awk '{print $4}' | sed '/(/d' | sed 's/^/pkill &/g')"
-EndOfFile
+#仅安卓支持终止所有进程
+if [ "$(uname -o)" = 'Android' ]; then
+	cat >${PREFIX}/bin/stopvnc <<-'EndOfFile'
+		#!/data/data/com.termux/files/usr/bin/bash
+		#pkill -u $(whoami)
+		sh -c "$(ps -e | grep -Ev "sshd|pkill|systemd" | awk '{print $4}' | sed '/(/d' | sed 's/^/pkill &/g')"
+	EndOfFile
+fi
 #################
 #不要单引号
 cat >${PREFIX}/bin/startxsdl <<-EndOfFile

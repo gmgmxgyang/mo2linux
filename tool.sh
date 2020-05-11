@@ -350,7 +350,7 @@ check_dependencies() {
 tmoe_linux_tool_menu() {
 	cd ${cur}
 	TMOE_OPTION=$(
-		whiptail --title "Tmoe-linux Tool输debian-i启动(20200510-21)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.请使用方向键和回车键操作,更新日志:0501支持解析并下载B站视频,0502支持搭建个人云网盘,0503优化code-server的配置,0507支持配置wayland,0510更新文件选择功能,0511支持配置x11vnc" 20 50 7 \
+		whiptail --title "Tmoe-linux Tool输debian-i启动(20200511-13)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.请使用方向键和回车键操作,更新日志:0501支持解析并下载B站视频,0502支持搭建个人云网盘,0503优化code-server的配置,0507支持配置wayland,0510更新文件选择功能,0511支持配置x11vnc" 20 50 7 \
 			"1" "Install GUI 安装图形界面" \
 			"2" "Install browser 安装浏览器" \
 			"3" "Download theme 下载主题" \
@@ -1907,17 +1907,20 @@ configure_x11vnc_remote_desktop_session() {
 	cd /usr/local/bin/
 	cat >startx11vnc <<-EOF
 		#!/bin/bash
-		stopvnc
+		#stopvnc 2>/dev/null
+		stopx11vnc
 		export PULSE_SERVER=127.0.0.1
 		export DISPLAY=:1
 		/usr/bin/Xvfb :1 -screen 0 1440x720x24 -ac +extension GLX +render -noreset & 
 		sleep 1s
 		${REMOTE_DESKTOP_SESSION} &
-		echo "正在启动x11vnc服务,本机默认vnc地址localhost:5901"
-		echo "您之后可以输startx11vnc启动，stopx11vnc停止"
 		echo The LAN VNC address 局域网地址 \$(ip -4 -br -c a | tail -n 1 | cut -d '/' -f 1 | cut -d 'P' -f 2):5901
 		#export LANG="zh_CN.UTF8"
 		x11vnc -xkb -noxrecord -noxfixes -noxdamage -display :1 -forever -bg -rfbauth \${HOME}/.vnc/passwd -users \$(whoami) -rfbport 5901 -noshm &
+		sleep 2s
+		echo "正在启动x11vnc服务,本机默认vnc地址localhost:5901"
+		echo "您可能会经历长达10多秒的黑屏"
+		echo "您之后可以输startx11vnc启动，stopx11vnc停止"
 	EOF
 	cat >stopx11vnc <<-'EOF'
 		#!/bin/bash
@@ -1927,6 +1930,8 @@ configure_x11vnc_remote_desktop_session() {
 	EOF
 	cat >x11vncpasswd <<-'EOF'
 		#!/bin/bash
+		echo "Configuring x11vnc..."
+		echo "正在配置x11vnc server..."
 		read -sp "请输入6至8位密码，Please enter the new VNC password: " PASSWORD
 		mkdir -p ${HOME}/.vnc
 		x11vnc -storepasswd $PASSWORD ${HOME}/.vnc/passwd
@@ -3303,9 +3308,11 @@ configure_x11vnc() {
 }
 ############
 x11vnc_onekey() {
-	echo "配置完x11vnc后，输startx11vnc启动,stopx11vnc停止"
+	echo "注：x11vnc和tightvnc是有${RED}区别${RESET}的！"
+	echo "配置完x11vnc后，输${GREEN}startx11vnc${RESET}${BLUE}启动${RESET},输${GREEN}stopx11vnc${RESET}${BLUE}停止${RESET}"
 	RETURN_TO_WHERE='configure_x11vnc'
 	do_you_want_to_continue
+	stopvnc 2>/dev/null
 	NON_DEBIAN='false'
 	DEPENDENCY_01=''
 	DEPENDENCY_02=''
@@ -4444,6 +4451,8 @@ first_configure_startvnc() {
 		/mnt/c/WINDOWS/system32/cmd.exe /c "start ."
 		startxsdl &
 	fi
+	echo "${GREEN}tightvnc/tigervnc & xserver${RESET}配置${BLUE}完成${RESET},将为您配置${GREEN}x11vnc${RESET}"
+	x11vnc_onekey
 	echo "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
 	echo "${YELLOW}按回车键返回。${RESET}"
 	read

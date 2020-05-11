@@ -677,7 +677,8 @@ fi
 ########
 #两次检测
 if [ -f "${HOME}/.APERTIS_DECTION_FILE" ]; then
-    rm -f "${HOME}/.APERTIS_DECTION_FILE"
+	rm -f "${HOME}/.APERTIS_DECTION_FILE"
+	rm -f "${DEBIAN_CHROOT}/tmp/.RASPBIANARMHFDetectionFILE"
 	cd ~/${DEBIAN_FOLDER}/etc/apt/
 	sed -i '$ a\deb https://repositories.apertis.org/apertis/ v2020 target' sources.list
 	sed -i '/raspbian/d' sources.list

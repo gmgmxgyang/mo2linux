@@ -3116,8 +3116,8 @@ explore_debian_opt_repo() {
 		"3" "electron-netease-cloud-music:云音乐客户端" \
 		"4" "listen1:免费音乐" \
 		"5" "lx-music-desktop:音乐下载助手" \
-		"6" "feeluown:支持网易云、虾米" \
-		"7" "netease-cloud-music-gtk:云音乐" \
+		"6" "feeluown(x64):支持网易云、虾米" \
+		"7" "netease-cloud-music-gtk(x64):云音乐" \
 		"8" "picgo:图床上传工具" \
 		"9" "other其他软件" \
 		"10" "remove移除本仓库" \

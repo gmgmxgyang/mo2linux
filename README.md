@@ -589,8 +589,14 @@ nano $(which startvnc)
 
 ##### 2020-05-11 更新日志
 
-- 1.支持配置 X11vnc 服务, 比XSDL强太多。
+- 1.支持配置 X11vnc 服务, 比 XSDL 强太多。
 - 输`startx11vnc`启动，输`stopx11vnc`停止。
 - 2.支持安装窗口管理器
   ![Snipaste_2020-05-11_21-36-18.png](https://i.loli.net/2020/05/11/ZIF7G9jApySEDeV.png)
   在安装时会自动配置 vnc 服务，我没有为它们写单独的 rdp 配置步骤。
+
+##### 2020-05-13 更新日志
+
+- 1.修复大量 bug。
+- 2.支持安装 arm64 版的 linux wechat,不过在 proot 容器里可能打不开。
+  ![arm64_wechat](https://images.gitee.com/uploads/images/2020/0513/212157_13da21ed_5617340.png "Capture+_2020-05-13-21-15-45.png")

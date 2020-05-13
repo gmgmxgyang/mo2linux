@@ -1619,7 +1619,7 @@ install_chromium_browser() {
 ############
 do_you_want_to_close_the_sandbox_mode() {
 	echo "请问您是否需要关闭沙盒模式？"
-	echo "若您需要以root权限运行chromium，则需要关闭，否则请保持开启状态。"
+	echo "若您需要以root权限运行该应用，则需要关闭，否则请保持开启状态。"
 	echo "${YELLOW}Do you need to turn off the sandbox mode?[Y/n]${RESET}"
 	echo "Press enter to close this mode,type n to cancel."
 	echo "按${YELLOW}回车${RESET}键${RED}关闭${RESET}该模式，输${YELLOW}n${RESET}取消"

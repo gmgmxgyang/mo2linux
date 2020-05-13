@@ -3134,14 +3134,8 @@ explore_debian_opt_repo() {
 	6) install_feeluown ;;
 	7) install_netease_cloud_music_gtk ;;
 	8) install_pic_go ;;
-	9)
-		apt list | grep '~buster'
-		echo "请使用apt install 软件包名称 来安装"
-		;;
-	10)
-		rm -vf /etc/apt/sources.list.d/debianopt.list
-		apt update
-		;;
+	9) apt_list_debian_opt ;;
+	10) remove_debian_opt_repo ;;
 	esac
 	##########################
 	if [ "$?" = '255' ]; then
@@ -3158,22 +3152,40 @@ debian_opt_quick_install() {
 	RETURN_TO_WHERE='explore_debian_opt_repo'
 	do_you_want_to_continue
 }
+############
+with_no_sandbox_model_01() {
+	sed -i "s+${DEPENDENCY_01} %U+${DEPENDENCY_01} --no-sandbox %U+" ${DEPENDENCY_01}.desktop
+}
+########
+with_no_sandbox_model_02() {
+	if ! grep 'sandbox' "${DEPENDENCY_01}.desktop"; then
+		sed -i "s@/usr/bin/${DEPENDENCY_01}@& --no-sandbox@" ${DEPENDENCY_01}.desktop
+	fi
+}
 ##################
+remove_debian_opt_repo() {
+	rm -vf /etc/apt/sources.list.d/debianopt.list
+	apt update
+}
+##########
+apt_list_debian_opt() {
+	apt list | grep '~buster'
+	echo "请使用apt install 软件包名称 来安装"
+}
+#############
 install_coco_music() {
 	DEPENDENCY_01='cocomusic'
 	echo "github url：https://github.com/xtuJSer/CoCoMusic"
 	debian_opt_quick_install
 	#sed -i 's+cocomusic %U+electron /opt/CocoMusic --no-sandbox "$@"+' /usr/share/applications/cocomusic.desktop
-	sed -i 's+cocomusic %U+cocomusic --no-sandbox %U+' cocomusic.desktop
+	with_no_sandbox_model_01
 }
 #####################
 install_iease_music() {
 	DEPENDENCY_01='iease-music'
 	echo "github url：https://github.com/trazyn/ieaseMusic"
 	debian_opt_quick_install
-	if grep ! 'sandbox' iease-music.desktop; then
-		sed -i 's@/usr/bin/iease-music@& --no-sandbox@' iease-music.desktop
-	fi
+	with_no_sandbox_model_02
 }
 #####################
 install_electron_netease_cloud_music() {
@@ -3186,8 +3198,9 @@ install_electron_netease_cloud_music() {
 	DEPENDENCY_01='electron-netease-cloud-music'
 	echo "github url：https://github.com/Rocket1184/electron-netease-cloud-music"
 	debian_opt_quick_install
-	if grep ! 'sandbox' electron-netease-cloud-music.desktop; then
-		sed -i 's@/usr/bin/electron-netease-cloud-music@& --no-sandbox@' electron-netease-cloud-music.desktop
+	#with_no_sandbox_model_02
+	if ! grep 'sandbox' "$(which electron-netease-cloud-music)"; then
+		sed -i 's@exec electron /opt/electron-netease-cloud-music/app.asar@& --no-sandbox@' $(which electron-netease-cloud-music)
 	fi
 }
 ########################
@@ -3195,14 +3208,16 @@ install_listen1() {
 	DEPENDENCY_01='listen1'
 	echo "github url：http://listen1.github.io/listen1/"
 	debian_opt_quick_install
-	sed -i 's+listen1 %U+listen1 --no-sandbox %U+' listen1.desktop
+	#sed -i 's+listen1 %U+listen1 --no-sandbox %U+' listen1.desktop
+	with_no_sandbox_model_01
 }
 ################
 install_lx_music_desktop() {
 	DEPENDENCY_01='lx-music-desktop'
 	echo "github url：https://github.com/lyswhut/lx-music-desktop"
 	debian_opt_quick_install
-	sed -i 's+lx-music-desktop %U+lx-music-desktop --no-sandbox %U+' lx-music-desktop.desktop
+	#sed -i 's+lx-music-desktop %U+lx-music-desktop --no-sandbox %U+' lx-music-desktop.desktop
+	with_no_sandbox_model_01
 }
 ####################
 install_feeluown() {
@@ -3227,7 +3242,8 @@ install_pic_go() {
 	DEPENDENCY_01='picgo'
 	echo "github url：https://github.com/Molunerfinn/PicGo"
 	debian_opt_quick_install
-	sed -i 's+picgo %U+picgo --no-sandbox %U+' picgo.desktop
+	#sed -i 's+picgo %U+picgo --no-sandbox %U+' picgo.desktop
+	with_no_sandbox_model_01
 }
 ############################################
 ############################################
@@ -3237,7 +3253,7 @@ other_software() {
 			"您想要安装哪个软件？\n Which software do you want to install? 您需要使用方向键或pgdown来翻页。 部分软件需要在安装gui后才能使用！" 17 60 6 \
 			"1" "MPV：开源、跨平台的音视频播放器" \
 			"2" "LinuxQQ：在线聊天软件" \
-			"3" "Debian-opt仓库(第三方QQ音乐,云音乐等)" \
+			"3" "Debian-opt仓库(第三方QQ音乐,云音乐)" \
 			"4" "韦诺之战：奇幻背景的回合制策略战棋游戏" \
 			"5" "大灾变-劫后余生：末日幻想背景的探索生存游戏" \
 			"6" "Synaptic：新立得软件包管理器/软件商店" \

@@ -3114,7 +3114,7 @@ explore_debian_opt_repo() {
 		"1" "cocomusic:第三方QQ音乐客户端" \
 		"2" "iease-music:界面华丽的云音乐客户端" \
 		"3" "electron-netease-cloud-music:云音乐客户端" \
-		"4" "listen1:免费音乐" \
+		"4" "listen1:免费音乐聚合" \
 		"5" "lx-music-desktop:音乐下载助手" \
 		"6" "feeluown(x64):支持网易云、虾米" \
 		"7" "netease-cloud-music-gtk(x64):云音乐" \

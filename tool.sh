@@ -3110,7 +3110,7 @@ explore_debian_opt_repo() {
 	DEPENDENCY_02=''
 	cd /usr/share/applications/
 	INSTALL_APP=$(whiptail --title "DEBIAN OPT REPO" --menu \
-		"您想要安装哪个软件？按方向键选择，回车键确认！\n Which software do you want to install? " 15 60 5 \
+		"您想要安装哪个软件？按方向键选择，回车键确认！\n Which software do you want to install? " 16 50 7 \
 		"1" "cocomusic:第三方QQ音乐客户端" \
 		"2" "iease-music:界面华丽的云音乐客户端" \
 		"3" "electron-netease-cloud-music:云音乐客户端" \

@@ -1794,8 +1794,8 @@ preconfigure_gui_dependecies_02() {
 		DEPENDENCY_02="tigervnc-x11vnc noto-sans-sc-fonts"
 		##################
 	elif [ "${LINUX_DISTRO}" = "alpine" ]; then
-		DEPENDENCY_02="curl openssl xvfb dbus-x11 bash font-noto-cjk x11vnc"
-		#ca-certificates
+		DEPENDENCY_02="xvfb dbus-x11 font-noto-cjk x11vnc"
+		#ca-certificates openssl
 		##############
 	fi
 }

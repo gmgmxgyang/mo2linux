@@ -5104,7 +5104,7 @@ install_pinyin_input_method() {
 ############
 install_gnome_system_monitor() {
 	DEPENDENCY_01="gnome-system-monitor"
-	DEPENDENCY_02=""
+	DEPENDENCY_02="gnome-nettool"
 	NON_DEBIAN='false'
 	beta_features_quick_install
 }

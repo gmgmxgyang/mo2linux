@@ -3222,6 +3222,13 @@ install_netease_cloud_music_gtk() {
 		arch_does_not_support
 	fi
 }
+###############
+install_pic_go() {
+	DEPENDENCY_01='picgo'
+	echo "github url：https://github.com/Molunerfinn/PicGo"
+	debian_opt_quick_install
+	sed -i 's+picgo %U+picgo --no-sandbox %U+' picgo.desktop
+}
 ############################################
 ############################################
 other_software() {

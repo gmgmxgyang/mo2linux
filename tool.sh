@@ -5074,6 +5074,7 @@ install_pinyin_input_method() {
 	#################
 	non_debian_function
 	echo "检测到您的系统支持安装sogou-pinyin"
+	echo "是否继续安装搜狗拼音?"
 	RETURN_TO_WHERE='beta_features'
 	do_you_want_to_continue
 	DEPENDENCY_02="${DEPENDENCY_02} sogoupinyin"
@@ -5081,7 +5082,14 @@ install_pinyin_input_method() {
 	if [ "${ARCH_TYPE}" = "amd64" ] || [ "${ARCH_TYPE}" = "i386" ]; then
 		cd /tmp
 		LatestSogouPinyinLink=$(curl -L 'https://pinyin.sogou.com/linux' | grep ${ARCH_TYPE} | grep 'deb' | head -n 1 | cut -d '=' -f 3 | cut -d '?' -f 1 | cut -d '"' -f 2)
+		echo ${LATEST_SOGOU_REPO}
 		curl -Lvo 'sogou_pinyin.deb' "${LatestSogouPinyinLink}"
+	elif [ "${ARCH_TYPE}" = "arm64" ]; then
+		LATEST_SOGOU_REPO='http://archive.kylinos.cn/kylin/KYLIN-ALL/pool/main/s/sogoupinyin/'
+		LATEST_SOGOU_VERSION=$(curl -L "${LATEST_SOGOU_REPO}" | grep 'arm64.deb' | tail -n 1 | cut -d '=' -f 5 | cut -d '"' -f 2)
+		LATEST_SOUGOU_URL="${LATEST_SOGOU_REPO}${LATEST_SOGOU_VERSION}"
+		echo ${LATEST_SOUGOU_URL}
+		curl -Lvo 'sogou_pinyin.deb' "${LATEST_SOUGOU_URL}"
 	else
 		echo "架构不支持，跳过安装搜狗输入法。"
 		arch_does_not_support
@@ -5360,10 +5368,15 @@ install_electronic_wechat() {
 		#curl -Lvo 'electronic-wechat.deb' 'http://archive.ubuntukylin.com:10006/ubuntukylin/pool/main/e/electronic-wechat/electronic-wechat_2.0.1_amd64.deb'
 	elif [ "${ARCH_TYPE}" = "i386" ]; then
 		curl -Lvo 'electronic-wechat.deb' 'http://archive.ubuntukylin.com:10006/ubuntukylin/pool/main/e/electronic-wechat/electronic-wechat_2.0.1_i386.deb'
+	elif [ "${ARCH_TYPE}" = "arm64" ]; then
+		REPO_URL='http://archive.kylinos.cn/kylin/KYLIN-ALL/pool/main/e/electronic-wechat/'
+		LATEST_VERSION=$(curl -L "${REPO_URL}" | grep 'arm64.deb' | tail -n 1 | cut -d '=' -f 5 | cut -d '"' -f 2)
+		LATEST_URL="${REPO_URL}${LATEST_VERSION}"
+		echo ${LATEST_URL}
+		curl -Lvo 'electronic-wechat.deb' "${LATEST_URL}"
 	else
 		arch_does_not_support
 	fi
-
 	apt install -y ./electronic-wechat.deb
 	rm -vf ./electronic-wechat.deb
 	beta_features_install_completed

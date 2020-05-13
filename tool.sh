@@ -3199,8 +3199,8 @@ install_electron_netease_cloud_music() {
 	echo "github url：https://github.com/Rocket1184/electron-netease-cloud-music"
 	debian_opt_quick_install
 	#with_no_sandbox_model_02
-	if ! grep 'sandbox' "$(which electron-netease-cloud-music)"; then
-		sed -i 's@exec electron /opt/electron-netease-cloud-music/app.asar@& --no-sandbox@' $(which electron-netease-cloud-music)
+	if ! grep -q 'sandbox' "$(command -v electron-netease-cloud-music)"; then
+		sed -i 's@exec electron /opt/electron-netease-cloud-music/app.asar@& --no-sandbox@' $(command -v electron-netease-cloud-music)
 	fi
 }
 ########################

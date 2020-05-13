@@ -2042,7 +2042,11 @@ windows_manager_install() {
 			RETURN_TO_WHERE="windows_manager_install"
 			do_you_want_to_continue
 		fi
-		DEPENDENCY_01='kwin-x11'
+		if [ "${LINUX_DISTRO}" = "alpine" ]; then
+			DEPENDENCY_01='kwin'
+		else
+			DEPENDENCY_01='kwin-x11'
+		fi
 		REMOTE_DESKTOP_SESSION_01='kwin'
 		;;
 	26)

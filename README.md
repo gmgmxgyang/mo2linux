@@ -604,6 +604,6 @@ nano $(which startvnc)
 ##### 2020-05-14 更新日志
 
 - 1.加入[debian-opt](https://github.com/coslyk/debianopt-repo)仓库，支持安装第三方音乐客户端，感谢仓库的维护者 coslyk，以及各个项目的原开发者。
-- 我在部分基于 electron 的应用中，添加了是否关闭沙盒模式的提醒。
+- 我在部分基于 electron 的应用中，添加了是否关闭沙盒模式的提醒。简单来说，就是修复root用户无法启动的问题。
 - 手机预览截图见下
   ![Screenshot_20200514-024023_1.png](https://i.loli.net/2020/05/14/T5wyZtisuJUIX3x.png)

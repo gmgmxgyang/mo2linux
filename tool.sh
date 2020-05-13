@@ -351,7 +351,7 @@ tmoe_linux_tool_menu() {
 	cd ${cur}
 	#窗口大小20 50 7
 	TMOE_OPTION=$(
-		whiptail --title "Tmoe-linux Tool输debian-i启动(20200512-12)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.请使用方向键和回车键操作,更新日志:0507支持配置wayland,0510更新文件选择功能,0511支持配置x11vnc,支持WM,0512增加新图标包" 20 50 7 \
+		whiptail --title "Tmoe-linux Tool输debian-i启动(20200513-17)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.请使用方向键和回车键操作,更新日志:0507支持配置wayland,0510更新文件选择功能,0511支持配置x11vnc,支持WM,0512增加新图标包" 20 50 7 \
 			"1" "Install GUI 安装图形界面" \
 			"2" "Install browser 安装浏览器" \
 			"3" "Download theme 下载主题" \
@@ -2328,8 +2328,8 @@ apt_purge_libfprint() {
 ##################
 install_xfce4_desktop() {
 	echo '即将为您安装思源黑体(中文字体)、xfce4、xfce4-terminal、xfce4-goodies和tightvncserver等软件包。'
-	REMOTE_DESKTOP_SESSION_01='startxfce4'
-	REMOTE_DESKTOP_SESSION_02='xfce4-session'
+	REMOTE_DESKTOP_SESSION_01='xfce4-session'
+	REMOTE_DESKTOP_SESSION_02='startxfce4'
 	DEPENDENCY_01="xfce4"
 	if [ "${LINUX_DISTRO}" = "debian" ]; then
 		DEPENDENCY_01="xfce4 xfce4-goodies xfce4-terminal"
@@ -2381,8 +2381,8 @@ install_xfce4_desktop() {
 }
 ###############
 install_lxde_desktop() {
-	REMOTE_DESKTOP_SESSION_01='startlxde'
-	REMOTE_DESKTOP_SESSION_02='lxde-session'
+	REMOTE_DESKTOP_SESSION_02='startlxde'
+	REMOTE_DESKTOP_SESSION_01='lxde-session'
 	echo '即将为您安装思源黑体(中文字体)、lxde-core、lxterminal、tightvncserver。'
 	DEPENDENCY_01='lxde'
 	if [ "${LINUX_DISTRO}" = "debian" ]; then
@@ -2486,8 +2486,8 @@ install_mate_desktop() {
 ######################
 #DEPENDENCY_02="dbus-x11 fonts-noto-cjk tightvncserver"
 install_lxqt_desktop() {
-	REMOTE_DESKTOP_SESSION_01='startlxqt'
-	REMOTE_DESKTOP_SESSION_02='lxqt-session'
+	REMOTE_DESKTOP_SESSION_02='startlxqt'
+	REMOTE_DESKTOP_SESSION_01='lxqt-session'
 	DEPENDENCY_01="lxqt"
 	echo '即将为您安装思源黑体(中文字体)、lxqt-core、lxqt-config、qterminal和tightvncserver等软件包。'
 	if [ "${LINUX_DISTRO}" = "debian" ]; then
@@ -4004,7 +4004,7 @@ xwayland_onekey() {
 		XDG_RUNTIME_DIR=/etc/xwayland Xwayland &
 		export PULSE_SERVER=127.0.0.1:0
 		export DISPLAY=:0
-		startxfce4
+		xfce4-session
 	EndOFwayland
 	chmod +x startw
 	xwayland_desktop_enviroment
@@ -4153,15 +4153,15 @@ configure_remote_desktop_enviroment() {
 	##########################
 	if [ "${BETA_DESKTOP}" == '1' ]; then
 		REMOTE_DESKTOP_SESSION='xfce4-session'
-		REMOTE_DESKTOP_SESSION_01='startxfce4'
-		REMOTE_DESKTOP_SESSION_02='xfce4-session'
+		REMOTE_DESKTOP_SESSION_01='xfce4-session'
+		REMOTE_DESKTOP_SESSION_02='startxfce4'
 		#configure_remote_xfce4_desktop
 	fi
 	##########################
 	if [ "${BETA_DESKTOP}" == '2' ]; then
 		REMOTE_DESKTOP_SESSION='lxde-session'
-		REMOTE_DESKTOP_SESSION_01='startlxde'
-		REMOTE_DESKTOP_SESSION_02='lxde-session'
+		REMOTE_DESKTOP_SESSION_01='lxde-session'
+		REMOTE_DESKTOP_SESSION_02='startlxde'
 		#configure_remote_lxde_desktop
 	fi
 	##########################
@@ -4173,9 +4173,13 @@ configure_remote_desktop_enviroment() {
 	fi
 	##############################
 	if [ "${BETA_DESKTOP}" == '4' ]; then
-		REMOTE_DESKTOP_SESSION='startlxqt'
-		REMOTE_DESKTOP_SESSION_01='startlxqt'
-		REMOTE_DESKTOP_SESSION_02='lxqt-session'
+		if [ $(command -v lxqt-session) ]; then
+			REMOTE_DESKTOP_SESSION="lxqt-session"
+		else
+			REMOTE_DESKTOP_SESSION='startlxqt'
+		fi
+		REMOTE_DESKTOP_SESSION_01='lxqt-session'
+		REMOTE_DESKTOP_SESSION_02='startlxqt'
 		#configure_remote_lxqt_desktop
 	fi
 	##############################
@@ -4606,7 +4610,7 @@ configure_startvnc() {
 ###############
 first_configure_startvnc() {
 	#卸载udisks2，会破坏mate和plasma的依赖关系。
-	if [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ] && [ ${REMOTE_DESKTOP_SESSION_01} = 'startxfce4' ]; then
+	if [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ] && [ ${REMOTE_DESKTOP_SESSION_01} = 'xfce4-session' ]; then
 		if [ "${LINUX_DISTRO}" = 'debian' ]; then
 			echo "检测到您处于${BLUE}proot容器${RESET}环境下，即将为您${RED}卸载${RESET}${YELLOW}udisk2${RESET}和${GREEN}gvfs${RESET}"
 			#umount .gvfs
@@ -4806,16 +4810,16 @@ fix_vnc_dbus_launch() {
 	else
 		if grep 'startxfce4' ~/.vnc/xstartup; then
 			echo "检测您当前的VNC配置为xfce4，正在将dbus-launch加入至启动脚本中..."
-			REMOTE_DESKTOP_SESSION_01='startxfce4'
-			REMOTE_DESKTOP_SESSION_02='xfce4-session'
+			REMOTE_DESKTOP_SESSION_02='startxfce4'
+			REMOTE_DESKTOP_SESSION_01='xfce4-session'
 		elif grep 'startlxde' ~/.vnc/xstartup; then
 			echo "检测您当前的VNC配置为lxde，正在将dbus-launch加入至启动脚本中..."
-			REMOTE_DESKTOP_SESSION_01='startlxde'
-			REMOTE_DESKTOP_SESSION_02='lxde-session'
+			REMOTE_DESKTOP_SESSION_02='startlxde'
+			REMOTE_DESKTOP_SESSION_01='lxde-session'
 		elif grep 'startlxqt' ~/.vnc/xstartup; then
 			echo "检测您当前的VNC配置为lxqt，正在将dbus-launch加入至启动脚本中..."
-			REMOTE_DESKTOP_SESSION_01='startlxqt'
-			REMOTE_DESKTOP_SESSION_02='lxqt-session'
+			REMOTE_DESKTOP_SESSION_02='startlxqt'
+			REMOTE_DESKTOP_SESSION_01='lxqt-session'
 		elif grep 'mate-session' ~/.vnc/xstartup; then
 			echo "检测您当前的VNC配置为mate，正在将dbus-launch加入至启动脚本中..."
 			REMOTE_DESKTOP_SESSION_01='mate-session'
@@ -5417,7 +5421,6 @@ install_obs_studio() {
 	fi
 	echo "若安装失败，则请前往官网阅读安装说明。"
 	echo "url: https://obsproject.com/wiki/install-instructions#linux"
-	beta_features_install_completed
 }
 ################
 install_openshot() {

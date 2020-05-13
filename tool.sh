@@ -3224,7 +3224,7 @@ install_feeluown() {
 	DEPENDENCY_01='feeluown'
 	echo "url：https://feeluown.readthedocs.io/en/latest/"
 	beta_features_quick_install
-	if [ "$?" != 0 ]; then
+	if [ ! $(command -v feeluown) ]; then
 		arch_does_not_support
 	fi
 }
@@ -3233,7 +3233,7 @@ install_netease_cloud_music_gtk() {
 	DEPENDENCY_01='netease-cloud-music-gtk'
 	echo "github url：https://github.com/gmg137/netease-cloud-music-gtk"
 	beta_features_quick_install
-	if [ "$?" != 0 ]; then
+	if [ ! $(command -v netease-cloud-music-gtk) ]; then
 		arch_does_not_support
 	fi
 }

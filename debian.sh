@@ -2557,7 +2557,7 @@ linux_distro_common_model_01() {
 		sed "s:Debian GNU/Linux:${DISTRO_NAME} GNU/Linux:g")"
 }
 ####################
-linux_distro_common_model_01() {
+linux_distro_common_model_02() {
 	bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/install.sh |
 		sed "s/debian system/${DISTRO_NAME} system/g" |
 		sed "s:debian-sid:${DISTRO_NAME}-${DISTRO_CODE}:g" |

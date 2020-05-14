@@ -3740,12 +3740,22 @@ x11vnc_warning() {
 	DEPENDENCY_01=''
 	DEPENDENCY_02=''
 	if [ ! $(command -v x11vnc) ]; then
-		DEPENDENCY_01="${DEPENDENCY_01} x11vnc"
+		if [ "${LINUX_DISTRO}" = "gentoo" ]; then
+			DEPENDENCY_01='x11-misc/x11vnc'
+		else
+			DEPENDENCY_01="${DEPENDENCY_01} x11vnc"
+		fi
 	fi
 	#注意下面那处的大小写
 	if [ ! $(command -v xvfb) ] && [ ! $(command -v Xvfb) ]; then
 		if [ "${LINUX_DISTRO}" = "arch" ]; then
 			DEPENDENCY_02='xorg-server-xvfb'
+		elif [ "${LINUX_DISTRO}" = "redhat" ]; then
+			DEPENDENCY_02='xorg-x11-server-Xvfb'
+		elif [ "${LINUX_DISTRO}" = "suse" ]; then
+			DEPENDENCY_02='xorg-x11-server-Xvfb'
+		elif [ "${LINUX_DISTRO}" = "gentoo" ]; then
+			DEPENDENCY_02='x11-misc/xvfb-run'
 		else
 			DEPENDENCY_02='xvfb'
 		fi

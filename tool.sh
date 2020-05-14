@@ -1300,6 +1300,9 @@ vscode_server_remove() {
 	echo "${YELLOW}Press enter to remove VSCode Server. ${RESET}"
 	RETURN_TO_WHERE='configure_vscode_server'
 	do_you_want_to_continue
+	if [ ! -e "${HOME}/.profile" ]; then
+		echo '' >>~/.profile
+	fi
 	sed -i '/export PASSWORD=/d' ~/.profile
 	sed -i '/export PASSWORD=/d' ~/.zshrc
 	rm -rvf /usr/local/bin/code-server-data/ /usr/local/bin/code-server /tmp/sed-vscode.tmp

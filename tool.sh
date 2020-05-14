@@ -2296,6 +2296,9 @@ configure_x11vnc_remote_desktop_session() {
 		mkdir -p ${HOME}/.vnc
 		x11vnc -storepasswd $PASSWORD ${HOME}/.vnc/passwd
 	EOF
+	if [ "${NON_DBUS}" != "true" ]; then
+		enable_dbus_launch
+	fi
 	chmod +x ./*
 	x11vncpasswd
 	startx11vnc
@@ -4357,6 +4360,12 @@ configure_remote_desktop_enviroment() {
 		modify_remote_desktop_config
 	fi
 	##########################
+
+	if [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
+		if [ "${LINUX_DISTRO}" = "debian" ] || [ "${LINUX_DISTRO}" = "redhat" ]; then
+			NON_DBUS='true'
+		fi
+	fi
 	if [ $(command -v ${REMOTE_DESKTOP_SESSION_01}) ]; then
 		REMOTE_DESKTOP_SESSION="${REMOTE_DESKTOP_SESSION_01}"
 	else

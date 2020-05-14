@@ -1274,7 +1274,7 @@ vscode_server_restart() {
 }
 #############
 vscode_server_password() {
-	TARGET_USERPASSWD=$(whiptail --inputbox "请设定访问密码\n Please enter the password." 12 50 --title "PASSWORD" 3>&1 1>&2 2>&3)
+	TARGET_USERPASSWD=$(whiptail --inputbox "请设定访问密码\n Please enter the password.您的密码将以明文形式保存至.profile和.zshrc" 12 50 --title "PASSWORD" 3>&1 1>&2 2>&3)
 	exitstatus=$?
 	if [ $exitstatus != 0 ]; then
 		echo "密码包含无效字符，操作取消"

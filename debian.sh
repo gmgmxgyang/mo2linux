@@ -2542,10 +2542,20 @@ install_ubuntu_gnu_linux_distro() {
 #########################
 ubuntu_distro_x64_model() {
 	bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/install.sh |
+		sed "s/focal/${DISTRO_CODE}/g" |
 		sed "s/debian system/${DISTRO_NAME} system/g" |
 		sed "s:debian-sid:${DISTRO_NAME}-${DISTRO_CODE}:g" |
 		sed "s:debian/sid:${DISTRO_NAME}/${DISTRO_CODE}:g" |
 		sed "s:/${DISTRO_NAME}-ports:/${DISTRO_NAME}:g" |
+		sed "s:Debian GNU/Linux:${DISTRO_NAME} GNU/Linux:g")"
+}
+############
+ubuntu_distro_arm_model() {
+	bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/install.sh |
+		sed "s/focal/${DISTRO_CODE}/g" |
+		sed "s/debian system/${DISTRO_NAME} system/g" |
+		sed "s:debian-sid:${DISTRO_NAME}-${DISTRO_CODE}:g" |
+		sed "s:debian/sid:${DISTRO_NAME}/${DISTRO_CODE}:g" |
 		sed "s:Debian GNU/Linux:${DISTRO_NAME} GNU/Linux:g")"
 }
 ########
@@ -2570,7 +2580,7 @@ install_different_ubuntu_gnu_linux_distros() {
 		ubuntu_distro_x64_model
 	else
 		#ubuntu-ports
-		linux_distro_common_model_01
+		ubuntu_distro_arm_model
 	fi
 }
 ############

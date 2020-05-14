@@ -2593,7 +2593,7 @@ install_kali_rolling_gnu_linux_distro() {
 	DISTRO_NAME='kali'
 	DISTRO_CODE='rolling'
 	DISTRO_CODE_02='current'
-	linux_distro_common_model_01
+	linux_distro_common_model_02
 }
 #####################
 install_arch_linux_distro() {

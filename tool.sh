@@ -2281,7 +2281,7 @@ configure_x11vnc_remote_desktop_session() {
 		echo The LAN VNC address 局域网地址 \$(ip -4 -br -c a | tail -n 1 | cut -d '/' -f 1 | cut -d 'P' -f 2):5901
 		echo "您可能会经历长达10多秒的黑屏"
 		echo "You may experience a black screen for up to 10 seconds."
-		echo "您之后可以输startx11vnc启动，stopx11vnc停止"
+		echo "您之后可以输startx11vnc启动，输stopvnc或stopx11vnc停止"
 		echo "You can type startx11vnc to start x11vnc,type stopx11vnc to stop it."
 		echo 'x11vnc可能会自动终止音频服务进程，若您的宿主机为Android系统，请在启动完成后，新建一个termux窗口，然后手动在termux原系统里输pulseaudio -D来启动音频服务后台进程'
 		echo "若您无法记住该命令，则只需输debian即可启动音频服务"
@@ -3720,7 +3720,7 @@ configure_x11vnc() {
 	##############################
 	if [ "${TMOE_OPTION}" == '7' ]; then
 		echo "输startx11vnc启动x11vnc"
-		echo "输stop11vnc停止x11vnc"
+		echo "输stopvnc或stopx11vnc停止x11vnc"
 		echo "经测试x11vnc会自动停止pulseaudio服务，若您的宿主机为Android系统，则请在启动完成后，手动在termux原系统里输${GREEN}pulseaudio -D${RESET}来启动音频服务后台进程"
 		echo "您亦可输${GREEN}pulseaudio --start${RESET}"
 	fi
@@ -3733,7 +3733,7 @@ configure_x11vnc() {
 x11vnc_warning() {
 	echo "注：x11vnc和tightvnc是有${RED}区别${RESET}的！"
 	echo "x11vnc可以打开tightvnc无法打开的某些应用"
-	echo "配置完x11vnc后，输${GREEN}startx11vnc${RESET}${BLUE}启动${RESET},输${GREEN}stopx11vnc${RESET}${BLUE}停止${RESET}"
+	echo "配置完x11vnc后，输${GREEN}startx11vnc${RESET}${BLUE}启动${RESET},输${GREEN}stopvnc${RESET}${BLUE}停止${RESET}"
 	echo "若超过一分钟黑屏，则请输${GREEN}startx11vnc${RESET}重启该服务"
 	echo "x11vnc可能会自动终止音频服务进程，若您的宿主机为Android系统，请在启动完成后，新建一个termux窗口，然后手动在termux原系统里输${GREEN}pulseaudio -D${RESET}来启动音频服务后台进程"
 	echo "若您无法记住该命令，则只需输${GREEN}debian${RESET}即可启动音频服务"

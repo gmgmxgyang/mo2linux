@@ -5077,10 +5077,11 @@ first_configure_startvnc() {
 	echo "${GREEN}tightvnc/tigervnc & xserver${RESET}配置${BLUE}完成${RESET},将为您配置${GREEN}x11vnc${RESET}"
 	x11vnc_warning
 	configure_x11vnc_remote_desktop_session
+	xfce4_x11vnc_hidpi_setting
 }
 ########################
 ########################
-xfce4_hidpi_setting() {
+xfce4_tightvnc_hidpi_setting() {
 	if [ "${REMOTE_DESKTOP_SESSION_01}" = 'xfce4-session' ]; then
 		echo "检测到您当前的桌面环境为xfce4，将为您自动调整高分屏设定"
 		echo "若分辨率不合，则请在脚本执行完成后，手动输${GREEN}debian-i${RESET}，然后在${BLUE}vnc${RESET}选项里进行修改。"
@@ -5095,6 +5096,14 @@ xfce4_hidpi_setting() {
 		startvnc >/dev/null 2>&1
 	fi
 	#Default-xhdpi默认处于未激活状态
+}
+################
+xfce4_x11vnc_hidpi_setting() {
+	if [ "${REMOTE_DESKTOP_SESSION_01}" = 'xfce4-session' ]; then
+		stopx11vnc >/dev/null 2>&1
+		sed -i "s@^/usr/bin/Xvfb.*@/usr/bin/Xvfb :233 -screen 0 2880x1440x24 -ac +extension GLX +render -noreset \&@" "$(command -v startx11vnc)"
+		startx11vnc >/dev/null 2>&1
+	fi
 }
 ####################
 frequently_asked_questions() {

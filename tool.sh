@@ -2903,9 +2903,9 @@ move_wallpaper_model_01() {
 }
 #################
 download_raspbian_pixel_wallpaper() {
-	THEME_NAME='raspbian_pixel_wallpaper'
+	THEME_NAME='raspberrypi_pixel_wallpaper'
 	WALLPAPER_NAME='pixel-wallpaper'
-	CUSTOM_WALLPAPER_NAME='raspbian-pixel-wallpapers'
+	CUSTOM_WALLPAPER_NAME='raspberrypi-pixel-wallpapers'
 	THEME_URL='https://mirrors.tuna.tsinghua.edu.cn/raspberrypi/pool/ui/p/pixel-wallpaper/'
 	download_theme_model_01
 	move_wallpaper_model_01

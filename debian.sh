@@ -2710,7 +2710,7 @@ install_raspbian_linux_distro() {
 	fi
 
 	touch ~/.RASPBIANARMHFDetectionFILE
-	if (whiptail --title "RASPBIAN" --yes-button "下载镜像" --no-button "换源安装" --yesno "您想要如何安装raspbian呢？How do you want to install raspbian?" 9 50); then
+	if (whiptail --title "RASPBIAN" --yes-button "直接" --no-button "间接" --yesno "您想要如何安装raspbian呢？How do you want to install raspbian?" 9 50); then
 		install_raspbian_linux_distro_type01
 	else
 		install_raspbian_linux_distro_type02
@@ -2721,7 +2721,7 @@ install_raspbian_linux_distro_type01() {
 	#https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/sid/${ARCH_TYPE}/default/${ttime}rootfs.tar.xz
 	#https://mirrors.tuna.tsinghua.edu.cn/raspbian-images/raspbian_full/root.tar.xz
 	bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/install.sh |
-		sed 's@lxc-images.*rootfs.tar.xz@raspbian-images/raspbian_full/root.tar.xz@g' |
+		sed 's@lxc-images.*rootfs.tar.xz@raspbian-images/raspbian_lite/root.tar.xz@g' |
 		sed 's:/sid:/buster:g' |
 		sed 's@#deb http@deb http@g' |
 		sed 's/.*sid main/#&/' |

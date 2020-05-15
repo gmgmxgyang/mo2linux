@@ -2976,14 +2976,14 @@ download_manjaro_wallpaper() {
 	THEME_URL='https://mirrors.tuna.tsinghua.edu.cn/manjaro/pool/overlay/wallpapers-2018-1.2-1-any.pkg.tar.xz'
 	download_manjaro_pkg
 	WALLPAPER_NAME='backgrounds/wallpapers-2018'
-	CUSTOM_WALLPAPER_NAME='wallpapers-2018'
+	CUSTOM_WALLPAPER_NAME='manjaro-2018'
 	move_wallpaper_model_01
 	##############
 	THEME_NAME='manjaro-2017'
 	THEME_URL='https://mirrors.tuna.tsinghua.edu.cn/manjaro/pool/overlay/manjaro-sx-wallpapers-20171023-1-any.pkg.tar.xz'
 	download_manjaro_pkg
 	WALLPAPER_NAME='backgrounds'
-	CUSTOM_WALLPAPER_NAME='wallpapers-2017'
+	CUSTOM_WALLPAPER_NAME='manjaro-2017'
 	move_wallpaper_model_01
 	##################
 	link_to_debian_wallpaper

@@ -2394,6 +2394,11 @@ install_xfce4_desktop() {
 	if [ ! -e "/usr/share/desktop-base/kali-theme" ]; then
 		download_kali_themes_common
 	fi
+	##############
+	if [ ! -e "/usr/share/icons/Papirus" ]; then
+		download_papirus_icon_theme
+		dbus-launch xfconf-query -c xsettings -p /Net/IconThemeName -s Papirus
+	fi
 
 	if [ ! -e "/usr/share/xfce4/terminal/colorschemes/Monokai Remastered.theme" ]; then
 		cd /usr/share/xfce4/terminal

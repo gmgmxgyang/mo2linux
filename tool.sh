@@ -67,7 +67,7 @@ check_dependencies() {
 		######################
 	elif grep -Eq "Arch|Manjaro" '/etc/os-release' || grep -Eq "Arch|Manjaro" '/etc/issue'; then
 		LINUX_DISTRO='arch'
-		PACKAGES_INSTALL_COMMAND='pacman -Sy'
+		PACKAGES_INSTALL_COMMAND='pacman -Syu --noconfirm'
 		PACKAGES_REMOVE_COMMAND='pacman -Rsc'
 		######################
 	elif grep -Eq "gentoo|funtoo" "/etc/os-release"; then

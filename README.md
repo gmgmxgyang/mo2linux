@@ -611,6 +611,7 @@ nano $(which startvnc)
 
 ##### 2020-05-20 凌晨更新日志
 
-- 1.支持安装wine、anbox和aqemu
-- 2.增加 iso 镜像文件下载功能，支持自动获取android_x86镜像，支持下载各个架构的 debian iso 镜像(包含 non-free 固件)，以及各个 ubuntu 的衍生版
+- 1.支持安装 wine、anbox 和 aqemu
+- 2.增加 iso 镜像文件下载功能，支持自动获取 android_x86 镜像，支持下载各个架构的 debian iso 镜像(包含 non-free 固件)，以及各个 ubuntu 的衍生版
 - 3.增加烧录 iso 文件至 U 盘的功能
+- 4. 支持安装 linux 版百度输入法，此前已经支持讯飞和搜狗输入法。

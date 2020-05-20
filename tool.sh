@@ -5945,7 +5945,7 @@ install_anbox() {
 		您亦可使用以下补丁，并将它们构建为模块。
 		https://salsa.debian.org/kernel-team/linux/blob/master/debian/patches/debian/android-enable-building-ashmem-and-binder-as-modules.patch
 		https://salsa.debian.org/kernel-team/linux/blob/master/debian/patches/debian/export-symbols-needed-by-android-drivers.patch
-		若模块安装失败，则请前往官网阅读详细说明https://docs.anbox.io/userguide/install_kernel_modules.html
+		若模块安装失败，则请前往官网阅读说明https://docs.anbox.io/userguide/install_kernel_modules.html
 		如需卸载该模块，请手动输apt purge -y anbox-modules-dkms
 	EndOfFile
 	do_you_want_to_continue

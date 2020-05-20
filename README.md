@@ -609,9 +609,10 @@ nano $(which startvnc)
   ![Screenshot_20200514-024023_1.png](https://i.loli.net/2020/05/14/T5wyZtisuJUIX3x.png)
   -2.加入最新的 ubuntu20.10 容器
 
-##### 2020-05-20 凌晨更新日志
+##### 2020-05-20 更新日志
 
 - 1.支持安装 wine、anbox 和 aqemu
 - 2.增加 iso 镜像文件下载功能，支持自动获取 android_x86 镜像，支持下载各个架构的 debian iso 镜像(包含 non-free 固件)，以及各个 ubuntu 的衍生版
 - 3.增加烧录 iso 文件至 U 盘的功能
 - 4. 支持安装 linux 版百度输入法，此前已经支持讯飞和搜狗输入法。
+- 5.增加 tmoe-deb 软件包安装器，支持在脚本内选择并安装 deb 文件。deb 系发行版使用此功能会自动解决依赖关系，但非deb系不会。

@@ -2328,10 +2328,6 @@ apt_purge_libfprint() {
 }
 ###################
 debian_xfce4_extras() {
-	if [ ! $(command -v catfish) ]; then
-		echo "${GREEN} ${PACKAGES_INSTALL_COMMAND} catfish ${RESET}"
-		${PACKAGES_INSTALL_COMMAND} catfish
-	fi
 	if [ "${LINUX_DISTRO}" = "debian" ]; then
 		if [ "${DEBIAN_DISTRO}" = "kali" ]; then
 			kali_xfce4_extras

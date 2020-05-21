@@ -2087,11 +2087,6 @@ termux_install_xfce() {
 			echo "${YELLOW}按回车键继续，按Ctrl+C取消。${RESET}"
 			read
 		fi
-	else
-		echo "检测到您当前使用的系统非Android"
-		echo 'Press Enter to continue.'
-		echo "${YELLOW}按回车键继续${RESET}"
-		read
 	fi
 	OPTION=$(whiptail --title "Termux GUI" --menu "Termux native GUI has fewer software packages. It is recommended that you install a container. Termux原系统GUI可玩性较低，建议您安装GNU/Linux容器" 17 60 6 \
 		"1" "install xfce4" \
@@ -2110,7 +2105,8 @@ termux_install_xfce() {
 	#####################################
 	if [ "${OPTION}" == '1' ]; then
 		if [ "${LINUX_DISTRO}" != 'Android' ]; then
-			bash <(curl -LfsS https://gitee.com/mo2/linux/raw/master/tool.sh)
+			aria2c --allow-overwrite=true -d /tmp -o '.tmoe-linux-tool.sh' 'https://gitee.com/mo2/linux/raw/master/tool.sh'
+			bash /tmp/.tmoe-linux-tool.sh --install-gui
 			exit 0
 		fi
 
@@ -2150,7 +2146,8 @@ termux_install_xfce() {
 	#######################
 	if [ "${OPTION}" == '2' ]; then
 		if [ "${LINUX_DISTRO}" != 'Android' ]; then
-			bash <(curl -LfsS https://gitee.com/mo2/linux/raw/master/tool.sh)
+			aria2c --allow-overwrite=true -d /tmp -o '.tmoe-linux-tool.sh' 'https://gitee.com/mo2/linux/raw/master/tool.sh'
+			bash /tmp/.tmoe-linux-tool.sh --modify_remote_desktop_config
 			exit 0
 		fi
 		modify_android_termux_vnc_config
@@ -2164,24 +2161,25 @@ termux_install_xfce() {
 		switch_vnc_pulse_audio_transport_method
 	fi
 	##################
-	if [ "${OPTION}" == '7' ]; then
-		if [ "${LINUX_DISTRO}" != 'Android' ]; then
-			bash <(curl -LfsS https://gitee.com/mo2/linux/raw/master/tool.sh)
-			exit 0
-		fi
-		remove_android_termux_xfce
-	fi
-	##################
 	if [ "${OPTION}" == '5' ]; then
 		if [ "${LINUX_DISTRO}" = 'Android' ]; then
 			termux_tuna_sources_list
 		else
-			gnu_linux_sources_list
+			tmoe_sources_list_manager
 		fi
 	fi
 	##################
 	if [ "${OPTION}" == '6' ]; then
 		aria2_download_termux_apk
+	fi
+	##################
+	if [ "${OPTION}" == '7' ]; then
+		if [ "${LINUX_DISTRO}" != 'Android' ]; then
+			aria2c --allow-overwrite=true -d /tmp -o '.tmoe-linux-tool.sh' 'https://gitee.com/mo2/linux/raw/master/tool.sh'
+			bash /tmp/.tmoe-linux-tool.sh --remove_gui
+			exit 0
+		fi
+		remove_android_termux_xfce
 	fi
 }
 #####################################
@@ -2966,6 +2964,13 @@ install_mint_linux_distro() {
 }
 ######################
 ######################
+tmoe_sources_list_manager() {
+	aria2c --allow-overwrite=true -d /tmp -o '.tmoe-linux-tool.sh' 'https://gitee.com/mo2/linux/raw/master/tool.sh'
+	bash /tmp/.tmoe-linux-tool.sh --mirror-list
+}
+##################
+#初次安装时用curl或wget，之后用aria2c
+###########
 gnu_linux_sources_list() {
 	if [ "${LINUX_DISTRO}" = "alpine" ] || [ ! $(command -v curl) ]; then
 		wget -O /tmp/.tmoe-linux-tool.sh 'https://gitee.com/mo2/linux/raw/master/tool.sh'

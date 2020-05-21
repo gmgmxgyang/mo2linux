@@ -7,6 +7,18 @@ main() {
 	i | -i)
 		tmoe_linux_tool_menu
 		;;
+	--install-gui | install-gui)
+		install_gui
+		;;
+	--modify_remote_desktop_config)
+		modify_remote_desktop_config
+		;;
+	--remove_gui)
+		remove_gui
+		;;
+	--mirror-list)
+		tmoe_sources_list_manager
+		;;
 	up | -u)
 		tmoe_linux_tool_upgrade
 		;;

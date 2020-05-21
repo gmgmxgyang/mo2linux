@@ -3692,14 +3692,14 @@ mirror_sources_station_download_speed_test() {
 	SOURCE_MIRROR_STATION=""
 	rm -f .tmoe_netspeed_test_*_temp_file
 	echo "测试${YELLOW}完成${RESET}，已自动${RED}清除${RESET}${BLUE}临时文件。${RESET}"
-	echo "下载${GREEN}速度快${RESET}并不意味着${BLUE}更新频率高${RESET}。"
-	echo "请${YELLOW}自行${RESET}选择"
+	echo "下载${GREEN}速度快${RESET}并不意味着${BLUE}更新频率高。${RESET}"
+	echo "请${YELLOW}自行${RESET}${BLUE}选择${RESET}"
 }
 ######################
 ping_mirror_sources_list_count_3() {
 	echo ${YELLOW}${SOURCE_MIRROR_STATION}${RESET}
 	echo ${BLUE}${SOURCE_MIRROR_STATION_NAME}${RESET}
-	ping ${SOURCE_MIRROR_STATION} -c 3 | grep -E 'avg|time.*' --color=auto
+	ping ${SOURCE_MIRROR_STATION} -c 3 | grep -E 'avg|time.*ms' --color=auto
 	echo "---------------------------"
 }
 ##############
@@ -3727,8 +3727,8 @@ ping_mirror_sources_list() {
 	###此处一定要将SOURCE_MIRROR_STATION赋值为空
 	SOURCE_MIRROR_STATION=""
 	echo "测试${YELLOW}完成${RESET}"
-	echo "延迟${GREEN}时间低${RESET}并不意味着${BLUE}下载速度快${RESET}。"
-	echo "请${YELLOW}自行${RESET}选择"
+	echo "延迟${GREEN}时间低${RESET}并不意味着${BLUE}下载速度快。${RESET}"
+	echo "请${YELLOW}自行${RESET}${BLUE}选择${RESET}"
 }
 ##############
 modify_kali_mirror_sources_list() {

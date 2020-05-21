@@ -3781,7 +3781,7 @@ modify_debian_mirror_sources_list() {
 	echo "检测到您使用的是Debian ${SOURCELISTCODE}系统"
 	sed -i 's/^deb/# &/g' /etc/apt/sources.list
 	if [ "${SOURCELISTCODE}" = "sid" ]; then
-		cat >>/etc/apt/sources.list <<-"EndOfSourcesList"
+		cat >>/etc/apt/sources.list <<-EndOfSourcesList
 			deb http://${SOURCE_MIRROR_STATION}/debian/ sid main contrib non-free
 			deb http://${SOURCE_MIRROR_STATION}/debian/ experimental main contrib non-free
 		EndOfSourcesList

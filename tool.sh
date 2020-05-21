@@ -1,6 +1,8 @@
 #!/bin/bash
 ########################################################################
 main() {
+	check_linux_distro
+	check_architecture
 	case "$1" in
 	i | -i)
 		tmoe_linux_tool_menu
@@ -13,6 +15,10 @@ main() {
 		;;
 	file | filebrowser)
 		filebrowser_restart
+		;;
+	tuna | -tuna | t | -t)
+		SOURCE_MIRROR_STATION='mirrors.tuna.tsinghua.edu.cn'
+		auto_check_distro_and_modify_sources_list
 		;;
 	*)
 		check_root
@@ -31,10 +37,47 @@ check_root() {
 		fi
 		exit 0
 	fi
+	check_linux_distro
+	check_architecture
 	check_dependencies
 }
-#############################
-check_dependencies() {
+#####################
+check_architecture() {
+	case $(uname -m) in
+	aarch64)
+		ARCH_TYPE="arm64"
+		;;
+	armv7l)
+		ARCH_TYPE="armhf"
+		;;
+	armv6l)
+		ARCH_TYPE="armel"
+		;;
+	x86_64)
+		ARCH_TYPE="amd64"
+		;;
+	i*86)
+		ARCH_TYPE="i386"
+		;;
+	x86)
+		ARCH_TYPE="i386"
+		;;
+	s390*)
+		ARCH_TYPE="s390x"
+		;;
+	ppc*)
+		ARCH_TYPE="ppc64el"
+		;;
+	mips*)
+		ARCH_TYPE="mipsel"
+		;;
+	risc*)
+		ARCH_TYPE="riscv"
+		;;
+	esac
+}
+#####################
+check_linux_distro() {
 	if grep -Eq 'debian|ubuntu' "/etc/os-release"; then
 		LINUX_DISTRO='debian'
 		PACKAGES_INSTALL_COMMAND='apt install -y'
@@ -90,7 +133,16 @@ check_dependencies() {
 		PACKAGES_INSTALL_COMMAND='xbps-install -S -y'
 		PACKAGES_REMOVE_COMMAND='xbps-remove -R'
 	fi
-	#####################
+	###############
+	RED=$(printf '\033[31m')
+	GREEN=$(printf '\033[32m')
+	YELLOW=$(printf '\033[33m')
+	BLUE=$(printf '\033[34m')
+	BOLD=$(printf '\033[1m')
+	RESET=$(printf '\033[m')
+}
+#############################
+check_dependencies() {
 	DEPENDENCIES=""
 
 	if [ "${LINUX_DISTRO}" = "debian" ]; then
@@ -273,38 +325,6 @@ check_dependencies() {
 		fi
 	fi
 	################
-	case $(uname -m) in
-	aarch64)
-		ARCH_TYPE="arm64"
-		;;
-	armv7l)
-		ARCH_TYPE="armhf"
-		;;
-	armv6l)
-		ARCH_TYPE="armel"
-		;;
-	x86_64)
-		ARCH_TYPE="amd64"
-		;;
-	i*86)
-		ARCH_TYPE="i386"
-		;;
-	x86)
-		ARCH_TYPE="i386"
-		;;
-	s390*)
-		ARCH_TYPE="s390x"
-		;;
-	ppc*)
-		ARCH_TYPE="ppc64el"
-		;;
-	mips*)
-		ARCH_TYPE="mipsel"
-		;;
-	risc*)
-		ARCH_TYPE="riscv"
-		;;
-	esac
 	################
 	if [ ! -e /usr/bin/catimg ]; then
 		if [ "${LINUX_DISTRO}" = "debian" ]; then
@@ -350,12 +370,6 @@ check_dependencies() {
 		WINDOWSDISTRO='WSL'
 	fi
 	##############
-	RED=$(printf '\033[31m')
-	GREEN=$(printf '\033[32m')
-	YELLOW=$(printf '\033[33m')
-	BLUE=$(printf '\033[34m')
-	BOLD=$(printf '\033[1m')
-	RESET=$(printf '\033[m')
 	cur=$(pwd)
 	tmoe_linux_tool_menu
 }
@@ -3752,7 +3766,7 @@ check_ca_certificates_and_apt_update() {
 	fi
 	apt update
 	apt dist-upgrade
-	echo '修改完成，您当前的${BLUE}软件源列表${RESET}如下所示。'
+	echo "修改完成，您当前的${BLUE}软件源列表${RESET}如下所示。"
 	cat /etc/apt/sources.list
 	cat /etc/apt/sources.list.d/* 2>/dev/null
 	echo "您可以输${YELLOW}apt edit-sources${RESET}来手动编辑软件源列表"

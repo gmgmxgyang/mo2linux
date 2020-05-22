@@ -7117,9 +7117,9 @@ install_electronic_wechat() {
 	if [ "${LINUX_DISTRO}" = "arch" ]; then
 		DEPENDENCY_01="electron-wechat"
 		NON_DEBIAN='false'
-		beta_features_quick_install
 	fi
 	################
+	beta_features_quick_install
 	if [ -e "/opt/wechat/electronic-wechat" ] || [ "$(command -v electronic-wechat)" ]; then
 		beta_features_install_completed
 		echo "按回车键重新安装"

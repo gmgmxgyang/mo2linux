@@ -614,7 +614,7 @@ nano $(which startvnc)
 - 1.支持安装 wine、anbox 和 aqemu
 - 2.增加 iso 镜像文件下载功能，支持自动获取 android_x86 镜像，支持下载各个架构的 debian iso 镜像(包含 non-free 固件)，以及各个 ubuntu 的衍生版
 - 3.增加烧录 iso 文件至 U 盘的功能
-- 4. 支持安装 linux 版百度输入法，此前已经支持讯飞和搜狗输入法。
+- 4.支持安装 linux 版百度输入法，此前已经支持讯飞和搜狗输入法。
 - 5.增加 tmoe-deb 软件包安装器，支持在脚本内选择并安装 deb 文件。deb 系发行版使用此功能会自动解决依赖关系，但非 deb 系不会。
 
 ##### 2020-05-21 更新日志
@@ -623,8 +623,9 @@ nano $(which startvnc)
 
 ##### 2020-05-22 更新日志
 
-- 1.修复 Ubuntu20.10 存在的各种问题。修复 arm64 架构上的[Rocket1184/electron-netease-cloud-music](https://github.com/Rocket1184/electron-netease-cloud-music)
+- 1.修复 Ubuntu20.10 存在的各种问题。
+- 2.修复 arm64 架构上的[Rocket1184/electron-netease-cloud-music](https://github.com/Rocket1184/electron-netease-cloud-music)
 - ![163music](https://images.gitee.com/uploads/images/2020/0522/221902_3490dfd0_5617340.png "截图_2020-05-22_21-43-28.png")
 
-- 2.镜像站支持测延迟+测速，支持强制信任软件源，去除多余行，一键切换 http/https。
-- 除了主要源外，还支持配置额外源。对于不同的发行版，显示的额外源是不同的。对于 debian,显示的是切换为 kali 源。对于 arch，显示的是 archlinux—cn 源。对于 centos，显示的是 epel 源。
+- 3.镜像站支持测延迟+测速，支持强制信任软件源，去除多余行，一键切换 http/https。
+- 除了主要源外，还支持配置额外源。对于不同的发行版，显示的额外源是不同的。对于 debian,显示的是切换为 kali 源。对于 arch，显示的是配置 archlinux-cn 源。对于 centos，显示的是 epel 源。

@@ -4153,6 +4153,7 @@ install_iease_music() {
 ############
 patch_electron_netease_cloud_music() {
 	cd /tmp
+	rm -rf /tmp/.electron-netease-cloud-music_TEMP_FOLDER
 	git clone -b electron-netease-cloud-music --depth=1 https://gitee.com/mo2/patch ./electron-netease-cloud-music_TEMP_FOLDER
 	cd ./electron-netease-cloud-music_TEMP_FOLDER
 	tar -Jxvf app.asar.tar.xz

@@ -620,3 +620,11 @@ nano $(which startvnc)
 ##### 2020-05-21 更新日志
 
 - 1.全面升级换源功能，支持选择多个镜像站。debian,ubuntu,kali,arch,manjaro,fedora 和 alpine 可以单独使用换源功能。
+
+##### 2020-05-22 更新日志
+
+- 1.修复 Ubuntu20.10 存在的各种问题。修复 arm64 架构上的[Rocket1184/electron-netease-cloud-music](https://github.com/Rocket1184/electron-netease-cloud-music)
+- ![163music](https://images.gitee.com/uploads/images/2020/0522/221902_3490dfd0_5617340.png "截图_2020-05-22_21-43-28.png")
+
+- 2.镜像站支持测延迟+测速，支持强制信任软件源，去除多余行，一键切换 http/https。
+- 除了主要源外，还支持配置额外源。对于不同的发行版，显示的额外源是不同的。对于 debian,显示的是切换为 kali 源。对于 arch，显示的是 archlinux—cn 源。对于 centos，显示的是 epel 源。

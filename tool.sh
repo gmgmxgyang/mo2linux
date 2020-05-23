@@ -1228,6 +1228,7 @@ vscode_server_upgrade() {
 	fi
 	vscode_server_password
 	vscode_server_restart
+	echo "若您是初次安装，则请重设密码"
 	########################################
 	press_enter_to_return
 	configure_vscode_server
@@ -1253,7 +1254,7 @@ vscode_server_password() {
 		press_enter_to_return
 		configure_vscode_server
 	fi
-	sed "s@^password:.*@password: ${TARGET_USERPASSWD}@" ~/.config/code-server/config.yaml
+	sed -i "s@^password:.*@password: ${TARGET_USERPASSWD}@" ~/.config/code-server/config.yaml
 	#sed -i '/export PASSWORD=/d' ~/.profile
 	#sed -i '/export PASSWORD=/d' ~/.zshrc
 	#sed -i "$ a\export PASSWORD=${TARGET_USERPASSWD}" ~/.profile

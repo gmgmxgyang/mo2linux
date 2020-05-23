@@ -2526,8 +2526,8 @@ install_beta_containers() {
 			"1" "manjaro(让arch更方便用户使用,arm64)" \
 			"2" "centos (基于红帽的社区企业操作系统)" \
 			"3" "Void:基于xbps包管理器的独立发行版" \
-			"4" "alpine 3.11(非glibc的精简系统)" \
-			"5" "mint tricia(简单易用的系统,x86,x64)" \
+			"4" "alpine(非glibc的精简系统)" \
+			"5" "mint(简单易用的系统,x86,x64)" \
 			"0" "Return to previous menu 返回上级菜单" \
 			3>&1 1>&2 2>&3
 	)
@@ -2974,7 +2974,7 @@ install_mint_linux_distro() {
 		OLD_STABLE_VERSION='tina'
 		LXC_IMAGES_REPO="https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/${DISTRO_NAME}/"
 		DISTRO_CODE=$(curl -sL ${LXC_IMAGES_REPO} | grep date | cut -d '=' -f 4 | cut -d '"' -f 2 | grep -Ev 'size|sarah|serena|sonya|sylvia|tara|tessa|tina' | tail -n 1)
-		which_version_do_you_want_to_install
+		which_linux_mint_distro
 	else
 		echo "${RED}WARNING！${RESET}检测到您使用的是${ARCH_TYPE}架构"
 		echo "Linux Mint${RED}不支持${RESET}您的架构"
@@ -2982,6 +2982,41 @@ install_mint_linux_distro() {
 		press_enter_to_return
 		install_beta_containers
 	fi
+}
+################
+which_linux_mint_distro() {
+	RETURN_TO_WHERE='which_linux_mint_distro'
+	DISTRO_NAME='mint'
+	BETA_SYSTEM=$(
+		DISTRO_NAME='mint'
+		whiptail --title "mint" --menu "您想要安装哪个版本？Which version do you want to install?" 17 55 7 \
+			"1" "自动检测版本" \
+			"2" "Custom code手动输入版本代号" \
+			"0" "Return to previous menu 返回上级菜单" \
+			3>&1 1>&2 2>&3
+	)
+	##############################
+	case "${BETA_SYSTEM}" in
+	0 | "") choose_which_gnu_linux_distro ;;
+	1) which_version_do_you_want_to_install ;;
+	2) custom_mint_version ;;
+	esac
+	######################
+	press_enter_to_return
+	tmoe_manager_main_menu
+}
+#########################
+custom_mint_version() {
+	TARGET=$(whiptail --inputbox "请输入mint版本代号，例如tricia(英文小写)\n Please enter the mint version code." 12 50 --title "MINT CODE" 3>&1 1>&2 2>&3)
+	DISTRO_CODE="$(echo ${TARGET} | head -n 1 | cut -d ' ' -f 1)"
+	if [ -z "${DISTRO_CODE}" ]; then
+		echo "检测到您取消了操作"
+		echo "已自动切换为tricia"
+		DISTRO_CODE='tricia'
+	fi
+	echo "即将为您安装mint ${DISTRO_CODE} GNU/Linux container"
+	do_you_want_to_continue
+	linux_distro_common_model_01
 }
 ######################
 ######################

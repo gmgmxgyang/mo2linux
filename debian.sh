@@ -612,7 +612,7 @@ android_termux() {
 #-- 主菜单 main menu
 tmoe_manager_main_menu() {
 	OPTION=$(
-		whiptail --title "GNU/Linux Tmoe manager(20200514-18)" --backtitle "$(
+		whiptail --title "GNU/Linux Tmoe manager(20200523-00)" --backtitle "$(
 			base64 -d <<-'DoYouWantToSeeWhatIsInside'
 				6L6TZGViaWFuLWnlkK/liqjmnKznqIvluo8sVHlwZSBkZWJpYW4taSB0byBzdGFydCB0aGUgdG9v
 				bCzokIzns7vnlJ/niannoJTnqbblkZgK
@@ -705,9 +705,10 @@ tmoe_manager_main_menu() {
 ##########################
 vnc_can_not_call_pulse_audio() {
 	echo "若您启动VNC后，发现无音频。首先请确保您的termux为最新版本，并安装了termux:api"
-	echo "若您的宿主机为Android系统，且发现音频服务无法启动，请在启动完成后，新建一个termux窗口，然后手动在termux原系统里输${GREEN}pulseaudio -D${RESET}来启动音频服务后台进程"
+	echo "若您的宿主机为Android系统，且发现音频服务无法启动，请在启动完成后，新建一个termux session会话窗口，然后手动在termux原系统里输${GREEN}pulseaudio -D${RESET}来启动音频服务后台进程"
 	echo "您亦可输${GREEN}pulseaudio --start${RESET}"
-	echo "按回车键自动执行上述命令"
+	echo "若您无法记住该命令，则只需输${GREEN}debian${RESET}"
+	echo "按回车键自动启动音频服务"
 	do_you_want_to_continue
 	pulseaudio --start
 }

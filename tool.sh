@@ -4239,7 +4239,7 @@ install_feeluown() {
 	DEPENDENCY_01='feeluown'
 	echo "url：https://feeluown.readthedocs.io/en/latest/"
 	beta_features_quick_install
-	if [ ! $(command -v feeluown) ]; then
+	if [ ! $(command -v feeluown-launcher) ]; then
 		arch_does_not_support
 	fi
 }

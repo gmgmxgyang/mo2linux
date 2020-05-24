@@ -629,3 +629,7 @@ nano $(which startvnc)
 
 - 3.镜像站支持测延迟+测速，支持强制信任软件源，去除多余行，一键切换 http/https。
 - 除了主要源外，还支持配置额外源。对于不同的发行版，显示的额外源是不同的。对于 debian,显示的是切换为 kali 源。对于 arch，显示的是配置 archlinux-cn 源。对于 centos，显示的是 epel 源。
+
+##### 2020-05-23 更新日志
+
+- 1.修复 code-server

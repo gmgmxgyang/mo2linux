@@ -2359,7 +2359,7 @@ touch_xfce4_terminal_rc() {
 		MiscMenubarDefault=TRUE
 		MiscMouseAutohide=FALSE
 		MiscMouseWheelZoom=TRUE
-		MiscToolbarDefault=FALSE
+		MiscToolbarDefault=TRUE
 		MiscConfirmClose=TRUE
 		MiscCycleTabs=TRUE
 		MiscTabCloseButtons=TRUE

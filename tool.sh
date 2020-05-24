@@ -2375,7 +2375,6 @@ touch_xfce4_terminal_rc() {
 		MiscNewTabAdjacent=FALSE
 		BackgroundMode=TERMINAL_BACKGROUND_TRANSPARENT
 		BackgroundDarkness=0.880000
-		CommandLoginShell=TRUE
 		ScrollingUnlimited=TRUE
 	ENDOFTERMIANLRC
 }

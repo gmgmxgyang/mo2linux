@@ -323,7 +323,7 @@ check_dependencies() {
 
 		if [ "${LINUX_DISTRO}" = "debian" ]; then
 			apt update
-			apt install -y ${DEPENDENCIES}
+			apt install -y ${DEPENDENCIES} || apt-get install -y git wget curl whiptail aria2c xz-utils nano aptitude sudo less
 			#创建文件夹防止aptitude报错
 			mkdir -p /run/lock /var/lib/aptitude
 			touch /var/lib/aptitude/pkgstates

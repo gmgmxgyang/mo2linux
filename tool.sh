@@ -362,7 +362,7 @@ check_dependencies() {
 		if [ "${LINUX_DISTRO}" = "debian" ]; then
 			CATIMGlatestVersion="$(curl -LfsS 'https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/c/catimg/' | grep arm64 | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2 | cut -d '_' -f 2)"
 			cd /tmp
-			aria2c --allow-overwrite=true -s 5 -x 5 -k 1M -o 'catimg.deb' "https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/c/catimg/catimg_${CATIMGlatestVersion}_${ARCH_TYPE}.deb"
+			wget --no-check-certificate -O 'catimg.deb' "https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/c/catimg/catimg_${CATIMGlatestVersion}_${ARCH_TYPE}.deb"
 			apt install -y ./catimg.deb
 			rm -f catimg.deb
 		fi
@@ -373,7 +373,7 @@ check_dependencies() {
 		wget --no-check-certificate -O "busybox" "https://gitee.com/mo2/busybox/raw/master/busybox-$(uname -m)"
 		chmod +x busybox
 		LatestBusyboxDEB="$(curl -L https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/b/busybox/ | grep static | grep ${ARCH_TYPE} | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
-		aria2c --allow-overwrite=true -s 5 -x 5 -k 1M -o 'busybox.deb' "https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/b/busybox/${LatestBusyboxDEB}"
+		wget --no-check-certificate -O 'busybox.deb' "https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/b/busybox/${LatestBusyboxDEB}"
 		mkdir -p busybox-static
 		./busybox dpkg-deb -X busybox.deb ./busybox-static
 		mv -f ./busybox-static/bin/busybox /usr/local/bin/
@@ -3945,7 +3945,13 @@ modify_debian_mirror_sources_list() {
 
 	elif ! grep -Eq 'buster|stretch|jessie' "/etc/os-release"; then
 		NEW_DEBIAN_SOURCES_LIST='true'
-		SOURCELISTCODE=$(cat /etc/os-release | grep VERSION_CODENAME | cut -d '=' -f 2 | head -n 1)
+		if grep -q 'VERSION_CODENAME' "/etc/os-release"; then
+			SOURCELISTCODE=$(cat /etc/os-release | grep VERSION_CODENAME | cut -d '=' -f 2 | head -n 1)
+		else
+			echo "不支持您的系统！"
+			press_enter_to_return
+			tmoe_sources_list_manager
+		fi
 		BACKPORTCODE=${SOURCELISTCODE}
 
 	elif grep -q 'buster' "/etc/os-release"; then

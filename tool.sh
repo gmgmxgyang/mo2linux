@@ -5595,8 +5595,8 @@ xrdp_onekey() {
 	RETURN_TO_WHERE='configure_xrdp'
 	do_you_want_to_continue
 
-	DEPENDENCY_01='xrdp'
-	DEPENDENCY_02='nano'
+	DEPENDENCY_01=''
+	DEPENDENCY_02='xrdp'
 	NON_DEBIAN='false'
 	if [ "${LINUX_DISTRO}" = "gentoo" ]; then
 		emerge -avk layman

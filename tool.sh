@@ -371,6 +371,13 @@ check_dependencies() {
 	busybox ar >/dev/null 2>&1
 	if [ "$?" != "0" ]; then
 		BUSYBOX_AR='false'
+		/usr/local/bin/busybox ar >/dev/null 2>&1
+		if [ "$?" != "0" ]; then
+			chmod +x /usr/local/bin/busybox
+			BUSYBOX_AR='false'
+		else
+			BUSYBOX_AR='true'
+		fi
 	else
 		BUSYBOX_AR='true'
 	fi

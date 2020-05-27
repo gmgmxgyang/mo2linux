@@ -368,7 +368,14 @@ check_dependencies() {
 		fi
 	fi
 
-	if [ ! $(command -v busybox) ]; then
+	busybox ar >/dev/null 2>&1
+	if [ "$?" != "0" ]; then
+		BUSYBOX_AR='false'
+	else
+		BUSYBOX_AR='true'
+	fi
+
+	if [ "${BUSYBOX_AR}" = 'false' ]; then
 		cd /tmp
 		wget --no-check-certificate -O "busybox" "https://gitee.com/mo2/busybox/raw/master/busybox-$(uname -m)"
 		chmod +x busybox
@@ -2982,7 +2989,11 @@ download_theme_model_01() {
 	THE_LATEST_THEME_LINK="${THEME_URL}${THE_LATEST_THEME_VERSION}"
 	echo ${THE_LATEST_THEME_LINK}
 	aria2c --allow-overwrite=true -s 5 -x 5 -k 1M -o "${THE_LATEST_THEME_VERSION}" "${THE_LATEST_THEME_LINK}"
-	busybox ar xv ${THE_LATEST_THEME_VERSION}
+	if [ "${BUSYBOX_AR}" = 'true' ]; then
+		busybox ar xv ${THE_LATEST_THEME_VERSION}
+	else
+		/usr/local/bin/busybox ar xv ${THE_LATEST_THEME_VERSION}
+	fi
 }
 ############################
 update_icon_caches_model_01() {
@@ -3280,7 +3291,11 @@ download_ukui_theme() {
 		cd /tmp/.ukui-gtk-themes
 		UKUITHEME="$(curl -LfsS 'https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/u/ukui-themes/' | grep all.deb | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
 		aria2c --allow-overwrite=true -s 5 -x 5 -k 1M -o 'ukui-themes.deb' "https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/u/ukui-themes/${UKUITHEME}"
-		busybox ar xv 'ukui-themes.deb'
+		if [ "${BUSYBOX_AR}" = 'true' ]; then
+			busybox ar xv 'ukui-themes.deb'
+		else
+			/usr/local/bin/busybox ar xv 'ukui-themes.deb'
+		fi
 		cd /
 		tar -Jxvf /tmp/.ukui-gtk-themes/data.tar.xz ./usr
 		#if which update-icon-caches >/dev/null 2>&1; then
@@ -3379,7 +3394,12 @@ install_kali_undercover() {
 		apt show ./kali-undercover.deb
 		apt install -y ./kali-undercover.deb
 		if [ ! -e "/usr/share/icons/Windows-10-Icons" ]; then
-			busybox ar xv kali-undercover.deb
+			THE_LATEST_DEB_FILE='kali-undercover.deb'
+			if [ "${BUSYBOX_AR}" = 'true' ]; then
+				busybox ar xv ${THE_LATEST_DEB_FILE}
+			else
+				/usr/local/bin/busybox ar xv ${THE_LATEST_DEB_FILE}
+			fi
 			cd /
 			tar -Jxvf /tmp/.kali-undercover-win10-theme/data.tar.xz ./usr
 			#if which gtk-update-icon-cache >/dev/null 2>&1; then
@@ -4446,7 +4466,11 @@ deb_file_installer() {
 		mkdir -p .DEB_TEMP_FOLDER
 		mv ${SELECTION} .DEB_TEMP_FOLDER
 		cd ./.DEB_TEMP_FOLDER
-		busybox ar xv ${SELECTION}
+		if [ "${BUSYBOX_AR}" = 'true' ]; then
+			busybox ar xv ${SELECTION}
+		else
+			/usr/local/bin/busybox ar xv ${SELECTION}
+		fi
 		mv ${SELECTION} ../
 		if [ -e "data.tar.xz" ]; then
 			cd /
@@ -4654,7 +4678,12 @@ install_chinese_manpages() {
 		LATEST_DEB_REPO='https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/d/debian-handbook/'
 		download_tuna_repo_deb_file_all_arch
 		#aria2c --allow-overwrite=true -s 5 -x 5 -k 1M -o 'debian-handbook.deb' 'https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/d/debian-handbook/debian-handbook_8.20180830_all.deb'
-		busybox ar xv ${LATEST_DEB_VERSION}
+		THE_LATEST_DEB_FILE='kali-undercover.deb'
+		if [ "${BUSYBOX_AR}" = 'true' ]; then
+			busybox ar xv ${LATEST_DEB_VERSION}
+		else
+			/usr/local/bin/busybox ar xv ${LATEST_DEB_VERSION}
+		fi
 		tar -Jxvf data.tar.xz ./usr/share/doc/debian-handbook/html
 		ls | grep -v usr | xargs rm -rf
 		ln -sf ./usr/share/doc/debian-handbook/html/zh-CN/index.html ./

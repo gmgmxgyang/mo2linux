@@ -6779,8 +6779,9 @@ install_wine64() {
 }
 #########################
 install_aqemu() {
-	DEPENDENCY_01='qemu gnome-boxes'
-	DEPENDENCY_02='qemu-system-x86 qemu-system-arm qemu-system-gui qemu-utils qemu-block-extra aqemu'
+	DEPENDENCY_01='aqemu'
+	DEPENDENCY_02='qemu gnome-boxes'
+	#qemu-block-extra
 	beta_features_quick_install
 }
 #########

@@ -2280,6 +2280,7 @@ configure_x11vnc_remote_desktop_session() {
 		stopx11vnc
 		export PULSE_SERVER=127.0.0.1
 		export DISPLAY=:233
+		export LANG="zh_CN.UTF8"
 		/usr/bin/Xvfb :233 -screen 0 1440x720x24 -ac +extension GLX +render -noreset & 
 		if [ "$(uname -r | cut -d '-' -f 3 | head -n 1)" = "Microsoft" ] || [ "$(uname -r | cut -d '-' -f 2 | head -n 1)" = "microsoft" ]; then
 			echo '检测到您使用的是WSL,正在为您打开音频服务'
@@ -2298,7 +2299,6 @@ configure_x11vnc_remote_desktop_session() {
 		else
 		    ${REMOTE_DESKTOP_SESSION_02} &
 		fi
-		export LANG="zh_CN.UTF8"
 		x11vnc -ncache_cr -xkb -noxrecord -noxfixes -noxdamage -display :233 -forever -bg -rfbauth \${HOME}/.vnc/x11passwd -users \$(whoami) -rfbport 5901 -noshm &
 		sleep 2s
 		echo "正在启动x11vnc服务,本机默认vnc地址localhost:5901"
@@ -2476,15 +2476,19 @@ install_xfce4_desktop() {
 	####################
 	debian_xfce4_extras
 	#################
-	if [ ! -e "/usr/share/desktop-base/kali-theme" ]; then
-		download_kali_themes_common
-	fi
-	##############
-	if [ ! -e "/usr/share/icons/Papirus" ]; then
-		download_papirus_icon_theme
-		if [ "${DEBIAN_DISTRO}" != "kali" ]; then
-			dbus-launch xfconf-query -c xsettings -p /Net/IconThemeName -s Papirus
+	if [ "${DEBIAN_DISTRO}" != "alpine" ]; then
+		if [ ! -e "/usr/share/desktop-base/kali-theme" ]; then
+			download_kali_themes_common
 		fi
+		##############
+		if [ ! -e "/usr/share/icons/Papirus" ]; then
+			download_papirus_icon_theme
+			if [ "${DEBIAN_DISTRO}" != "kali" ]; then
+				dbus-launch xfconf-query -c xsettings -p /Net/IconThemeName -s Papirus
+			fi
+		fi
+	else
+		dbus-launch xfconf-query -c xsettings -p /Net/IconThemeName -s Faenza
 	fi
 	xfce4_color_scheme
 	#########

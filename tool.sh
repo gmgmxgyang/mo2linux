@@ -2468,7 +2468,7 @@ install_xfce4_desktop() {
 		DEPENDENCY_01="patterns-xfce-xfce xfce4-terminal"
 		###############
 	elif [ "${LINUX_DISTRO}" = "alpine" ]; then
-		DEPENDENCY_01="faenza-icon-theme xfce4 xfce4-terminal"
+		DEPENDENCY_01="faenza-icon-theme xfce4 xfce4-terminal xfce4-whiskermenu-plugin"
 		##############
 	fi
 	##################

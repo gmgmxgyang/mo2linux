@@ -368,10 +368,10 @@ check_dependencies() {
 		fi
 	fi
 
-	busybox ar >/dev/null 2>&1
+	busybox --help 2>&1 | grep -q ', ar,'
 	if [ "$?" != "0" ]; then
 		BUSYBOX_AR='false'
-		/usr/local/bin/busybox ar >/dev/null 2>&1
+		/usr/local/bin/busybox --help 2>&1 | grep -q ', ar,'
 		if [ "$?" != "0" ]; then
 			chmod +x /usr/local/bin/busybox
 			BUSYBOX_AR='false'

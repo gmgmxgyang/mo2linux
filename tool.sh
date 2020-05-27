@@ -7056,7 +7056,7 @@ install_docker_portainer() {
 		install_container_and_virtual_machine
 	fi
 	service docker start 2>/dev/null
-	docker run -d -p 39080:9000 --name portainer --restart always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer:latest
+	docker run -d -p ${TARGET_PORT}:9000 --name portainer --restart always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer:latest
 }
 #####################
 install_docker_ce() {

@@ -7046,17 +7046,17 @@ select_file_manually() {
 		elif (($number >= 0 && $number <= $count)); then
 			eval SELECTION=${restore_file_name[number]}
 			# cp -fr "${START_DIR}/$choice" "$DIR/restore_file.properties"
-			if [ -z "${SELECTION}" ]; then
-				echo "没有文件被选择"
-				press_enter_to_return
-				RETURN_TO_WHERE
-			fi
 			break
 		else
 			echo "Please enter the right number!"
 			echo "请输正确的数字编号!"
 		fi
 	done
+	if [ -z "${SELECTION}" ]; then
+		echo "没有文件被选择"
+		press_enter_to_return
+		RETURN_TO_WHERE
+	fi
 }
 #####################
 multi_vm_start_manager() {

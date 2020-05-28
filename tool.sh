@@ -7085,10 +7085,10 @@ other_qemu_conf_related_instructions() {
 ############
 qemu_process_management_instructions() {
 	check_qemu_vnc_port
-	echo "${BLUE}连接方式01${RESET}"
 	echo "输startqemu启动qemu"
-	echo "${BLUE}关机方式01${RESET}"
+	echo "${BLUE}连接方式01${RESET}"
 	echo "打开vnc客户端，输入访问地址localhost:${CURRENT_VNC_PORT}"
+	echo "${BLUE}关机方式01${RESET}"
 	echo "在qemu monitor界面下输system_powerdown关闭虚拟机电源，输stop停止"
 	echo "${BLUE}连接方式02${RESET}"
 	echo "若您需要使用ssh连接，则请新建一个termux会话窗口，并输入${GREEN}ssh -p 2888 root@localhost${RESET}"

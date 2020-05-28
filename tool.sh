@@ -7096,10 +7096,10 @@ qemu_process_management_instructions() {
 	echo "若连接提示${YELLOW}REMOTE HOST IDENTIFICATION HAS CHANGED${RESET}，则请手动输${GREEN}sed -i '/localhost/d' ~/.ssh/known_hosts${RESET}"
 	echo "${BLUE}关机方式02${RESET}"
 	echo "在linux虚拟机内输poweroff"
-	echo "在windows虚拟机内输shutdown /s /t now"
+	echo "在windows虚拟机内输shutdown /s /t 0"
 	echo "${BLUE}重启方式01${RESET}"
 	echo "在linux虚拟机内输reboot"
-	echo "在windows虚拟机内输shutdown /r /t now"
+	echo "在windows虚拟机内输shutdown /r /t 0"
 }
 #################
 #sed '$!N;$!P;$!D;s/\(\n\)/\n    -test \\ \n/' startqemu

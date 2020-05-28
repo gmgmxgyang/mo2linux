@@ -7190,7 +7190,7 @@ uncompress_alpine_and_docker_x64_img_file() {
 ##################
 dd_if_zero_of_qemu_tmp_disk() {
 	rm -fv /tmp/tmoe_qemu
-	echo "请在在虚拟机内执行操作"
+	echo "请在虚拟机内执行操作,不建议在宿主机内执行"
 	echo "本操作将填充磁盘所有空白扇区"
 	echo "若执行完成后，无法自动删除临时文件，则请手动输rm -f /tmp/tmoe_qemu"
 	echo "请务必在执行完操作后,关掉虚拟机,并回到宿主机选择转换压缩"

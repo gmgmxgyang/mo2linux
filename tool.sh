@@ -7055,7 +7055,7 @@ select_file_manually() {
 	if [ -z "${SELECTION}" ]; then
 		echo "没有文件被选择"
 		press_enter_to_return
-		RETURN_TO_WHERE
+		${RETURN_TO_WHERE}
 	fi
 }
 #####################

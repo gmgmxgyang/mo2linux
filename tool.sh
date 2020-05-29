@@ -6897,7 +6897,7 @@ start_tmoe_qemu_manager() {
 			"15" "creat disk创建(空白)虚拟磁盘" \
 			"16" "restore to default恢复到默认" \
 			"17" "sound card声卡" \
-			"18" "Graphics card/VGA显卡/显示器" \
+			"18" "Graphics card/VGA(显卡/显示器)" \
 			"19" "spice远程桌面" \
 			"20" "windows2000 hack" \
 			"0" "Return to previous menu 返回上级菜单" \

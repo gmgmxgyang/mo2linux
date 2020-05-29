@@ -6499,7 +6499,7 @@ start_tmoe_qemu_aarch64_manager() {
 			"4" "machine机器型号" \
 			"5" "exposed ports端口映射/转发" \
 			"6" "compress压缩磁盘文件" \
-			"7" "mount挂载共享文件夹" \
+			"7" "mount shared folder挂载共享文件夹" \
 			"8" "VNC port端口" \
 			"9" "edit script manually手动修改配置脚本" \
 			"10" "iso选择启动镜像" \
@@ -7104,8 +7104,8 @@ modify_qemu_host_shared_folder_sdcard() {
 ###############
 modify_qemu_host_shared_folder() {
 	VIRTUAL_TECH=$(
-		whiptail --title "共享文件夹" --menu "如需添加更多共享文件夹，请手动修改配置文件" 15 55 4 \
-			"1" "DISABLE禁用共享" \
+		whiptail --title "shared folder" --menu "如需添加更多共享文件夹，请手动修改配置文件" 15 55 4 \
+			"1" "DISABLE SHARE禁用共享" \
 			"2" "/root/sd" \
 			"0" "Return to previous menu 返回上级菜单" \
 			3>&1 1>&2 2>&3
@@ -8040,7 +8040,7 @@ start_tmoe_qemu_manager() {
 			"4" "kvm/tcg/xen加速类型" \
 			"5" "exposed ports端口映射/转发" \
 			"6" "compress压缩磁盘文件" \
-			"7" "mount挂载共享文件夹" \
+			"7" "mount shared folder挂载共享文件夹" \
 			"8" "VNC port端口" \
 			"9" "edit script manually手动修改配置脚本" \
 			"10" "iso选择启动镜像" \

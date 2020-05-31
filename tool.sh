@@ -6478,7 +6478,6 @@ creat_qemu_aarch64_startup_script() {
 			-bios /usr/share/qemu-efi-aarch64/QEMU_EFI.fd \
 			-vnc :2 \
 			-usb \
-			-device usb-tablet \
 			--cdrom /root/alpine-standard-3.11.6-aarch64.iso \
 			-name "tmoe-linux-aarch64-qemu"
 	EndOFqemu

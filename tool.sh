@@ -421,7 +421,6 @@ check_dependencies() {
 }
 ####################################################
 tmoe_linux_tool_menu() {
-	cd ${cur}
 	IMPORTANT_TIPS=""
 	#窗口大小20 50 7
 	TMOE_OPTION=$(

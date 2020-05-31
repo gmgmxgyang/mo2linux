@@ -6527,14 +6527,14 @@ start_tmoe_qemu_aarch64_manager() {
 			"1" "CPU管理" \
 			"2" "RAM运行内存" \
 			"3" "edit script manually手动修改配置脚本" \
-			"4" "exposed ports端口映射/转发" \
+			"4" "Multi-VM多虚拟机管理" \
 			"5" "compress压缩磁盘文件" \
 			"6" "mount shared folder挂载共享文件夹" \
 			"7" "VNC port端口" \
 			"8" "iso选择启动光盘" \
 			"9" "disk选择启动磁盘" \
 			"10" "FAQ常见问题" \
-			"11" "Multi-VM多虚拟机管理" \
+			"11" "exposed ports端口映射/转发" \
 			"12" "network card model网卡" \
 			"13" "creat disk创建(空白)虚拟磁盘" \
 			"14" "restore to default恢复到默认" \
@@ -6552,14 +6552,14 @@ start_tmoe_qemu_aarch64_manager() {
 	1) tmoe_qemu_aarch64_cpu_manager ;;
 	2) modify_qemu_ram_size ;;
 	3) nano startqemu ;;
-	4) modify_qemu_exposed_ports ;;
+	4) multi_qemu_vm_management ;;
 	5) compress_or_dd_qcow2_img_file ;;
 	6) modify_qemu_shared_folder ;;
 	7) modify_qemu_vnc_display_port ;;
 	8) choose_qemu_iso_file ;;
 	9) choose_qemu_qcow2_or_img_file ;;
 	10) tmoe_qemu_faq ;;
-	11) multi_qemu_vm_management ;;
+	11) modify_qemu_exposed_ports ;;
 	12) modify_qemu_tmoe_network_card ;;
 	13) creat_blank_virtual_disk_image ;;
 	14) creat_qemu_startup_script ;;
@@ -8180,7 +8180,7 @@ start_tmoe_qemu_manager() {
 			"2" "CPU管理" \
 			"3" "RAM运行内存" \
 			"4" "edit script manually手动修改配置脚本" \
-			"5" "exposed ports端口映射/转发" \
+			"5" "Multi-VM多虚拟机管理" \
 			"6" "compress压缩磁盘文件" \
 			"7" "mount shared folder挂载共享文件夹" \
 			"8" "VNC port端口" \
@@ -8188,7 +8188,7 @@ start_tmoe_qemu_manager() {
 			"10" "iso选择启动光盘" \
 			"11" "disk选择启动磁盘" \
 			"12" "FAQ常见问题" \
-			"13" "Multi-VM多虚拟机管理" \
+			"13" "exposed ports端口映射/转发" \
 			"14" "snapshoots快照管理" \
 			"15" "creat disk创建(空白)虚拟磁盘" \
 			"16" "restore to default恢复到默认" \
@@ -8209,7 +8209,7 @@ start_tmoe_qemu_manager() {
 	2) tmoe_qemu_x64_cpu_manager ;;
 	3) modify_qemu_ram_size ;;
 	4) nano startqemu ;;
-	5) modify_qemu_exposed_ports ;;
+	5) multi_qemu_vm_management ;;
 	6) compress_or_dd_qcow2_img_file ;;
 	7) modify_qemu_shared_folder ;;
 	8) modify_qemu_vnc_display_port ;;
@@ -8217,7 +8217,7 @@ start_tmoe_qemu_manager() {
 	10) choose_qemu_iso_file ;;
 	11) choose_qemu_qcow2_or_img_file ;;
 	12) tmoe_qemu_faq ;;
-	13) multi_qemu_vm_management ;;
+	13) modify_qemu_exposed_ports ;;
 	14) qemu_snapshoots_manager ;;
 	15) creat_blank_virtual_disk_image ;;
 	16) creat_qemu_startup_script ;;

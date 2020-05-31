@@ -8357,6 +8357,11 @@ choose_qemu_bios_or_uefi_file() {
 		DEPENDENCY_02='qemu-efi-aarch64'
 		beta_features_quick_install
 	fi
+	if [ ! -e "/usr/share/ovmf/OVMF.fd" ]; then
+		DEPENDENCY_01=''
+		DEPENDENCY_02='ovmf'
+		beta_features_quick_install
+	fi
 	cd /usr/local/bin/
 	RETURN_TO_WHERE='choose_qemu_bios_or_uefi_file'
 	if grep -q '\-bios ' startqemu; then
@@ -8378,8 +8383,10 @@ choose_qemu_bios_or_uefi_file() {
 	0 | "") ${RETURN_TO_MENU} ;;
 	1) restore_to_default_qemu_bios ;;
 	2) TMOE_QEMU_BIOS_FILE_PATH='/usr/share/qemu-efi-aarch64/QEMU_EFI.fd' ;;
-	3) echo "请将显卡修改为qxl或std"
-	TMOE_QEMU_BIOS_FILE_PATH='/usr/share/ovmf/OVMF.fd' ;;
+	3)
+		echo "请将显卡修改为qxl或std"
+		TMOE_QEMU_BIOS_FILE_PATH='/usr/share/ovmf/OVMF.fd'
+		;;
 	4) tmoe_choose_a_qemu_bios_file ;;
 	esac
 	###############

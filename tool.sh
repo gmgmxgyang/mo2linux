@@ -416,7 +416,6 @@ check_dependencies() {
 		WINDOWSDISTRO='WSL'
 	fi
 	##############
-	cur=$(pwd)
 	tmoe_linux_tool_menu
 }
 ####################################################
@@ -1245,7 +1244,7 @@ vscode_server_upgrade() {
 		git clone -b aarch64 --depth=1 https://gitee.com/mo2/vscode-server.git .VSCODE_SERVER_TEMP_FOLDER
 		cd .VSCODE_SERVER_TEMP_FOLDER
 		tar -PpJxvf code.tar.xz
-		cd ${cur}
+		cd ..
 		rm -rf /tmp/.VSCODE_SERVER_TEMP_FOLDER
 	elif [ "${ARCH_TYPE}" = "amd64" ]; then
 		mkdir -p .VSCODE_SERVER_TEMP_FOLDER

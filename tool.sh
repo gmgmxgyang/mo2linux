@@ -8560,7 +8560,7 @@ select_file_manually() {
 	count=$(($count - 1))
 
 	while true; do
-		read -p "请输入${BLUE}选项数字${RESET},并按${GREEN}回车键。${RESET}Please type the ${BLUE}option number${RESET} and press ${BLUE}Enter:${RESET}" number
+		read -p "请输入${BLUE}选项数字${RESET},并按${GREEN}回车键。${RESET}Please type the ${BLUE}option number${RESET} and press ${GREEN}Enter:${RESET}" number
 		if [[ -z "$number" ]]; then
 			break
 		elif ! [[ $number =~ ^[0-9]+$ ]]; then

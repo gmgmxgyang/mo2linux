@@ -8530,7 +8530,8 @@ delete_the_iso_file_of_the_specified_qemu_vm() {
 	START_DIR=${TMOE_QEMU_SCRIPT_FILE_PATH}
 	BACKUP_FILE_NAME='*'
 	echo "选中的虚拟机的iso镜像文件将被删除"
-	echo "按Ctrl+C退出"
+	echo "按Ctrl+C退出,若选项留空,则按回车键返回"
+	echo "Press Ctrl+C to exit,press enter to return."
 	select_file_manually
 	TMOE_FILE_ABSOLUTE_PATH=${START_DIR}/${SELECTION}
 	THE_QEMU_STARTUP_SCRIPT=${TMOE_FILE_ABSOLUTE_PATH}
@@ -8541,7 +8542,8 @@ delete_the_disk_file_of_the_specified_qemu_vm() {
 	START_DIR=${TMOE_QEMU_SCRIPT_FILE_PATH}
 	BACKUP_FILE_NAME='*'
 	echo "选中的虚拟机的磁盘文件将被删除"
-	echo "按Ctrl+C退出"
+	echo "按Ctrl+C退出,若选项留空,则按回车键返回"
+	echo "Press Ctrl+C to exit,press enter to return."
 	select_file_manually
 	TMOE_FILE_ABSOLUTE_PATH=${START_DIR}/${SELECTION}
 	THE_QEMU_STARTUP_SCRIPT=${TMOE_FILE_ABSOLUTE_PATH}
@@ -8558,7 +8560,7 @@ select_file_manually() {
 	count=$(($count - 1))
 
 	while true; do
-		read -p '请输入选项数字,并按回车键。Please type the option number and press Enter:' number
+		read -p "请输入${BLUE}选项数字${RESET},并按${GREEN}回车键。${RESET}Please type the ${BLUE}option number${RESET} and press ${BLUE}Enter:${RESET}" number
 		if [[ -z "$number" ]]; then
 			break
 		elif ! [[ $number =~ ^[0-9]+$ ]]; then
@@ -8584,7 +8586,8 @@ multi_vm_start_manager() {
 	START_DIR=${TMOE_QEMU_SCRIPT_FILE_PATH}
 	BACKUP_FILE_NAME='*'
 	echo "选中的配置将设定为startqemu的默认配置"
-	echo "按Ctrl+C退出"
+	echo "按Ctrl+C退出,若选项留空,则按回车键返回"
+	echo "Press Ctrl+C to exit,press enter to return."
 	select_file_manually
 	TMOE_FILE_ABSOLUTE_PATH=${START_DIR}/${SELECTION}
 	if [ ! -z "${SELECTION}" ]; then
@@ -8603,7 +8606,9 @@ delete_multi_qemu_vm_conf() {
 	START_DIR=${TMOE_QEMU_SCRIPT_FILE_PATH}
 	BACKUP_FILE_NAME='*'
 	echo "选中的配置将被删除"
-	echo "按Ctrl+C退出"
+	echo "按Ctrl+C退出,若选项留空,则按回车键返回"
+	echo "Press Ctrl+C to exit,press enter to return."
+	echo "Press Ctrl+C to exit,press enter to return."
 	select_file_manually
 	TMOE_FILE_ABSOLUTE_PATH=${START_DIR}/${SELECTION}
 	rm -fv ${TMOE_FILE_ABSOLUTE_PATH} /usr/local/bin/${SELECTION}

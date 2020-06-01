@@ -6595,9 +6595,9 @@ modify_qemu_tmoe_network_card() {
 			"02" "e1000-82544gc:Intel Gigabit Ethernet" \
 			"03" "e1000-82545em" \
 			"04" "e1000e:Intel 82574L GbE Controller" \
-			"05" "rtl8139" \
+			"05" "Realtek rtl8139" \
 			"06" "virtio-net-pci" \
-			"07" "i82550" \
+			"07" "i82550:Intel i82550 Ethernet" \
 			"08" "i82551" \
 			"09" "i82557a" \
 			"10" "i82557b" \
@@ -6615,8 +6615,8 @@ modify_qemu_tmoe_network_card() {
 			"22" "smc91c111" \
 			"23" "lance" \
 			"24" "mcf_fec" \
-			"25" "vmxnet3" \
-			"26" "rocker" \
+			"25" "vmxnet3:VMWare Paravirtualized" \
+			"26" "rocker Switch" \
 			3>&1 1>&2 2>&3
 	)
 	#############

@@ -908,13 +908,13 @@ check_latest_video_download_tool_version() {
 		║   ║ software ║ 最新版本          ║   本地版本 🎪
 		║   ║          ║latest version✨   ║  Local version     
 		║---║----------║-------------------║--------------------
-		║ 1 ║   annie  ║                   ║  ${AnnieVersion}
-		║   ║          ║${LATEST_ANNIE_VERSION}║
+		║ 1 ║   annie  ║                   ║ ${AnnieVersion}
+		║   ║          ║${LATEST_ANNIE_VERSION}
 		║---║----------║-------------------║--------------------
 		║   ║          ║                   ║ ${YouGetVersion}                   
 		║ 2 ║ you-get  ║                   ║  
 		║---║----------║-------------------║--------------------
-		║   ║          ║                   ║  ${YOTUBEdlVersion}                  
+		║   ║          ║                   ║ ${YOTUBEdlVersion}                  
 		║ 3 ║youtube-dl║${LATEST_YOUTUBE_DL_VERSION}           ║  
 
 		annie: github.com/iawia002/annie
@@ -1277,6 +1277,9 @@ vscode_server_restart() {
 	echo 'You can type "code-server" to start Code Server.'
 	/usr/local/bin/code-server-data/bin/code-server &
 	SERVER_PORT=$(cat ${HOME}/.config/code-server/config.yaml | grep bind-addr | cut -d ':' -f 3)
+	if [ -z "${SERVER_PORT}" ]; then
+		SERVER_PORT='18080'
+	fi
 	echo "正在为您启动code-server，本机默认访问地址为localhost:${SERVER_PORT}"
 	echo The LAN VNC address 局域网地址 $(ip -4 -br -c a | tail -n 1 | cut -d '/' -f 1 | cut -d 'P' -f 2):${SERVER_PORT}
 	echo "您可以输${YELLOW}pkill node${RESET}来停止进程"
@@ -4346,9 +4349,9 @@ install_electron_netease_cloud_music() {
 	echo "github url：https://github.com/Rocket1184/electron-netease-cloud-music"
 	beta_features_quick_install
 	FILE_SIZE=$(du -s /opt/electron-netease-cloud-music/app.asar | awk '{print $1}')
-	if ((${FILE_SIZE} < 3000)); then
-		patch_electron_netease_cloud_music
-	fi
+	#if ((${FILE_SIZE} < 3000)); then
+	patch_electron_netease_cloud_music
+	#fi
 	do_you_want_to_close_the_sandbox_mode
 	do_you_want_to_continue
 	#with_no_sandbox_model_02

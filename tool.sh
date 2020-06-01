@@ -7043,7 +7043,7 @@ modify_qemnu_graphics_card() {
 			"2" "std(standard VGA,vesa2.0)" \
 			"3" "cirrus clgd5446" \
 			"4" "qxl(QXL VGA)" \
-			"5" "xenf(Xen paravirtualized framebuffer)" \
+			"5" "xenfb(Xen paravirtualized framebuffer)" \
 			"6" "tcx" \
 			"7" "cg3" \
 			"8" "none无显卡" \
@@ -7058,7 +7058,7 @@ modify_qemnu_graphics_card() {
 	2) QEMU_VGA='std' ;;
 	3) QEMU_VGA='cirrus' ;;
 	4) QEMU_VGA='qxl' ;;
-	5) QEMU_VGA='xenf' ;;
+	5) QEMU_VGA='xenfb' ;;
 	6) QEMU_VGA='tcx' ;;
 	7) QEMU_VGA='cg3' ;;
 	8) QEMU_VGA='none' ;;

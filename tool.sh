@@ -9002,6 +9002,12 @@ download_win10_19041_arm64_iso() {
 	ISO_FILE_NAME='win10_2004_arm64_tmoe.iso'
 	TMOE_FILE_ABSOLUTE_PATH=$(pwd)/${ISO_FILE_NAME}
 	TMOE_ISO_URL="https://m.tmoe.me/down/share/windows/20H1/${ISO_FILE_NAME}"
+	cat <<-'EOF'
+		本文件为uupdump转换的原版iso
+		若您需要在qemu虚拟机里使用，那么请手动制作Windows to Go启动盘
+		您也可以阅览其它人所撰写的教程
+		    https://zhuanlan.zhihu.com/p/32905265
+	EOF
 	download_windows_tmoe_iso_model
 }
 ############

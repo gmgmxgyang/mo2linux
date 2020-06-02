@@ -9574,7 +9574,7 @@ other_qemu_conf_related_instructions() {
 		Q:一个个删除配置太麻烦了，有没有更快速的方法？
 		A：有哒！rm -rfv /usr/local/bin/.tmoe-linux-qemu
 		Q: 不知道为啥虚拟机启动不了
-		A：你可以看一下资源发布者的相关说明，再调整一下参数。
+		A：你可以看一下资源发布者所撰写的相关说明，再调整一下参数。
 	ENDOFTMOEINST
 }
 ############

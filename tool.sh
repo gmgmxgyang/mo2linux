@@ -8472,13 +8472,13 @@ modify_qemu_amd64_tmoe_machine_type() {
 	if grep -q '\-M ' startqemu; then
 		CURRENT_VALUE=$(cat startqemu | grep '\-M ' | head -n 1 | awk '{print $2}' | cut -d '=' -f 2)
 	else
-		CURRENT_VALUE='未指定'
+		CURRENT_VALUE='默认'
 	fi
 	#qemu-system-x86_64 -machine help >001
 	#cat 001 |awk '{print $1}' >002
 	#paste 002 003 -d ':'
 	VIRTUAL_TECH=$(
-		whiptail --title "MACHINE" --menu "Please select the machine type.\n默认未指定机器类型,当前为${CURRENT_VALUE}" 0 0 0 \
+		whiptail --title "MACHINE" --menu "Please select the machine type.\n默认为pc-i440fx,当前为${CURRENT_VALUE}" 0 0 0 \
 			"0" "Return to previous menu 返回上级菜单" \
 			"00" "disable禁用指定机器类型参数" \
 			"01" "microvm:microvm (i386)" \

@@ -5406,6 +5406,7 @@ xrdp_desktop_enviroment() {
 #############
 configure_xrdp() {
 	#进入xrdp配置文件目录
+	RETURN_TO_WHERE='configure_xrdp'
 	cd /etc/xrdp/
 	TMOE_OPTION=$(
 		whiptail --title "CONFIGURE XRDP" --menu "您想要修改哪项配置？Which configuration do you want to modify?" 16 50 7 \
@@ -5758,16 +5759,21 @@ xrdp_restart() {
 xrdp_port() {
 	cd /etc/xrdp/
 	RDP_PORT=$(cat xrdp.ini | grep 'port=' | head -n 1 | cut -d '=' -f 2)
-	TARGET_PORT=$(whiptail --inputbox "请输入新的端口号(纯数字)，范围在1-65525之间,不建议您将其设置为22、80、443或3389,检测到您当前的端口为${RDP_PORT}\n Please enter the port number." 12 50 --title "PORT" 3>&1 1>&2 2>&3)
-	exitstatus=$?
-	if [ $exitstatus != 0 ]; then
+	TARGET=$(whiptail --inputbox "请输入新的端口号(纯数字)，范围在1-65525之间,不建议您将其设置为22、80、443或3389,检测到您当前的端口为${RDP_PORT}\n Please enter the port number." 12 50 --title "PORT" 3>&1 1>&2 2>&3)
+	if [ "$?" != "0" ]; then
+		#echo "检测到您取消了操作"
+		#${RETURN_TO_WHERE}
 		echo "检测到您取消了操作，请返回重试。"
 		press_enter_to_return_configure_xrdp
+	elif [ -z "${TARGET}" ]; then
+		echo "请输入有效的数值"
+		echo "Please enter a valid value"
+	else
+		sed -i "s@port=${RDP_PORT}@port=${TARGET}@" xrdp.ini
+		ls -l $(pwd)/xrdp.ini
+		cat xrdp.ini | grep 'port=' | head -n 1
+		/etc/init.d/xrdp restart
 	fi
-	sed -i "s@port=${RDP_PORT}@port=${TARGET_PORT}@" xrdp.ini
-	ls -l $(pwd)/xrdp.ini
-	cat xrdp.ini | grep 'port=' | head -n 1
-	/etc/init.d/xrdp restart
 }
 #################
 xrdp_systemd() {
@@ -7153,7 +7159,7 @@ modify_qemu_machine_accel() {
 			"1" "tcg(default)" \
 			"2" "kvm(Intel VT-d/AMD-V)" \
 			"3" "xen" \
-			"4" "hax" \
+			"4" "hax(Intel VT-x)" \
 			"0" "Return to previous menu 返回上级菜单" \
 			3>&1 1>&2 2>&3
 	)

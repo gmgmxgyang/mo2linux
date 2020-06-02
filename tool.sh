@@ -8605,6 +8605,8 @@ modify_qemu_amd64_tmoe_machine_type() {
 disable_tmoe_qemu_machine() {
 	sed -i '/-M /d' startqemu
 	echo "禁用完成"
+	press_enter_to_return
+	${RETURN_TO_WHERE}
 }
 ################
 enable_tmoe_qemu_cpu_multi_threading() {

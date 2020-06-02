@@ -8945,7 +8945,7 @@ start_tmoe_qemu_manager() {
 modify_tmoe_qemu_network_settings() {
 	RETURN_TO_WHERE='modify_tmoe_qemu_network_settings'
 	VIRTUAL_TECH=$(
-		whiptail --title "display devices" --menu "Which configuration do you want to modify？" 0 0 0 \
+		whiptail --title "network devices" --menu "Which configuration do you want to modify？" 0 0 0 \
 			"1" "network card网卡" \
 			"2" "exposed ports端口映射/转发" \
 			"0" "Return to previous menu 返回上级菜单" \
@@ -9072,7 +9072,7 @@ modify_tmoe_qemu_display_device() {
 	###############
 	enable_qemnu_display_device
 	press_enter_to_return
-	tmoe_qemu_display_settings
+	${RETURN_TO_WHERE}
 }
 ##############
 list_all_enabled_qemu_display_devices() {

@@ -8548,7 +8548,7 @@ explore_qemu_configuration_templates() {
 			"004" "lubuntu18.04内置wine,可玩游戏(github@..)" \
 			"005" "win98 骁龙6系超级流畅(bili@..)" \
 			"006" "winxp有网有声(tieba@..)" \
-			"007" "vista装了许多好玩的东西(tieba@..)" \
+			"007" "vista装了许多好玩的东西,骁龙865流畅(tieba@..)" \
 			"008" "macos ppc上古版本(coolapk@..)" \
 			3>&1 1>&2 2>&3
 	)

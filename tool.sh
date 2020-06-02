@@ -6543,7 +6543,7 @@ install_container_and_virtual_machine() {
 	NON_DEBIAN='false'
 	VIRTUAL_TECH=$(
 		whiptail --title "虚拟化与api的转换" --menu "您想要选择哪一项呢？" 16 50 8 \
-			"1" "aqemu(基于qt的qemu前端)" \
+			"1" "aqemu(QEMU和KVM的Qt5前端)" \
 			"2" "tmoe-qemu(x64虚拟机管理)" \
 			"3" "tmoe-qemu(arm64虚拟机管理）" \
 			"4" "download iso(Android,linux等)" \

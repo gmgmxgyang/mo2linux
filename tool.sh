@@ -8550,6 +8550,7 @@ explore_qemu_configuration_templates() {
 			"006" "winxp有网有声(tieba@..)" \
 			"007" "vista装了许多好玩的东西,骁龙865流畅(tieba@..)" \
 			"008" "macos ppc上古版本(coolapk@..)" \
+			"009" "xubuntu个人轻度精简,内置qq和百度云(github@..)" \
 			3>&1 1>&2 2>&3
 	)
 	#############

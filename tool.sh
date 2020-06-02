@@ -8722,7 +8722,7 @@ choose_qemu_bios_or_uefi_file() {
 		CURRENT_VALUE='默认'
 	fi
 	VIRTUAL_TECH=$(
-		whiptail --title "uefi/legacy bios" --menu "Please select the legacy bios or uefi file.win8/win10选用uefi或许能加快开机速度.若您使用的是legacy bios，则可以在启动VNC后的3秒钟内按下ESC键选择启动项。若您使用的是uefi,则您可以在启动系统后在VNC显示画面的前几秒内按其他键允许使用光盘\n当前为${CURRENT_VALUE}" 18 50 5 \
+		whiptail --title "uefi/legacy bios" --menu "Please select the legacy bios or uefi file.win8/win10选用uefi或许能加快开机速度.若您使用的是legacy bios，则可以在启动VNC后的3秒钟内按下ESC键选择启动项。若您使用的是uefi,则您可以在启动VNC后的几秒内按其他键允许使用光盘\n当前为${CURRENT_VALUE}" 18 50 5 \
 			"1" "default默认" \
 			"2" "qemu-efi-aarch64:UEFI firmware for arm64" \
 			"3" "ovmf:UEFI firmware for x64" \

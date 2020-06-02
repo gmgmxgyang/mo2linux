@@ -9165,7 +9165,7 @@ win7_qemu_template_2020_06_02_17_38() {
       个人主页：https://space.bilibili.com/
       资源链接：https://pan.baidu.com/disk/home#/all?vmode=list&path=%2F%E6%88%91%E7%9A%84%E8%B5%84%E6%BA%90
       大家好，我是来自B站的..
-      不知道今天是哪个幸运儿用到了我发布的镜像和配置脚本呢？希望大家多多给我的视频素质三连😀
+      不知道今天是哪个幸运儿用到了我发布的镜像和配置脚本呢？萌新up主求三连😀
       " 0 0
 	echo "是否将其设置为默认的qemu配置？"
 	do_you_want_to_continue

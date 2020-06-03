@@ -7642,7 +7642,7 @@ enable_qemnu_spice_remote() {
 		TMOE_SPICE_STATUS='检测到您已禁用speic'
 	fi
 	###########
-	if (whiptail --title "您想要对这个小可爱做什么?" --yes-button 'enable启用' --no-button 'disable禁用' --yesno "Do you want to enable it?(っ °Д °)\n您是想要启用还是禁用呢？${TMOE_SPICE_STATUS},默认spice端口为5931,启用后将禁用vnc服务。" 10 45); then
+	if (whiptail --title "您想要对这个小可爱做什么?" --yes-button 'enable启用' --no-button 'disable禁用' --yesno "Do you want to enable it?(っ °Д °)\n您是想要启用还是禁用呢？启用后将禁用vnc服务。${TMOE_SPICE_STATUS},默认spice端口为5931" 10 45); then
 		sed -i '/-spice port=/d' startqemu
 		sed -i "/-vnc :/d" startqemu
 		sed -i '$!N;$!P;$!D;s/\(\n\)/\n    -spice tmoe_spice_config_test \\\n/' startqemu
@@ -9127,7 +9127,7 @@ modify_tmoe_qemu_vnc_pulse_audio_address() {
 modify_tmoe_qemu_xsdl_settings() {
 	if grep -q '\-vnc \:' "startqemu"; then
 		X_SERVER_STATUS="检测到您当前启用的是VNC,而非X服务"
-	elif grep -q '/-spice port' "startqemu"; then
+	elif grep -q '\-spice port' "startqemu"; then
 		X_SERVER_STATUS="检测到您当前启用的是spice,而非X服务"
 	else
 		X_SERVER_STATUS="检测到您已经启用了X服务"

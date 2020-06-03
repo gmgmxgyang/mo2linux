@@ -6579,8 +6579,8 @@ install_container_and_virtual_machine() {
 			"7" "VirtualBox:甲骨文开源虚拟机(x64)" \
 			"8" "wine(调用win api并即时转换)" \
 			"9" "anbox:Android in a box(测试)" \
-			"00" "Back to the main menu 返回主菜单" \
 			"0" "Return to previous menu 返回上级菜单" \
+			"00" "Back to the main menu 返回主菜单" \
 			3>&1 1>&2 2>&3
 	)
 	#############
@@ -9126,9 +9126,9 @@ modify_tmoe_qemu_vnc_pulse_audio_address() {
 ##################
 modify_tmoe_qemu_xsdl_settings() {
 	if grep -q '\-vnc \:' "startqemu"; then
-		X_SERVER_STATUS="检测到您当前启用的是VNC"
+		X_SERVER_STATUS="检测到您当前启用的是VNC,而非X服务"
 	elif grep -q '/-spice port' "startqemu"; then
-		X_SERVER_STATUS="检测到您当前启用的是spice"
+		X_SERVER_STATUS="检测到您当前启用的是spice,而非X服务"
 	else
 		X_SERVER_STATUS="检测到您已经启用了X服务"
 	fi

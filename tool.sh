@@ -7558,6 +7558,7 @@ choose_qemu_qcow2_or_img_file() {
 	else
 		echo "您选择的文件为${TMOE_FILE_ABSOLUTE_PATH}"
 		qemu-img info ${TMOE_FILE_ABSOLUTE_PATH}
+		qemu-img check ${TMOE_FILE_ABSOLUTE_PATH}
 		ls -lah ${TMOE_FILE_ABSOLUTE_PATH}
 		cd /usr/local/bin
 		#-hda /root/.aqemu/alpine_v3.11_x64.qcow2 \
@@ -7583,6 +7584,7 @@ choose_hdb_disk_image_file() {
 	else
 		echo "您选择的文件为${TMOE_FILE_ABSOLUTE_PATH}"
 		qemu-img info ${TMOE_FILE_ABSOLUTE_PATH}
+		qemu-img check ${TMOE_FILE_ABSOLUTE_PATH}
 		ls -lah ${TMOE_FILE_ABSOLUTE_PATH}
 		cd /usr/local/bin
 		sed -i '/-hdb /d' startqemu
@@ -7606,6 +7608,7 @@ choose_hdc_disk_image_file() {
 	else
 		echo "您选择的文件为${TMOE_FILE_ABSOLUTE_PATH}"
 		qemu-img info ${TMOE_FILE_ABSOLUTE_PATH}
+		qemu-img check ${TMOE_FILE_ABSOLUTE_PATH}
 		ls -lah ${TMOE_FILE_ABSOLUTE_PATH}
 		cd /usr/local/bin
 		sed -i '/-hdc /d' startqemu
@@ -7629,6 +7632,7 @@ choose_hdd_disk_image_file() {
 	else
 		echo "您选择的文件为${TMOE_FILE_ABSOLUTE_PATH}"
 		qemu-img info ${TMOE_FILE_ABSOLUTE_PATH}
+		qemu-img check ${TMOE_FILE_ABSOLUTE_PATH}
 		ls -lah ${TMOE_FILE_ABSOLUTE_PATH}
 		cd /usr/local/bin
 		sed -i '/-hdd /d' startqemu
@@ -8978,6 +8982,7 @@ choose_drive_virtio_disk_01() {
 	else
 		echo "您选择的文件为${TMOE_FILE_ABSOLUTE_PATH}"
 		qemu-img info ${TMOE_FILE_ABSOLUTE_PATH}
+		qemu-img check ${TMOE_FILE_ABSOLUTE_PATH}
 		ls -lah ${TMOE_FILE_ABSOLUTE_PATH}
 		cd /usr/local/bin
 		#-hda /root/.aqemu/alpine_v3.11_x64.qcow2 \

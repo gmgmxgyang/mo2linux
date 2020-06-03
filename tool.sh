@@ -6593,8 +6593,10 @@ creat_qemu_aarch64_startup_script() {
 	CONFIG_FOLDER="${HOME}/.config/tmoe-linux/"
 	mkdir -p ${CONFIG_FOLDER}
 	cd ${CONFIG_FOLDER}
-	cat >startqemu_aarch64_20200602 <<-'EndOFqemu'
+	cat >startqemu_aarch64_20200603 <<-'EndOFqemu'
 		#!/usr/bin/env bash
+		export DISPLAY=127.0.0.1:0
+		export PULSE_SERVER=127.0.0.1
 		CURRENT_PORT=$(cat /usr/local/bin/startqemu | grep '\-vnc ' | tail -n 1 | awk '{print $2}' | cut -d ':' -f 2 | tail -n 1)
 		CURRENT_VNC_PORT=$((${CURRENT_PORT} + 5900))
 		echo "正在为您启动qemu虚拟机，本机默认VNC访问地址为localhost:${CURRENT_VNC_PORT}"
@@ -7129,8 +7131,10 @@ creat_qemu_startup_script() {
 	CONFIG_FOLDER="${HOME}/.config/tmoe-linux/"
 	mkdir -p ${CONFIG_FOLDER}
 	cd ${CONFIG_FOLDER}
-	cat >startqemu_amd64_20200602 <<-'EndOFqemu'
+	cat >startqemu_amd64_20200603 <<-'EndOFqemu'
 		#!/usr/bin/env bash
+		export DISPLAY=127.0.0.1:0
+		export PULSE_SERVER=127.0.0.1
 		CURRENT_PORT=$(cat /usr/local/bin/startqemu | grep '\-vnc ' | tail -n 1 | awk '{print $2}' | cut -d ':' -f 2 | tail -n 1)
 		CURRENT_VNC_PORT=$((${CURRENT_PORT} + 5900))
 		echo "正在为您启动qemu虚拟机，本机默认VNC访问地址为localhost:${CURRENT_VNC_PORT}"

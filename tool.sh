@@ -6597,10 +6597,20 @@ creat_qemu_aarch64_startup_script() {
 		#!/usr/bin/env bash
 		export DISPLAY=127.0.0.1:0
 		export PULSE_SERVER=127.0.0.1
-		CURRENT_PORT=$(cat /usr/local/bin/startqemu | grep '\-vnc ' | tail -n 1 | awk '{print $2}' | cut -d ':' -f 2 | tail -n 1)
-		CURRENT_VNC_PORT=$((${CURRENT_PORT} + 5900))
-		echo "正在为您启动qemu虚拟机，本机默认VNC访问地址为localhost:${CURRENT_VNC_PORT}"
-		echo The LAN VNC address 局域网地址 $(ip -4 -br -c a | tail -n 1 | cut -d '/' -f 1 | cut -d 'P' -f 2):${CURRENT_VNC_PORT}
+		START_QEMU_SCRIPT_PATH='/usr/local/bin/startqemu'
+		if grep -q '\-vnc \:' "${START_QEMU_SCRIPT_PATH}"; then
+			CURRENT_PORT=$(cat ${START_QEMU_SCRIPT_PATH} | grep '\-vnc ' | tail -n 1 | awk '{print $2}' | cut -d ':' -f 2 | tail -n 1)
+			CURRENT_VNC_PORT=$((${CURRENT_PORT} + 5900))
+			echo "正在为您启动qemu虚拟机，本机默认VNC访问地址为localhost:${CURRENT_VNC_PORT}"
+			echo The LAN VNC address 局域网地址 $(ip -4 -br -c a | tail -n 1 | cut -d '/' -f 1 | cut -d 'P' -f 2):${CURRENT_VNC_PORT}
+		else
+			echo "检测到您当前没有使用VNC服务，若您使用的是Xserver则可无视以下说明"
+			echo "请自行添加端口号"
+			echo "spice默认端口号为5931"
+			echo "正在为您启动qemu虚拟机"
+			echo "本机localhost"
+			echo The LAN ip 局域网ip $(ip -4 -br -c a | tail -n 1 | cut -d '/' -f 1 | cut -d 'P' -f 2)
+		fi
 
 		/usr/bin/qemu-system-aarch64 \
 			-monitor stdio \
@@ -7135,10 +7145,20 @@ creat_qemu_startup_script() {
 		#!/usr/bin/env bash
 		export DISPLAY=127.0.0.1:0
 		export PULSE_SERVER=127.0.0.1
-		CURRENT_PORT=$(cat /usr/local/bin/startqemu | grep '\-vnc ' | tail -n 1 | awk '{print $2}' | cut -d ':' -f 2 | tail -n 1)
-		CURRENT_VNC_PORT=$((${CURRENT_PORT} + 5900))
-		echo "正在为您启动qemu虚拟机，本机默认VNC访问地址为localhost:${CURRENT_VNC_PORT}"
-		echo The LAN VNC address 局域网地址 $(ip -4 -br -c a | tail -n 1 | cut -d '/' -f 1 | cut -d 'P' -f 2):${CURRENT_VNC_PORT}
+		START_QEMU_SCRIPT_PATH='/usr/local/bin/startqemu'
+		if grep -q '\-vnc \:' "${START_QEMU_SCRIPT_PATH}"; then
+			CURRENT_PORT=$(cat ${START_QEMU_SCRIPT_PATH} | grep '\-vnc ' | tail -n 1 | awk '{print $2}' | cut -d ':' -f 2 | tail -n 1)
+			CURRENT_VNC_PORT=$((${CURRENT_PORT} + 5900))
+			echo "正在为您启动qemu虚拟机，本机默认VNC访问地址为localhost:${CURRENT_VNC_PORT}"
+			echo The LAN VNC address 局域网地址 $(ip -4 -br -c a | tail -n 1 | cut -d '/' -f 1 | cut -d 'P' -f 2):${CURRENT_VNC_PORT}
+		else
+			echo "检测到您当前没有使用VNC服务，若您使用的是Xserver则可无视以下说明"
+			echo "请自行添加端口号"
+			echo "spice默认端口号为5931"
+			echo "正在为您启动qemu虚拟机"
+			echo "本机localhost"
+			echo The LAN ip 局域网ip $(ip -4 -br -c a | tail -n 1 | cut -d '/' -f 1 | cut -d 'P' -f 2)
+		fi
 
 		/usr/bin/qemu-system-x86_64 \
 			-monitor stdio \
@@ -7406,6 +7426,12 @@ check_qemu_vnc_port() {
 }
 #########################
 modify_qemu_vnc_display_port() {
+	if grep -q '\-vnc \:' "startqemu"; then
+		echo "检测到您未启用VNC服务，是否启用？"
+		do_you_want_to_continue
+		sed -i "/-vnc :/d" startqemu
+		sed -i '$!N;$!P;$!D;s/\(\n\)/\n    -vnc :2 \\\n/' startqemu
+	fi
 	check_qemu_vnc_port
 	TARGET=$(whiptail --inputbox "默认显示编号为2，默认VNC服务端口为5902，当前为${CURRENT_VNC_PORT} \nVNC服务以5900端口为起始，若显示编号为3,则端口为5903，请输入显示编号.Please enter the display number." 13 50 --title "MODIFY DISPLAY PORT " 3>&1 1>&2 2>&3)
 
@@ -7588,8 +7614,9 @@ enable_qemnu_spice_remote() {
 		TMOE_SPICE_STATUS='检测到您已禁用speic'
 	fi
 	###########
-	if (whiptail --title "您想要对这个小可爱做什么?" --yes-button 'enable启用' --no-button 'disable禁用' --yesno "Do you want to enable it?(っ °Д °)\n您是想要启用还是禁用呢？${TMOE_SPICE_STATUS},默认spice端口为5931" 11 45); then
+	if (whiptail --title "您想要对这个小可爱做什么?" --yes-button 'enable启用' --no-button 'disable禁用' --yesno "Do you want to enable it?(っ °Д °)\n您是想要启用还是禁用呢？${TMOE_SPICE_STATUS},默认spice端口为5931,启用后将禁用vnc服务。" 10 45); then
 		sed -i '/-spice port=/d' startqemu
+		sed -i "/-vnc :/d" startqemu
 		sed -i '$!N;$!P;$!D;s/\(\n\)/\n    -spice tmoe_spice_config_test \\\n/' startqemu
 		sed -i "s@-spice tmoe_spice_config_test@-spice port=5931,image-compression=quic,disable-ticketing@" startqemu
 		echo "启用完成，将在下次启动qemu虚拟机时生效"
@@ -9002,12 +9029,14 @@ tmoe_qemu_disk_manager() {
 ################
 tmoe_qemu_display_settings() {
 	RETURN_TO_WHERE='tmoe_qemu_display_settings'
+	cd /usr/local/bin/
 	VIRTUAL_TECH=$(
 		whiptail --title "DISPLAY" --menu "Which configuration do you want to modify?" 15 50 5 \
 			"1" "Graphics card/VGA(显卡/显示器)" \
 			"2" "Display devices显示设备" \
 			"3" "VNC port端口" \
-			"4" "spice远程桌面" \
+			"4" "Xserver SDL" \
+			"5" "spice远程桌面" \
 			"0" "Return to previous menu 返回上级菜单" \
 			3>&1 1>&2 2>&3
 	)
@@ -9017,12 +9046,21 @@ tmoe_qemu_display_settings() {
 	1) modify_qemnu_graphics_card ;;
 	2) modify_tmoe_qemu_display_device ;;
 	3) modify_qemu_vnc_display_port ;;
-	4) enable_qemnu_spice_remote ;;
+	4) modify_tmoe_qemu_xsdl_settings ;;
+	5) enable_qemnu_spice_remote ;;
 	esac
 	press_enter_to_return
 	tmoe_qemu_display_settings
 }
 ################
+modify_tmoe_qemu_xsdl_settings() {
+	if (whiptail --title "您想要对这个小可爱做什么?" --yes-button 'enable启用' --no-button 'no' --yesno "Do you want to enable it?(っ °Д °)\n启用xserver后将禁用vnc和spice${TMOE_SPICE_STATUS}" 0 0); then
+		sed -i '/vnc :/d' startqemu
+		sed -i '/-spice port=/d' startqemu
+		sed 's@export PULSE_SERVER.*@export PULSE_SERVER=127.0.0.1:4713@' $(which startqemu)
+	fi
+}
+##############
 modify_tmoe_qemu_display_device() {
 	cd /usr/local/bin/
 	RETURN_TO_WHERE='modify_tmoe_qemu_display_device'

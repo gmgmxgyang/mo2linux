@@ -7458,8 +7458,13 @@ mount_qemu_guest_shared_folder() {
 }
 ##############
 check_qemu_vnc_port() {
-	CURRENT_PORT=$(cat startqemu | grep '\-vnc ' | tail -n 1 | awk '{print $2}' | cut -d ':' -f 2)
-	CURRENT_VNC_PORT=$((${CURRENT_PORT} + 5900))
+	START_QEMU_SCRIPT_PATH='/usr/local/bin/startqemu'
+	if grep -q '\-vnc \:' "${START_QEMU_SCRIPT_PATH}"; then
+		CURRENT_PORT=$(cat ${START_QEMU_SCRIPT_PATH} | grep '\-vnc ' | tail -n 1 | awk '{print $2}' | cut -d ':' -f 2 | tail -n 1)
+		CURRENT_VNC_PORT=$((${CURRENT_PORT} + 5900))
+	fi
+	#CURRENT_PORT=$(cat startqemu | grep '\-vnc ' | tail -n 1 | awk '{print $2}' | cut -d ':' -f 2)
+	#CURRENT_VNC_PORT=$((${CURRENT_PORT} + 5900))
 }
 #########################
 modify_qemu_vnc_display_port() {

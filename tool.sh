@@ -7394,6 +7394,7 @@ modify_qemu_host_shared_folder_sdcard() {
 	echo "Sorry,当前暂不支持修改挂载目录"
 }
 ###############
+#-hdd fat:rw:/root/sd \
 modify_qemu_host_shared_folder() {
 	VIRTUAL_TECH=$(
 		whiptail --title "shared folder" --menu "如需添加更多共享文件夹，请手动修改配置文件" 15 55 4 \
@@ -7442,7 +7443,7 @@ configure_mount_script() {
 		echo "" >>.profile
 		sed -i '$ a\/usr/local/bin/mount-9p-filesystem' .profile
 	fi
-	echo "若无法自动挂载，则请手动输$GREEN}mount-9p-filesystem${RESET}"
+	echo "若无法自动挂载，则请手动输${GREEN}mount-9p-filesystem${RESET}"
 }
 #############
 disable_automatic_mount_qemu_folder() {

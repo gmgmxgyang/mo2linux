@@ -6666,7 +6666,7 @@ creat_qemu_aarch64_startup_script() {
 tmoe_qemu_aarch64_cpu_manager() {
 	RETURN_TO_WHERE='tmoe_qemu_aarch64_cpu_manager'
 	VIRTUAL_TECH=$(
-		whiptail --title "CPU" --menu "Which configuration do you want to modify?" 15 50 5 \
+		whiptail --title "CPU" --menu "Which configuration do you want to modify?" 15 50 6 \
 			"1" "CPU cores处理器核心数" \
 			"2" "cpu model/type(型号/类型)" \
 			"3" "multithreading多线程" \
@@ -7354,7 +7354,7 @@ modify_qemu_host_and_guest_port() {
 ########
 modify_qemu_shared_folder() {
 	cd /usr/local/bin
-	if (whiptail --title "您当前处于哪个环境" --yes-button 'Host' --no-button 'Guest' --yesno "您当前处于宿主机还是虚拟机环境？" 8 50); then
+		if (whiptail --title "您当前处于哪个环境" --yes-button 'Host' --no-button 'Guest' --yesno "您当前处于宿主机还是虚拟机环境？\nAre you in a host or guest environment?" 8 50); then
 		modify_qemu_host_shared_folder
 	else
 		mount_qemu_guest_shared_folder
@@ -8756,7 +8756,7 @@ enable_tmoe_qemu_cpu_multi_threading() {
 tmoe_qemu_x64_cpu_manager() {
 	RETURN_TO_WHERE='tmoe_qemu_x64_cpu_manager'
 	VIRTUAL_TECH=$(
-		whiptail --title "CPU" --menu "Which configuration do you want to modify?" 15 50 5 \
+		whiptail --title "CPU" --menu "Which configuration do you want to modify?" 15 50 6 \
 			"1" "CPU cores处理器核心数" \
 			"2" "cpu model/type(型号/类型)" \
 			"3" "multithreading多线程" \
@@ -9827,7 +9827,7 @@ dd_if_zero_of_qemu_tmp_disk() {
 ##################
 compress_or_dd_qcow2_img_file() {
 	cd /usr/local/bin
-	if (whiptail --title "您当前处于哪个环境" --yes-button 'Host' --no-button 'Guest' --yesno "您当前处于宿主机还是虚拟机环境？" 8 50); then
+	if (whiptail --title "您当前处于哪个环境" --yes-button 'Host' --no-button 'Guest' --yesno "您当前处于宿主机还是虚拟机环境？\nAre you in a host or guest environment?" 8 50); then
 		compress_qcow2_img_file
 	else
 		dd_if_zero_of_qemu_tmp_disk

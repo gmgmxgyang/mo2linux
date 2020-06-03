@@ -7712,7 +7712,7 @@ modify_qemu_sound_card() {
 	if grep -q '\-soundhw ' startqemu; then
 		CURRENT_VALUE=$(cat startqemu | grep '\-soundhw ' | tail -n 1 | awk '{print $2}')
 	else
-		CURRENT_VALUE='未指定'
+		CURRENT_VALUE='未启用'
 	fi
 	VIRTUAL_TECH=$(
 		whiptail --title "声卡型号" --menu "Please select the sound card model.\n检测到当前为${CURRENT_VALUE}" 16 50 7 \

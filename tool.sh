@@ -7275,13 +7275,33 @@ modify_qemnu_graphics_card() {
 	#############
 	case ${VIRTUAL_TECH} in
 	0 | "") tmoe_qemu_display_settings ;;
-	1) QEMU_VGA='vmware' ;;
-	2) QEMU_VGA='std' ;;
-	3) QEMU_VGA='cirrus' ;;
-	4) QEMU_VGA='qxl' ;;
-	5) QEMU_VGA='xenfb' ;;
-	6) QEMU_VGA='tcx' ;;
-	7) QEMU_VGA='cg3' ;;
+	1)
+		echo " VMWare SVGA-II compatible adapter. Use it if you have sufficiently recent XFree86/XOrg server or Windows guest with a driver for this card."
+		QEMU_VGA='vmware'
+		;;
+	2)
+		echo "std Standard VGA card with Bochs VBE extensions.  If your guest OS supports the VESA 2.0 VBE extensions (e.g. Windows XP) and if you want to use high resolution modes (>= 1280x1024x16) then you should use this option. (This card is the default since QEMU 2.2)"
+		QEMU_VGA='std'
+		;;
+	3)
+		echo "Cirrus Logic GD5446 Video card. All Windows versions starting from Windows 95 should recognize and use this graphic card. For optimal performances, use 16 bit color depth in the guest and the host OS.  (This card was the default before QEMU 2.2) "
+		QEMU_VGA='cirrus'
+		;;
+	4)
+		echo "QXL paravirtual graphic card.  It is VGA compatible (including VESA 2.0 VBE support).  Works best with qxl guest drivers installed though.  Recommended choice when using the spice protocol."
+		QEMU_VGA='qxl'
+		;;
+	5)
+		QEMU_VGA='xenfb'
+		;;
+	6)
+		echo "tcx (sun4m only) Sun TCX framebuffer. This is the default framebuffer for sun4m machines and offers both 8-bit and 24-bit colour depths at a fixed resolution of 1024x768."
+		QEMU_VGA='tcx'
+		;;
+	7)
+		echo " cg3 (sun4m only) Sun cgthree framebuffer. This is a simple 8-bit framebuffer for sun4m machines available in both 1024x768 (OpenBIOS) and 1152x900 (OBP) resolutions aimed at people wishing to run older Solaris versions."
+		QEMU_VGA='cg3'
+		;;
 	8) QEMU_VGA='none' ;;
 	9) QEMU_VGA='virtio' ;;
 	esac

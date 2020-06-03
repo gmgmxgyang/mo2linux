@@ -6622,8 +6622,8 @@ creat_qemu_aarch64_startup_script() {
 			--cdrom /root/alpine-standard-3.11.6-aarch64.iso \
 			-name "tmoe-linux-aarch64-qemu"
 	EndOFqemu
-	chmod +x startqemu_aarch64_20200602
-	cp -pf startqemu_aarch64_20200602 /usr/local/bin/startqemu
+	chmod +x startqemu_aarch64_20200603
+	cp -pf startqemu_aarch64_20200603 /usr/local/bin/startqemu
 }
 ######################
 tmoe_qemu_aarch64_cpu_manager() {
@@ -6657,7 +6657,7 @@ start_tmoe_qemu_aarch64_manager() {
 	RETURN_TO_MENU='start_tmoe_qemu_aarch64_manager'
 	check_qemu_aarch64_install
 	cd /usr/local/bin/
-	if [ ! -e "${HOME}/.config/tmoe-linux/startqemu_aarch64_20200602" ]; then
+	if [ ! -e "${HOME}/.config/tmoe-linux/startqemu_aarch64_20200603" ]; then
 		echo "启用arm64虚拟机将重置startqemu为arm64的配置"
 		rm -fv ${HOME}/.config/tmoe-linux/startqemu*
 		creat_qemu_aarch64_startup_script
@@ -7159,8 +7159,8 @@ creat_qemu_startup_script() {
 			-device usb-tablet \
 			-name "tmoe-linux-qemu"
 	EndOFqemu
-	chmod +x startqemu_amd64_20200602
-	cp -pf startqemu_amd64_20200602 /usr/local/bin/startqemu
+	chmod +x startqemu_amd64_20200603
+	cp -pf startqemu_amd64_20200603 /usr/local/bin/startqemu
 }
 ###########
 modify_qemu_machine_accel() {
@@ -8896,7 +8896,7 @@ start_tmoe_qemu_manager() {
 	RETURN_TO_WHERE='start_tmoe_qemu_manager'
 	RETURN_TO_MENU='start_tmoe_qemu_manager'
 	check_qemu_install
-	if [ ! -e "${HOME}/.config/tmoe-linux/startqemu_amd64_20200602" ]; then
+	if [ ! -e "${HOME}/.config/tmoe-linux/startqemu_amd64_20200603" ]; then
 		echo "启用x86_64虚拟机将重置startqemu为x86_64的配置"
 		rm -fv ${HOME}/.config/tmoe-linux/startqemu*
 		creat_qemu_startup_script

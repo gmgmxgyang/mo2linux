@@ -6609,7 +6609,7 @@ install_container_and_virtual_machine() {
 ###########
 check_qemu_aarch64_install() {
 	if [ ! $(command -v qemu-system-aarch64) ]; then
-		DEPENDENCY_01='qemu'
+		DEPENDENCY_01='qemu qemu-system-gui'
 		DEPENDENCY_02='qemu-system-arm'
 		echo "请按回车键安装qemu-system-arm,否则您将无法使用本功能"
 		beta_features_quick_install
@@ -7162,7 +7162,7 @@ modify_qemu_aarch64_tmoe_sound_card() {
 #############
 check_qemu_install() {
 	if [ ! $(command -v qemu-system-x86_64) ]; then
-		DEPENDENCY_01='qemu'
+		DEPENDENCY_01='qemu qemu-system-gui'
 		DEPENDENCY_02='qemu-system-x86'
 		beta_features_quick_install
 	fi

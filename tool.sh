@@ -9159,6 +9159,9 @@ modify_tmoe_qemu_xsdl_settings() {
 			sed -i "1 a\export DISPLAY=127.0.0.1:0" startqemu
 		fi
 		sed -i 's@export PULSE_SERVER.*@export PULSE_SERVER=127.0.0.1:4713@' startqemu
+		echo "启用完成，重启qemu生效"
+		press_enter_to_return
+		modify_tmoe_qemu_xsdl_settings
 	else
 		modify_xsdl_conf
 	fi

@@ -9123,8 +9123,8 @@ tmoe_qemu_disk_manager() {
 		whiptail --title "DISK MANAGER" --menu "Which configuration do you want to modify?" 15 50 7 \
 			"1" "choose iso选择启动光盘(CD)" \
 			"2" "choose disk选择启动磁盘(IDE)" \
-			"3" "compress压缩磁盘文件大小" \
-			"4" "expand disk扩容磁盘空间" \
+			"3" "compress压缩磁盘文件(真实大小)" \
+			"4" "expand disk扩容磁盘(最大空间)" \
 			"5" "mount shared folder挂载共享文件夹" \
 			"6" "Storage devices存储设备" \
 			"7" "creat disk创建(空白)虚拟磁盘" \

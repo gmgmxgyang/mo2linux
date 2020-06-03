@@ -9044,7 +9044,7 @@ creat_a_new_tmoe_qemu_vm() {
 	TMOE_QEMU_SCRIPT_FILE_PATH='/usr/local/bin/.tmoe-linux-qemu'
 	THE_QEMU_STARTUP_SCRIPT='/usr/local/bin/startqemu'
 	RETURN_TO_WHERE='save_current_qemu_conf_as_a_new_script'
-	if (whiptail --title "是否需要选择启动光盘" --yes-button 'yes' --no-button 'skip跳过' --yesno "Do you want to choose a iso?启动光盘用于安装系统,若您无此文件,则请先下载iso;若磁盘内已安装系统,则可跳过此选项。" 10 50); then
+	if (whiptail --title "是否需要选择启动光盘" --yes-button 'yes' --no-button 'skip跳过' --yesno "Do you want to choose a iso?启动光盘用于安装系统,若您无此文件,则请先下载iso;若磁盘内已安装了系统,则可跳过此选项。" 10 50); then
 		choose_qemu_iso_file
 	fi
 	RETURN_TO_WHERE='multi_qemu_vm_management'

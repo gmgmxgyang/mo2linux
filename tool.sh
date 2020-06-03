@@ -7530,6 +7530,7 @@ where_is_tmoe_file_dir() {
 choose_qemu_qcow2_or_img_file() {
 	FILE_EXT_01='qcow2'
 	FILE_EXT_02='img'
+	cd /usr/local/bin
 	if grep -q '\-hda' startqemu; then
 		CURRENT_QEMU_ISO=$(cat startqemu | grep '\-hda' | tail -n 1 | awk '{print $2}')
 		IMPORTANT_TIPS="您当前已加载的虚拟磁盘为${CURRENT_QEMU_ISO}"

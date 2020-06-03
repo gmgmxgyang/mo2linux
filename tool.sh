@@ -9125,7 +9125,7 @@ modify_tmoe_qemu_vnc_pulse_audio_address() {
 }
 ##################
 modify_tmoe_qemu_xsdl_settings() {
-	if ! grep -q '\-vnc \:' "startqemu"; then
+	if grep -q '\-vnc \:' "startqemu"; then
 		X_SERVER_STATUS="检测到您当前启用的是VNC"
 	elif grep -q '/-spice port' "startqemu"; then
 		X_SERVER_STATUS="检测到您当前启用的是spice"

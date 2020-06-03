@@ -9711,8 +9711,8 @@ save_current_qemu_conf_as_a_new_script() {
 	TARGET_FILE_NAME=$(whiptail --inputbox "请自定义启动脚本名称\nPlease enter the script name." 10 50 --title "SCRIPT NAME" 3>&1 1>&2 2>&3)
 	if [ "$?" != "0" ]; then
 		multi_qemu_vm_management
-	elif [ "${TARGET_FILE_NAME}" = "startqemu" ]; then
-		echo "startqemu已被占用，请重新输入"
+	elif [ "${TARGET_FILE_NAME}" = "startqemu" ] || [ "${TARGET_FILE_NAME}" = "debian-i" ] || [ "${TARGET_FILE_NAME}" = "startvnc" ]; then
+		echo "文件已被占用，请重新输入"
 		echo "Please re-enter."
 		press_enter_to_return
 		save_current_qemu_conf_as_a_new_script

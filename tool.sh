@@ -10369,7 +10369,7 @@ install_wine64() {
 }
 #########################
 install_aqemu() {
-	DEPENDENCY_01='aqemu'
+	DEPENDENCY_01='aqemu virt-manager'
 	DEPENDENCY_02='qemu gnome-boxes'
 	#qemu-block-extra
 	beta_features_quick_install

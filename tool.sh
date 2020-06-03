@@ -4353,9 +4353,9 @@ install_electron_netease_cloud_music() {
 	echo "github url：https://github.com/Rocket1184/electron-netease-cloud-music"
 	beta_features_quick_install
 	FILE_SIZE=$(du -s /opt/electron-netease-cloud-music/app.asar | awk '{print $1}')
-	#if ((${FILE_SIZE} < 3000)); then
-	patch_electron_netease_cloud_music
-	#fi
+	if ((${FILE_SIZE} < 3000)); then
+		patch_electron_netease_cloud_music
+	fi
 	do_you_want_to_close_the_sandbox_mode
 	do_you_want_to_continue
 	#with_no_sandbox_model_02

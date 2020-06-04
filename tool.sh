@@ -1702,7 +1702,7 @@ install_firefox_esr_browser() {
 	fi
 	beta_features_quick_install
 	#################
-	if [ ! $(command -v firefox-esr) ]; then
+	if [ ! $(command -v firefox) ] && [ ! $(command -v firefox-esr) ]; then
 		echo "${YELLOW}对不起，我...我真的已经尽力了ヽ(*。>Д<)o゜！您的软件源仓库里容不下我，我只好叫姐姐来代替了。${RESET}"
 		echo 'Press Enter to confirm.'
 		RETURN_TO_WHERE='install_browser'
@@ -2966,6 +2966,7 @@ check_update_icon_caches_sh() {
 ##############
 configure_theme() {
 	check_update_icon_caches_sh
+	cd /tmp
 	RETURN_TO_WHERE='configure_theme'
 	INSTALL_THEME=$(whiptail --title "桌面环境主题" --menu \
 		"您想要下载哪个主题？按方向键选择！下载完成后，您需要手动修改外观设置中的样式和图标。注：您需修改窗口管理器样式才能解决标题栏丢失的问题。\n Which theme do you want to download? " 17 55 7 \

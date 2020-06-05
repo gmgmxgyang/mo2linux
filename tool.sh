@@ -2347,7 +2347,7 @@ download_deb_comman_model_01() {
 ###################
 other_desktop() {
 	BETA_DESKTOP=$(whiptail --title "Alpha features" --menu \
-		"WARNING！本功能仍处于测试阶段,可能无法正常运行。部分桌面依赖systemd,无法在chroot环境中运行\nAlpha features may not work properly." 15 60 6 \
+		"WARNING！本功能仍处于测试阶段,可能无法正常运行。部分桌面依赖systemd,无法在chroot环境中运行\nAlpha features may not work properly." 17 50 6 \
 		"1" "lxqt(lxde原作者基于QT开发的桌面)" \
 		"2" "kde plasma5(风格华丽的桌面环境)" \
 		"3" "gnome3(GNU项目的一部分)" \

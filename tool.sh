@@ -10555,7 +10555,7 @@ download_tmoe_debian_x64_or_arm64_qcow2_file() {
 		DOWNLOAD_FILE_NAME='debian-10.4.1-20200515-tmoe_arm64.tar.xz'
 		QEMU_DISK_FILE_NAME='debian-10.4.1-20200515-tmoe_arm64.qcow2'
 		CURRENT_TMOE_QEMU_BIN='/usr/bin/qemu-system-x86_64'
-		LATER_TMOE_QEMU_BIN='/usr/bin/qemu-system-aarch64F'
+		LATER_TMOE_QEMU_BIN='/usr/bin/qemu-system-aarch64'
 		THE_LATEST_ISO_LINK='https://m.tmoe.me/down/share/Tmoe-linux/qemu/debian-10.4.1-20200515-tmoe_arm64.tar.xz'
 		;;
 	esac

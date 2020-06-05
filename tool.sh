@@ -3931,6 +3931,10 @@ modify_archlinux_mirror_list() {
 edit_sources_list_manually() {
 	if [ "${LINUX_DISTRO}" = "debian" ]; then
 		apt edit-sources || nano ${SOURCES_LIST_FILE}
+		#SOURCES_LIST_FILE="/etc/apt/sources.list"
+		if [ ! -z "$(ls /etc/apt/sources.list.d/)" ]; then
+			nano /etc/apt/sources.list.d/*.list
+		fi
 	elif [ "${LINUX_DISTRO}" = "redhat" ]; then
 		nano ${SOURCES_LIST_PATH}/*repo
 	else

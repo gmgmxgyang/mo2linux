@@ -491,7 +491,7 @@ nano $(which startvnc)
 
 ##### 2020-04-10 更新日志
 
-- 1.加入测试版容器 arch,fedora,centos.raspbian,mint 等等
+- 1.加入测试版容器 arch,fedora,centos,raspbian,mint 等等
 
 ##### 2020-04-11 更新日志
 
@@ -656,5 +656,9 @@ nano $(which startvnc)
 
 ##### 2020-06-03 更新日志
 
-- 1.修改 qemu 在 VNC 远程桌面环境下无法调用音频的问题
-- 2. 更新 Tmoe 文件选择器，自动重定向文件路径。
+- 1.修复 qemu 在 VNC 远程桌面环境下无法调用音频的问题
+- 2.更新 Tmoe 文件选择器，自动重定向文件路径。
+
+##### 2020-06-05 更新日志
+
+- 1.支持配置显示管理器 (Display manager)

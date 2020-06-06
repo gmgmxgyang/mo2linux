@@ -10,7 +10,7 @@ check_arch() {
 	h* | -h* | --h*)
 		cat <<-'EOF'
 			输debian-i打开tmoe-linux工具
-			输debian-i -m切换为国内镜像源
+			输debian-i -m更换为tuna镜像源(仅debian,ubuntu,kali,alpine和arch)
 			startvnc启动VNC
 			stopvnc停止vnc
 			startxsdl启动xsdl  

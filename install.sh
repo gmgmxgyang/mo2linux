@@ -430,7 +430,7 @@ creat_proot_startup_script() {
 				debian-i
 				exit 0
 				;;
-			-h | --help)
+			-h* | --h*)
 				get_tmoe_linux_help_info
 				;;
 			-m* | m*)

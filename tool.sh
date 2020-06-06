@@ -1919,7 +1919,7 @@ tmoe_display_manager_install() {
 	case "${INSTALLDESKTOP}" in
 	0 | "") tmoe_linux_tool_menu ;;
 	1)
-		DEPENDENCY_01='ukui-greeter'
+		DEPENDENCY_01='ukui-greeter lightdm-gtk-greeter-settings'
 		DEPENDENCY_02='lightdm'
 		;;
 	2)
@@ -2334,15 +2334,20 @@ install_fvwm() {
 	fi
 }
 #################
-download_deb_comman_model_01() {
+download_deb_comman_model_02() {
 	cd /tmp/
-	THE_LATEST_DEB_VERSION="$(curl -L ${REPO_URL} | grep '.deb' | grep "${GREP_NAME}" | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
 	THE_LATEST_DEB_LINK="${REPO_URL}${THE_LATEST_DEB_VERSION}"
 	echo ${THE_LATEST_DEB_LINK}
 	aria2c --allow-overwrite=true -s 5 -x 5 -k 1M -o "${THE_LATEST_DEB_VERSION}" "${THE_LATEST_DEB_LINK}"
 	apt show ./${THE_LATEST_DEB_VERSION}
 	apt install -y ./${THE_LATEST_DEB_VERSION}
 	rm -fv ${THE_LATEST_DEB_VERSION}
+}
+#########################
+download_deb_comman_model_01() {
+	cd /tmp/
+	THE_LATEST_DEB_VERSION="$(curl -L ${REPO_URL} | grep '.deb' | grep "${GREP_NAME}" | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
+	download_deb_comman_model_02
 }
 ###################
 other_desktop() {
@@ -2476,6 +2481,12 @@ debian_xfce4_extras() {
 	if [ "${LINUX_DISTRO}" = "debian" ]; then
 		if [ "${DEBIAN_DISTRO}" = "kali" ]; then
 			kali_xfce4_extras
+		fi
+		if [ ! $(command -v xfce4-panel-profiles) ]; then
+			REPO_URL='https://mirrors.tuna.tsinghua.edu.cn/ubuntu/pool/universe/x/xfce4-panel-profiles/'
+			GREP_NAME="xfce4-panel-profiles"
+			THE_LATEST_DEB_VERSION="$(curl -L ${REPO_URL} | grep '.deb' | grep "${GREP_NAME}" | grep -v '1.0.9' | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
+			download_deb_comman_model_02
 		fi
 	fi
 	apt_purge_libfprint
@@ -11013,7 +11024,7 @@ install_iflyime_pinyin() {
 ################
 install_gnome_system_monitor() {
 	DEPENDENCY_01="gnome-system-monitor"
-	DEPENDENCY_02="gnome-nettool"
+	DEPENDENCY_02="network-manager-gnome gnome-nettool"
 	NON_DEBIAN='false'
 	beta_features_quick_install
 }

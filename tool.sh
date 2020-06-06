@@ -56,22 +56,19 @@ check_root() {
 #####################
 check_architecture() {
 	case $(uname -m) in
-	aarch64)
+	aarch64 | armv8* | arm64)
 		ARCH_TYPE="arm64"
 		;;
-	armv7l)
+	armv7*)
 		ARCH_TYPE="armhf"
 		;;
-	armv6l)
+	armv6* | armv5*)
 		ARCH_TYPE="armel"
 		;;
-	x86_64)
+	x86_64 | amd64)
 		ARCH_TYPE="amd64"
 		;;
-	i*86)
-		ARCH_TYPE="i386"
-		;;
-	x86)
+	i*86 | x86)
 		ARCH_TYPE="i386"
 		;;
 	s390*)

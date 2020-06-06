@@ -9500,13 +9500,16 @@ tmoe_qemu_templates_repo() {
 	DOWNLOAD_PATH="${HOME}/sd/Download/backup"
 	mkdir -p ${DOWNLOAD_PATH}
 	cd ${DOWNLOAD_PATH}
+	CURRENT_TMOE_QEMU_BIN='/usr/bin/qemu-system-aarch64'
+	LATER_TMOE_QEMU_BIN='/usr/bin/qemu-system-x86_64'
 	VIRTUAL_TECH=$(
-		whiptail --title "QEMU TEMPLATES" --menu "Welcome to 施工现场(ﾟДﾟ*)ﾉ" 15 50 6 \
+		whiptail --title "QEMU TEMPLATES" --menu "Welcome to 施工现场(ﾟДﾟ*)ﾉ" 15 50 7 \
 			"1" "Explore templates探索共享模板(未开放)" \
 			"2" "alpine(x64,含docker)" \
 			"3" "Debian buster(arm64+x64,UEFI引导)" \
 			"4" "Arch_x64(legacy bios引导)" \
-			"5" "share 分享你的qemu配置(未开放)" \
+			"5" "FreeBSD_x64(legacy bios引导)" \
+			"6" "share 分享你的qemu配置(未开放)" \
 			"0" "Return to previous menu 返回上级菜单" \
 			3>&1 1>&2 2>&3
 	)
@@ -9518,12 +9521,47 @@ tmoe_qemu_templates_repo() {
 	2) download_alpine_and_docker_x64_img_file ;;
 	3) download_debian_qcow2_file ;;
 	4) download_arch_linux_qcow2_file ;;
-	5) share_qemu_conf_to_git_branch_qemu ;;
+	5) download_freebsd_qcow2_file ;;
+	6) share_qemu_conf_to_git_branch_qemu ;;
 	esac
 	press_enter_to_return
 	tmoe_qemu_templates_repo
 }
 ##########
+download_freebsd_qcow2_file() {
+	DOWNLOAD_PATH="${HOME}/sd/Download/backup/freebsd"
+	mkdir -p ${DOWNLOAD_PATH}
+	cd ${DOWNLOAD_PATH}
+	ISO_REPO='https://mirrors.huaweicloud.com/freebsd/releases/VM-IMAGES/'
+	THE_LATEST_SYSTEM_VERSION=$(curl -L ${ISO_REPO} | grep -v 'README' | grep href | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)
+	#https://mirrors.huaweicloud.com/freebsd/releases/VM-IMAGES/12.1-RELEASE/amd64/Latest/
+	THE_LATEST_ISO_REPO="${ISO_REPO}${THE_LATEST_SYSTEM_VERSION}amd64/Latest/"
+	THE_LATEST_FILE_VERSION=$(curl -L ${THE_LATEST_ISO_REPO} | grep -Ev 'vmdk|vhd|raw.xz|CHECKSUM' | grep qcow2 | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)
+	DOWNLOAD_FILE_NAME="${THE_LATEST_FILE_VERSION}"
+	THE_LATEST_ISO_LINK="${THE_LATEST_ISO_REPO}${THE_LATEST_FILE_VERSION}"
+	# stat ${THE_LATEST_FILE_VERSION}
+	if [ -f "${DOWNLOAD_FILE_NAME}" ]; then
+		if (whiptail --title "检测到压缩包已下载,请选择您需要执行的操作！" --yes-button '解压o(*￣▽￣*)o' --no-button '重新下载(っ °Д °)' --yesno "Detected that the file has been downloaded.\nDo you want to uncompress it, or download it again?" 0 0); then
+			echo "解压后将重置虚拟机的所有数据"
+			do_you_want_to_continue
+		else
+			aria2c_download_file
+		fi
+	else
+		aria2c_download_file
+	fi
+	uncompress_qcow2_xz_file
+	QEMU_DISK_FILE_NAME=$(ls -At | grep -v '.xz' | awk -F ' ' '$0=$NF' | head -n 1)
+	TMOE_FILE_ABSOLUTE_PATH="${DOWNLOAD_PATH}/${QEMU_DISK_FILE_NAME}"
+	set_it_as_default_qemu_disk
+}
+########################
+uncompress_qcow2_xz_file() {
+	echo '正在解压中...'
+	#unxz
+	xz -dv ${DOWNLOAD_FILE_NAME}
+}
+####################
 share_qemu_conf_to_git_branch_qemu() {
 	echo "Welcome to 施工现场，这个功能还在开发中呢！咕咕咕，建议您明年再来o((>ω< ))o"
 }
@@ -10080,6 +10118,7 @@ download_alpine_and_docker_x64_img_file_again() {
 }
 ###########
 uncompress_alpine_and_docker_x64_img_file() {
+	echo '正在解压中...'
 	if [ $(command -v pv) ]; then
 		pv ${DOWNLOAD_FILE_NAME} | tar -pJx
 	else
@@ -10536,8 +10575,6 @@ download_arch_linux_qcow2_file() {
 	cd ${DOWNLOAD_PATH}
 	DOWNLOAD_FILE_NAME='arch_linux_x64_tmoe_20200605.tar.xz'
 	QEMU_DISK_FILE_NAME='arch_linux_x64_tmoe_20200605.qcow2'
-	CURRENT_TMOE_QEMU_BIN='/usr/bin/qemu-system-aarch64'
-	LATER_TMOE_QEMU_BIN='/usr/bin/qemu-system-x86_64'
 	THE_LATEST_ISO_LINK='https://m.tmoe.me/down/share/Tmoe-linux/qemu/arch_linux_x64_tmoe_20200605.tar.xz'
 	echo '使用此磁盘需要将引导方式切换回默认'
 	download_debian_tmoe_qemu_qcow2_file
@@ -10565,8 +10602,6 @@ download_tmoe_debian_x64_or_arm64_qcow2_file() {
 	2)
 		DOWNLOAD_FILE_NAME='debian-10.4.1-20200515-tmoe_arm64.tar.xz'
 		QEMU_DISK_FILE_NAME='debian-10.4.1-20200515-tmoe_arm64.qcow2'
-		CURRENT_TMOE_QEMU_BIN='/usr/bin/qemu-system-x86_64'
-		LATER_TMOE_QEMU_BIN='/usr/bin/qemu-system-aarch64'
 		THE_LATEST_ISO_LINK='https://m.tmoe.me/down/share/Tmoe-linux/qemu/debian-10.4.1-20200515-tmoe_arm64.tar.xz'
 		;;
 	esac
@@ -10577,19 +10612,7 @@ download_tmoe_debian_x64_or_arm64_qcow2_file() {
 }
 #####################
 #################
-download_debian_tmoe_qemu_qcow2_file() {
-	TMOE_FILE_ABSOLUTE_PATH="${DOWNLOAD_PATH}/${QEMU_DISK_FILE_NAME}"
-	if [ -f "${DOWNLOAD_FILE_NAME}" ]; then
-		if (whiptail --title "检测到压缩包已下载,请选择您需要执行的操作！" --yes-button '解压o(*￣▽￣*)o' --no-button '重新下载(っ °Д °)' --yesno "Detected that the file has been downloaded.\nDo you want to unzip it, or download it again?" 0 0); then
-			echo "解压后将重置虚拟机的所有数据"
-			do_you_want_to_continue
-		else
-			download_debian_tmoe_arm64_img_file_again
-		fi
-	else
-		download_debian_tmoe_arm64_img_file_again
-	fi
-	uncompress_alpine_and_docker_x64_img_file
+set_it_as_default_qemu_disk() {
 	echo "文件已解压至${DOWNLOAD_PATH}"
 	cd ${DOWNLOAD_PATH}
 	qemu-img check ${QEMU_DISK_FILE_NAME}
@@ -10607,6 +10630,22 @@ download_debian_tmoe_qemu_qcow2_file() {
 	# sed -i 's@/usr/bin/qemu-system-x86_64@/usr/bin/qemu-system-aarch64@' startqemu
 	echo "设置完成，您之后可以输startqemu启动"
 	echo "若启动失败，则请检查虚拟机中的相关设置选项"
+}
+##################
+download_debian_tmoe_qemu_qcow2_file() {
+	TMOE_FILE_ABSOLUTE_PATH="${DOWNLOAD_PATH}/${QEMU_DISK_FILE_NAME}"
+	if [ -f "${DOWNLOAD_FILE_NAME}" ]; then
+		if (whiptail --title "检测到压缩包已下载,请选择您需要执行的操作！" --yes-button '解压o(*￣▽￣*)o' --no-button '重新下载(っ °Д °)' --yesno "Detected that the file has been downloaded.\nDo you want to unzip it, or download it again?" 0 0); then
+			echo "解压后将重置虚拟机的所有数据"
+			do_you_want_to_continue
+		else
+			download_debian_tmoe_arm64_img_file_again
+		fi
+	else
+		download_debian_tmoe_arm64_img_file_again
+	fi
+	uncompress_alpine_and_docker_x64_img_file
+	set_it_as_default_qemu_disk
 }
 #############
 download_debian_tmoe_arm64_img_file_again() {

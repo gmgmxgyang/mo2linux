@@ -16,7 +16,7 @@ main() {
 	--remove_gui)
 		remove_gui
 		;;
-	--mirror-list)
+	--mirror-list | -m* | m*)
 		tmoe_sources_list_manager
 		;;
 	up | -u)

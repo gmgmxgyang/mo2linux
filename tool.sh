@@ -10288,6 +10288,7 @@ dd_flash_iso_to_udisk() {
 	fi
 	echo "${DD_OF_TARGET}即将被格式化，所有文件都将丢失"
 	do_you_want_to_continue
+	umount -lf ${DD_OF_TARGET}
 	echo "正在烧录中，这可能需要数分钟的时间..."
 	dd <${TMOE_FILE_ABSOLUTE_PATH} >${DD_OF_TARGET}
 }
@@ -11246,7 +11247,7 @@ install_virtual_box() {
 ################
 install_gparted() {
 	DEPENDENCY_01="gparted"
-	DEPENDENCY_02="baobab"
+	DEPENDENCY_02="baobab disk-manager"
 	NON_DEBIAN='false'
 	beta_features_quick_install
 }

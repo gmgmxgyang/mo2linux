@@ -416,7 +416,6 @@ check_dependencies() {
 	##############
 	CurrentLANG=$LANG
 	export LANG=$(echo 'emhfQ04uVVRGLTgK' | base64 -d)
-	export LANG=${CurrentLANG}
 	tmoe_linux_tool_menu
 }
 ####################################################
@@ -448,7 +447,10 @@ tmoe_linux_tool_menu() {
 	)
 	########
 	case "${TMOE_OPTION}" in
-	0 | "") exit 0 ;;
+	0 | "")
+		export LANG=${CurrentLANG}
+		exit 0
+		;;
 	1) install_gui ;;
 	2) install_browser ;;
 	3) configure_theme ;;

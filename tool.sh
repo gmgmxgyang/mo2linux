@@ -7522,6 +7522,7 @@ modify_qemu_host_shared_folder_sdcard() {
 ###############
 #-hdd fat:rw:/root/sd \
 modify_qemu_host_shared_folder() {
+	cd /usr/local/bin/
 	VIRTUAL_TECH=$(
 		whiptail --title "shared folder" --menu "如需添加更多共享文件夹，请手动修改配置文件" 15 55 4 \
 			"1" "DISABLE SHARE禁用共享" \
@@ -7559,6 +7560,7 @@ configure_mount_script() {
 
 		df | grep "${MOUNT_FOLDER}" >/dev/null 2>&1 || mount_tmoe_linux_9p
 	EOF
+	chmod +x mount-9p-filesystem
 	cd ~
 	if ! grep -q 'mount-9p-filesystem' .zlogin; then
 		echo "" >>.zlogin
@@ -7578,6 +7580,7 @@ disable_automatic_mount_qemu_folder() {
 }
 ##############
 mount_qemu_guest_shared_folder() {
+	cd /usr/local/bin/
 	VIRTUAL_TECH=$(
 		whiptail --title "挂载磁盘" --menu "请在虚拟机环境下使用以下配置" 15 55 4 \
 			"1" "configure配置挂载脚本" \

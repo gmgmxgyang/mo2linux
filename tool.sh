@@ -10030,8 +10030,13 @@ delete_multi_qemu_vm_conf() {
 	echo "Press Ctrl+C to exit,press enter to return."
 	select_file_manually
 	TMOE_FILE_ABSOLUTE_PATH=${START_DIR}/${SELECTION}
-	rm -fv ${TMOE_FILE_ABSOLUTE_PATH} /usr/local/bin/${SELECTION}
+	rm -fv ${TMOE_FILE_ABSOLUTE_PATH}
+	TMOE_QEMU_CONFIG_LINK_FILE="/usr/local/bin/${SELECTION}"
+	if [ -h "${TMOE_QEMU_CONFIG_LINK_FILE}" ]; then
+		rm -f ${TMOE_QEMU_CONFIG_LINK_FILE}
+	fi
 }
+
 ###############
 other_qemu_conf_related_instructions() {
 	cat <<-"ENDOFTMOEINST"

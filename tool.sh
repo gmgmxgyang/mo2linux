@@ -10725,7 +10725,7 @@ set_it_as_default_qemu_disk() {
 	fi
 	# sed -i 's@/usr/bin/qemu-system-x86_64@/usr/bin/qemu-system-aarch64@' startqemu
 	echo "设置完成，您之后可以输startqemu启动"
-	echo "若启动失败，则请检查虚拟机中的相关设置选项"
+	echo "若启动失败，则请检查qemu的相关设置选项"
 }
 ##################
 download_debian_tmoe_qemu_qcow2_file() {

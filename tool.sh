@@ -446,6 +446,9 @@ tmoe_linux_tool_menu() {
 			3>&1 1>&2 2>&3
 	)
 	########
+	if [ "${CurrentLANG}" != $(echo 'emhfQ04uVVRGLTgK' | base64 -d) ]; then
+		export LANG=C.UTF-8
+	fi
 	case "${TMOE_OPTION}" in
 	0 | "")
 		export LANG=${CurrentLANG}

@@ -10059,7 +10059,7 @@ qemu_process_management_instructions() {
 	echo "${BLUE}连接方式02${RESET}"
 	echo "若您需要使用ssh连接，则请新建一个termux会话窗口，并输入${GREEN}ssh -p 2888 root@localhost${RESET}"
 	echo "本工具默认将虚拟机的22端口映射为宿主机的2888端口，若无法连接，则请在虚拟机下新建一个普通用户，再将上述命令中的root修改为普通用户名称"
-	echo "若连接提示${YELLOW}REMOTE HOST IDENTIFICATION HAS CHANGED${RESET}，则请手动输${GREEN}sed -i '/localhost/d' ~/.ssh/known_hosts${RESET}"
+	echo "若连接提示${YELLOW}REMOTE HOST IDENTIFICATION HAS CHANGED${RESET}，则请手动输${GREEN}ssh-keygen -f '/root/.ssh/known_hosts' -R '[localhost]:2888'${RESET}"
 	echo "${BLUE}关机方式02${RESET}"
 	echo "在linux虚拟机内输poweroff"
 	echo "在windows虚拟机内输shutdown /s /t 0"

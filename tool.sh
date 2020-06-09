@@ -10202,7 +10202,9 @@ choose_tmoe_qemu_qcow2_model() {
 }
 #########
 expand_qemu_qcow2_img_file() {
-	echo '您必须在虚拟机系统内对该镜像进行分区并格式化后才能真正开始使用新空间。 在收缩磁盘映像时，必须先使用虚拟机内部系统的分区工具减少该分区的大小，然后相应地收缩磁盘映像，否则收缩磁盘映像将导致数据丢失'
+	echo '建议您在调整容量前对磁盘文件进行备份。'
+	echo '调整完成之后，您可以在虚拟机内部使用resize2fs命令对磁盘空间进行重新识别，例如resize2fs /dev/sda1'
+	echo '在扩容之后，您必须在虚拟机系统内对该镜像进行分区并格式化后才能真正开始使用新空间。 在收缩磁盘映像前，必须先使用虚拟机内部系统的分区工具减少该分区的大小，然后相应地收缩磁盘映像，否则收缩磁盘映像将导致数据丢失'
 	echo 'Arch wiki:After enlarging the disk image, you must use file system and partitioning tools inside the virtual machine to actually begin using the new space. When shrinking a disk image, you must first reduce the allocated file systems and partition sizes using the file system and partitioning tools inside the virtual machine and then shrink the disk image accordingly, otherwise shrinking the disk image will result in data loss! For a Windows guest, open the "create and format hard disk partitions" control panel.'
 	do_you_want_to_continue
 	choose_tmoe_qemu_qcow2_model

@@ -396,19 +396,25 @@ check_dependencies() {
 
 	if [ "${LINUX_DISTRO}" = "debian" ]; then
 		if [ "${DEBIAN_DISTRO}" = "ubuntu" ]; then
-			if [ ! -e "/bin/add-apt-repository" ] && [ ! -e "/usr/bin/add-apt-repository" ]; then
+			if [ ! $(command -v add-apt-repository) ]; then
 				apt install -y software-properties-common
 			fi
-		fi
-
-		if ! grep -q "^zh_CN" "/etc/locale.gen"; then
-			if [ ! -e "/usr/sbin/locale-gen" ]; then
-				apt install -y locales
+			if ! grep -q "^zh_CN" "/etc/locale.gen"; then
+				apt install -y language-pack-zh-hans 2>/dev/null
 			fi
-			sed -i 's/^#.*zh_CN.UTF-8 UTF-8/zh_CN.UTF-8 UTF-8/' /etc/locale.gen
-			locale-gen
-			apt install -y language-pack-zh-hans 2>/dev/null
 		fi
+		if [ ! -e "/usr/sbin/locale-gen" ]; then
+			apt install -y locales
+		fi
+	fi
+
+	if ! grep -q "^zh_CN" "/etc/locale.gen"; then
+		sed -i 's/^#.*zh_CN.UTF-8 UTF-8/zh_CN.UTF-8 UTF-8/' /etc/locale.gen
+		if ! grep -q "^zh_CN" "/etc/locale.gen"; then
+			echo '' >>/etc/locale.gen
+			sed -i '$ a\zh_CN.UTF-8 UTF-8' /etc/locale.gen
+		fi
+		locale-gen
 	fi
 
 	if [ "$(uname -r | cut -d '-' -f 3)" = "Microsoft" ] || [ "$(uname -r | cut -d '-' -f 2)" = "microsoft" ]; then
@@ -450,7 +456,9 @@ tmoe_linux_tool_menu() {
 	#if [ "${CurrentLANG}" != $(echo 'emhfQ04uVVRGLTgK' | base64 -d) ]; then
 	#	export LANG=C.UTF-8
 	#fi
-	export LANG=${CurrentLANG}
+	if [ ! -z "${CurrentLANG}" ]; then
+		export LANG=${CurrentLANG}
+	fi
 	case "${TMOE_OPTION}" in
 	0 | "")
 		#export LANG=${CurrentLANG}

@@ -6630,6 +6630,7 @@ beta_features() {
 network_manager_tui() {
 	NON_DEBIAN='false'
 	DEPENDENCY_01=''
+	NON_DEBIAN='false'
 	RETURN_TO_WHERE='network_manager_tui'
 	if [ ! $(command -v nmtui) ]; then
 		DEPENDENCY_02='network-manager'
@@ -6658,6 +6659,7 @@ network_manager_tui() {
 		"5" "driver网卡驱动" \
 		"6" "View ip address查看ip" \
 		"7" "edit config manually手动编辑" \
+		"8" "blueman(蓝牙管理器,GTK+前端)" \
 		"0" "Return to previous menu 返回上级菜单" \
 		3>&1 1>&2 2>&3)
 	##########################
@@ -6683,7 +6685,7 @@ network_manager_tui() {
 		ip a
 		ip -br -c a
 		if [ ! -z $(echo ${LANG} | grep zh) ]; then
-			curl myip.ipip.net
+			curl -L myip.ipip.net
 		else
 			curl -L ip.sb
 		fi
@@ -6694,12 +6696,23 @@ network_manager_tui() {
 		nano /etc/network/interfaces.d/*
 		nano /etc/network/interfaces
 		;;
+	8) install_blueman ;;
 	esac
 	##########################
 	press_enter_to_return
 	network_manager_tui
 }
 ###########
+install_blueman() {
+	if [ "${LINUX_DISTRO}" = "alpine" ]; then
+		DEPENDENCY_01='gnome-bluetooth'
+	else
+		DEPENDENCY_01='blueman-manager'
+	fi
+	DEPENDENCY_02='blueman'
+	beta_features_quick_install
+}
+##################
 tmoe_wifi_scan() {
 	DEPENDENCY_01=''
 	if [ ! $(command -v iw) ]; then
@@ -6762,7 +6775,7 @@ check_debian_nonfree_source() {
 }
 ##################
 install_debian_nonfree_network_card_driver() {
-	RETURN_TO_MENU='install_debian_nonfree_network_card_driver'
+	RETURN_TO_WHERE='install_debian_nonfree_network_card_driver'
 	check_debian_nonfree_source
 	DEPENDENCY_01=''
 	NETWORK_MANAGER=$(whiptail --title "你想要安装哪个驱动？" --menu \
@@ -6786,18 +6799,40 @@ install_debian_nonfree_network_card_driver() {
 	6) DEPENDENCY_02='firmware-misc-nonfree' ;;
 	esac
 	##########################
-	beta_features_quick_install
+	if (whiptail --title "您想要对这个小可爱做什么" --yes-button "install安装" --no-button "Download下载" --yesno "您是想要直接安装，还是下载驱动安装包? ♪(^∇^*) " 8 50); then
+		beta_features_quick_install
+	else
+		download_network_card_device
+	fi
 	press_enter_to_return
 	install_debian_nonfree_network_card_driver
 }
 #############
+download_network_card_device() {
+	mkdir -p cd ${HOME}/sd/Download
+	cd ${HOME}/sd/Download
+	echo "即将为您下载至${HOME}/sd/Download"
+	if [ $(command -v apt-get) ]; then
+		apt download ${DEPENDENCY_02}
+	else
+		GREP_NAME=${DEPENDENCY_02}
+		REPO_URL='https://mirrors.tuna.tsinghua.edu.cn/debian/pool/non-free/f/firmware-nonfree/'
+		THE_LATEST_DEB_VERSION="$(curl -L ${REPO_URL} | grep '.deb' | grep "${GREP_NAME}" | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
+		THE_LATEST_DEB_LINK="${REPO_URL}${THE_LATEST_DEB_VERSION}"
+		echo ${THE_LATEST_DEB_LINK}
+		aria2c --allow-overwrite=true -s 5 -x 5 -k 1M -o "${THE_LATEST_DEB_VERSION}" "${THE_LATEST_DEB_LINK}"
+		apt show ./${THE_LATEST_DEB_VERSION}
+	fi
+	echo "Download completed,文件已保存至${HOME}/sd/Download"
+}
+###############
 list_network_devices() {
 	if [ ! $(command -v dmidecode) ]; then
 		DEPENDENCY_02='dmidecode'
 		beta_features_quick_install
 	fi
 	dmidecode | less -meQ
-	dmidecode | grep --color=auto -Ei 'Wireless|Net'
+	dmidecode | grep --color=auto -Ei 'Wire|Net'
 	press_enter_to_return
 	install_debian_nonfree_network_card_driver
 }

@@ -11237,7 +11237,8 @@ install_pinyin_input_method() {
 			"7" "libpinyin(提供智能整句输入算法核心)" \
 			"8" "sunpinyin(基于统计学语言模型)" \
 			"9" "google谷歌拼音(引擎fork自Android版)" \
-			"10" "uim(Universal Input Method)" \
+			"10" "fcitx云拼音模块" \
+			"11" "uim(Universal Input Method)" \
 			"0" "Return to previous menu 返回上级菜单" \
 			3>&1 1>&2 2>&3
 	)
@@ -11255,7 +11256,8 @@ install_pinyin_input_method() {
 	7) install_lib_pinyin ;;
 	8) install_sun_pinyin ;;
 	9) install_google_pinyin ;;
-	10) install_uim_pinyin ;;
+	10) install_fcitx_module_cloud_pinyin ;;
+	11) install_uim_pinyin ;;
 	esac
 	###############
 	configure_arch_fcitx
@@ -11282,6 +11284,16 @@ install_uim_pinyin() {
 	beta_features_quick_install
 }
 ###########
+install_fcitx_module_cloud_pinyin() {
+	DEPENDENCY_01=''
+	if [ "${LINUX_DISTRO}" = "debian" ]; then
+		DEPENDENCY_02='fcitx-module-cloudpinyin'
+	else
+		DEPENDENCY_02='fcitx-cloudpinyin'
+	fi
+	beta_features_quick_install
+}
+######################
 install_rime_pinyin() {
 	DEPENDENCY_02='fcitx-rime'
 	beta_features_quick_install

@@ -7659,6 +7659,7 @@ modify_qemu_vnc_display_port() {
 }
 ###############
 choose_qemu_iso_file() {
+	cd /usr/local/bin/
 	FILE_EXT_01='iso'
 	FILE_EXT_02='img'
 	if grep -q '\--cdrom' startqemu; then

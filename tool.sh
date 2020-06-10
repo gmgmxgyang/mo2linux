@@ -6800,6 +6800,7 @@ install_debian_nonfree_network_card_driver() {
 	esac
 	##########################
 	if (whiptail --title "您想要对这个小可爱做什么" --yes-button "install安装" --no-button "Download下载" --yesno "您是想要直接安装，还是下载驱动安装包? ♪(^∇^*) " 8 50); then
+		do_you_want_to_continue
 		beta_features_quick_install
 	else
 		download_network_card_device

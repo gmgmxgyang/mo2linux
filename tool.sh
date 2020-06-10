@@ -11229,7 +11229,7 @@ install_pinyin_input_method() {
 	INPUT_METHOD=$(
 		whiptail --title "输入法" --menu "您想要安装哪个输入法呢？\nWhich input method do you want to install?" 17 55 8 \
 			"1" "im-config配置输入法" \
-			"2" "fcitx诊断" \
+			"2" "fcitx-diagnose诊断" \
 			"3" "sogou搜狗拼音" \
 			"4" "iflyime讯飞语音+拼音+五笔" \
 			"5" "rime中州韻(擊響中文之韻)" \
@@ -11411,6 +11411,20 @@ configure_arch_fcitx() {
 			export QT_IM_MODULE=fcitx
 			export XMODIFIERS="@im=fcitx"
 		EOF
+		#sort -u ${HOME}/.xprofile -o ${HOME}/.xprofile
+	fi
+	if ! grep -q 'GTK_IM_MODULE=fcitx' /etc/environment; then
+		sed -i 's/^export INPUT_METHOD.*/#&/' /etc/environment
+		sed -i 's/^export GTK_IM_MODULE.*/#&/' /etc/environment
+		sed -i 's/^export QT_IM_MODULE=.*/#&/' /etc/environment
+		sed -i 's/^export XMODIFIERS=.*/#&/' /etc/environment
+		cat >>/etc/environment <<-'EOF'
+			export INPUT_METHOD=fcitx
+			export GTK_IM_MODULE=fcitx
+			export QT_IM_MODULE=fcitx
+			export XMODIFIERS="@im=fcitx"
+		EOF
+		#sort -u /etc/environment -o /etc/environment
 	fi
 }
 ##############

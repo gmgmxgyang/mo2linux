@@ -11255,7 +11255,7 @@ install_pinyin_input_method() {
 	###############
 	configure_arch_fcitx
 	press_enter_to_return
-	beta_features
+	install_pinyin_input_method
 }
 ########################
 input_method_config() {

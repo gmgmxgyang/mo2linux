@@ -7541,7 +7541,7 @@ check_qemu_install() {
 		elif [ "${LINUX_DISTRO}" = 'alpine' ]; then
 			DEPENDENCY_01='qemu qemu-system-x86_64 qemu-system-i386'
 			DEPENDENCY_02='qemu-system-aarch64'
-		elif [ "${LINUX_DISTRO}" = 'debian' ]; then
+		elif [ "${LINUX_DISTRO}" = 'arch' ]; then
 			DEPENDENCY_02='qemu-arch-extra'
 		fi
 		beta_features_quick_install

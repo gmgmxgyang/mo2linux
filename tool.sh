@@ -11215,30 +11215,44 @@ install_gnome_logs() {
 	beta_features_quick_install
 }
 ##################
-
+kde_config_module_for_fcitx() {
+	DEPENDENCY_01="qt4-qtconfig"
+	DEPENDENCY_02='kcm-fcitx'
+	if [ "${LINUX_DISTRO}" = "arch" ]; then
+		DEPENDENCY_02='kcm-fcitx'
+		#kcm-fcitx
+	elif [ "${LINUX_DISTRO}" = "debian" ]; then
+		DEPENDENCY_02='kde-config-fcitx'
+		#kde-config-fcitx
+	fi
+	beta_features_quick_install
+}
 ############
 install_pinyin_input_method() {
 	RETURN_TO_WHERE='install_pinyin_input_method'
 	NON_DEBIAN='false'
 	DEPENDENCY_01="fcitx"
 	if [ "${LINUX_DISTRO}" = "arch" ]; then
-		DEPENDENCY_01='kcm-fcitx fcitx-im fcitx-configtool'
+		DEPENDENCY_01='fcitx-im fcitx-configtool'
+		#kcm-fcitx
 	elif [ "${LINUX_DISTRO}" = "debian" ]; then
-		DEPENDENCY_01='fcitx kde-config-fcitx fcitx-tools fcitx-table'
+		DEPENDENCY_01='fcitx fcitx-tools fcitx-config-gtk'
+		#kde-config-fcitx
 	fi
 	INPUT_METHOD=$(
 		whiptail --title "输入法" --menu "您想要安装哪个输入法呢？\nWhich input method do you want to install?" 17 55 8 \
 			"1" "im-config配置输入法" \
 			"2" "fcitx-diagnose诊断" \
-			"3" "sogou搜狗拼音" \
-			"4" "iflyime讯飞语音+拼音+五笔" \
-			"5" "rime中州韻(擊響中文之韻)" \
-			"6" "baidu百度输入法" \
-			"7" "libpinyin(提供智能整句输入算法核心)" \
-			"8" "sunpinyin(基于统计学语言模型)" \
-			"9" "google谷歌拼音(引擎fork自Android版)" \
-			"10" "fcitx云拼音模块" \
-			"11" "uim(Universal Input Method)" \
+			"3" "KDE配置模块" \
+			"4" "sogou搜狗拼音" \
+			"5" "iflyime讯飞语音+拼音+五笔" \
+			"6" "rime中州韻(擊響中文之韻)" \
+			"7" "baidu百度输入法" \
+			"8" "libpinyin(提供智能整句输入算法核心)" \
+			"9" "sunpinyin(基于统计学语言模型)" \
+			"10" "google谷歌拼音(引擎fork自Android版)" \
+			"11" "fcitx云拼音模块" \
+			"12" "uim(Universal Input Method)" \
 			"0" "Return to previous menu 返回上级菜单" \
 			3>&1 1>&2 2>&3
 	)
@@ -11249,15 +11263,16 @@ install_pinyin_input_method() {
 		echo '若您无法使用fcitx,则请根据以下诊断信息自行解决'
 		fcitx-diagnose
 		;;
-	3) install_sogou_pinyin ;;
-	4) install_iflyime_pinyin ;;
-	5) install_rime_pinyin ;;
-	6) install_baidu_pinyin ;;
-	7) install_lib_pinyin ;;
-	8) install_sun_pinyin ;;
-	9) install_google_pinyin ;;
-	10) install_fcitx_module_cloud_pinyin ;;
-	11) install_uim_pinyin ;;
+	3) kde_config_module_for_fcitx ;;
+	4) install_sogou_pinyin ;;
+	5) install_iflyime_pinyin ;;
+	6) install_rime_pinyin ;;
+	7) install_baidu_pinyin ;;
+	8) install_lib_pinyin ;;
+	9) install_sun_pinyin ;;
+	10) install_google_pinyin ;;
+	11) install_fcitx_module_cloud_pinyin ;;
+	12) install_uim_pinyin ;;
 	esac
 	###############
 	configure_arch_fcitx

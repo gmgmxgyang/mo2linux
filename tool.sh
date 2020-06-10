@@ -6341,7 +6341,7 @@ frequently_asked_questions() {
 		echo 'arch系创建新用户的命令为useradd loveyou'
 		echo '其中loveyou为用户名'
 		echo '输passwd loveyou修改该用户密码'
-		echo '如需添加将其至sudo用户组，那么您可以手动编辑/etc/sudoers'
+		echo '如需将其添加至sudo用户组，那么您可以手动编辑/etc/sudoers'
 	fi
 	###################
 	if [ "${TMOE_FAQ}" == '6' ]; then

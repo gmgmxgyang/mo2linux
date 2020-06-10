@@ -11382,7 +11382,7 @@ configure_arch_fcitx() {
 	if [ ! -e "${HOME}/.xprofile" ]; then
 		echo '' >${HOME}/.xprofile
 	fi
-	if ! grep -q 'GTK_IM_MODULE=fcitx' ${HOME}/.xprofile 2>/dev/null; then
+	if ! grep -q 'GTK_IM_MODULE=fcitx' ${HOME}/.xprofile; then
 		sed -i 's/^export GTK_IM_MODULE.*/#&/' ${HOME}/.xprofile
 		sed -i 's/^export QT_IM_MODULE=.*/#&/' ${HOME}/.xprofile
 		sed -i 's/^export XMODIFIERS=.*/#&/' ${HOME}/.xprofile

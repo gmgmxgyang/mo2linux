@@ -6730,7 +6730,7 @@ beta_features() {
 			"12" "calibre:电子书转换器和库管理" \
 			"13" "文件管理器:thunar/nautilus/dolphin" \
 			"14" "krita(数字绘画)" \
-			"15" "openshot(视频剪辑)" \
+			"15" "media多媒体文件剪辑与制作" \
 			"16" "fbreader(epub阅读器)" \
 			"17" "gnome-system-monitor(资源监视器)" \
 			"18" "telegram(注重保护隐私的社交app)" \
@@ -6759,7 +6759,7 @@ beta_features() {
 	12) install_calibre ;;
 	13) thunar_nautilus_dolphion ;;
 	14) install_krita ;;
-	15) install_openshot ;;
+	15) tmoe_media_menu ;;
 	16) install_fbreader ;;
 	17) install_gnome_system_monitor ;;
 	18) install_telegram ;;
@@ -6776,6 +6776,33 @@ beta_features() {
 	beta_features
 }
 ##########
+tmoe_media_menu() {
+	DEPENDENCY_01=''
+	NON_DEBIAN='false'
+	BEAUTIFICATION=$(whiptail --title "多媒体文件剪辑与制作" --menu \
+		"Which software do you want to install？" 0 50 0 \
+		"1" "openshot(界面简单,多用途)" \
+		"2" "blender(工业级,用于电影制作和设计3D模型)" \
+		"3" "kdenlive(来自KDE的开源视频编辑器)" \
+		"4" "mkvtoolnix-gui(分割,编辑,混流,分离,合并,提取mkv)" \
+		"5" "flowblade(旨在提供一个快速,精确的功能)" \
+		"0" "Return to previous menu 返回上级菜单" \
+		3>&1 1>&2 2>&3)
+	##########################
+	case "${BEAUTIFICATION}" in
+	0 | "") beta_features ;;
+	1) DEPENDENCY_02="openshot" ;;
+	2) DEPENDENCY_02="blender" ;;
+	3) DEPENDENCY_02="kdenlive" ;;
+	4) DEPENDENCY_02="mkvtoolnix-gui" ;;
+	5) DEPENDENCY_02='flowblade' ;;
+	esac
+	##########################
+	beta_features_quick_install
+	press_enter_to_return
+	tmoe_media_menu
+}
+#############
 network_manager_tui() {
 	NON_DEBIAN='false'
 	DEPENDENCY_01=''
@@ -12018,14 +12045,6 @@ install_obs_studio() {
 	fi
 	echo "若安装失败，则请前往官网阅读安装说明。"
 	echo "url: https://obsproject.com/wiki/install-instructions#linux"
-}
-################
-install_openshot() {
-	DEPENDENCY_01="openshot"
-	DEPENDENCY_02=""
-	NON_DEBIAN='false'
-	echo "您亦可选择其他视频剪辑软件，Blender在Xserver下测试失败，Kdenlive在VNC远程下测试成功。"
-	beta_features_quick_install
 }
 ############################
 install_telegram() {

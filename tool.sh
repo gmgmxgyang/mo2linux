@@ -6717,22 +6717,16 @@ beta_features() {
 	TMOE_BETA=$(
 		whiptail --title "Beta features" --menu "测试版功能可能无法正常运行\nBeta features may not work properly." 17 55 8 \
 			"1" "container/VM(docker容器,qemu,vbox虚拟机)" \
-			"2" "UEFI bootmgr开机启动项管理" \
-			"3" "input method输入法(搜狗,讯飞,百度)" \
-			"4" "network manager网络管理器" \
-			"5" "read:墨纸留香,品味阅读" \
-			"6" "cut video:流年芳华,剪下美好" \
-			"7" "paint:融入意境,绘画真谛" \
-			"8" "file:文件,浩如烟海" \
-			"9" "OBS-Studio(录屏软件)" \
-			"10" "electronic-wechat(第三方微信客户端)" \
-			"11" "qbittorrent(P2P下载工具)" \
-			"12" "plasma-discover:KDE发现(软件中心)" \
-			"13" "gnome-software软件商店" \
-			"14" "gnome-system-monitor(资源监视器)" \
-			"15" "telegram(注重保护隐私的社交app)" \
-			"16" "Grub Customizer(图形化开机引导编辑器)" \
-			"17" "geogebra+kalzium(数学+化学)" \
+			"2" "input method输入法(搜狗,讯飞,百度)" \
+			"3" "network:网络" \
+			"4" "read:墨纸留香,品味阅读" \
+			"5" "cut video:岁月静好,剪下佳刻" \
+			"6" "paint:融入意境,绘画真谛" \
+			"7" "file:文件,浩如烟海" \
+			"8" "SNS:进行物质和精神交流的社会活动的app" \
+			"9" "Store&download:繁花似锦,一切皆在此中" \
+			"10" "system:系统" \
+			"11" "other:其它类" \
 			"0" "Back to the main menu 返回主菜单" \
 			3>&1 1>&2 2>&3
 	)
@@ -6740,29 +6734,110 @@ beta_features() {
 	case ${TMOE_BETA} in
 	0 | "") tmoe_linux_tool_menu ;;
 	1) install_container_and_virtual_machine ;;
-	2) tmoe_uefi_boot_manager ;;
-	3) install_pinyin_input_method ;;
-	4) network_manager_tui ;;
-	5) tmoe_read_app_menu ;;
-	6) tmoe_media_menu ;;
-	7) tmoe_paint_app_menu ;;
-	8) tmoe_file_browser_app_menu ;;
-	9) install_obs_studio ;;
-	10) install_electronic_wechat ;;
-	11) install_qbitorrent ;;
-	12) install_plasma_discover ;;
-	13) install_gnome_software ;;
-	14) install_gnome_system_monitor ;;
-	15) install_telegram ;;
-	16) install_grub_customizer ;;
-	17) install_geogebra_and_kalzium ;;
+	2) install_pinyin_input_method ;;
+	3) network_manager_tui ;;
+	4) tmoe_read_app_menu ;;
+	5) tmoe_media_menu ;;
+	6) tmoe_paint_app_menu ;;
+	7) tmoe_file_browser_app_menu ;;
+	8) tmoe_sns_app_menu ;;
+	9) tmoe_store_app_menu ;;
+	10) tmoe_system_app_menu ;;
+	11) tmoe_other_app_menu ;;
 	esac
 	##############################
 	press_enter_to_return
 	beta_features
 }
 ##########
+tmoe_other_app_menu() {
+	RETURN_TO_WHERE='tmoe_other_app_menu'
+	NON_DEBIAN='false'
+	TMOE_APP=$(whiptail --title "SNS" --menu \
+		"Which software do you want to install？" 0 50 0 \
+		"17" "geogebra+kalzium(数学+化学)" \
+		"9" "OBS-Studio(录屏软件)" \
+		"0" "Return to previous menu 返回上级菜单" \
+		3>&1 1>&2 2>&3)
+	##########################
+	case "${TMOE_APP}" in
+	0 | "") beta_features ;;
+	17) install_geogebra_and_kalzium ;;
+	9) install_obs_studio ;;
+	esac
+	##########################
+	press_enter_to_return
+	tmoe_other_app_menu
+}
+###################
+tmoe_system_app_menu() {
+	RETURN_TO_WHERE='tmoe_system_app_menu'
+	NON_DEBIAN='false'
+	TMOE_APP=$(whiptail --title "SNS" --menu \
+		"Which software do you want to install？" 0 50 0 \
+		"1" "UEFI bootmgr开机启动项管理" \
+		"2" "gnome-system-monitor(资源监视器)" \
+		"3" "Grub Customizer(图形化开机引导编辑器)" \
+		"4" "gnome log日志" \
+		"0" "Return to previous menu 返回上级菜单" \
+		3>&1 1>&2 2>&3)
+	##########################
+	case "${TMOE_APP}" in
+	0 | "") beta_features ;;
+	1) tmoe_uefi_boot_manager ;;
+	2) install_gnome_system_monitor ;;
+	3) install_grub_customizer ;;
+	4) install_gnome_logs ;;
+	esac
+	##########################
+	press_enter_to_return
+	tmoe_system_app_menu
+}
+#############
+tmoe_store_app_menu() {
+	RETURN_TO_WHERE='tmoe_store_app_menu'
+	NON_DEBIAN='false'
+	TMOE_APP=$(whiptail --title "SNS" --menu \
+		"Which software do you want to install？" 0 50 0 \
+		"1" "gnome-software软件商店" \
+		"2" "plasma-discover:KDE发现(软件中心)" \
+		"3" "qbittorrent(P2P下载工具)" \
+		"0" "Return to previous menu 返回上级菜单" \
+		3>&1 1>&2 2>&3)
+	##########################
+	case "${TMOE_APP}" in
+	0 | "") beta_features ;;
+	1) install_gnome_software ;;
+	2) install_plasma_discover ;;
+	3) install_qbitorrent ;;
+	esac
+	##########################
+	press_enter_to_return
+	tmoe_store_app_menu
+}
+#############
+tmoe_sns_app_menu() {
+	RETURN_TO_WHERE='tmoe_sns_app_menu'
+	NON_DEBIAN='false'
+	TMOE_APP=$(whiptail --title "SNS" --menu \
+		"Which software do you want to install？" 0 50 0 \
+		"1" "electronic-wechat(第三方微信客户端)" \
+		"2" "telegram(注重保护隐私的社交app)" \
+		"0" "Return to previous menu 返回上级菜单" \
+		3>&1 1>&2 2>&3)
+	##########################
+	case "${TMOE_APP}" in
+	0 | "") beta_features ;;
+	1) install_electronic_wechat ;;
+	2) install_telegram ;;
+	esac
+	##########################
+	press_enter_to_return
+	tmoe_sns_app_menu
+}
+###################
 tmoe_paint_app_menu() {
+	RETURN_TO_WHERE='tmoe_paint_app_menu'
 	NON_DEBIAN='false'
 	TMOE_APP=$(whiptail --title "绘图app" --menu \
 		"Which software do you want to install？" 0 50 0 \
@@ -6788,12 +6863,12 @@ install_inkscape() {
 }
 ###################
 tmoe_file_browser_app_menu() {
+	RETURN_TO_WHERE='tmoe_file_browser_app_menu'
 	TMOE_APP=$(whiptail --title "文件与磁盘" --menu \
 		"Which software do you want to install？" 0 50 0 \
 		"1" "文件管理器:thunar/nautilus/dolphin" \
 		"2" "gparted:磁盘分区工具" \
 		"3" "catfish(文件搜索)" \
-		"4" "gnome log日志" \
 		"0" "Return to previous menu 返回上级菜单" \
 		3>&1 1>&2 2>&3)
 	##########################
@@ -6802,7 +6877,6 @@ tmoe_file_browser_app_menu() {
 	1) thunar_nautilus_dolphion ;;
 	2) install_gparted ;;
 	3) install_catfish ;;
-	4) install_gnome_logs ;;
 	esac
 	##########################
 	press_enter_to_return
@@ -6810,7 +6884,8 @@ tmoe_file_browser_app_menu() {
 }
 #############
 tmoe_read_app_menu() {
-	TMOE_APP=$(whiptail --title "多媒体文件剪辑与制作" --menu \
+	RETURN_TO_WHERE='tmoe_read_app_menu'
+	TMOE_APP=$(whiptail --title "TXET & OFFICE" --menu \
 		"Which software do you want to install？" 0 50 0 \
 		"1" "calibre:电子书转换器和库管理" \
 		"2" "fbreader(epub阅读器)" \
@@ -6833,9 +6908,10 @@ tmoe_read_app_menu() {
 }
 #############
 tmoe_media_menu() {
+	RETURN_TO_WHERE='tmoe_media_menu'
 	DEPENDENCY_01=''
 	NON_DEBIAN='false'
-	BEAUTIFICATION=$(whiptail --title "多媒体文件剪辑与制作" --menu \
+	BEAUTIFICATION=$(whiptail --title "多媒体文件制作与剪辑" --menu \
 		"Which software do you want to install？" 0 50 0 \
 		"1" "openshot(界面简单,多用途)" \
 		"2" "blender(工业级,用于电影制作和设计3D模型)" \

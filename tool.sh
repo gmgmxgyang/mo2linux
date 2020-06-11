@@ -4861,7 +4861,7 @@ tmoe_games_menu() {
 	DEPENDENCY_01=""
 	TMOE_APP=$(whiptail --title "GAMES" --menu \
 		"Which game do you want to install?" 0 50 0 \
-		"1" "install Steam(安装蒸汽游戏平台)" \
+		"1" "install Steam-x86_64(安装蒸汽游戏平台)" \
 		"2" "remove Steam(卸载)" \
 		"3" "cataclysm大灾变-劫后余生(末日幻想背景的探索生存游戏)" \
 		"4" "mayomonogatari斯隆与马克贝尔的谜之物语(nds解谜游戏)" \

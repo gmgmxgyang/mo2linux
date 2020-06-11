@@ -6720,25 +6720,19 @@ beta_features() {
 			"2" "UEFI bootmgr开机启动项管理" \
 			"3" "input method输入法(搜狗,讯飞,百度)" \
 			"4" "network manager网络管理器" \
-			"5" "WPS office(办公软件)" \
-			"6" "gparted:磁盘分区工具" \
-			"7" "OBS-Studio(录屏软件)" \
-			"8" "electronic-wechat(第三方微信客户端)" \
-			"9" "qbittorrent(P2P下载工具)" \
-			"10" "plasma-discover:KDE发现(软件中心)" \
-			"11" "gnome-software软件商店" \
-			"12" "calibre:电子书转换器和库管理" \
-			"13" "文件管理器:thunar/nautilus/dolphin" \
-			"14" "krita(数字绘画)" \
-			"15" "media多媒体文件剪辑与制作" \
-			"16" "fbreader(epub阅读器)" \
-			"17" "gnome-system-monitor(资源监视器)" \
-			"18" "telegram(注重保护隐私的社交app)" \
-			"19" "Grub Customizer(图形化开机引导编辑器)" \
-			"20" "catfish(文件搜索)" \
-			"21" "geogebra+kalzium(数学+化学)" \
-			"22" "gnome logs" \
-			"23" "typora(markdown编辑器)" \
+			"5" "read:墨纸留香,品味阅读" \
+			"6" "cut video:流年芳华,剪下美好" \
+			"7" "paint:融入意境,绘画真谛" \
+			"8" "file:文件,浩如烟海" \
+			"9" "OBS-Studio(录屏软件)" \
+			"10" "electronic-wechat(第三方微信客户端)" \
+			"11" "qbittorrent(P2P下载工具)" \
+			"12" "plasma-discover:KDE发现(软件中心)" \
+			"13" "gnome-software软件商店" \
+			"14" "gnome-system-monitor(资源监视器)" \
+			"15" "telegram(注重保护隐私的社交app)" \
+			"16" "Grub Customizer(图形化开机引导编辑器)" \
+			"17" "geogebra+kalzium(数学+化学)" \
 			"0" "Back to the main menu 返回主菜单" \
 			3>&1 1>&2 2>&3
 	)
@@ -6749,33 +6743,95 @@ beta_features() {
 	2) tmoe_uefi_boot_manager ;;
 	3) install_pinyin_input_method ;;
 	4) network_manager_tui ;;
-	5) install_wps_office ;;
-	6) install_gparted ;;
-	7) install_obs_studio ;;
-	8) install_electronic_wechat ;;
-	9) install_qbitorrent ;;
-	10) install_plasma_discover ;;
-	11) install_gnome_software ;;
-	12) install_calibre ;;
-	13) thunar_nautilus_dolphion ;;
-	14) install_krita ;;
-	15) tmoe_media_menu ;;
-	16) install_fbreader ;;
-	17) install_gnome_system_monitor ;;
-	18) install_telegram ;;
-	19) install_grub_customizer ;;
-	20) install_catfish ;;
-	21) install_geogebra_and_kalzium ;;
-	22) install_gnome_logs ;;
-	23) install_typora ;;
+	5) tmoe_read_app_menu ;;
+	6) tmoe_media_menu ;;
+	7) tmoe_paint_app_menu ;;
+	8) tmoe_file_browser_app_menu ;;
+	9) install_obs_studio ;;
+	10) install_electronic_wechat ;;
+	11) install_qbitorrent ;;
+	12) install_plasma_discover ;;
+	13) install_gnome_software ;;
+	14) install_gnome_system_monitor ;;
+	15) install_telegram ;;
+	16) install_grub_customizer ;;
+	17) install_geogebra_and_kalzium ;;
 	esac
 	##############################
-	########################################
-	# Blender在WSL2（Xserver）下测试失败，Kdenlive在VNC远程下测试成功。
 	press_enter_to_return
 	beta_features
 }
 ##########
+tmoe_paint_app_menu() {
+	NON_DEBIAN='false'
+	TMOE_APP=$(whiptail --title "绘图app" --menu \
+		"Which software do you want to install？" 0 50 0 \
+		"1" "krita(数字绘画)" \
+		"2" "inkscape强大的矢量图绘制工具" \
+		"0" "Return to previous menu 返回上级菜单" \
+		3>&1 1>&2 2>&3)
+	##########################
+	case "${TMOE_APP}" in
+	0 | "") beta_features ;;
+	1) install_krita ;;
+	2) install_inkscape ;;
+	esac
+	##########################
+	press_enter_to_return
+	tmoe_paint_app_menu
+}
+#############
+install_inkscape() {
+	DEPENDENCY_01="inkscape-tutorials"
+	DEPENDENCY_02="inkscape"
+	beta_features_quick_install
+}
+###################
+tmoe_file_browser_app_menu() {
+	TMOE_APP=$(whiptail --title "文件与磁盘" --menu \
+		"Which software do you want to install？" 0 50 0 \
+		"1" "文件管理器:thunar/nautilus/dolphin" \
+		"2" "gparted:磁盘分区工具" \
+		"3" "catfish(文件搜索)" \
+		"4" "gnome log日志" \
+		"0" "Return to previous menu 返回上级菜单" \
+		3>&1 1>&2 2>&3)
+	##########################
+	case "${TMOE_APP}" in
+	0 | "") beta_features ;;
+	1) thunar_nautilus_dolphion ;;
+	2) install_gparted ;;
+	3) install_catfish ;;
+	4) install_gnome_logs ;;
+	esac
+	##########################
+	press_enter_to_return
+	tmoe_file_browser_app_menu
+}
+#############
+tmoe_read_app_menu() {
+	TMOE_APP=$(whiptail --title "多媒体文件剪辑与制作" --menu \
+		"Which software do you want to install？" 0 50 0 \
+		"1" "calibre:电子书转换器和库管理" \
+		"2" "fbreader(epub阅读器)" \
+		"3" "WPS office(办公软件)" \
+		"4" "typora(markdown编辑器)" \
+		"0" "Return to previous menu 返回上级菜单" \
+		3>&1 1>&2 2>&3)
+	##########################
+	case "${TMOE_APP}" in
+	0 | "") beta_features ;;
+	1) install_calibre ;;
+	2) install_fbreader ;;
+	3) install_wps_office ;;
+	4) install_typora ;;
+	esac
+	##########################
+	#beta_features_quick_install
+	press_enter_to_return
+	tmoe_read_app_menu
+}
+#############
 tmoe_media_menu() {
 	DEPENDENCY_01=''
 	NON_DEBIAN='false'
@@ -6784,7 +6840,7 @@ tmoe_media_menu() {
 		"1" "openshot(界面简单,多用途)" \
 		"2" "blender(工业级,用于电影制作和设计3D模型)" \
 		"3" "kdenlive(来自KDE的开源视频编辑器)" \
-		"4" "mkvtoolnix-gui(分割,编辑,混流,分离,合并,提取mkv)" \
+		"4" "mkvtoolnix-gui(分割,编辑,混流,分离,合并和提取mkv)" \
 		"5" "flowblade(旨在提供一个快速,精确的功能)" \
 		"0" "Return to previous menu 返回上级菜单" \
 		3>&1 1>&2 2>&3)

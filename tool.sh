@@ -7263,7 +7263,7 @@ tmoe_uefi_boot_manager() {
 	)
 	#############
 	case ${TMOE_BOOT_MGR} in
-	0 | "") beta_features ;;
+	0 | "") tmoe_system_app_menu ;;
 	1) modify_first_uefi_boot_item ;;
 	2) custom_uefi_boot_order ;;
 	3) tmoe_backup_efi ;;

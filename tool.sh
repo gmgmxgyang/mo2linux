@@ -1720,7 +1720,7 @@ install_firefox_esr_browser() {
 	if [ "${LINUX_DISTRO}" = "debian" ]; then
 		if [ "${DEBIAN_DISTRO}" = "ubuntu" ]; then
 			add-apt-repository -y ppa:mozillateam/ppa
-			DEPENDENCY_02="firefox-esr-locale-zh-hans"
+			DEPENDENCY_02="firefox-esr-locale-zh-hans libavcodec58"
 		fi
 		#################
 	elif [ "${LINUX_DISTRO}" = "arch" ]; then
@@ -1755,7 +1755,7 @@ install_firefox_browser() {
 
 	if [ "${LINUX_DISTRO}" = "debian" ]; then
 		if [ "${DEBIAN_DISTRO}" = "ubuntu" ]; then
-			DEPENDENCY_02="firefox-locale-zh-hans"
+			DEPENDENCY_02="firefox-locale-zh-hans libavcodec58"
 		fi
 	elif [ "${LINUX_DISTRO}" = "arch" ]; then
 		DEPENDENCY_02="firefox-i18n-zh-cn"

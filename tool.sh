@@ -7163,6 +7163,7 @@ tmoe_r_language_menu() {
 			"Which software do you want to install?" 0 50 0 \
 			"1" "r-base(GNU R statistical computation and graphics system)" \
 			"2" "RStudio(x64,R语言IDE)" \
+			"3" "r-recommended(kernsmooth,lattice,mgcv,nlme,rpart,matrix,etc.)" \
 			"0" "Return to previous menu 返回上级菜单" \
 			3>&1 1>&2 2>&3
 	)
@@ -7171,6 +7172,7 @@ tmoe_r_language_menu() {
 	0 | "") tmoe_paint_app_menu ;;
 	1) install_r_base ;;
 	2) install_r_studio ;;
+	3) install_r_recommended ;;
 	esac
 	##########################
 	press_enter_to_return
@@ -7205,6 +7207,11 @@ install_r_studio() {
 #####################
 install_r_base() {
 	DEPENDENCY_02="r-base"
+	beta_features_quick_install
+}
+#############
+install_r_recommended() {
+	DEPENDENCY_02="r-recommended"
 	beta_features_quick_install
 }
 #############

@@ -6887,8 +6887,8 @@ beta_features() {
 	NON_DEBIAN='false'
 	TMOE_BETA=$(
 		whiptail --title "Beta features" --menu "测试版功能可能无法正常运行\nBeta features may not work properly." 17 55 8 \
-			"1" "container/VM(docker容器,qemu,vbox虚拟机)" \
-			"2" "input method输入法(搜狗,讯飞,百度)" \
+			"1" "container/vm:docker容器,qemu,vbox虚拟机" \
+			"2" "input method:输入法(搜狗,讯飞,百度)" \
 			"3" "network:网络" \
 			"4" "read:墨纸留香,品味阅读" \
 			"5" "cut video:岁月静好,剪下佳刻" \

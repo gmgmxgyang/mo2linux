@@ -12138,6 +12138,7 @@ install_pinyin_input_method() {
 }
 ########################
 input_method_config() {
+	NON_DEBIAN='true'
 	if [ ! $(command -v im-config) ]; then
 		DEPENDENCY_01=''
 		DEPENDENCY_02='im-config'

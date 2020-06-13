@@ -1908,9 +1908,9 @@ standand_desktop_install() {
 	RETURN_TO_WHERE='standand_desktop_install'
 	INSTALLDESKTOP=$(whiptail --title "GUI" --menu \
 		"您想要安装哪个桌面？按方向键选择，回车键确认！仅xfce桌面支持在本工具内便捷下载主题。 \n Which desktop environment do you want to install? " 17 56 7 \
-		"1" "xfce(兼容性高)" \
-		"2" "lxde(轻量化桌面)" \
-		"3" "mate(基于GNOME 2)" \
+		"1" "xfce(兼容性高,简单优雅)" \
+		"2" "lxde(轻量化桌面,资源占用低)" \
+		"3" "mate(GNOME2的延续,让用户体验更舒适的环境)" \
 		"4" "Other其它桌面(内测版新功能):lxqt,kde" \
 		"5" "window manager窗口管理器(公测):ice,fvwm" \
 		"6" "display manager显示(登录)管理器:lightdm,sddm" \
@@ -2390,8 +2390,8 @@ other_desktop() {
 		"WARNING！本功能仍处于测试阶段,可能无法正常运行。部分桌面依赖systemd,无法在chroot环境中运行\nAlpha features may not work properly." 17 50 6 \
 		"1" "lxqt(lxde原作者基于QT开发的桌面)" \
 		"2" "kde plasma5(风格华丽的桌面环境)" \
-		"3" "gnome3(GNU项目的一部分)" \
-		"4" "cinnamon(肉桂类似于GNOME2,对用户友好)" \
+		"3" "gnome3(GNU网络对象模型环境)" \
+		"4" "cinnamon(肉桂类似于GNOME,对用户友好)" \
 		"5" "dde(国产deepin系统桌面)" \
 		"0" "Return to previous menu 返回上级菜单" \
 		3>&1 1>&2 2>&3)

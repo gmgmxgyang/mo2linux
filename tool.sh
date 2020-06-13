@@ -7196,12 +7196,13 @@ tmoe_store_app_menu() {
 	TMOE_APP=$(whiptail --title "商店与下载工具" --menu \
 		"Which software do you want to install？" 0 50 0 \
 		"1" "aptitude:基于终端的软件包管理器" \
-		"2" "gnome-software(软件商店)" \
-		"3" "plasma-discover(KDE发现-软件中心)" \
-		"4" "Flatpak(跨平台包管理,便捷安装tim等软件)" \
-		"5" "snap(ubuntu母公司开发的跨平台商店)" \
-		"6" "bauh(旨在处理Flatpak,Snap,AppImage和AUR)" \
-		"7" "qbittorrent(P2P下载工具)" \
+		"2" "deepin:深度软件" \
+		"3" "gnome-software(软件商店)" \
+		"4" "plasma-discover(KDE发现-软件中心)" \
+		"5" "Flatpak(跨平台包管理,便捷安装tim等软件)" \
+		"6" "snap(ubuntu母公司开发的跨平台商店)" \
+		"7" "bauh(旨在处理Flatpak,Snap,AppImage和AUR)" \
+		"8" "qbittorrent(P2P下载工具)" \
 		"0" "Return to previous menu 返回上级菜单" \
 		3>&1 1>&2 2>&3)
 	##########################
@@ -7211,19 +7212,70 @@ tmoe_store_app_menu() {
 		non_debian_function
 		aptitude
 		;;
-	2) install_gnome_software ;;
-	3) install_plasma_discover ;;
-	4) install_flatpak_store ;;
-	5) install_snap_store ;;
-	6) install_bauh_store ;;
-	7) install_qbitorrent ;;
+	2) install_deepin_software_menu ;;
+	3) install_gnome_software ;;
+	4) install_plasma_discover ;;
+	5) install_flatpak_store ;;
+	6) install_snap_store ;;
+	7) install_bauh_store ;;
+	8) install_qbitorrent ;;
 	esac
 	##########################
 	press_enter_to_return
 	tmoe_store_app_menu
 }
 #############
-#############
+#################
+install_deepin_software_menu() {
+	RETURN_TO_WHERE='install_deepin_software_menu'
+	NON_DEBIAN='true'
+	DEPENDENCY_01=""
+	TMOE_APP=$(whiptail --title "deepin store" --menu \
+		"Which software do you want to install？" 0 50 0 \
+		"01" "dde-calendar(深度日历)" \
+		"02" "dde-qt5integration(Qt5 theme integration)" \
+		"03" "deepin-calculator(计算器)" \
+		"04" "deepin-deb-installer(软件包安装器)" \
+		"05" "deepin-gettext-tools(Deepin国际化工具)" \
+		"06" "deepin-image-viewer(图像查看器)" \
+		"07" "deepin-menu(Deepin 菜单服务)" \
+		"08" "deepin-movie(电影播放器)" \
+		"09" "deepin-music(音乐播放器 with brilliant and tweakful UI)" \
+		"10" "deepin-notifications(系统通知)" \
+		"11" "deepin-picker(深度取色器)" \
+		"12" "deepin-screen-recorder(简单截图工具)" \
+		"13" "deepin-screenshot(高级截图工具)" \
+		"14" "deepin-shortcut-viewer(弹出式快捷键查看器)" \
+		"15" "deepin-terminal(深度终端模拟器)" \
+		"16" "deepin-voice-recorder(录音器)" \
+		"0" "Return to previous menu 返回上级菜单" \
+		3>&1 1>&2 2>&3)
+	##########################
+	case "${TMOE_APP}" in
+	0 | "") tmoe_store_app_menu ;;
+	01) DEPENDENCY_02="dde-calendar" ;;
+	02) DEPENDENCY_02="dde-qt5integration" ;;
+	03) DEPENDENCY_02="deepin-calculator" ;;
+	04) DEPENDENCY_02="deepin-deb-installer" ;;
+	05) DEPENDENCY_02="deepin-gettext-tools" ;;
+	06) DEPENDENCY_02="deepin-image-viewer" ;;
+	07) DEPENDENCY_02="deepin-menu" ;;
+	08) DEPENDENCY_02="deepin-movie" ;;
+	09) DEPENDENCY_02="deepin-music" ;;
+	10) DEPENDENCY_02="deepin-notifications" ;;
+	11) DEPENDENCY_02="deepin-picker" ;;
+	12) DEPENDENCY_02="deepin-screen-recorder" ;;
+	13) DEPENDENCY_02="deepin-screenshot" ;;
+	14) DEPENDENCY_02="deepin-shortcut-viewer" ;;
+	15) DEPENDENCY_02="deepin-terminal" ;;
+	16) DEPENDENCY_02="deepin-voice-recorder" ;;
+	esac
+	##########################
+	beta_features_quick_install
+	press_enter_to_return
+	install_deepin_software_menu
+}
+#######################
 install_bauh_store() {
 	if [ ! $(command -v pip3) ]; then
 		DEPENDENCY_01="python3-pip"

@@ -7202,7 +7202,10 @@ tmoe_store_app_menu() {
 	##########################
 	case "${TMOE_APP}" in
 	0 | "") beta_features ;;
-	1) aptitude ;;
+	1)
+		non_debian_function
+		aptitude
+		;;
 	2) install_gnome_software ;;
 	3) install_plasma_discover ;;
 	4) install_qbitorrent ;;

@@ -2696,7 +2696,7 @@ install_lxde_desktop() {
 ##########################
 arch_linux_mate_warning() {
 	echo "${RED}WARNING！${RESET}检测到您当前使用的是${YELLOW}Arch系发行版${RESET},并且处于${GREEN}proot容器${RESET}环境下！"
-	echo "mate-session在当前容器环境下可能出现${RED}屏幕闪烁${RESET}的现象"
+	echo "mate-session在当前容器环境下可能会出现${RED}屏幕闪烁${RESET}的现象"
 	echo "按${GREEN}回车键${RESET}${BLUE}继续安装${RESET}"
 	echo "${YELLOW}Do you want to continue?[Y/l/x/q/n]${RESET}"
 	echo "Press ${GREEN}enter${RESET} to ${BLUE}continue.${RESET},type n to return."

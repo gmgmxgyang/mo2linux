@@ -4243,6 +4243,8 @@ edit_sources_list_manually() {
 		fi
 	elif [ "${LINUX_DISTRO}" = "redhat" ]; then
 		nano ${SOURCES_LIST_PATH}/*repo
+	elif [ "${LINUX_DISTRO}" = "arch" ]; then
+		nano ${SOURCES_LIST_FILE} /etc/pacman.conf
 	else
 		nano ${SOURCES_LIST_FILE}
 	fi
@@ -7191,12 +7193,15 @@ install_boot_repair() {
 tmoe_store_app_menu() {
 	RETURN_TO_WHERE='tmoe_store_app_menu'
 	NON_DEBIAN='false'
-	TMOE_APP=$(whiptail --title "Store" --menu \
+	TMOE_APP=$(whiptail --title "商店与下载工具" --menu \
 		"Which software do you want to install？" 0 50 0 \
 		"1" "aptitude:基于终端的软件包管理器" \
 		"2" "gnome-software(软件商店)" \
 		"3" "plasma-discover(KDE发现-软件中心)" \
-		"4" "qbittorrent(P2P下载工具)" \
+		"4" "Flatpak(跨平台包管理,便捷安装tim等软件)" \
+		"5" "snap(ubuntu母公司开发的跨平台商店)" \
+		"6" "bauh(旨在处理Flatpak,Snap,AppImage和AUR)" \
+		"7" "qbittorrent(P2P下载工具)" \
 		"0" "Return to previous menu 返回上级菜单" \
 		3>&1 1>&2 2>&3)
 	##########################
@@ -7208,11 +7213,54 @@ tmoe_store_app_menu() {
 		;;
 	2) install_gnome_software ;;
 	3) install_plasma_discover ;;
-	4) install_qbitorrent ;;
+	4) install_flatpak_store ;;
+	5) install_snap_store ;;
+	6) install_bauh_store ;;
+	7) install_qbitorrent ;;
 	esac
 	##########################
 	press_enter_to_return
 	tmoe_store_app_menu
+}
+#############
+#############
+install_bauh_store() {
+	if [ ! $(command -v pip3) ]; then
+		DEPENDENCY_01="python3-pip"
+		DEPENDENCY_02="python-pip"
+		beta_features_quick_install
+	fi
+	pip3 install bauh
+}
+#############
+install_snap_store() {
+	echo 'web store url:https://snapcraft.io/store'
+	DEPENDENCY_01="snapd"
+	DEPENDENCY_02="gnome-software-plugin-snap"
+	if [ "${LINUX_DISTRO}" = "arch" ]; then
+		DEPENDENCY_01="snapd"
+		DEPENDENCY_02="snapd-xdg-open-git"
+	fi
+	beta_features_quick_install
+	echo '前往在线商店,获取更多应用'
+	echo 'https://snapcraft.io/store'
+	snap install snap-store
+}
+#############
+install_flatpak_store() {
+	DEPENDENCY_01="flatpak"
+	DEPENDENCY_02="gnome-software-plugin-flatpak"
+	echo 'web store url:https://flathub.org/'
+	if [ "${LINUX_DISTRO}" = "gentoo" ]; then
+		echo 'gentoo用户请前往此处阅读详细说明'
+		echo 'https://github.com/fosero/flatpak-overlay'
+	elif [ "${LINUX_DISTRO}" = "arch" ]; then
+		DEPENDENCY_02="gnome-software-packagekit-plugin"
+	fi
+	beta_features_quick_install
+	flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+	echo '前往在线商店,获取更多应用'
+	echo 'https://flathub.org/apps'
 }
 #############
 tmoe_sns_app_menu() {
@@ -12678,7 +12726,6 @@ install_electronic_wechat() {
 install_gnome_software() {
 	DEPENDENCY_01="gnome-software"
 	DEPENDENCY_02=""
-	NON_DEBIAN='false'
 	beta_features_quick_install
 }
 #############

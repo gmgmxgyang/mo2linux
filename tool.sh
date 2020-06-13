@@ -7332,6 +7332,9 @@ install_r_studio() {
 		GREP_NAME='x86_64.rpm'
 		check_rstudio_version
 		rpm -ivh ./${THE_LATEST_DEB_VERSION}
+	elif [ "${LINUX_DISTRO}" = "arch" ]; then
+		DEPENDENCY_02="rstudio-desktop-git"
+		beta_features_quick_install
 	else
 		non_debian_function
 	fi

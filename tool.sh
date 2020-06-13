@@ -7256,14 +7256,16 @@ tmoe_linux_sudo_user_group_management() {
 
 	if (whiptail --title "您想要对这个小可爱做什么" --yes-button "${SUDO_YES}" --no-button "del踢走っ °Д °;" --yesno "Do you want to add it to sudo group,or remove it from sudo?\n${SUDO_USER_STATUS}\n您是想要把ta加进sudo这个小家庭，还是踢走ta呢？" 0 50); then
 		if [ "${SUDO_RETURN}" = "true" ]; then
-			tmoe_linux_sudo_user_group_managementF
+			tmoe_linux_sudo_user_group_management
 		else
 			add_tmoe_sudo
 		fi
 	else
-
 		del_tmoe_sudo
 	fi
+	##########################
+	press_enter_to_return
+	tmoe_linux_sudo_user_group_management
 }
 ##################
 del_tmoe_sudo() {

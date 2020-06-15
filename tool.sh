@@ -12649,6 +12649,7 @@ input_method_config() {
 		echo 'Sorry，本功能只支持deb系发行版'
 	fi
 	im-config
+	fcitx || fcitx5
 	fcitx-configtool
 }
 ####################

@@ -5259,7 +5259,7 @@ install_nds_game_mayomonogatari() {
 	echo "如需卸载，请手动输${PACKAGES_REMOVE_COMMAND} desmume ; rm -rf ~/斯隆与马克贝尔的谜之物语"
 	echo 'Press enter to start the nds emulator.'
 	echo "${YELLOW}按回车键启动游戏。${RESET}"
-	read
+	do_you_want_to_continue
 	/usr/games/desmume "${HOME}/斯隆与马克贝尔的谜之物语/3782.nds" 2>/dev/null &
 }
 ##################

@@ -12650,7 +12650,7 @@ input_method_config() {
 	fi
 	im-config
 	fcitx || fcitx5
-	fcitx-configtool
+	echo "请手动修改键盘布局，并打开fcitx-configtool"
 }
 ####################
 install_uim_pinyin() {

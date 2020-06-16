@@ -6748,8 +6748,8 @@ first_configure_startvnc() {
 	echo "You can also type ${GREEN}startxsdl${RESET} to ${BLUE}start${RESET} X client and server."
 	echo '------------------------'
 	echo "您之后可以在原系统里输${BOLD}${GREEN}startvnc${RESET}${RESET}来${BLUE}同时启动${RESET}vnc服务端和客户端。"
-	echo "您之后可以在容器里输${BOLD}${GREEN}startvnc${RESET}${RESET}来${BLUE}启动${RESET}vnc服务，输${GREEN}stopvnc${RESET}${RED}停止${RESET}"
-	echo "您还可以在原系统里输${GREEN}startxsdl${RESET}来同时启动X客户端与服务端，按${YELLOW}Ctrl+C${RESET}或在termux原系统里输${GREEN}stopvnc${RESET}来${RED}停止${RESET}进程"
+	echo "在容器里输${BOLD}${GREEN}startvnc${RESET}${RESET}来${BLUE}启动${RESET}vnc服务，输${GREEN}stopvnc${RESET}${RED}停止${RESET}"
+	echo "在原系统里输${GREEN}startxsdl${RESET}来同时启动X客户端与服务端，按${YELLOW}Ctrl+C${RESET}或在termux原系统里输${GREEN}stopvnc${RESET}来${RED}停止${RESET}进程"
 	echo "注：同时启动tight/tigervnc服务端和realvnc客户端仅适配Termux,同时启动X客户端和服务端还适配了win10的linux子系统"
 	echo '------------------------'
 	xfce4_tightvnc_hidpi_settings

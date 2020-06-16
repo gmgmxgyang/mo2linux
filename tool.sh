@@ -2484,12 +2484,10 @@ configure_x11vnc_remote_desktop_session() {
 	fi
 	chmod +x ./*
 
-	if [ ! -e "${HOME}/.vnc/x11passwd" ]; then
+	if [ -e "${HOME}/.vnc/passwd" ]; then
 		cd ${HOME}/.vnc
 		cp -pvf passwd x11passwd
-	fi
-
-	if [ ! -e "${HOME}/.vnc/passwd" ]; then
+	else
 		x11vncpasswd
 	fi
 	echo "x11vnc配置完成，您可以输${GREEN}startx11vnc${RESET}来重启服务"

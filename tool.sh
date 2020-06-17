@@ -5733,7 +5733,6 @@ x11vnc_process_readme() {
 x11vnc_warning() {
 	cat <<-EOF
 		    ${YELLOW}关于X11VNC服务的启动说明${RESET}：
-			Do you want to configure x11vnc? 
 			There are many differences between x11vnc and tightvnc. Mainly reflected in the fluency and special effects of the picture.
 			After configuring x11vnc, you can type ${GREEN}startx11vnc${RESET} to ${BLUE}start${RESET} it.
 			------------------------
@@ -5743,6 +5742,7 @@ x11vnc_warning() {
 			配置完x11vnc后，您可以在容器里输${GREEN}startx11vnc${RESET}${BLUE}启动${RESET},输${GREEN}stopvnc${RESET}${RED}停止${RESET}
 			若超过一分钟黑屏，则请输${GREEN}startx11vnc${RESET}重启该服务
 			------------------------
+			Do you want to configure x11vnc? 
 			您是否需要配置${BLUE}X11VNC${RESET}服务？
 	EOF
 

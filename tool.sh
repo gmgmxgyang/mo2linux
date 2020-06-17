@@ -3265,6 +3265,7 @@ local_theme_installer() {
 	FILE_EXT_02='tar.xz'
 	#where_is_tmoe_file_dir
 	START_DIR='/tmp'
+	IMPORTANT_TIPS='您可以选择已经下载至本地的主题或图标压缩包'
 	tmoe_file_manager
 	if [ -z ${SELECTION} ]; then
 		echo "没有指定${YELLOW}有效${RESET}的${BLUE}文件${GREEN}，请${GREEN}重新${RESET}选择"

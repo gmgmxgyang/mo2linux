@@ -447,17 +447,17 @@ tmoe_linux_tool_menu() {
 	#窗口大小20 50 7
 	TMOE_OPTION=$(
 		whiptail --title "Tmoe-linux Tool输debian-i启动(20200618-04)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.请使用方向键和回车键操作,更新日志:0522修复ubuntu20.10和云音乐,0529增加qemu配置中心,0531至0603修复qemu部分问题,6月上旬增加更多系统管理功能,0618支持解析主题链接" 20 50 7 \
-			"1" "GUI:图形界面" \
-			"2" "Software center:软件(浏览器,影音,游戏)" \
+			"1" "GUI:图形界面🍭" \
+			"2" "Software center:软件(浏览器,🎦,游戏)" \
 			"3" "Desktop beautification:桌面美化(主题)" \
-			"4" "vnc/xsdl/rdp:远程桌面" \
-			"5" "Download video:解析视频链接(bili,Y2B)" \
+			"4" "vnc/x/rdp:远程桌面" \
+			"5" "Download video:解析视频链接(bili🍻Y2B)" \
 			"6" "File shared:文件共享与网盘(Webdav)" \
 			"7" "Update tmoe-linux tool(更新本工具)" \
 			"8" "FAQ:常见问题" \
 			"9" "software sources:软件镜像源管理" \
-			"10" "qemu:x86_64虚拟机管理" \
-			"11" "The Secret Garden秘密花园" \
+			"10" "qemu:x86_64虚拟机管理💻" \
+			"11" "The Secret Garden秘密花园🌸" \
 			"0" "Exit 退出" \
 			3>&1 1>&2 2>&3
 	)
@@ -3175,19 +3175,20 @@ check_update_icon_caches_sh() {
 	fi
 }
 ##############
+#
 tmoe_desktop_beautification() {
 	NON_DEBIAN='false'
 	DEPENDENCY_01=''
 	RETURN_TO_WHERE='tmoe_desktop_beautification'
 	BEAUTIFICATION=$(whiptail --title "beautification" --menu \
-		"你想要如何美化桌面？\n How do you want to beautify the desktop environment? " 0 50 0 \
-		"1" "themes:主题" \
-		"2" "icon-theme:图标包" \
-		"3" "wallpaper:壁纸" \
-		"4" "mouse cursor(鼠标指针)" \
-		"5" "conky(显示系统和资源占用等信息)" \
+		"你想要如何美化桌面？\nHow do you want to beautify the DE? " 0 50 0 \
+		"1" "themes:主题(你有一双善于发现美的眼睛)" \
+		"2" "icon-theme:图标包(点缀出惊艳绝伦)" \
+		"3" "wallpaper:壁纸(感受万物之息)🍹" \
+		"4" "mouse cursor(璀璨夺目的鼠标指针)" \
+		"5" "conky(显示资源占用,还有...天气预报" \
 		"6" "dock栏(plank/docky)" \
-		"7" "compiz(实现酷炫3D效果)" \
+		"7" "compiz(如花火般绚烂)" \
 		"0" "Return to previous menu 返回上级菜单" \
 		3>&1 1>&2 2>&3)
 	##########################
@@ -3240,11 +3241,12 @@ install_compiz() {
 }
 ##################
 configure_theme() {
+	#\n下载完成后，您需要手动修改外观设置中的样式和图标。\n注：您需修改窗口管理器样式才能解决标题栏丢失的问题。
 	check_update_icon_caches_sh
 	cd /tmp
 	RETURN_TO_WHERE='configure_theme'
 	INSTALL_THEME=$(whiptail --title "桌面环境主题" --menu \
-		"您想要下载哪个主题？按方向键选择！\n下载完成后，您需要手动修改外观设置中的样式和图标。\n注：您需修改窗口管理器样式才能解决标题栏丢失的问题。\n Which theme do you want to download? " 0 50 0 \
+		"您想要下载哪个主题？\n Which theme do you want to download? " 0 50 0 \
 		"1" "XFCE-LOOK-parser主题链接解析器" \
 		"2" "local-theme-installer本地主题安装器" \
 		"3" "win10:kali卧底模式主题" \
@@ -4089,7 +4091,7 @@ tmoe_sources_list_manager() {
 			"2" "business:国内商业镜像源" \
 			"3" "ping(镜像站延迟测试)" \
 			"4" "speed(镜像站下载速度测试)" \
-			"5" "+ppa:(debian添加ubuntu ppa源)" \
+			"5" "+ppa:(🍥debian添加ubuntu ppa源)" \
 			"6" "restore to default(还原默认源)" \
 			"7" "edit list manually(手动编辑)" \
 			"8" "${EXTRA_SOURCE}" \

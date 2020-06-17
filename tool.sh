@@ -5725,7 +5725,7 @@ configure_x11vnc() {
 x11vnc_process_readme() {
 	echo "输startx11vnc启动x11vnc"
 	echo "输stopvnc或stopx11vnc停止x11vnc"
-	echo "若您的宿主机为Android系统，且发现音频服务无法启动,请在启动完成后，新建一个termux session会话窗口，然后手动在termux原系统里输${GREEN}pulseaudio -D${RESET}来启动音频服务后台进程"
+	echo "若您的音频服务端为Android系统，且发现音频服务无法启动,请在启动完成后，新建一个termux session会话窗口，然后手动在termux原系统里输${GREEN}pulseaudio -D${RESET}来启动音频服务后台进程"
 	echo "您亦可输${GREEN}pulseaudio --start${RESET}"
 	echo "若您无法记住该命令，则只需输${GREEN}debian${RESET}"
 }
@@ -5746,8 +5746,9 @@ x11vnc_warning() {
 		FAQ-01：
 		关于音频服务无法自动启动的说明：
 		正常情况下，音频服务会自动启用。若因某些特殊原因导致启动或调用异常，则请您阅读以下说明。
-		若您的宿主机为Android系统，且发现音频服务无法自动启动。请在图形界面启动完成后，新建一个termux会话窗口，然后手动在termux原系统里输${GREEN}pulseaudio -D${RESET}来启动音频服务后台进程。若您无法记住该命令，则只需输${GREEN}debian${RESET}。
-		若您的宿主机为windows10系统，则请手动打开'C:\Users\Public\Downloads\pulseaudio\pulseaudio.bat'，并修改音频服务地址。
+		若您的音频服务端为Android系统，且发现音频服务无法自动启动。请在图形界面启动完成后，新建一个termux会话窗口，然后手动在termux原系统里输${GREEN}pulseaudio -D${RESET}来启动音频服务后台进程。若您无法记住该命令，则只需输${GREEN}debian${RESET}。
+		若您的音频服务端为windows10系统，则请手动打开'C:\Users\Public\Downloads\pulseaudio\pulseaudio.bat'，并修改音频服务地址。
+		若您使用的是Android版Linux Deploy或Linux Userland，则您可以使用本脚本覆盖安装图形界面。之后，您可以您可以前往Tmoe-linux manager,查看FAQ并配置Linux Deploy的音频服务启动脚本。
 		------------------------
 	EOF
 

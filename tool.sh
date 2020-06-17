@@ -5750,6 +5750,7 @@ x11vnc_warning() {
 		若您的音频服务端为windows10系统，则请手动打开'C:\Users\Public\Downloads\pulseaudio\pulseaudio.bat'，并修改音频服务地址。
 		若您使用的是Android版Linux Deploy或Linux Userland，则您可以使用本脚本覆盖安装图形界面。之后，您可以您可以前往Tmoe-linux manager,查看FAQ并配置Linux Deploy的音频服务启动脚本。
 		------------------------
+		您是否需要配置${BLUE}X11VNC${RESET}服务？
 	EOF
 
 	RETURN_TO_WHERE='configure_x11vnc'

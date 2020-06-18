@@ -1982,13 +1982,9 @@ tmoe_desktop_faq() {
 			因为我不想把时间浪费在无所谓的事情上，所以就不想改了。
 			虽然修改相关命令和文件夹名称很简单，但是需要花费大量的时间去调试。
 			-----------------------
-			Q: 可是这样子一点B格都没有。XX神教千秋万代，一桶浆糊！debian系列的发行版很辣鸡。
-
-			A：我觉得你可以把发行版用出优越感来，但是不能认为Ubuntu和Mint之类的萌新发行版就很low。
-		    个人觉得Mint非常好用。
-			-----------------------
 	EOF
 }
+#####################
 tmoe_container_desktop() {
 	INSTALLDESKTOP=$(whiptail --title "Desktop environment" --menu \
 		"您想要安装哪个桌面环境?\n仅GTK+环境(如xfce等)支持在本工具内便捷下载主题。 \n Which desktop environment do you want to install? " 0 0 0 \
@@ -5060,7 +5056,7 @@ other_software() {
 	SOFTWARE=$(
 		whiptail --title "Software center-01" --menu \
 			"您想要安装哪个软件？\n Which software do you want to install?" 0 50 0 \
-			"1" "🦊Browser:浏览器" \
+			"1" "🦊Browser:浏览器(firefox,chromium)" \
 			"2" "🎵Multimedia:图像与影音(mpv,云音乐)" \
 			"3" "🐧SNS:社交类(qq)" \
 			"4" "🎮Games:游戏(steam,wesnoth)" \

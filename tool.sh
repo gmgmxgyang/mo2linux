@@ -13332,7 +13332,7 @@ install_wps_office() {
 thunar_nautilus_dolphion() {
 	if [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
 		echo "检测到您当前使用的是${BLUE}proot容器${RESET}，请勿安装${RED}dolphion${RESET}"
-		echo "安装后将有可能导致VNC黑屏"
+		echo "dolphion可能无法正常启动"
 		echo "请选择${GREEN}thunar${RESET}或${GREEN}nautilus${RESET}"
 	fi
 	DEPENDENCY_02=""

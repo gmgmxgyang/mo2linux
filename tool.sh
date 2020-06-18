@@ -2125,7 +2125,7 @@ window_manager_install() {
 	REMOTE_DESKTOP_SESSION_02='x-window-manager'
 	BETA_DESKTOP=$(
 		whiptail --title "WINDOW MANAGER" --menu \
-			"Window manager窗口管理器(简称WM)是一种比桌面环境更轻量化的图形界面.\n您想要安装哪个WM呢?您可以同时安装多个\nWhich WM do you want to install?" 0 0 0 \
+			"Window manager窗口管理器(简称WM)\n是一种比桌面环境更轻量化的图形界面.\n您想要安装哪个WM呢?您可以同时安装多个\nWhich WM do you want to install?" 0 0 0 \
 			"00" "Return to previous menu 返回上级菜单" \
 			"01" "ice(意在提升感观和体验,兼顾轻量和可定制性)" \
 			"02" "openbox(快速,轻巧,可扩展)" \
@@ -2154,7 +2154,7 @@ window_manager_install() {
 			"25" "kwin-x11(KDE默认WM,X11 version)" \
 			"26" "lwm(轻量化WM)" \
 			"27" "marco(轻量化GTK+ WM for MATE)" \
-			"28" "matchbox-window-manager(WM for resource-limited systems)" \
+			"28" "matchbox-window-manager(低配机福音)" \
 			"29" "miwm(极简主义WM with virtual workspaces)" \
 			"30" "muffin(轻量化window and compositing manager)" \
 			"31" "mwm(Motif WM)" \

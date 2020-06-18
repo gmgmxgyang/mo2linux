@@ -447,18 +447,18 @@ tmoe_linux_tool_menu() {
 	#窗口大小20 50 7
 	TMOE_OPTION=$(
 		whiptail --title "Tmoe-linux Tool输debian-i启动(20200618-04)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.请使用方向键和回车键操作,更新日志:0522修复ubuntu20.10和云音乐,0529增加qemu配置中心,0531至0603修复qemu部分问题,6月上旬增加更多系统管理功能,0618支持解析主题链接" 20 50 7 \
-			"1" "GUI:图形界面🍭" \
-			"2" "Software center:软件(浏览器,🎦,游戏)" \
-			"3" "Desktop beautification:桌面美化(主题)" \
-			"4" "vnc/x/rdp:远程桌面" \
-			"5" "Download video:解析视频链接(bili🍻Y2B)" \
-			"6" "File shared:文件共享与网盘(Webdav)" \
-			"7" "Update tmoe-linux tool(更新本工具)" \
-			"8" "FAQ:常见问题" \
-			"9" "software sources:软件镜像源管理" \
-			"10" "qemu:x86_64虚拟机管理💻" \
-			"11" "The Secret Garden秘密花园🌸" \
-			"0" "Exit 退出" \
+			"1" "🍭GUI:图形界面" \
+			"2" "🎦Software center:软件(浏览器,游戏,影音)" \
+			"3" "🌈Desktop beautification:桌面美化(主题)" \
+			"4" "🌌vnc/x/rdp:远程桌面" \
+			"5" "🍻Download video:解析视频链接(bili,Y2B)" \
+			"6" "☃File shared:文件共享与网盘(Webdav)" \
+			"7" "✨Update tmoe-linux tool(更新本工具)" \
+			"8" "🏫FAQ:常见问题" \
+			"9" "🍥software sources:软件镜像源管理" \
+			"10" "💻qemu:x86_64虚拟机管理" \
+			"11" "🌸The Secret Garden秘密花园" \
+			"0" "🌚Exit 退出" \
 			3>&1 1>&2 2>&3
 	)
 	########
@@ -601,11 +601,11 @@ tmoe_linux_tool_upgrade() {
 download_videos() {
 	VIDEOTOOL=$(
 		whiptail --title "DOWNLOAD VIDEOS" --menu "你想要使用哪个工具来下载视频呢" 14 50 6 \
-			"1" "Annie" \
-			"2" "You-get" \
-			"3" "Youtube-dl" \
-			"4" "cookie说明" \
-			"5" "upgrade更新下载工具" \
+			"1" "🥂Annie" \
+			"2" "🍷You-get" \
+			"3" "🍾Youtube-dl" \
+			"4" "🍹cookie说明" \
+			"5" "🍺upgrade更新下载工具" \
 			"0" "Back to the main menu 返回主菜单" \
 			3>&1 1>&2 2>&3
 	)
@@ -1897,11 +1897,11 @@ standand_desktop_install() {
 	RETURN_TO_WHERE='standand_desktop_install'
 	INSTALLDESKTOP=$(whiptail --title "GUI" --menu \
 		"Desktop environment(简称DE)是一种多功能和多样化的图形界面。\n若您使用的是容器，则您只需选择第一项\nIf you are using container,then choose container_DE.\nWhich GUI do you want to install?\n若您使用的是虚拟机，则可以任意挑选项目。" 0 0 0 \
-		"1" "Container_DE(容器可运行:xfce,mate,lxde)" \
-		"2" "VM_DE(虚拟机可运行:lxqt,kde,gnome)" \
-		"3" "window manager窗口管理器(公测):ice,fvwm" \
-		"4" "display manager显示(登录)管理器:lightdm,sddm" \
-		"0" "none我一个都不要 =￣ω￣=" \
+		"1" "🍰Container_DE(容器可运行:xfce,mate,lxde)" \
+		"2" "🍱VM_DE(虚拟机可运行:lxqt,kde,gnome)" \
+		"3" "🍙window manager窗口管理器(公测):ice,fvwm" \
+		"4" "🍣display manager显示(登录)管理器:lightdm,sddm" \
+		"0" "🌚none我一个都不要 =￣ω￣=" \
 		3>&1 1>&2 2>&3)
 	##########################
 	case "${INSTALLDESKTOP}" in
@@ -3182,13 +3182,13 @@ tmoe_desktop_beautification() {
 	RETURN_TO_WHERE='tmoe_desktop_beautification'
 	BEAUTIFICATION=$(whiptail --title "beautification" --menu \
 		"你想要如何美化桌面？\nHow do you want to beautify the DE? " 0 50 0 \
-		"1" "themes:主题(你有一双善于发现美的眼睛)" \
-		"2" "icon-theme:图标包(点缀出惊艳绝伦)" \
-		"3" "wallpaper:壁纸(感受万物之息)🍹" \
-		"4" "mouse cursor(璀璨夺目的鼠标指针)" \
-		"5" "conky(显示资源占用,还有...天气预报" \
-		"6" "dock栏(plank/docky)" \
-		"7" "compiz(如花火般绚烂)" \
+		"1" "🍨themes:主题(你有一双善于发现美的眼睛)" \
+		"2" "🎀icon-theme:图标包(点缀出惊艳绝伦)" \
+		"3" "🍹wallpaper:壁纸(感受万物之息)" \
+		"4" "↗mouse cursor(璀璨夺目的鼠标指针)" \
+		"5" "🌦conky(显示资源占用情况,还有...天气预报)" \
+		"6" "💫dock栏(plank/docky)" \
+		"7" "🎇compiz(如花火般绚烂)" \
 		"0" "Return to previous menu 返回上级菜单" \
 		3>&1 1>&2 2>&3)
 	##########################
@@ -3247,11 +3247,11 @@ configure_theme() {
 	RETURN_TO_WHERE='configure_theme'
 	INSTALL_THEME=$(whiptail --title "桌面环境主题" --menu \
 		"您想要下载哪个主题？\n Which theme do you want to download? " 0 50 0 \
-		"1" "XFCE-LOOK-parser主题链接解析器" \
-		"2" "local-theme-installer本地主题安装器" \
-		"3" "win10:kali卧底模式主题" \
-		"4" "MacOS:Mojave" \
-		"5" "breeze:plasma桌面微风gtk+版主题" \
+		"1" "🌈XFCE-LOOK-parser主题链接解析器" \
+		"2" "⚡local-theme-installer本地主题安装器" \
+		"3" "🎭win10:kali卧底模式主题" \
+		"4" "🚥MacOS:Mojave" \
+		"5" "🎋breeze:plasma桌面微风gtk+版主题" \
 		"6" "Kali:Flat-Remix-Blue主题" \
 		"7" "ukui:国产优麒麟ukui桌面主题" \
 		"8" "arc:融合透明元素的平面主题" \
@@ -4987,16 +4987,16 @@ other_software() {
 	SOFTWARE=$(
 		whiptail --title "Software center-01" --menu \
 			"您想要安装哪个软件？\n Which software do you want to install?" 0 50 0 \
-			"1" "Browser:浏览器" \
-			"2" "Multimedia:图像与影音(mpv,云音乐)" \
-			"3" "SNS:社交类(qq)" \
-			"4" "Games:游戏(steam,wesnoth)" \
-			"5" "Packages&system:软件包与系统管理" \
-			"6" "Documents:文档(libreoffice)" \
-			"7" "VSCode 现代化代码编辑器" \
-			"8" "Download:下载类(baidu)" \
-			"9" "Start zsh tool:启动zsh管理工具" \
-			"10" "remove:卸载管理" \
+			"1" "🦊Browser:浏览器" \
+			"2" "🎵Multimedia:图像与影音(mpv,云音乐)" \
+			"3" "🐧SNS:社交类(qq)" \
+			"4" "🎮Games:游戏(steam,wesnoth)" \
+			"5" "🔯Packages&system:软件包与系统管理" \
+			"6" "📚Documents:文档(libreoffice)" \
+			"7" "📘VSCode 现代化代码编辑器" \
+			"8" "🎁Download:下载类(baidu)" \
+			"9" "🥙Start zsh tool:启动zsh管理工具" \
+			"10" "🌚remove:卸载管理" \
 			"0" "Back to the main menu 返回主菜单" \
 			3>&1 1>&2 2>&3
 	)
@@ -5074,7 +5074,7 @@ tmoe_download_class() {
 	TMOE_APP=$(
 		whiptail --title "documents" --menu \
 			"Which software do you want to install?" 0 50 0 \
-			"1" "百度网盘(x64,提供文件的网络备份,同步和分享服务)" \
+			"1" "📉百度网盘(x64,提供文件的网络备份,同步和分享服务)" \
 			"0" "Return to previous menu 返回上级菜单" \
 			3>&1 1>&2 2>&3
 	)
@@ -7347,18 +7347,18 @@ beta_features() {
 	NON_DEBIAN='false'
 	TMOE_BETA=$(
 		whiptail --title "The Secret Garden" --menu "Welcome to the secret garden." 17 55 8 \
-			"1" "container/vm:docker容器,qemu,vbox虚拟机" \
-			"2" "input method:输入法(搜狗,讯飞,百度)" \
-			"3" "network:网络" \
-			"4" "read:墨纸留香,品味阅读" \
-			"5" "cut video:岁月静好,剪下佳刻" \
-			"6" "paint:融入意境,绘画真谛" \
-			"7" "file:文件,浩如烟海" \
-			"8" "SNS:进行物质和精神交流的社会活动的app" \
-			"9" "Store&download:繁花似锦,一切皆在此中" \
-			"10" "system:系统" \
-			"11" "tech&edu:科学与教育" \
-			"12" "other:其它类" \
+			"1" "💻container/vm:docker容器,qemu,vbox虚拟机" \
+			"2" "⌨input method:输入法(搜狗,讯飞,百度)" \
+			"3" "🥅network:网络" \
+			"4" "📝read:墨纸留香,品味阅读" \
+			"5" "🎞cut video:岁月静好,剪下佳刻" \
+			"6" "🎨paint:融入意境,绘画真谛" \
+			"7" "💾file:文件,浩如烟海" \
+			"8" "👬SNS:进行物质和精神交流的社会活动的app" \
+			"9" "🌼Store&download:繁花似锦,一切皆在此中" \
+			"10" "🔨system:系统" \
+			"11" "🌌tech&edu:科学与教育" \
+			"12" "🍛other:其它类" \
 			"0" "Back to the main menu 返回主菜单" \
 			3>&1 1>&2 2>&3
 	)

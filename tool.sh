@@ -447,7 +447,7 @@ tmoe_linux_tool_menu() {
 	#窗口大小20 50 7
 	TMOE_OPTION=$(
 		whiptail --title "Tmoe-linux Tool输debian-i启动(20200618-04)" --menu "Type 'debian-i' to start this tool.Please use the enter and arrow keys to operate.请使用方向键和回车键操作,更新日志:0522修复ubuntu20.10和云音乐,0529增加qemu配置中心,0531至0603修复qemu部分问题,6月上旬增加更多系统管理功能,0618支持解析主题链接" 20 50 7 \
-			"1" "🍭GUI:图形界面" \
+			"1" "🍭GUI:图形界面(桌面,WM,登录管理器)" \
 			"2" "🎦Software center:软件(浏览器,游戏,影音)" \
 			"3" "🌈Desktop beautification:桌面美化(主题)" \
 			"4" "🌌vnc/x/rdp:远程桌面" \
@@ -1899,8 +1899,8 @@ standand_desktop_install() {
 		"Desktop environment(简称DE)是一种多功能和多样化的图形界面。\n若您使用的是容器，则您只需选择第一项\nIf you are using container,then choose container_DE.\nWhich GUI do you want to install?\n若您使用的是虚拟机，则可以任意挑选项目。" 0 0 0 \
 		"1" "🍰Container_DE(容器可运行:xfce,mate,lxde)" \
 		"2" "🍱VM_DE(虚拟机可运行:lxqt,kde,gnome)" \
-		"3" "🍙window manager窗口管理器(公测):ice,fvwm" \
-		"4" "🍣display manager显示(登录)管理器:lightdm,sddm" \
+		"3" "🍙window manager窗口管理器:ice,fvwm" \
+		"4" "🍣display manager显示/登录管理器:lightdm,sddm" \
 		"0" "🌚none我一个都不要 =￣ω￣=" \
 		3>&1 1>&2 2>&3)
 	##########################

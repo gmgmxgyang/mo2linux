@@ -1507,11 +1507,12 @@ modify_other_vnc_conf() {
 	MODIFYOTHERVNCCONF=$(whiptail --title "Modify vnc server conf" --menu "Which configuration do you want to modify?" 15 60 7 \
 		"1" "Pulse server address音频地址" \
 		"2" "VNC password密码" \
-		"3" "Edit xstartup manually 手动编辑xstartup" \
-		"4" "Edit startvnc manually 手动编辑vnc启动脚本" \
-		"5" "fix vnc crash修复VNC闪退" \
-		"6" "window scaling factor调整屏幕缩放比例(仅支持xfce)" \
-		"7" "display port显示端口" \
+		"3" "switch tiger/tightvnc切换服务端" \
+		"4" "Edit xstartup manually 手动编辑xstartup" \
+		"5" "Edit startvnc manually 手动编辑vnc启动脚本" \
+		"6" "fix vnc crash修复VNC闪退" \
+		"7" "window scaling factor调整屏幕缩放比例(仅支持xfce)" \
+		"8" "display port显示端口" \
 		"0" "Return to previous menu 返回上级菜单" \
 		3>&1 1>&2 2>&3)
 	###########
@@ -1519,16 +1520,17 @@ modify_other_vnc_conf() {
 	0 | "") modify_remote_desktop_config ;;
 	1) modify_vnc_pulse_audio ;;
 	2) set_vnc_passwd ;;
-	3)
+	3) switch_tight_or_tiger_vncserver ;;
+	4)
 		nano ~/.vnc/xstartup
 		stopvnc 2>/dev/null
 		press_enter_to_return
 		modify_other_vnc_conf
 		;;
-	4) nano_startvnc_manually ;;
-	5) fix_vnc_dbus_launch ;;
-	6) modify_xfce_window_scaling_factor ;;
-	7) modify_tightvnc_display_port ;;
+	5) nano_startvnc_manually ;;
+	6) fix_vnc_dbus_launch ;;
+	7) modify_xfce_window_scaling_factor ;;
+	8) modify_tightvnc_display_port ;;
 	esac
 	#########
 	press_enter_to_return
@@ -1536,6 +1538,30 @@ modify_other_vnc_conf() {
 	##########
 }
 ##############
+switch_tight_or_tiger_vncserver() {
+	DEPENDENCY_01=''
+	NON_DEBIAN='true'
+	if [ $(command -v Xtightvnc) ]; then
+		VNC_SERVER_BIN_NOW="tightvncserver"
+		VNC_SERVER_BIN="tigervnc"
+		DEPENDENCY_02="tigervnc-standalone-server"
+	elif [ $(command -v Xtigervnc) ]; then
+		VNC_SERVER_BIN_NOW="tigervnc-standalone-server"
+		VNC_SERVER_BIN="tightvnc"
+		DEPENDENCY_02="tightvncserver"
+	fi
+	VNC_SERVER_BIN_STATUS="检测到您当前使用的是${VNC_SERVER_BIN_NOW}"
+	if (whiptail --title "您想要对这个小可爱做什么呢 " --yes-button "Back返回" --no-button "${VNC_SERVER_BIN}" --yesno "${VNC_SERVER_BIN_STATUS}\n请问您是否需要切换为${VNC_SERVER_BIN}♪(^∇^*)\nDo you want to switch to ${VNC_SERVER_BIN}?" 0 0); then
+		modify_other_vnc_conf
+	else
+		non_debian_function
+		echo "${RED}${PACKAGES_REMOVE_COMMAND} ${VNC_SERVER_BIN_NOW}${RESET}"
+		${PACKAGES_REMOVE_COMMAND} ${VNC_SERVER_BIN_NOW}
+		DEPENDENCY_02=${VNC_SERVER_BIN}
+		beta_features_quick_install
+	fi
+}
+#################
 check_tightvnc_port() {
 	if grep -q 'tmoe-linux.*:1' "/usr/local/bin/startvnc"; then
 		CURRENT_VNC_PORT=5901
@@ -6143,10 +6169,8 @@ modify_vnc_conf() {
 			#echo $(sed -n \$p "$(command -v startvnc)" | cut -d 'y' -f 2 | cut -d '-' -f 1)
 			#$p表示最后一行，必须用反斜杠转义。
 			stopvnc 2>/dev/null
-			echo "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
-			echo "${YELLOW}按回车键返回。${RESET}"
-			read
-			tmoe_linux_tool_menu
+			press_enter_to_return
+			modify_remote_desktop_config
 		else
 			echo "您当前的分辨率为${CURRENT_VNC_RESOLUTION}"
 		fi

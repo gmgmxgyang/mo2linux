@@ -1892,7 +1892,7 @@ standand_desktop_install() {
 	REMOVE_UDISK2='false'
 	RETURN_TO_WHERE='standand_desktop_install'
 	INSTALLDESKTOP=$(whiptail --title "GUI" --menu \
-		"Desktop environment(简称DE)是一种多功能和多样化的图形界面。\n若您使用的是容器，则只需选择第一或者第三项。\nIf you are using container,choose DE or WM.\nWhich GUI do you want to install?\n若您使用的是虚拟机，则可以任意挑选项目。" 0 0 0 \
+		"Desktop environment(简称DE)是一种多功能和多样化的图形界面。\n若您使用的是容器，则只需选择第一或者第三项。\nIf you are using container,then choose DE or WM.\nWhich GUI do you want to install?\n若您使用的是虚拟机，则可以任意挑选项目。" 0 0 0 \
 		"1" "🍰Container_DE(容器可运行:xfce,mate,lxde)" \
 		"2" "🍱VM_DE(虚拟机可运行:lxqt,kde,gnome)" \
 		"3" "🍙window manager窗口管理器:ice,fvwm" \

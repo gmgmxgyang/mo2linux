@@ -13331,8 +13331,8 @@ install_wps_office() {
 ###################
 thunar_nautilus_dolphion() {
 	if [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
-		echo "检测到您当前使用的是${BLUE}proot容器${RESET}，请勿安装${RED}dolphion${RESET}"
-		echo "dolphion可能无法正常启动"
+		echo "检测到您当前使用的是${BLUE}proot容器${RESET}，不建议您安装${RED}dolphion${RESET}"
+		echo "dolphion可能在当前环境下无法正常启动"
 		echo "请选择${GREEN}thunar${RESET}或${GREEN}nautilus${RESET}"
 	fi
 	DEPENDENCY_02=""

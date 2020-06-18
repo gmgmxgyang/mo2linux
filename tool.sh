@@ -2115,9 +2115,9 @@ tmoe_desktop_faq() {
 
 					之前曾在Android的Ubuntu 18.04 proot容器体验过kde plasma，流畅度并不如xfce。
 			                
-					如果你直接在proot容器里安装的话，那么你很有可能遇到程序崩溃，无法正常启动的问题，此外你还得要自己解决很多问题，修bug可不是一件简单的事情。
+					如果直接在proot容器里安装的话，那么很有可能遇到程序崩溃，无法正常启动的问题，此外你还得要自己解决很多问题，修bug可不是一件简单的事情。
 
-					如果你使用的是chroot容器的话，那么你可以选择arch+kde+tigervnc。
+					如果使用的是chroot容器的话，那么可以选择arch+kde+tigervnc。
 			                
 
 					3.综合来说，桌面环境三剑客中在手机上体验最好的是xfce4。

@@ -2671,7 +2671,7 @@ install_fvwm() {
 		else
 			REPO_URL='https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/f/fvwm-crystal/'
 			GREP_NAME='all'
-			download_deb_comman_model_01
+			grep_deb_comman_model_01
 			if [ $(command -v fvwm-crystal) ]; then
 				REMOTE_DESKTOP_SESSION_01='fvwm-crystal'
 			fi
@@ -2689,8 +2689,12 @@ download_deb_comman_model_02() {
 	rm -fv ${THE_LATEST_DEB_VERSION}
 }
 #########################
-download_deb_comman_model_01() {
-	cd /tmp/
+grep_deb_comman_model_02() {
+	THE_LATEST_DEB_VERSION="$(curl -L ${REPO_URL} | grep '.deb' | grep "${GREP_NAME_01}" | grep "${GREP_NAME_02}" | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
+	download_deb_comman_model_02
+}
+###################
+grep_deb_comman_model_01() {
 	THE_LATEST_DEB_VERSION="$(curl -L ${REPO_URL} | grep '.deb' | grep "${GREP_NAME}" | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
 	download_deb_comman_model_02
 }
@@ -2878,7 +2882,7 @@ touch_xfce4_terminal_rc() {
 		MiscSlimTabs=FALSE
 		MiscNewTabAdjacent=FALSE
 		BackgroundMode=TERMINAL_BACKGROUND_TRANSPARENT
-		BackgroundDarkness=0.880000
+		BackgroundDarkness=0.730000
 		ScrollingUnlimited=TRUE
 	ENDOFTERMIANLRC
 }
@@ -2963,14 +2967,19 @@ install_xfce4_desktop() {
 	debian_xfce4_extras
 	if [ ! -e "/usr/share/icons/Breeze-Adapta-Cursor" ]; then
 		download_arch_breeze_adapta_cursor_theme
-		dbus-launch xfconf-query -c xsettings -np /Gtk/CursorThemeName -s "Breeze-Adapta-Cursor" 2>/dev/null
+		dbus-launch xfconf-query -c xsettings -t string -np /Gtk/CursorThemeName -s "Breeze-Adapta-Cursor" 2>/dev/null
+	fi
+	cd ${HOME}/.config/xfce4/xfconf/xfce-perchannel-xml/
+	XFCE_WORK_SPACE_01=$(cat xfce4-desktop.xml | grep -n workspace1 | awk '{print $1}' | cut -d ':' -f 1)
+	if [ "$(cat xfce4-desktop.xml | sed -n 1,${XFCE_WORK_SPACE_01}p | grep -E 'xfce-stripes.png|.svg')" ]; then
+		modify_the_default_xfce_wallpaper
 	fi
 
 	if [ ! -e "${HOME}/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml" ]; then
 		auto_configure_xfce4_panel
 	fi
 	#################
-	if [ "${DEBIAN_DISTRO}" != "alpine" ]; then
+	if [ "${LINUX_DISTRO}" != "alpine" ]; then
 		if [ ! -e "/usr/share/desktop-base/kali-theme" ]; then
 			download_kali_themes_common
 		fi
@@ -2987,6 +2996,54 @@ install_xfce4_desktop() {
 	xfce4_color_scheme
 	#########
 	configure_vnc_xstartup
+}
+###############
+MODIFY_XFCE_VNC0_WALLPAPER() {
+	dbus-launch xfconf-query -c xfce4-desktop -t string -np /backdrop/screen0/monitorVNC-0/workspace0/last-image -s "${WALLPAPER_FILE}"
+}
+##################
+debian_xfce_wallpaper() {
+	WALLPAPER_FILE='/usr/share/xfce4/backdrops/Untitled_by_Troy_Jarrell.jpg'
+	if [ ! -e "${WALLPAPER_FILE}" ]; then
+		debian_download_xubuntu_xenial_wallpaper
+	fi
+	MODIFY_XFCE_VNC0_WALLPAPER
+}
+#################
+if_exists_other_debian_distro_wallpaper() {
+	if [ -e "${WALLPAPER_FILE}" ]; then
+		MODIFY_XFCE_VNC0_WALLPAPER
+	else
+		debian_xfce_wallpaper
+	fi
+}
+###############
+modify_the_default_xfce_wallpaper() {
+	if [ "${LINUX_DISTRO}" = "debian" ]; then
+		if [ "${DEBIAN_DISTRO}" = "kali" ]; then
+			WALLPAPER_FILE='/usr/share/backgrounds/kali/kali/kali-mesh-16x9.png'
+			if_exists_other_debian_distro_wallpaper
+		elif [ "${DEBIAN_DISTRO}" = "ubuntu" ]; then
+			WALLPAPER_FILE='/usr/share/xfce4/backdrops/Campos_de_Castilla_by_David_Arias_Gutierrez.jpg'
+			if_exists_other_debian_distro_wallpaper
+		else
+			debian_xfce_wallpaper
+		fi
+	fi
+
+	if [ "${LINUX_DISTRO}" = "arch" ]; then
+		WALLPAPER_FILE="/usr/share/backgrounds/xfce/Violet.jpg"
+		if [ -e "${WALLPAPER_FILE}" ]; then
+			MODIFY_XFCE_VNC0_WALLPAPER
+		fi
+	fi
+}
+#################
+debian_download_xubuntu_xenial_wallpaper() {
+	REPO_URL='https://mirrors.tuna.tsinghua.edu.cn/ubuntu/pool/universe/x/xubuntu-community-artwork/'
+	GREP_NAME_01='xubuntu-community-wallpapers-xenial'
+	GREP_NAME_02='all.deb'
+	grep_deb_comman_model_02
 }
 ###############
 auto_configure_xfce4_panel() {
@@ -7346,6 +7403,19 @@ first_configure_startvnc() {
 
 	EndOFneko
 	printf "$RESET"
+	echo '------------------------'
+	if [ "${REMOTE_DESKTOP_SESSION_01}" = 'xfce4-session' ]; then
+		if (whiptail --title "Are you using a high-resolution monitor" --yes-button 'YES' --no-button 'NO' --yesno "您当前是否使用高分辨率屏幕/显示器?(っ °Д °)\n设屏幕分辨率为x,若2K<x<4K,则选择YES;\n若x<=1080p,则选择NO。" 0 50); then
+			TMOE_HIGH_DPI='true'
+			xfce4_tightvnc_hidpi_settings
+		else
+			TMOE_HIGH_DPI='false'
+			echo "默认分辨率为1440x720，窗口缩放大小为1x"
+			dbus-launch xfconf-query -c xsettings -t int -np /Gdk/WindowScalingFactor -s 1 2>/dev/null
+			echo "若分辨率不合，则请在脚本执行完成后，手动输${GREEN}debian-i${RESET}，然后在${BLUE}vnc${RESET}选项里进行修改。"
+			echo "You can type debian-i to start tmoe-linux tool,and modify the vnc screen resolution."
+		fi
+	fi
 	cat <<-EOF
 		------------------------
 		一：
@@ -7371,8 +7441,6 @@ first_configure_startvnc() {
 	echo "在容器里输${BOLD}${GREEN}startvnc${RESET}${RESET}(仅支持)${BLUE}启动${RESET}vnc服务端，输${GREEN}stopvnc${RESET}${RED}停止${RESET}"
 	echo "在原系统里输${GREEN}startxsdl${RESET}同时启动X客户端与服务端，按${YELLOW}Ctrl+C${RESET}或在termux原系统里输${GREEN}stopvnc${RESET}来${RED}停止${RESET}进程"
 	echo "注：同时启动tight/tigervnc服务端和realvnc客户端仅适配Termux,同时启动X客户端和服务端还适配了win10的linux子系统"
-	echo '------------------------'
-	xfce4_tightvnc_hidpi_settings
 	echo '------------------------'
 	echo '------------------------'
 	if [ "${HOME}" != "/root" ]; then
@@ -7402,10 +7470,10 @@ first_configure_startvnc() {
 		/mnt/c/WINDOWS/system32/cmd.exe /c "start Firewall.cpl"
 		/mnt/c/WINDOWS/system32/cmd.exe /c "start .\Firewall-pulseaudio.png" 2>/dev/null
 		############
-		if [ ! -e 'XserverHightDPI.png' ]; then
-			aria2c --allow-overwrite=true -s 5 -x 5 -k 1M -o 'XserverHightDPI.png' https://gitee.com/mo2/pic_api/raw/test/2020/03/27/jvNs2JUIbsSQQInO.png
+		if [ ! -e 'XserverhighDPI.png' ]; then
+			aria2c --allow-overwrite=true -s 5 -x 5 -k 1M -o 'XserverhighDPI.png' https://gitee.com/mo2/pic_api/raw/test/2020/03/27/jvNs2JUIbsSQQInO.png
 		fi
-		/mnt/c/WINDOWS/system32/cmd.exe /c "start .\XserverHightDPI.png" 2>/dev/null
+		/mnt/c/WINDOWS/system32/cmd.exe /c "start .\XserverhighDPI.png" 2>/dev/null
 		echo "若X服务的画面过于模糊，则您需要右击vcxsrv.exe，并手动修改兼容性设定中的高Dpi选项。"
 		echo "vcxsrv文件位置为C:\Users\Public\Downloads\VcXsrv\vcxsrv.exe"
 		echo "${YELLOW}按回车键启动X${RESET}"
@@ -7474,32 +7542,32 @@ check_vnc_passsword_length() {
 }
 ###################
 xfce4_tightvnc_hidpi_settings() {
-	if [ "${REMOTE_DESKTOP_SESSION_01}" = 'xfce4-session' ]; then
-		echo "检测到您当前的桌面环境为xfce4，将为您自动调整高分屏设定"
-		echo "若分辨率不合，则请在脚本执行完成后，手动输${GREEN}debian-i${RESET}，然后在${BLUE}vnc${RESET}选项里进行修改。"
-		stopvnc >/dev/null 2>&1
-		sed -i '/vncserver -geometry/d' "$(command -v startvnc)"
-		sed -i "$ a\vncserver -geometry 2880x1440 -depth 24 -name tmoe-linux :1" "$(command -v startvnc)"
-		sed -i "s@^/usr/bin/Xvfb.*@/usr/bin/Xvfb :233 -screen 0 2880x1440x24 -ac +extension GLX +render -noreset \&@" "$(command -v startx11vnc)" 2>/dev/null
-		echo "已将默认分辨率修改为2880x1440，窗口缩放大小调整为2x"
-		dbus-launch xfconf-query -c xsettings -np /Gdk/WindowScalingFactor -s 2 || dbus-launch xfconf-query -n -t int -c xsettings -np /Gdk/WindowScalingFactor -s 2
-		#-n创建一个新属性，类型为int
-		if grep -q 'Focal Fossa' "/etc/os-release"; then
-			dbus-launch xfconf-query -c xfwm4 -p /general/theme -s Kali-Light-xHiDPI 2>/dev/null
-		else
-			dbus-launch xfconf-query -c xfwm4 -p /general/theme -s Default-xhdpi 2>/dev/null
-		fi
-		#dbus-launch xfconf-query -c xfce4-panel -p /plugins/plugin-1 -s whiskermenu
-		#startvnc >/dev/null 2>&1
+	echo "检测到您当前的桌面环境为xfce4，将为您自动调整高分屏设定"
+	echo "若分辨率不合，则请在脚本执行完成后，手动输${GREEN}debian-i${RESET}，然后在${BLUE}vnc${RESET}选项里进行修改。"
+	stopvnc >/dev/null 2>&1
+	sed -i '/vncserver -geometry/d' "$(command -v startvnc)"
+	sed -i "$ a\vncserver -geometry 2880x1440 -depth 24 -name tmoe-linux :1" "$(command -v startvnc)"
+	sed -i "s@^/usr/bin/Xvfb.*@/usr/bin/Xvfb :233 -screen 0 2880x1440x24 -ac +extension GLX +render -noreset \&@" "$(command -v startx11vnc)" 2>/dev/null
+	echo "已将默认分辨率修改为2880x1440，窗口缩放大小调整为2x"
+	dbus-launch xfconf-query -c xsettings -t int -np /Gdk/WindowScalingFactor -s 2 2>/dev/null
+	#-n创建一个新属性，类型为int
+	if grep -q 'Focal Fossa' "/etc/os-release"; then
+		dbus-launch xfconf-query -c xfwm4 -p /general/theme -s Kali-Light-xHiDPI 2>/dev/null
+	else
+		dbus-launch xfconf-query -c xfwm4 -p /general/theme -s Default-xhdpi 2>/dev/null
 	fi
+	#dbus-launch xfconf-query -c xfce4-panel -p /plugins/plugin-1 -s whiskermenu
+	#startvnc >/dev/null 2>&1
 	#Default-xhdpi默认处于未激活状态
 }
 ################
 xfce4_x11vnc_hidpi_settings() {
-	if [ "${REMOTE_DESKTOP_SESSION_01}" = 'xfce4-session' ]; then
-		stopx11vnc >/dev/null 2>&1
-		sed -i "s@^/usr/bin/Xvfb.*@/usr/bin/Xvfb :233 -screen 0 2880x1440x24 -ac +extension GLX +render -noreset \&@" "$(command -v startx11vnc)"
-		startx11vnc >/dev/null 2>&1
+	if [ ${TMOE_HIGH_DPI} = 'true' ]; then
+		if [ "${REMOTE_DESKTOP_SESSION_01}" = 'xfce4-session' ]; then
+			#stopx11vnc >/dev/null 2>&1
+			sed -i "s@^/usr/bin/Xvfb.*@/usr/bin/Xvfb :233 -screen 0 2880x1440x24 -ac +extension GLX +render -noreset \&@" "$(command -v startx11vnc)"
+			#startx11vnc >/dev/null 2>&1
+		fi
 	fi
 }
 ####################
@@ -13570,7 +13638,7 @@ install_debian_iflyime_pinyin() {
 	if [ "${ARCH_TYPE}" = "amd64" ]; then
 		REPO_URL='https://mirrors.tuna.tsinghua.edu.cn/deepin/pool/non-free/i/iflyime/'
 		GREP_NAME="${ARCH_TYPE}"
-		download_deb_comman_model_01
+		grep_deb_comman_model_01
 	else
 		arch_does_not_support
 		echo "请在更换x64架构的设备后，再来尝试"

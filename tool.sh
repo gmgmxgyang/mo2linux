@@ -2971,7 +2971,7 @@ install_xfce4_desktop() {
 	fi
 	cd ${HOME}/.config/xfce4/xfconf/xfce-perchannel-xml/
 	XFCE_WORK_SPACE_01=$(cat xfce4-desktop.xml | grep -n workspace1 | awk '{print $1}' | cut -d ':' -f 1)
-	if [ "$(cat xfce4-desktop.xml | sed -n 1,${XFCE_WORK_SPACE_01}p | grep -E 'xfce-stripes.png|.svg')" ]; then
+	if [ "$(cat xfce4-desktop.xml | sed -n 1,${XFCE_WORK_SPACE_01}p | grep -E 'xfce-stripes|xfce-blue|xfce-teal|0.svg')" ]; then
 		modify_the_default_xfce_wallpaper
 	fi
 
@@ -3666,7 +3666,7 @@ remove_browser() {
 #############################################
 #############################################
 set_default_xfce_icon_theme() {
-	dbus-launch xfconf-query -c xsettings -p /Net/IconThemeName -s ${XFCE_ICRO_NAME} 2>/dev/null
+	dbus-launch xfconf-query -c xsettings -p /Net/IconThemeName -s ${XFCE_ICON_NAME} 2>/dev/null
 }
 ###############
 creat_update_icon_caches() {
@@ -3997,21 +3997,63 @@ download_wallpapers() {
 	RETURN_TO_WHERE='download_wallpapers'
 	INSTALL_THEME=$(whiptail --title "桌面壁纸" --menu \
 		"您想要下载哪套壁纸包？\n Which wallpaper do you want to download? " 0 50 0 \
-		"1" "deepin:深度系统壁纸包" \
-		"2" "arch/elementary/manjaro系统壁纸包" \
+		"1" "deepin-community+official" \
+		"2" "arch & elementary" \
+		"3" "raspbian pixel" \
+		"4" "manjaro-2017+2018" \
+		"5" "xubuntu-trusty" \
+		"6" "xubuntu-xenial" \
+		"7" "xubuntu-bionic" \
+		"8" "xubuntu-focal" \
 		"0" "Back to the main menu 返回主菜单" \
 		3>&1 1>&2 2>&3)
 	########################
 	case "${INSTALL_THEME}" in
 	0 | "") tmoe_desktop_beautification ;;
 	1) download_deepin_wallpaper ;;
-	2) download_manjaro_wallpaper ;;
+	2) download_arch_wallpaper ;;
+	3) download_raspbian_pixel_wallpaper ;;
+	4) download_manjaro_wallpaper ;;
+	5)
+		GREP_NAME_02='xubuntu-community-wallpapers-trusty'
+		CUSTOM_WALLPAPER_NAME='xubuntu-community-artwork/trusty'
+		download_xubuntu_wallpaper
+		;;
+	6)
+		GREP_NAME_02='xubuntu-community-wallpapers-xenial'
+		CUSTOM_WALLPAPER_NAME='xubuntu-community-artwork/xenial'
+		download_xubuntu_wallpaper
+		;;
+	7)
+		GREP_NAME_02='xubuntu-community-wallpapers-bionic'
+		CUSTOM_WALLPAPER_NAME='xubuntu-community-artwork/bionic'
+		download_xubuntu_wallpaper
+		;;
+	8)
+		GREP_NAME_02='xubuntu-community-wallpapers-focal'
+		CUSTOM_WALLPAPER_NAME='xubuntu-community-artwork/focal'
+		download_xubuntu_wallpaper
+		;;
 	esac
 	######################################
 	press_enter_to_return
 	download_wallpapers
 }
 ###########
+download_xubuntu_wallpaper() {
+	if [ -d "${HOME}/图片" ]; then
+		mkdir -p ${HOME}/图片/xubuntu-community-artwork
+	else
+		mkdir -p ${HOME}/Pictures/xubuntu-community-artwork
+	fi
+	THEME_NAME='xubuntu_wallpaper'
+	WALLPAPER_NAME='xfce4/backdrops'
+	GREP_NAME_01='all.deb'
+	THEME_URL='https://mirrors.tuna.tsinghua.edu.cn/ubuntu/pool/universe/x/xubuntu-community-artwork/'
+	grep_theme_model_03
+	move_wallpaper_model_01
+}
+############
 configure_mouse_cursor() {
 	echo "chameleon:现代化鼠标指针主题"
 	echo 'Do you want to download it?'
@@ -4019,11 +4061,24 @@ configure_mouse_cursor() {
 	download_chameleon_cursor_theme
 }
 ################################
-#下载deb包
-download_theme_model_01() {
+check_theme_folder() {
+	if [ -e "${HOME}/Pictures/${CUSTOM_WALLPAPER_NAME}" ] || [ -e ${HOME}/图片/${CUSTOM_WALLPAPER_NAME} ]; then
+		echo "检测到您已经下载过该壁纸包了"
+		echo "壁纸包位于${HOME}/Pictures/${CUSTOM_WALLPAPER_NAME}(图片)目录"
+		echo "Do you want to download again?"
+		do_you_want_to_continue
+	fi
+}
+##############
+grep_theme_model_01() {
+	check_theme_folder
 	mkdir -p /tmp/.${THEME_NAME}
 	cd /tmp/.${THEME_NAME}
 	THE_LATEST_THEME_VERSION="$(curl -L ${THEME_URL} | grep '.deb' | grep "${GREP_NAME}" | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
+	download_theme_deb_and_extract_01
+}
+###############
+download_theme_deb_and_extract_01() {
 	THE_LATEST_THEME_LINK="${THEME_URL}${THE_LATEST_THEME_VERSION}"
 	echo ${THE_LATEST_THEME_LINK}
 	aria2c --allow-overwrite=true -s 5 -x 5 -k 1M -o "${THE_LATEST_THEME_VERSION}" "${THE_LATEST_THEME_LINK}"
@@ -4033,7 +4088,28 @@ download_theme_model_01() {
 		/usr/local/bin/busybox ar xv ${THE_LATEST_THEME_VERSION}
 	fi
 }
+###############
+#多GREP
+grep_theme_model_03() {
+	check_theme_folder
+	mkdir -p /tmp/.${THEME_NAME}
+	cd /tmp/.${THEME_NAME}
+	THE_LATEST_THEME_VERSION="$(curl -L ${THEME_URL} | grep '.deb' | grep "${GREP_NAME_01}" | grep "${GREP_NAME_02}" | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
+	download_theme_deb_and_extract_01
+}
 ############################
+#tar.xz
+#manjaro仓库
+grep_theme_model_02() {
+	check_theme_folder
+	mkdir -p /tmp/.${THEME_NAME}
+	cd /tmp/.${THEME_NAME}
+	THE_LATEST_THEME_VERSION="$(curl -L ${THEME_URL} | grep -v '.xz.sig' | grep "${GREP_NAME}" | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
+	THE_LATEST_THEME_LINK="${THEME_URL}${THE_LATEST_THEME_VERSION}"
+	echo ${THE_LATEST_THEME_LINK}
+	aria2c --allow-overwrite=true -s 5 -x 5 -k 1M -o "${THE_LATEST_THEME_VERSION}" "${THE_LATEST_THEME_LINK}"
+}
+###########
 update_icon_caches_model_01() {
 	cd /
 	tar -Jxvf /tmp/.${THEME_NAME}/data.tar.xz ./usr
@@ -4049,9 +4125,9 @@ download_paper_icon_theme() {
 	ICON_NAME='Paper /usr/share/icons/Paper-Mono-Dark'
 	GREP_NAME='paper-icon-theme'
 	THEME_URL='https://mirrors.tuna.tsinghua.edu.cn/manjaro/pool/overlay/'
-	download_theme_model_02
+	grep_theme_model_02
 	update_icon_caches_model_02
-	XFCE_ICRO_NAME='Paper'
+	XFCE_ICON_NAME='Paper'
 	set_default_xfce_icon_theme
 }
 #############
@@ -4060,9 +4136,9 @@ download_papirus_icon_theme() {
 	ICON_NAME='Papirus /usr/share/icons/Papirus-Dark /usr/share/icons/Papirus-Light /usr/share/icons/ePapirus'
 	GREP_NAME='papirus-icon-theme'
 	THEME_URL='https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/p/papirus-icon-theme/'
-	download_theme_model_01
+	grep_theme_model_01
 	update_icon_caches_model_01
-	XFCE_ICRO_NAME='Papirus'
+	XFCE_ICON_NAME='Papirus'
 	set_default_xfce_icon_theme
 }
 ############################
@@ -4080,25 +4156,16 @@ update_icon_caches_model_02() {
 	update-icon-caches /usr/share/icons/${ICON_NAME} 2>/dev/null &
 	tips_of_delete_icon_theme
 }
-###############
-#tar.xz
-download_theme_model_02() {
-	mkdir -p /tmp/.${THEME_NAME}
-	cd /tmp/.${THEME_NAME}
-	THE_LATEST_THEME_VERSION="$(curl -L ${THEME_URL} | grep -v '.xz.sig' | grep "${GREP_NAME}" | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
-	THE_LATEST_THEME_LINK="${THEME_URL}${THE_LATEST_THEME_VERSION}"
-	echo ${THE_LATEST_THEME_LINK}
-	aria2c --allow-overwrite=true -s 5 -x 5 -k 1M -o "${THE_LATEST_THEME_VERSION}" "${THE_LATEST_THEME_LINK}"
-}
 ####################
 download_raspbian_pixel_icon_theme() {
 	THEME_NAME='raspbian_pixel_icon_theme'
 	ICON_NAME='PiX'
 	GREP_NAME='all.deb'
 	THEME_URL='https://mirrors.tuna.tsinghua.edu.cn/raspberrypi/pool/ui/p/pix-icons/'
-	download_theme_model_01
+	grep_theme_model_01
 	update_icon_caches_model_01
-	download_raspbian_pixel_wallpaper
+	XFCE_ICON_NAME='PiX'
+	set_default_xfce_icon_theme
 }
 ################
 move_wallpaper_model_01() {
@@ -4106,11 +4173,12 @@ move_wallpaper_model_01() {
 	if [ -d "${HOME}/图片" ]; then
 		mv ./usr/share/${WALLPAPER_NAME} ${HOME}/图片/${CUSTOM_WALLPAPER_NAME}
 	else
-		mkdir -p ${HOME}/Pictures
+		mkdir -p ${HOME}/Pictures/
 		mv ./usr/share/${WALLPAPER_NAME} ${HOME}/Pictures/${CUSTOM_WALLPAPER_NAME}
 	fi
 	rm -rf /tmp/.${THEME_NAME}
-	echo "壁纸包已经保存至${HOME}/图片/${CUSTOM_WALLPAPER_NAME}"
+	echo "${BLUE}壁纸包${RESET}已经保存至${YELLOW}${HOME}/图片/${CUSTOM_WALLPAPER_NAME}${RESET}"
+	echo "${BLUE}The wallpaper-pack${RESET} have been saved to ${YELLOW}${HOME}/Pictures/${CUSTOM_WALLPAPER_NAME}${RESET}"
 }
 #################
 download_raspbian_pixel_wallpaper() {
@@ -4118,10 +4186,8 @@ download_raspbian_pixel_wallpaper() {
 	WALLPAPER_NAME='pixel-wallpaper'
 	CUSTOM_WALLPAPER_NAME='raspberrypi-pixel-wallpapers'
 	THEME_URL='https://mirrors.tuna.tsinghua.edu.cn/raspberrypi/pool/ui/p/pixel-wallpaper/'
-	download_theme_model_01
+	grep_theme_model_01
 	move_wallpaper_model_01
-	XFCE_ICRO_NAME='PiX'
-	set_default_xfce_icon_theme
 }
 ########
 download_deepin_wallpaper() {
@@ -4130,11 +4196,11 @@ download_deepin_wallpaper() {
 	GREP_NAME='deepin-community-wallpapers'
 	CUSTOM_WALLPAPER_NAME='deepin-community-wallpapers'
 	THEME_URL='https://mirrors.tuna.tsinghua.edu.cn/deepin/pool/main/d/deepin-wallpapers/'
-	download_theme_model_01
+	grep_theme_model_01
 	move_wallpaper_model_01
 	GREP_NAME='deepin-wallpapers_'
 	CUSTOM_WALLPAPER_NAME='deepin-wallpapers'
-	download_theme_model_01
+	grep_theme_model_01
 	move_wallpaper_model_01
 }
 ##########
@@ -4188,8 +4254,6 @@ download_manjaro_wallpaper() {
 	CUSTOM_WALLPAPER_NAME='manjaro-2017'
 	move_wallpaper_model_01
 	##################
-	link_to_debian_wallpaper
-	download_arch_wallpaper
 }
 #########
 grep_arch_linux_pkg() {
@@ -4198,7 +4262,9 @@ grep_arch_linux_pkg() {
 	echo "${ARCH_WALLPAPER_URL}"
 	aria2c --allow-overwrite=true -o data.tar.xz -x 5 -s 5 -k 1M ${ARCH_WALLPAPER_URL}
 }
+###################
 download_arch_wallpaper() {
+	link_to_debian_wallpaper
 	mkdir -p /tmp/.arch_and_elementary
 	cd /tmp/.arch_and_elementary
 	THEME_URL='https://mirrors.tuna.tsinghua.edu.cn/archlinux/pool/community/'
@@ -4226,7 +4292,7 @@ download_kali_themes_common() {
 	GREP_NAME='kali-themes-common'
 	ICON_NAME='Flat-Remix-Blue-Dark /usr/share/icons/Flat-Remix-Blue-Light /usr/share/icons/desktop-base'
 	THEME_URL='https://mirrors.tuna.tsinghua.edu.cn/kali/pool/main/k/kali-themes/'
-	download_theme_model_01
+	grep_theme_model_01
 	update_icon_caches_model_01
 }
 ####################
@@ -4239,7 +4305,7 @@ download_kali_theme() {
 		download_kali_themes_common
 	fi
 	echo "Download completed.如需删除，请手动输rm -rf /usr/share/desktop-base/kali-theme /usr/share/icons/desktop-base /usr/share/icons/Flat-Remix-Blue-Light /usr/share/icons/Flat-Remix-Blue-Dark"
-	XFCE_ICRO_NAME='Flat-Remix-Blue-Light'
+	XFCE_ICON_NAME='Flat-Remix-Blue-Light'
 	set_default_xfce_icon_theme
 }
 ##################
@@ -4262,7 +4328,7 @@ download_win10x_theme() {
 	echo ${GITHUB_URL}
 	rm -rf /tmp/McWe10X
 	echo "Download completed.如需删除，请手动输rm -rf /usr/share/icons/We10X-dark /usr/share/icons/We10X"
-	XFCE_ICRO_NAME='We10X'
+	XFCE_ICON_NAME='We10X'
 	set_default_xfce_icon_theme
 }
 ###################
@@ -4290,7 +4356,7 @@ download_uos_icon_theme() {
 	echo ${GITHUB_URL}
 	rm -rf /tmp/UosICONS
 	echo "Download completed.如需删除，请手动输rm -rf /usr/share/icons/Uos ; ${PACKAGES_REMOVE_COMMAND} deepin-icon-theme"
-	XFCE_ICRO_NAME='Uos'
+	XFCE_ICON_NAME='Uos'
 	set_default_xfce_icon_theme
 }
 #####################
@@ -4314,7 +4380,7 @@ download_macos_mojave_theme() {
 	echo ${GITHUB_URL}
 	rm -rf /tmp/McMojave
 	echo "Download completed.如需删除，请手动输rm -rf /usr/share/themes/Mojave-dark /usr/share/icons/McMojave-circle-dark /usr/share/icons/McMojave-circle"
-	XFCE_ICRO_NAME='McMojave-circle'
+	XFCE_ICON_NAME='McMojave-circle'
 	set_default_xfce_icon_theme
 }
 #######################
@@ -4347,7 +4413,7 @@ download_ukui_theme() {
 	else
 		echo '请前往外观设置手动修改图标'
 	fi
-	XFCE_ICRO_NAME='ukui-icon-theme'
+	XFCE_ICON_NAME='ukui-icon-theme'
 	set_default_xfce_icon_theme
 	#update-icon-caches /usr/share/icons/ukui-icon-theme/ 2>/dev/null
 	#echo "安装完成，如需卸载，请手动输${PACKAGES_REMOVE_COMMAND} ukui-themes"
@@ -4384,18 +4450,18 @@ download_chameleon_cursor_theme() {
 	THEME_NAME='breeze-cursor-theme'
 	GREP_NAME="${THEME_NAME}"
 	THEME_URL='https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/b/breeze/'
-	download_theme_model_01
+	grep_theme_model_01
 	upcompress_deb_file
 	#############
 	GREP_NAME='all'
 	THEME_NAME='chameleon-cursor-theme'
 	THEME_URL='https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/c/chameleon-cursor-theme/'
-	download_theme_model_01
+	grep_theme_model_01
 	upcompress_deb_file
 	##############
 	THEME_NAME='moblin-cursor-theme'
 	THEME_URL='https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/m/moblin-cursor-theme/'
-	download_theme_model_01
+	grep_theme_model_01
 	upcompress_deb_file
 	##########
 }
@@ -4451,7 +4517,7 @@ install_kali_undercover() {
 		rm -rf /tmp/.kali-undercover-win10-theme
 		#rm -f ./kali-undercover.deb
 	fi
-	#XFCE_ICRO_NAME='Windows 10'
+	#XFCE_ICON_NAME='Windows 10'
 }
 #################
 check_tmoe_sources_list_backup_file() {

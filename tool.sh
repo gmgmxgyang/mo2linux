@@ -4257,7 +4257,7 @@ download_wallpapers() {
 		"2" "Mint:聆听自然的律动与风之呼吸,感受清新而唯美" \
 		"3" "deepin-community+official" \
 		"4" "arch & elementary" \
-		"5" "raspbian pixel" \
+		"5" "raspberrypi pixel树莓派" \
 		"6" "manjaro-2017+2018" \
 		"7" "gnome-backgrounds" \
 		"0" "Back to the main menu 返回主菜单" \

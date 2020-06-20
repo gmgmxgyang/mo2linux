@@ -4255,11 +4255,12 @@ download_wallpapers() {
 		"您想要下载哪套壁纸包？\n Which wallpaper-pack do you want to download? " 0 50 0 \
 		"1" "ubuntu:汇聚了官方及社区的绝赞壁纸包" \
 		"2" "Mint:聆听自然的律动与风之呼吸,感受清新而唯美" \
-		"3" "deepin-community+official" \
-		"4" "arch & elementary" \
-		"5" "raspberrypi pixel树莓派" \
+		"3" "deepin-community+official 深度" \
+		"4" "elementary(如沐春风)" \
+		"5" "raspberrypi pixel树莓派(美如画卷)" \
 		"6" "manjaro-2017+2018" \
-		"7" "gnome-backgrounds" \
+		"7" "gnome-backgrounds(简单而纯粹)" \
+		"8" "arch(领略别样艺术)" \
 		"0" "Back to the main menu 返回主菜单" \
 		3>&1 1>&2 2>&3)
 	########################
@@ -4268,10 +4269,11 @@ download_wallpapers() {
 	1) ubuntu_wallpapers_and_photos ;;
 	2) linux_mint_backgrounds ;;
 	3) download_deepin_wallpaper ;;
-	4) download_arch_wallpaper ;;
+	4) download_elementary_wallpaper ;;
 	5) download_raspbian_pixel_wallpaper ;;
 	6) download_manjaro_wallpaper ;;
 	7) download_debian_gnome_wallpaper ;;
+	8) download_arch_wallpaper ;;
 	esac
 	######################################
 	press_enter_to_return
@@ -4529,26 +4531,33 @@ grep_arch_linux_pkg() {
 	aria2c --allow-overwrite=true -o data.tar.xz -x 5 -s 5 -k 1M ${ARCH_WALLPAPER_URL}
 }
 ###################
-download_arch_wallpaper() {
-	link_to_debian_wallpaper
-	mkdir -p /tmp/.arch_and_elementary
-	cd /tmp/.arch_and_elementary
+download_arch_community_repo_html() {
+	THEME_NAME=${GREP_NAME}
+	mkdir -p /tmp/.${THEME_NAME}
+	cd /tmp/.${THEME_NAME}
 	THEME_URL='https://mirrors.tuna.tsinghua.edu.cn/archlinux/pool/community/'
 	aria2c --allow-overwrite=true -o index.html "${THEME_URL}"
-	#https://mirrors.tuna.tsinghua.edu.cn/archlinux/pool/community/archlinux-wallpaper-1.4-6-any.pkg.tar.xz
+}
+##############
+download_arch_wallpaper() {
+	link_to_debian_wallpaper
 	GREP_NAME='archlinux-wallpaper'
-	THEME_NAME=${GREP_NAME}
+	#https://mirrors.tuna.tsinghua.edu.cn/archlinux/pool/community/archlinux-wallpaper-1.4-6-any.pkg.tar.xz
 	WALLPAPER_NAME='backgrounds/archlinux'
 	CUSTOM_WALLPAPER_NAME='archlinux'
 	check_theme_folder
+	download_arch_community_repo_html
 	grep_arch_linux_pkg
 	move_wallpaper_model_01
+}
+########################
+download_elementary_wallpaper() {
 	#https://mirrors.tuna.tsinghua.edu.cn/archlinux/pool/community/elementary-wallpapers-5.5.0-1-any.pkg.tar.xz
 	GREP_NAME='elementary-wallpapers'
-	THEME_NAME='arch_and_elementary'
 	WALLPAPER_NAME='wallpapers/elementary'
 	CUSTOM_WALLPAPER_NAME='elementary'
 	check_theme_folder
+	download_arch_community_repo_html
 	grep_arch_linux_pkg
 	move_wallpaper_model_01
 	#elementary-wallpapers-5.5.0-1-any.pkg.tar.xz

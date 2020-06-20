@@ -4260,7 +4260,8 @@ download_wallpapers() {
 		"5" "raspberrypi pixel树莓派(美如画卷)" \
 		"6" "manjaro-2017+2018" \
 		"7" "gnome-backgrounds(简单而纯粹)" \
-		"8" "arch(领略别样艺术)" \
+		"8" "xfce-artwork" \
+		"9" "arch(领略别样艺术)" \
 		"0" "Back to the main menu 返回主菜单" \
 		3>&1 1>&2 2>&3)
 	########################
@@ -4273,7 +4274,8 @@ download_wallpapers() {
 	5) download_raspbian_pixel_wallpaper ;;
 	6) download_manjaro_wallpaper ;;
 	7) download_debian_gnome_wallpaper ;;
-	8) download_arch_wallpaper ;;
+	8) download_arch_xfce_artwork ;;
+	9) download_arch_wallpaper ;;
 	esac
 	######################################
 	press_enter_to_return
@@ -4410,6 +4412,8 @@ move_wallpaper_model_01() {
 		tar -Jxvf data.tar.xz 2>/dev/null
 	elif [ -e "data.tar.gz" ]; then
 		tar -zxvf data.tar.gz 2>/dev/null
+	elif [ -e "data.tar.zst" ]; then
+		tar --zstd -xvf data.tar.zst 2>/dev/null
 	else
 		tar -xvf data.* 2>/dev/null
 	fi
@@ -4524,18 +4528,26 @@ download_manjaro_wallpaper() {
 	##################
 }
 #########
+#non-zst
 grep_arch_linux_pkg() {
 	ARCH_WALLPAPER_VERSION=$(cat index.html | grep -Ev '.xz.sig|.zst.sig|.pkg.tar.zst' | egrep "${GREP_NAME}" | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)
 	ARCH_WALLPAPER_URL="${THEME_URL}${ARCH_WALLPAPER_VERSION}"
 	echo "${ARCH_WALLPAPER_URL}"
 	aria2c --allow-overwrite=true -o data.tar.xz -x 5 -s 5 -k 1M ${ARCH_WALLPAPER_URL}
 }
+################
+#grep zst
+grep_arch_linux_pkg_02() {
+	ARCH_WALLPAPER_VERSION=$(cat index.html | grep '.pkg.tar.zst' | grep -Ev '.xz.sig|.zst.sig' | grep "${GREP_NAME}" | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)
+	ARCH_WALLPAPER_URL="${THEME_URL}${ARCH_WALLPAPER_VERSION}"
+	echo "${ARCH_WALLPAPER_URL}"
+	aria2c --allow-overwrite=true -o data.tar.zst -x 5 -s 5 -k 1M ${ARCH_WALLPAPER_URL}
+}
 ###################
 download_arch_community_repo_html() {
 	THEME_NAME=${GREP_NAME}
 	mkdir -p /tmp/.${THEME_NAME}
 	cd /tmp/.${THEME_NAME}
-	THEME_URL='https://mirrors.tuna.tsinghua.edu.cn/archlinux/pool/community/'
 	aria2c --allow-overwrite=true -o index.html "${THEME_URL}"
 }
 ##############
@@ -4545,9 +4557,26 @@ download_arch_wallpaper() {
 	#https://mirrors.tuna.tsinghua.edu.cn/archlinux/pool/community/archlinux-wallpaper-1.4-6-any.pkg.tar.xz
 	WALLPAPER_NAME='backgrounds/archlinux'
 	CUSTOM_WALLPAPER_NAME='archlinux'
+	THEME_URL='https://mirrors.tuna.tsinghua.edu.cn/archlinux/pool/community/'
 	check_theme_folder
 	download_arch_community_repo_html
 	grep_arch_linux_pkg
+	move_wallpaper_model_01
+}
+##############
+download_arch_xfce_artwork() {
+	if [ ! $(command -v unzstd) ]; then
+		echo "${PACKAGES_INSTALL_COMMAND} zstd"
+		${PACKAGES_INSTALL_COMMAND} zstd
+	fi
+	GREP_NAME='xfce4-artwork'
+	#https://mirrors.tuna.tsinghua.edu.cn/archlinux/pool/community/archlinux-wallpaper-1.4-6-any.pkg.tar.xz
+	WALLPAPER_NAME='backgrounds/xfce'
+	CUSTOM_WALLPAPER_NAME='xfce-artwork'
+	THEME_URL='https://mirrors.tuna.tsinghua.edu.cn/archlinux/extra/os/x86_64/'
+	check_theme_folder
+	download_arch_community_repo_html
+	grep_arch_linux_pkg_02
 	move_wallpaper_model_01
 }
 ########################
@@ -4556,6 +4585,7 @@ download_elementary_wallpaper() {
 	GREP_NAME='elementary-wallpapers'
 	WALLPAPER_NAME='wallpapers/elementary'
 	CUSTOM_WALLPAPER_NAME='elementary'
+	THEME_URL='https://mirrors.tuna.tsinghua.edu.cn/archlinux/pool/community/'
 	check_theme_folder
 	download_arch_community_repo_html
 	grep_arch_linux_pkg

@@ -4413,7 +4413,7 @@ move_wallpaper_model_01() {
 	elif [ -e "data.tar.gz" ]; then
 		tar -zxvf data.tar.gz 2>/dev/null
 	elif [ -e "data.tar.zst" ]; then
-		tar --zstd -xvf data.tar.zst 2>/dev/null
+		tar --zstd -xvf data.tar.zst &>/dev/null || zstdcat "data.tar.zst" | tar xvf -
 	else
 		tar -xvf data.* 2>/dev/null
 	fi

@@ -3992,6 +3992,45 @@ install_numix_theme() {
 	beta_features_quick_install
 }
 ################
+xubuntu_wallpapers() {
+	RETURN_TO_WHERE='xubuntu_wallpapers'
+	INSTALL_THEME=$(whiptail --title "桌面壁纸" --menu \
+		"您想要下载哪套壁纸包？\n Which wallpaper do you want to download? " 0 50 0 \
+		"1" "xubuntu-trusty" \
+		"2" "xubuntu-xenial" \
+		"3" "xubuntu-bionic" \
+		"4" "xubuntu-focal" \
+		"0" "Back to the main menu 返回主菜单" \
+		3>&1 1>&2 2>&3)
+	########################
+	case "${INSTALL_THEME}" in
+	0 | "") download_wallpapers ;;
+	1)
+		GREP_NAME_02='xubuntu-community-wallpapers-trusty'
+		CUSTOM_WALLPAPER_NAME='xubuntu-community-artwork/trusty'
+		download_xubuntu_wallpaper
+		;;
+	2)
+		GREP_NAME_02='xubuntu-community-wallpapers-xenial'
+		CUSTOM_WALLPAPER_NAME='xubuntu-community-artwork/xenial'
+		download_xubuntu_wallpaper
+		;;
+	3)
+		GREP_NAME_02='xubuntu-community-wallpapers-bionic'
+		CUSTOM_WALLPAPER_NAME='xubuntu-community-artwork/bionic'
+		download_xubuntu_wallpaper
+		;;
+	4)
+		GREP_NAME_02='xubuntu-community-wallpapers-focal'
+		CUSTOM_WALLPAPER_NAME='xubuntu-community-artwork/focal'
+		download_xubuntu_wallpaper
+		;;
+	esac
+	######################################
+	press_enter_to_return
+	xubuntu_wallpapers
+}
+###############
 download_wallpapers() {
 	cd /tmp
 	RETURN_TO_WHERE='download_wallpapers'
@@ -4001,10 +4040,8 @@ download_wallpapers() {
 		"2" "arch & elementary" \
 		"3" "raspbian pixel" \
 		"4" "manjaro-2017+2018" \
-		"5" "xubuntu-trusty" \
-		"6" "xubuntu-xenial" \
-		"7" "xubuntu-bionic" \
-		"8" "xubuntu-focal" \
+		"5" "xubuntu-community:(bionic,focal,etc.)" \
+		"6" "gnome-backgrounds" \
 		"0" "Back to the main menu 返回主菜单" \
 		3>&1 1>&2 2>&3)
 	########################
@@ -4014,26 +4051,8 @@ download_wallpapers() {
 	2) download_arch_wallpaper ;;
 	3) download_raspbian_pixel_wallpaper ;;
 	4) download_manjaro_wallpaper ;;
-	5)
-		GREP_NAME_02='xubuntu-community-wallpapers-trusty'
-		CUSTOM_WALLPAPER_NAME='xubuntu-community-artwork/trusty'
-		download_xubuntu_wallpaper
-		;;
-	6)
-		GREP_NAME_02='xubuntu-community-wallpapers-xenial'
-		CUSTOM_WALLPAPER_NAME='xubuntu-community-artwork/xenial'
-		download_xubuntu_wallpaper
-		;;
-	7)
-		GREP_NAME_02='xubuntu-community-wallpapers-bionic'
-		CUSTOM_WALLPAPER_NAME='xubuntu-community-artwork/bionic'
-		download_xubuntu_wallpaper
-		;;
-	8)
-		GREP_NAME_02='xubuntu-community-wallpapers-focal'
-		CUSTOM_WALLPAPER_NAME='xubuntu-community-artwork/focal'
-		download_xubuntu_wallpaper
-		;;
+	5) xubuntu_wallpapers ;;
+	6) download_debian_gnome_wallpaper ;;
 	esac
 	######################################
 	press_enter_to_return
@@ -4063,9 +4082,9 @@ configure_mouse_cursor() {
 ################################
 check_theme_folder() {
 	if [ -e "${HOME}/Pictures/${CUSTOM_WALLPAPER_NAME}" ] || [ -e ${HOME}/图片/${CUSTOM_WALLPAPER_NAME} ]; then
-		echo "检测到您已经下载过该壁纸包了"
-		echo "壁纸包位于${HOME}/Pictures/${CUSTOM_WALLPAPER_NAME}(图片)目录"
-		echo "Do you want to download again?"
+		echo "检测到您${RED}已经下载过${RESET}该壁纸包了"
+		echo "壁纸包位于${BLUE}${HOME}/Pictures/${CUSTOM_WALLPAPER_NAME}${RESET}(图片)目录"
+		echo "Do you want to ${RED}download again?${RESET}"
 		do_you_want_to_continue
 	fi
 }
@@ -4185,11 +4204,22 @@ download_raspbian_pixel_wallpaper() {
 	THEME_NAME='raspberrypi_pixel_wallpaper'
 	WALLPAPER_NAME='pixel-wallpaper'
 	CUSTOM_WALLPAPER_NAME='raspberrypi-pixel-wallpapers'
+	GREP_NAME='pixel-wallpaper'
 	THEME_URL='https://mirrors.tuna.tsinghua.edu.cn/raspberrypi/pool/ui/p/pixel-wallpaper/'
 	grep_theme_model_01
 	move_wallpaper_model_01
 }
 ########
+download_debian_gnome_wallpaper() {
+	THEME_NAME='gnome_backgrounds'
+	WALLPAPER_NAME='backgrounds/gnome'
+	CUSTOM_WALLPAPER_NAME='gnome-backgrounds'
+	GREP_NAME='gnome-backgrounds'
+	THEME_URL='https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/g/gnome-backgrounds/'
+	grep_theme_model_01
+	move_wallpaper_model_01
+}
+##############
 download_deepin_wallpaper() {
 	THEME_NAME='deepin-wallpapers'
 	WALLPAPER_NAME='wallpapers/deepin'

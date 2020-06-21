@@ -3004,6 +3004,7 @@ install_xfce4_desktop() {
 ###############
 MODIFY_XFCE_VNC0_WALLPAPER() {
 	dbus-launch xfconf-query -c xfce4-desktop -t string -np /backdrop/screen0/monitorVNC-0/workspace0/last-image -s "${WALLPAPER_FILE}"
+	dbus-launch xfconf-query -c xfce4-desktop -t string -np /backdrop/screen0/monitor0/workspace0/last-image -s "${WALLPAPER_FILE}"
 }
 ##################
 debian_xfce_wallpaper() {

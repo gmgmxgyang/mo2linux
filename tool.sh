@@ -4319,6 +4319,7 @@ check_theme_folder() {
 		echo "检测到您${RED}已经下载过${RESET}该壁纸包了"
 		echo "壁纸包位于${BLUE}${HOME}/Pictures/${CUSTOM_WALLPAPER_NAME}${RESET}(图片)目录"
 		echo "Do you want to ${RED}download again?${RESET}"
+		echo "是否想要重新下载？"
 		do_you_want_to_continue
 	fi
 }

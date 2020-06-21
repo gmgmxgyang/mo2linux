@@ -7801,7 +7801,7 @@ first_configure_startvnc() {
 	printf "$RESET"
 	echo '------------------------'
 	if [ "${REMOTE_DESKTOP_SESSION_01}" = 'xfce4-session' ]; then
-		if (whiptail --title "Are you using a high-resolution monitor" --yes-button 'YES' --no-button 'NO' --yesno "您当前是否使用高分辨率屏幕/显示器?(っ °Д °)\n设屏幕分辨率为x,若2K<x<4K,则选择YES;\n若x<=1080p,则选择NO。" 0 50); then
+		if (whiptail --title "Are you using a high-resolution monitor" --yes-button 'YES' --no-button 'NO' --yesno "您当前是否使用高分辨率屏幕/显示器?(っ °Д °)\n设屏幕分辨率为x,若x>=2K,则选择YES;\n若x<=1080p,则选择NO。" 0 50); then
 			TMOE_HIGH_DPI='true'
 			xfce4_tightvnc_hidpi_settings
 		else

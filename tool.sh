@@ -376,7 +376,7 @@ check_dependencies() {
 	################
 	if [ ! $(command -v catimg) ]; then
 		if [ "${LINUX_DISTRO}" = "debian" ]; then
-			CATIMGlatestVersion="$(curl -LfsS 'https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/c/catimg/' | grep arm64 | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2 | cut -d '_' -f 2)"
+			CATIMGlatestVersion="$(curl -LfsS 'https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/c/catimg/' | grep ${ARCH_TYPE} | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2 | cut -d '_' -f 2)"
 			cd /tmp
 			wget --no-check-certificate -O 'catimg.deb' "https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/c/catimg/catimg_${CATIMGlatestVersion}_${ARCH_TYPE}.deb"
 			apt install -y ./catimg.deb
@@ -398,16 +398,13 @@ check_dependencies() {
 	fi
 
 	if [ "${BUSYBOX_AR}" = 'false' ]; then
-		cd /tmp
-		wget --no-check-certificate -O "busybox" "https://gitee.com/mo2/busybox/raw/master/busybox-$(uname -m)"
-		chmod +x busybox
-		LatestBusyboxDEB="$(curl -L https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/b/busybox/ | grep static | grep ${ARCH_TYPE} | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
-		wget --no-check-certificate -O 'busybox.deb' "https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/b/busybox/${LatestBusyboxDEB}"
-		mkdir -p busybox-static
-		./busybox dpkg-deb -X busybox.deb ./busybox-static
-		mv -f ./busybox-static/bin/busybox /usr/local/bin/
-		chmod +x /usr/local/bin/busybox
-		rm -rvf busybox busybox-static busybox.deb
+		DEPENDENCY_01='binutils'
+		echo ${PACKAGES_INSTALL_COMMAND} ${DEPENDENCY_01}
+		${PACKAGES_INSTALL_COMMAND} ${DEPENDENCY_01}
+		if [ ! $(command -v ar) ]; then
+			download_busybox_deb
+			BUSYBOX_AR='true'
+		fi
 	fi
 
 	if [ "${LINUX_DISTRO}" = "debian" ]; then
@@ -442,6 +439,19 @@ check_dependencies() {
 	tmoe_linux_tool_menu
 }
 ####################################################
+download_busybox_deb() {
+	cd /tmp
+	wget --no-check-certificate -O "busybox" "https://gitee.com/mo2/busybox/raw/master/busybox-$(uname -m)"
+	chmod +x busybox
+	LatestBusyboxDEB="$(curl -L https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/b/busybox/ | grep static | grep ${ARCH_TYPE} | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
+	wget --no-check-certificate -O 'busybox.deb' "https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/b/busybox/${LatestBusyboxDEB}"
+	mkdir -p busybox-static
+	./busybox dpkg-deb -X busybox.deb ./busybox-static
+	mv -f ./busybox-static/bin/busybox /usr/local/bin/
+	chmod +x /usr/local/bin/busybox
+	rm -rvf busybox busybox-static busybox.deb
+}
+######################
 tmoe_linux_tool_menu() {
 	IMPORTANT_TIPS=""
 	#窗口大小20 50 7
@@ -4345,7 +4355,7 @@ download_theme_deb_and_extract_01() {
 	if [ "${BUSYBOX_AR}" = 'true' ]; then
 		busybox ar xv ${THE_LATEST_THEME_VERSION}
 	else
-		/usr/local/bin/busybox ar xv ${THE_LATEST_THEME_VERSION}
+		ar xv ${THE_LATEST_THEME_VERSION}
 	fi
 }
 ###############
@@ -4735,7 +4745,7 @@ download_ukui_theme() {
 		if [ "${BUSYBOX_AR}" = 'true' ]; then
 			busybox ar xv 'ukui-themes.deb'
 		else
-			/usr/local/bin/busybox ar xv 'ukui-themes.deb'
+			ar xv 'ukui-themes.deb'
 		fi
 		cd /
 		tar -Jxvf /tmp/.ukui-gtk-themes/data.tar.xz ./usr
@@ -4843,7 +4853,7 @@ install_kali_undercover() {
 			if [ "${BUSYBOX_AR}" = 'true' ]; then
 				busybox ar xv ${THE_LATEST_DEB_FILE}
 			else
-				/usr/local/bin/busybox ar xv ${THE_LATEST_DEB_FILE}
+				ar xv ${THE_LATEST_DEB_FILE}
 			fi
 			cd /
 			tar -Jxvf /tmp/.kali-undercover-win10-theme/data.tar.xz ./usr
@@ -6248,7 +6258,7 @@ uncompress_deb_file() {
 	if [ "${BUSYBOX_AR}" = 'true' ]; then
 		busybox ar xv ${SELECTION}
 	else
-		/usr/local/bin/busybox ar xv ${SELECTION}
+		ar xv ${SELECTION}
 	fi
 	mv ${SELECTION} ../
 	if [ -e "data.tar.xz" ]; then
@@ -6459,7 +6469,7 @@ install_chinese_manpages() {
 		if [ "${BUSYBOX_AR}" = 'true' ]; then
 			busybox ar xv ${LATEST_DEB_VERSION}
 		else
-			/usr/local/bin/busybox ar xv ${LATEST_DEB_VERSION}
+			ar xv ${LATEST_DEB_VERSION}
 		fi
 		tar -Jxvf data.tar.xz ./usr/share/doc/debian-handbook/html
 		ls | grep -v usr | xargs rm -rf
@@ -9326,7 +9336,7 @@ download_network_card_driver() {
 	if [ "${BUSYBOX_AR}" = 'true' ]; then
 		busybox ar xv ../${THE_LATEST_DEB_VERSION}
 	else
-		/usr/local/bin/busybox ar xv ../${THE_LATEST_DEB_VERSION}
+		ar xv ../${THE_LATEST_DEB_VERSION}
 	fi
 	tar -Jxvf ./data.tar.*
 	rm *.tar.* debian-binary

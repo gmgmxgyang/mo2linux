@@ -14246,12 +14246,14 @@ install_virtual_box() {
 		DEPENDENCY_02="virtualbox-ext-oracle"
 		echo "您可以在安装完成后，输usermod -G vboxusers -a 当前用户名称"
 		echo "将当前用户添加至vboxusers用户组"
+	fi
+	echo "您可以输modprobe vboxdrv vboxnetadp vboxnetflt来加载内核模块"
+	beta_features_quick_install
+	if [ "${LINUX_DISTRO}" = 'arch' ]; then
 		echo "usermod -G vboxusers -a ${CURRENT_USER_NAME}"
 		do_you_want_to_continue
 		usermod -G vboxusers -a ${CURRENT_USER_NAME}
 	fi
-	echo "您可以输modprobe vboxdrv vboxnetadp vboxnetflt来加载内核模块"
-	beta_features_quick_install
 	####################
 	if [ ! $(command -v virtualbox) ]; then
 		echo "检测到virtual box安装失败，是否将其添加到软件源？"

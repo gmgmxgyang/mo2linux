@@ -553,8 +553,8 @@ different_distro_software_install() {
 		apk add ${DEPENDENCY_02}
 		################
 	elif [ "${LINUX_DISTRO}" = "arch" ]; then
-		pacman -Syu --noconfirm ${DEPENDENCY_01} || su ${CURRENT_USER_NAME} -c "yay -S ${DEPENDENCY_01}" || echo "请以非root身份运行yay"
-		pacman -S --noconfirm ${DEPENDENCY_02} || su ${CURRENT_USER_NAME} -c "yay -S ${DEPENDENCY_02}" || echo "请以非root身份运行yay"
+		pacman -Syu --noconfirm ${DEPENDENCY_01} || su ${CURRENT_USER_NAME} -c "yay -S ${DEPENDENCY_01}" || echo "请以非root身份运行yay -S ${DEPENDENCY_01}"
+		pacman -S --noconfirm ${DEPENDENCY_02} || su ${CURRENT_USER_NAME} -c "yay -S ${DEPENDENCY_02}" || echo "请以非root身份运行yay -S ${DEPENDENCY_02}"
 		################
 	elif [ "${LINUX_DISTRO}" = "redhat" ]; then
 		dnf install -y --skip-broken ${DEPENDENCY_01} || yum install -y --skip-broken ${DEPENDENCY_01}

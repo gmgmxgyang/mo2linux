@@ -541,6 +541,7 @@ do_you_want_to_continue() {
 }
 ######################
 different_distro_software_install() {
+	check_current_user_name_and_group
 	if [ "${LINUX_DISTRO}" = "debian" ]; then
 		apt update
 		apt install -y ${DEPENDENCY_01} || aptitude install ${DEPENDENCY_01}
@@ -552,8 +553,8 @@ different_distro_software_install() {
 		apk add ${DEPENDENCY_02}
 		################
 	elif [ "${LINUX_DISTRO}" = "arch" ]; then
-		pacman -Syu --noconfirm ${DEPENDENCY_01} || yay -S ${DEPENDENCY_01} || echo "请以非root身份运行yay"
-		pacman -S --noconfirm ${DEPENDENCY_02} || yay -S ${DEPENDENCY_02} || echo "请以非root身份运行yay"
+		pacman -Syu --noconfirm ${DEPENDENCY_01} || su ${CURRENT_USER_NAME} -c "yay -S ${DEPENDENCY_01}" || echo "请以非root身份运行yay"
+		pacman -S --noconfirm ${DEPENDENCY_02} || su ${CURRENT_USER_NAME} -c "yay -S ${DEPENDENCY_02}" || echo "请以非root身份运行yay"
 		################
 	elif [ "${LINUX_DISTRO}" = "redhat" ]; then
 		dnf install -y --skip-broken ${DEPENDENCY_01} || yum install -y --skip-broken ${DEPENDENCY_01}
@@ -4675,7 +4676,7 @@ download_uos_icon_theme() {
 	beta_features_quick_install
 
 	if [ -d "/usr/share/icons/Uos" ]; then
-		echo "检测到Uos图标包已下载��是否继续。"
+		echo "检测到Uos图标包已下载,是否继续？[Y/n]"
 		RETURN_TO_WHERE='configure_theme'
 		do_you_want_to_continue
 	fi
@@ -14232,7 +14233,7 @@ install_virtual_box() {
 		beta_features_quick_insta
 		#linux-headers
 	fi
-	DEPENDENCY_02=""
+	DEPENDENCY_02="virtualbox-qt"
 	DEPENDENCY_01="virtualbox"
 	#apt remove docker docker-engine docker.io
 	if [ "${LINUX_DISTRO}" = 'debian' ]; then
@@ -14244,8 +14245,10 @@ install_virtual_box() {
 		DEPENDENCY_01="virtualbox virtualbox-guest-iso"
 		DEPENDENCY_02="virtualbox-ext-oracle"
 		echo "您可以在安装完成后，输usermod -G vboxusers -a 当前用户名称"
-		echo "将当前用户添加至vboxusers用��组"
-		#
+		echo "将当前用户添加至vboxusers用户组"
+		echo "usermod -G vboxusers -a ${CURRENT_USER_NAME}"
+		do_you_want_to_continue
+		usermod -G vboxusers -a ${CURRENT_USER_NAME}
 	fi
 	echo "您可以输modprobe vboxdrv vboxnetadp vboxnetflt来加载内核模块"
 	beta_features_quick_install

@@ -3037,7 +3037,6 @@ modify_xfce_vnc0_wallpaper() {
 }
 ##################
 debian_xfce_wallpaper() {
-	#WALLPAPER_FILE='/usr/share/xfce4/backdrops/Untitled_by_Troy_Jarrell.jpg'
 	if [ ! -e "${WALLPAPER_FILE}" ]; then
 		#debian_download_xubuntu_xenial_wallpaper
 		if [ ${LANG} = "zh_CN.UTF-8" ]; then
@@ -3065,18 +3064,23 @@ modify_the_default_xfce_wallpaper() {
 			WALLPAPER_FILE='/usr/share/backgrounds/nattu-adnan-328570.jpg'
 		elif [ "${DEBIAN_DISTRO}" = "ubuntu" ]; then
 			#WALLPAPER_FILE='/usr/share/xfce4/backdrops/Campos_de_Castilla_by_David_Arias_Gutierrez.jpg'
-			WALLPAPER_FILE='/usr/share/backgrounds/kristopher-roller-110203.jpg'
+			WALLPAPER_FILE='/usr/share/backgrounds/nattu-adnan-328570.jpg'
 		fi
 		debian_xfce_wallpaper
-	fi
-
-	if [ "${LINUX_DISTRO}" = "arch" ]; then
+	elif [ "${LINUX_DISTRO}" = "arch" ]; then
 		WALLPAPER_FILE="/usr/share/backgrounds/xfce/Violet.jpg"
-		#	if [ -e "${WALLPAPER_FILE}" ]; then
-		modify_xfce_vnc0_wallpaper
-		#	fi
-		#	else
-		#debian_xfce_wallpaper
+		if [ -e "${WALLPAPER_FILE}" ]; then
+			modify_xfce_vnc0_wallpaper
+		else
+			WALLPAPER_FILE='/usr/share/backgrounds/nasa-53884.jpg'
+			debian_xfce_wallpaper
+		fi
+	elif [ "${LINUX_DISTRO}" = "redhat" ]; then
+		WALLPAPER_FILE='/usr/share/backgrounds/kristopher-roller-110203.jpg'
+		debian_xfce_wallpaper
+	else
+		WALLPAPER_FILE='/usr/share/backgrounds/johann-siemens-591.jpg'
+		debian_xfce_wallpaper
 	fi
 }
 #################

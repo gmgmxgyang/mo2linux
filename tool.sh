@@ -5748,7 +5748,7 @@ add_debian_opt_repo() {
 	RETURN_TO_WHERE='other_software'
 	do_you_want_to_continue
 	cd /tmp
-	curl -o bintray-public.key.asc 'https://bintray.com/user/downloadSubjectPublicKey?username=bintray'
+	curl -Lv -o bintray-public.key.asc 'https://bintray.com/user/downloadSubjectPublicKey?username=bintray'
 	apt-key add bintray-public.key.asc
 	echo -e "deb https://bintray.proxy.ustclug.org/debianopt/debianopt/ buster main\n#deb https://dl.bintray.com/debianopt/debianopt buster main" >/etc/apt/sources.list.d/debianopt.list
 	apt update

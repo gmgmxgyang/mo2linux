@@ -2846,7 +2846,7 @@ kali_xfce4_extras() {
 		fi
 		apt search kali-linux
 	fi
-	dbus-launch xfconf-query -c xsettings -p /Net/IconThemeName -s Windows-10-Iconss
+	dbus-launch xfconf-query -c xsettings -p /Net/IconThemeName -s Windows-10-Icons
 }
 ###################
 apt_purge_libfprint() {

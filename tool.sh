@@ -3044,6 +3044,7 @@ debian_xfce_wallpaper() {
 		if [ ${LANG} = "zh_CN.UTF-8" ]; then
 			mkdir -p ${HOME}/图片
 		fi
+		echo "壁纸包将保存至/usr/share/backgrounds"
 		debian_download_ubuntu_mate_wallpaper
 	fi
 	modify_xfce_vnc0_wallpaper

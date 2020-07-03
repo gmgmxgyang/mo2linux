@@ -1677,9 +1677,9 @@ ubuntu_install_chromium_browser() {
 		else
 			sed -i '$ a\deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ bionic-updates main restricted universe multiverse' "/etc/apt/sources.list"
 		fi
-		DEPENDENCY_01="chromium-browser/bionic-updates"
-		DEPENDENCY_02="chromium-browser-l10n/bionic-updates"
 	fi
+	DEPENDENCY_01="chromium-browser/bionic-updates"
+	DEPENDENCY_02="chromium-browser-l10n/bionic-updates"
 }
 #########
 fix_chromium_root_ubuntu_no_sandbox() {

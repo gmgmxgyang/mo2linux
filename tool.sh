@@ -2846,7 +2846,7 @@ kali_xfce4_extras() {
 		fi
 		apt search kali-linux
 	fi
-	dbus-launch xfconf-query -c xsettings -p /Net/IconThemeName -s Flat-Remix-Blue-Light
+	dbus-launch xfconf-query -c xsettings -p /Net/IconThemeName -s Windows-10-Iconss
 }
 ###################
 apt_purge_libfprint() {
@@ -3011,7 +3011,9 @@ install_xfce4_desktop() {
 		if [ ! -e "/usr/share/desktop-base/kali-theme" ]; then
 			download_kali_themes_common
 		fi
-		dbus-launch xfconf-query -c xsettings -p /Net/IconThemeName -s Flat-Remix-Blue-Light
+		if [ "${DEBIAN_DISTRO}" != "kali" ]; then
+			dbus-launch xfconf-query -c xsettings -p /Net/IconThemeName -s Flat-Remix-Blue-Light
+		fi
 	fi
 	##############
 	xfce4_color_scheme

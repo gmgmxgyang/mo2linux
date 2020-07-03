@@ -8009,7 +8009,7 @@ xfce4_tightvnc_hidpi_settings() {
 	echo "已将默认分辨率修改为2880x1440，窗口缩放大小调整为2x"
 	dbus-launch xfconf-query -c xsettings -t int -np /Gdk/WindowScalingFactor -s 2 2>/dev/null
 	#-n创建一个新属性，类型为int
-	if grep -Eq 'Focal Fossa|Eoan Ermine|buster|stretch|jessie' "/etc/os-release"; then
+	if grep -Eq 'Focal Fossa|focal|bionic|Bionic Beaver|Eoan Ermine|buster|stretch|jessie' "/etc/os-release"; then
 		dbus-launch xfconf-query -c xfwm4 -t string -np /general/theme -s Kali-Light-xHiDPI 2>/dev/null
 	else
 		dbus-launch xfconf-query -c xfwm4 -t string -np /general/theme -s Default-xhdpi 2>/dev/null

@@ -7867,7 +7867,7 @@ first_configure_startvnc() {
 			TMOE_HIGH_DPI='false'
 			echo "默认分辨率为1440x720，窗口缩放大小为1x"
 			dbus-launch xfconf-query -c xsettings -t int -np /Gdk/WindowScalingFactor -s 1 2>/dev/null
-			if grep -Eq 'Focal Fossa|Eoan Ermine|buster|stretch|jessie' "/etc/os-release"; then
+			if grep -Eqi 'Focal Fossa|Eoan Ermine|buster|stretch|jessie' "/etc/os-release"; then
 				dbus-launch xfconf-query -c xfwm4 -t string -np /general/theme -s Kali-Light-DPI 2>/dev/null
 			fi
 			echo "若分辨率不合，则请在脚本执行完成后，手动输${GREEN}debian-i${RESET}，然后在${BLUE}vnc${RESET}选项里进行修改。"
@@ -9628,7 +9628,7 @@ creat_qemu_aarch64_startup_script() {
 			-virtfs local,id=shared_folder_dev_0,path=${HOME}/sd,security_model=none,mount_tag=shared0 \
 			-boot order=cd,menu=on \
 			-net nic \
-			-net user,hostfwd=tcp::2889-0.0.0.0:22,hostfwd=tcp::5903-0.0.0.0:5901,hostfwd=tcp::49080-0.0.0.0:80 \
+			-net user,hostfwd=tcp::2888-0.0.0.0:22,hostfwd=tcp::5903-0.0.0.0:5901,hostfwd=tcp::49080-0.0.0.0:80 \
 			-rtc base=localtime \
 			-bios /usr/share/qemu-efi-aarch64/QEMU_EFI.fd \
 			-vnc :2 \

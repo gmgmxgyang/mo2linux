@@ -4889,6 +4889,7 @@ install_breeze_theme() {
 }
 #################
 download_chameleon_cursor_theme() {
+	CUSTOM_WALLPAPER_NAME='breeze-cursor-theme'
 	THEME_NAME='breeze-cursor-theme'
 	GREP_NAME="${THEME_NAME}"
 	THEME_URL='https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/b/breeze/'

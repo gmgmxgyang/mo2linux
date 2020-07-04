@@ -8610,9 +8610,15 @@ check_android_studio() {
 	if [ ! -e "android_studio_linux_64bit.tar.gz" ]; then
 		download_android_studio
 	fi
+	DEPENDENCY_01=''
 	if [ ! $(command -v java) ]; then
-		DEPENDENCY_01=''
-		DEPENDENCY_02='default-jre'
+
+		case "${LINUX_DISTRO}" in
+		arch) DEPENDENCY_02='jre-openjdk' ;;
+		debian | "") DEPENDENCY_02='default-jre' ;;
+		alpine) DEPENDENCY_02='openjdk11-jre' ;;
+		*) DEPENDENCY_01='java' ;;
+		esac
 		beta_features_quick_install
 	fi
 }

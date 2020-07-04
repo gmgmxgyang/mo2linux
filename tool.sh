@@ -3049,6 +3049,8 @@ creat_xfce4_desktop_wallpaper_config() {
 		                <property name="last-single-image" type="empty"/>
 		                <property name="workspace0" type="empty">
 		                    <property name="last-image" type="string" value="/usr/share/backgrounds/xfce/xfce-stripes.png"/>
+		                    <property name="backdrop-cycle-enable" type="bool" value="true"/>
+		                    <property name="backdrop-cycle-random-order" type="bool" value="true"/>
 		                </property>
 		            </property>
 		            <property name="monitor1" type="empty">
@@ -3064,13 +3066,26 @@ creat_xfce4_desktop_wallpaper_config() {
 		            <property name="monitorVNC-0" type="empty">
 		                <property name="workspace0" type="empty">
 		                    <property name="last-image" type="string" value="/usr/share/backgrounds/xfce/xfce-stripes.png"/>
+		                    <property name="backdrop-cycle-enable" type="bool" value="true"/>
+		                    <property name="backdrop-cycle-random-order" type="bool" value="true"/>
 		                </property>
 		            </property>
 		            <property name="monitorrdp0" type="empty">
 		                <property name="workspace0" type="empty">
-		                    <property name="color-style" type="int" value="1"/>
-		                    <property name="image-style" type="int" value="5"/>
+		                    <property name="color-style" type="empty"/>
+		                    <property name="image-style" type="empty"/>
 		                    <property name="last-image" type="string" value="/usr/share/backgrounds/xfce/xfce-stripes.png"/>
+		                    <property name="backdrop-cycle-enable" type="bool" value="true"/>
+		                    <property name="backdrop-cycle-random-order" type="bool" value="true"/>
+		                </property>
+		            </property>
+		            <property name="monitorscreen" type="empty">
+		                <property name="workspace0" type="empty">
+		                    <property name="color-style" type="empty"/>
+		                    <property name="image-style" type="empty"/>
+		                    <property name="last-image" type="string" value="/usr/share/backgrounds/xfce/xfce-stripes.png"/>
+		                    <property name="backdrop-cycle-enable" type="bool" value="true"/>
+		                    <property name="backdrop-cycle-random-order" type="bool" value="true"/>
 		                </property>
 		            </property>
 		        </property>
@@ -3081,17 +3096,17 @@ creat_xfce4_desktop_wallpaper_config() {
 }
 #############
 modify_xfce_vnc0_wallpaper() {
-	if [ "${LINUX_DISTRO}" = "debian" ]; then
-		#if [ "${VNC_SERVER_BIN}" = "tigervnc" ]; then
-		#	dbus-launch xfconf-query -c xfce4-desktop -t string -np /backdrop/screen0/monitorVNC-0/workspace0/last-image -s "${WALLPAPER_FILE}"
-		#else
-		#	dbus-launch xfconf-query -c xfce4-desktop -t string -np /backdrop/screen0/monitor0/workspace0/last-image -s "${WALLPAPER_FILE}"
-		#fi
-		creat_xfce4_desktop_wallpaper_config
-		sed -i "s@/usr/share/backgrounds/xfce/xfce-stripes.png@${WALLPAPER_FILE}@" xfce4-desktop.xml
-	else
-		dbus-launch xfconf-query -c xfce4-desktop -t string -np /backdrop/screen0/monitorVNC-0/workspace0/last-image -s "${WALLPAPER_FILE}"
-	fi
+	#if [ "${LINUX_DISTRO}" = "debian" ]; then
+	#if [ "${VNC_SERVER_BIN}" = "tigervnc" ]; then
+	#	dbus-launch xfconf-query -c xfce4-desktop -t string -np /backdrop/screen0/monitorVNC-0/workspace0/last-image -s "${WALLPAPER_FILE}"
+	#else
+	#	dbus-launch xfconf-query -c xfce4-desktop -t string -np /backdrop/screen0/monitor0/workspace0/last-image -s "${WALLPAPER_FILE}"
+	#fi
+	creat_xfce4_desktop_wallpaper_config
+	sed -i "s@/usr/share/backgrounds/xfce/xfce-stripes.png@${WALLPAPER_FILE}@" xfce4-desktop.xml
+	#else
+	#	dbus-launch xfconf-query -c xfce4-desktop -t string -np /backdrop/screen0/monitorVNC-0/workspace0/last-image -s "${WALLPAPER_FILE}"
+	#fi
 }
 ##################
 debian_xfce_wallpaper() {

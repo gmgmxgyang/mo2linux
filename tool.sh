@@ -8623,7 +8623,7 @@ install_android_studio() {
 	check_android_studio
 	tar -zxvf android_studio_linux_64bit.tar.gz -C /opt
 	creat_android_studio_application_link
-	echo "安装完成，如需卸载，则请输${RED}rm -rv${RESET} /opt/android-studio /usr/share/applications/android_studio.desktop;${PACKAGES_REMOVE_COMMAND} default-jre"
+	echo "安装完成，如需卸载，则请输${RED}rm -rv${RESET} ${BLUE}/opt/android-studio /usr/share/applications/android_studio.desktop${RESET};${RED}${PACKAGES_REMOVE_COMMAND}${RESET} ${BLUE}default-jre${RESET}"
 }
 ##################
 install_seahorse() {

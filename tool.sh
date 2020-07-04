@@ -8616,7 +8616,7 @@ check_android_studio() {
 		arch) DEPENDENCY_02='jre-openjdk' ;;
 		debian | "") DEPENDENCY_02='default-jre' ;;
 		alpine) DEPENDENCY_02='openjdk11-jre' ;;
-		*) DEPENDENCY_02='java' ;;
+		redhat | *) DEPENDENCY_02='java' ;;
 		esac
 		beta_features_quick_install
 	fi

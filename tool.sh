@@ -8606,10 +8606,8 @@ check_android_studio() {
 		echo "是否需要重新安装？"
 		echo "Do you want to reinstall it?"
 		do_you_want_to_continue
-		if [ ! -e "android_studio_linux_64bit.tar.gz" ]; then
-			download_android_studio
-		fi
-	else
+	fi
+	if [ ! -e "android_studio_linux_64bit.tar.gz" ]; then
 		download_android_studio
 	fi
 	if [ ! $(command -v java) ]; then

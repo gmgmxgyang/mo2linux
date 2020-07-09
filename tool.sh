@@ -12104,6 +12104,7 @@ download_virtio_drivers() {
 		DOWNLOAD_FILE_NAME='virtio-win.iso'
 		QEMU_QCOW2_FILE_PREFIX='.virtio_'
 		git_clone_tmoe_linux_qemu_qcow2_file
+		uncompress_tar_gz_file
 		;;
 	2)
 		#https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/latest-virtio/virtio-win.iso
@@ -13169,6 +13170,7 @@ download_alpine_and_docker_x64_img_file_again() {
 }
 ###########
 uncompress_alpine_and_docker_x64_img_file() {
+	#txz
 	echo '正在解压中...'
 	if [ $(command -v pv) ]; then
 		pv ${DOWNLOAD_FILE_NAME} | tar -pJx
@@ -13177,6 +13179,15 @@ uncompress_alpine_and_docker_x64_img_file() {
 	fi
 }
 ##################
+uncompress_tar_gz_file() {
+	echo '正在解压中...'
+	if [ $(command -v pv) ]; then
+		pv ${DOWNLOAD_FILE_NAME} | tar -pzx
+	else
+		tar -zpxvf ${DOWNLOAD_FILE_NAME}
+	fi
+}
+###################
 dd_if_zero_of_qemu_tmp_disk() {
 	rm -fv /tmp/tmoe_qemu
 	echo "请在虚拟机内执行操作,不建议在宿主机内执行"

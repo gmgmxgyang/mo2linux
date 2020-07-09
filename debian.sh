@@ -22,8 +22,11 @@ main() {
 	-novnc | novnc* | -n*)
 		start_web_novnc
 		;;
-	-v | -vnc*)
+	-v | -vnc)
 		startvnc
+		;;
+	passwd | -passwd)
+		set_vnc_passwd
 		;;
 	-s | -stop*)
 		stopvnc
@@ -645,7 +648,7 @@ tmoe_manager_main_menu() {
 			"7" "restore还原" \
 			"8" "query space occupation查询空间占用" \
 			"9" "update更新" \
-			"10" "Configure zsh" \
+			"10" "Configure zsh美化终端" \
 			"11" "Download VNC/xwayland/xsdl apk" \
 			"12" "VSCode Server arm64" \
 			"13" "赋予proot容器真实root权限" \
@@ -1714,7 +1717,6 @@ download_vnc_or_xsdl_apk() {
 
 		git clone -b vnc --depth=1 https://gitee.com/mo2/VncClient.git .GITCLONEVNCCLIENT
 		mv -f /sdcard/Download/.GITCLONEVNCCLIENT/vnc/vnc36142089.tar.xz ./
-		#aria2c -x 16 -k 1M --split=16 --allow-overwrite=true 'https://cdn.tmoe.me/git/linux/VNCViewer_com-realvnc-viewer-android-3-6-1-42089.tar.xz' || aria2c -x 16 -k 1M --split=16 --allow-overwrite=true 'https://m.tmoe.me/down/share/Android/VNC/VNCViewer_com-realvnc-viewer-android-3-6-1-42089.tar.xz'
 		echo '正在解压...'
 		tar -Jxvf vnc36142089.tar.xz
 		#tar -Jxvf 'VNCViewer_com-realvnc-viewer-android-3-6-1-42089.tar.xz'
@@ -1741,7 +1743,6 @@ download_vnc_or_xsdl_apk() {
 
 		git clone -b xsdl --depth=1 https://gitee.com/mo2/VncClient.git .GITCLONEVNCCLIENT
 		mv -f /sdcard/Download/.GITCLONEVNCCLIENT/xsdl/XSERVERXSDLANDROID.tar.xz ./
-		#		aria2c -x 16 -k 1M --split=16 --allow-overwrite=true 'https://cdn.tmoe.me/git/linux/XServerXSDL-X-org-server_1-20-41.tar.xz' || aria2c -x 16 -k 1M --split=16 --allow-overwrite=true 'https://m.tmoe.me/down/share/Android/VNC/XServerXSDL-X-org-server_1-20-41.tar.xz'
 		echo '正在解压...'
 		tar -Jxvf XSERVERXSDLANDROID.tar.xz
 		#tar -Jxvf 'XServerXSDL-X-org-server_1-20-41.tar.xz'

@@ -471,7 +471,7 @@ gnu_linux() {
 				y* | Y* | "")
 					cd /mnt/c/Users/Public/Downloads/
 					ISO_FILE_NAME='win10_2004_x64_tmoe.iso'
-					TMOE_ISO_URL="https://m.tmoe.me/down/share/windows/20H1/${ISO_FILE_NAME}"
+					TMOE_ISO_URL="https://webdav.tmoe.me/down/share/windows/20H1/${ISO_FILE_NAME}"
 					if [ ! -e "${ISO_FILE_NAME}" ]; then
 						echo "即将为您下载10.0.19041 iso镜像文件..."
 						echo "目录C:\Users\Public\Downloads"
@@ -2351,7 +2351,7 @@ start_web_novnc() {
 	elif [ "${WINDOWSDISTRO}" = "WSL" ]; then
 		/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe "start http://localhost:6080/vnc.html"
 	else
-		firefox 'http://localhost:6080/vnc.html' 2>/dev/null
+		xdg-open 'http://localhost:6080/vnc.html' 2>/dev/null
 	fi
 	echo "本机默认novnc地址${YELLOW}http://localhost:6080/vnc.html${RESET}"
 	echo The LAN VNC address 局域网地址$(ip -4 -br -c a | tail -n 1 | cut -d '/' -f 1 | cut -d 'P' -f 2):6080/vnc.html

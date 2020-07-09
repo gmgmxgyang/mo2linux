@@ -897,8 +897,10 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	    arch_linux_mirror_list
 	elif [ "$(cat /etc/issue | cut -c 1-7)" = "Manjaro" ]; then
 	    manjaro_mirror_list
+			pacman-key --init
+	        pacman-key --populate
 	    #pacman -Sy --noconfirm grep sed awk
-		pacman -Sy --noconfirm base base-devel
+		pacman -Syu --noconfirm base base-devel
 	fi
 
 	if [ -e "/etc/pacman.conf" ] && [ $(command -v grep) ]; then

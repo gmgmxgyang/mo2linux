@@ -475,7 +475,7 @@ gnu_linux() {
 					if [ ! -e "${ISO_FILE_NAME}" ]; then
 						echo "即将为您下载10.0.19041 iso镜像文件..."
 						echo "目录C:\Users\Public\Downloads"
-						aria2c -x 16 -k 1M --split=16 --allow-overwrite=true -o "${ISO_FILE_NAME}" 'https://m.tmoe.me/down/share/windows/20H1/${ISO_FILE_NAME}' || aria2c -x 16 -k 1M --split=16 --allow-overwrite=true -o "${ISO_FILE_NAME}" 'https://cdn.tmoe.me/windows/20H1/${ISO_FILE_NAME}'
+						aria2c -x 16 -k 1M --split=16 --allow-overwrite=true -o "${ISO_FILE_NAME}" 'https://webdav.tmoe.me/down/share/windows/20H1/${ISO_FILE_NAME}' || aria2c -x 16 -k 1M --split=16 --allow-overwrite=true -o "${ISO_FILE_NAME}" 'https://cdn.tmoe.me/windows/20H1/${ISO_FILE_NAME}'
 					fi
 					/mnt/c/WINDOWS/system32/cmd.exe /c "start ."
 					echo "请手动运行${YELLOW}setup.exe${RESET}"

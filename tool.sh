@@ -454,6 +454,39 @@ download_busybox_deb() {
 	rm -rvf busybox busybox-static busybox.deb
 }
 ######################
+check_tmoe_linux_desktop_link() {
+	if [ ! -e "/usr/share/applications/tmoe-linux.desktop" ]; then
+		curl -Lv -o /usr/share/icons/tmoe-linux.png 'https://gitee.com/mo2/linux/raw/master/.mirror/icon.png'
+		chmod 644 /usr/share/icons/tmoe-linux.png
+		cd /usr/share/applications
+		creat_tmoe_linux_desktop_icon
+	fi
+}
+###################
+creat_tmoe_linux_desktop_icon() {
+	if [ ! $(command -v debian-i) ]; then
+		cd /usr/local/bin
+		curl -Lv -o debian-i 'https://gitee.com/mo2/linux/raw/master/tool.sh'
+		chmod +x debian-i
+	fi
+	cat >tmoe-linux.desktop <<-'EOF'
+		[Desktop Entry]
+		Name=Tmoe-linux tool
+		Comment=Easily configure remote desktop server and qemu vm.
+		Exec=/usr/local/bin/debian-i
+		Terminal=true
+		X-MultipleArgs=false
+		Type=Application
+		StartupNotify=false
+		Categories=System;Settings;
+		Icon=/usr/share/icons/tmoe-linux.png
+		X-Ubuntu-Gettext-Domain=tmoe-linux
+		X-KDE-SubstituteUID=true
+		Keywords=tmoe;Tmoe;moe;vnc;aria2;xserver;xsdl;startvnc;debian-i;tool;manager;configuration;settings;menu;
+	EOF
+	chmod 644 tmoe-linux.desktop
+}
+#######################
 tmoe_linux_tool_menu() {
 	IMPORTANT_TIPS=""
 	#窗口大小20 50 7
@@ -480,6 +513,7 @@ tmoe_linux_tool_menu() {
 	if [ ! -z "${CurrentLANG}" ]; then
 		export LANG=${CurrentLANG}
 	fi
+	check_tmoe_linux_desktop_link
 	case "${TMOE_OPTION}" in
 	0 | "")
 		#export LANG=${CurrentLANG}

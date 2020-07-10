@@ -2168,7 +2168,7 @@ install_debian_testing_via_tuna() {
 install_debian_buster_gnu_linux_container() {
 	DISTRO_CODE='buster'
 	BETA_SYSTEM=$(
-		whiptail --title "DEBIAN CONTAINER" --menu "DEBIAN BUSTER" 0 50 0 \
+		whiptail --title "DEBIAN CONTAINER" --menu "BUSTER更加稳定且bug较少,但软件包较旧,而sid较新。\nBuster is more stable and has fewer bugs,\nbut the packages inside the buster software source are older.\nThe sid package is relatively new." 0 50 0 \
 			"1" "Arm64 rec pkg(20200710,xfce4.12桌面,638MB)" \
 			"2" "Software source(通过软件源来安装)" \
 			"0" "Return to previous menu 返回上级菜单" \
@@ -2191,9 +2191,10 @@ install_debian_gnu_linux_distro() {
 	#DISTRO_CODE=''
 	DISTRO_NAME='debian'
 	LXC_IMAGES_REPO="https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/${DISTRO_NAME}/"
+	#\nStable版更加稳定且bug较少,但stable的软件包较旧,而sid较新。\nBuster is more stable and has fewer bugs,\nbut the packages inside the buster software source are older.\nThe sid package is relatively new.
 	BETA_SYSTEM=$(
 		DISTRO_NAME='debian'
-		whiptail --title "请选择您需要安装的debian version" --menu "Buster为2019~2021年的stable版,sid永远都为unstable。\nStable版更加稳定且bug较少,但stable的软件包较旧,而sid较新。\nBuster is more stable and has fewer bugs,\nbut the packages inside the buster software source are older.\nThe sid package is relatively new." 0 50 0 \
+		whiptail --title "请选择您需要安装的debian version" --menu "Buster为2019~2021年的stable版,sid永远都为unstable,sid的软件包较新。\nStable has fewer bugs,\nbut the packages inside the software source are older." 0 50 0 \
 			"1" "Sid(滚动更新,隔壁的男孩席德,玩具终结者)" \
 			"2" "🐕10-buster(2019~2022,安弟一家养的小狗)" \
 			"3" "Custom code手动输入版本代号" \

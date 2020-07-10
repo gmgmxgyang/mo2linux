@@ -2237,9 +2237,9 @@ check_debian_12() {
 	DISTRO_CODE=$(curl -L ${LXC_IMAGES_REPO} | grep date | cut -d '=' -f 4 | cut -d '"' -f 2 | grep -Ev 'jessie|stretch|buster|bullseye|sid|size' | tail -n 1)
 	if [ -z ${DISTRO_CODE} ]; then
 		echo "检测到debian12尚未发布，建议您等到2023年时再来尝试"
-		echo "因无法下载该版本，故将自动获取debian sid"
-		do_you_want_to_continue
-		install_debian_sid_gnu_linux_container
+		echo "如需体验最新版本，请安装debian sid，并添加experimental软件源"
+		press_enter_to_return
+		install_debian_gnu_linux_distro
 	fi
 }
 #############
@@ -2257,9 +2257,9 @@ check_debian_new_version() {
 	DISTRO_CODE=$(curl -L ${LXC_IMAGES_REPO} | grep date | cut -d '=' -f 4 | cut -d '"' -f 2 | grep -Ev 'jessie|stretch|buster|bullseye|bookworm|sid|size' | tail -n 1)
 	if [ -z ${DISTRO_CODE} ]; then
 		echo "检测到debian13尚未发布，建议您等到2025年时再来尝试"
-		echo "因无法下载该版本，故将自动获取debian sid"
-		do_you_want_to_continue
-		install_debian_sid_gnu_linux_container
+		echo "如需体验最新版本，请安装debian sid，并添加experimental软件源"
+		press_enter_to_return
+		install_debian_gnu_linux_distro
 	fi
 }
 #####################################

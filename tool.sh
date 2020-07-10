@@ -3008,6 +3008,7 @@ install_xfce4_desktop() {
 		download_arch_breeze_adapta_cursor_theme
 		dbus-launch xfconf-query -c xsettings -t string -np /Gtk/CursorThemeName -s "Breeze-Adapta-Cursor" 2>/dev/null
 	fi
+	mkdir -p ${HOME}/.config/xfce4/xfconf/xfce-perchannel-xml/
 	cd ${HOME}/.config/xfce4/xfconf/xfce-perchannel-xml/
 	if [ ! -e "xfce4-desktop.xml" ]; then
 		modify_the_default_xfce_wallpaper
@@ -7903,9 +7904,11 @@ first_configure_startvnc() {
 	#卸载udisks2，会破坏mate和plasma的依赖关系。
 	if [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ] && [ ${REMOVE_UDISK2} = 'true' ]; then
 		if [ "${LINUX_DISTRO}" = 'debian' ]; then
-			echo "检测到您处于${BLUE}proot容器${RESET}环境下，即将为您${RED}卸载${RESET}${YELLOW}udisk2${RESET}和${GREEN}gvfs${RESET}"
-			#umount .gvfs
-			apt purge -y --allow-change-held-packages ^udisks2 ^gvfs
+			if grep -Eq 'Focal Fossa|focal|bionic|Bionic Beaver|Eoan Ermine|buster|stretch|jessie' "/etc/os-release"; then
+				echo "检测到您处于${BLUE}proot容器${RESET}环境下，即将为您${RED}卸载${RESET}${YELLOW}udisk2${RESET}和${GREEN}gvfs${RESET}"
+				#umount .gvfs
+				apt purge -y --allow-change-held-packages ^udisks2 ^gvfs
+			fi
 		fi
 	fi
 	configure_startvnc

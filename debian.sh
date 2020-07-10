@@ -2955,7 +2955,12 @@ install_slackware_linux_distro() {
 	#touch .SLACKDetectionFILE
 	if [ "${ARCH_TYPE}" = 'amd64' ]; then
 		if [ ! -e "slackware-current-rootfs.tar.xz" ]; then
-			aria2c -x 16 -s 16 -k 1M -o "slackware-current-rootfs.tar.xz" "https://cdn.tmoe.me/Tmoe-Debian-Tool/chroot/archive/slackware_amd64.tar.xz" || aria2c -x 16 -s 16 -k 1M -o "slackware-current-rootfs.tar.xz" "https://m.tmoe.me/down/share/Tmoe-linux/chroot/slackware_amd64.tar.xz"
+			git clone -b x64 --depth=1 https://gitee.com/ak2/slackware_rootfs.git .SLACKWARE_AMD64_TEMP_FOLDER
+			#aria2c -x 16 -s 16 -k 1M -o "slackware-current-rootfs.tar.xz" "https://cdn.tmoe.me/Tmoe-Debian-Tool/chroot/archive/slackware_amd64.tar.xz" || aria2c -x 16 -s 16 -k 1M -o "slackware-current-rootfs.tar.xz" "https://m.tmoe.me/down/share/Tmoe-linux/chroot/slackware_amd64.tar.xz"
+			cd .SLACKWARE_AMD64_TEMP_FOLDER
+			mv -f slackware_amd64.tar.xz ../slackware-current-rootfs.tar.xz
+			cd ..
+			rm -rf .SLACKWARE_AMD64_TEMP_FOLDER
 		fi
 	else
 		if [ ! -e "slackware-current-rootfs.tar.xz" ]; then

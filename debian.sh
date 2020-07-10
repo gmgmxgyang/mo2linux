@@ -2802,7 +2802,7 @@ install_ubuntu_gnu_linux_distro() {
 	DISTRO_NAME='ubuntu'
 	BETA_SYSTEM=$(
 		DISTRO_NAME='ubuntu'
-		whiptail --title "UBUNTU" --menu "您想要安装哪个版本？Which version do you want to install?\n2020至2025年的LTS长期支持版为focal 20.04(2020年4月正式发布),上一个LTS为18.04(2018年4月)\n下一个LTS可能为22.04\n设当前年份为x,若x>=2022,则请手动输入版本代号。" 0 50 0 \
+		whiptail --title "UBUNTU" --menu "您想要安装哪个版本？Which version do you want to install?\n2020至2025年的LTS长期支持版为focal 20.04(2020年4月正式发布),上一个LTS为18.04(2018年4月),下一个LTS可能为22.04\n设当前年份为x,若x>=2022,则请手动输入版本代号。" 0 50 0 \
 			"1" "🦍20.10 Groovy Gorilla 時髦大猩猩" \
 			"2" "🐱20.04 Focal Fossa 焦點馬島長尾狸貓" \
 			"3" "Custom code手动输入版本代号" \

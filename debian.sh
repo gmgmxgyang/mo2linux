@@ -2125,15 +2125,13 @@ install_debian_sid_via_tuna() {
 }
 #################
 install_debian_sid_gnu_linux_container() {
+	#Do you want to install debian container via Tsinghua University open source mirror station,\nor download the recovery package (debian-xfce.tar.xz)?\n您想要通过软件源镜像站来安装，还是在线下载恢复包来安装？\n软件源获取的是最新版镜像，且支持arm64,armhf,x86,x64等架构,\n安装基础系统速度很快，但安装gui速度较慢。\n恢复包非最新版,软件包只更新至2020-07-10,且仅支持arm64架构,但安装gui速度较快。\n若您无使用GUI的需求，建议通过软件源镜像站来安装。" 0 50 0 \
 	DISTRO_CODE='sid'
-	BETA_SYSTEM=$(
-		DISTRO_NAME='debian'
-		whiptail --title "DEBIAN CONTAINER" --menu "Do you want to install debian container via Tsinghua University open source mirror station,\n or download the recovery package (debian-xfce.tar.xz)?\n您想要通过软件源镜像站来安装，还是在线下载恢复包来安装？\n软件源获取的是最新版镜像，且支持arm64,armhf,x86,x64等架构,\n安装基础系统速度很快，但安装gui速度较慢。\n恢复包非最新版,软件包只更新至2020-07-10,且仅支持arm64架构,但安装gui速度较快。\n若您无使用GUI的需求，建议通过软件源镜像站来安装。" 0 50 0 \
-			"1" "Download arm64 rec pkg(xfce4.14桌面+音乐app,1.2GB)" \
-			"2" "Software source(通过软件源来安装)" \
-			"0" "Return to previous menu 返回上级菜单" \
-			3>&1 1>&2 2>&3
-	)
+	BETA_SYSTEM=$(whiptail --title "Install sid via tuna station or DL rec PKG?" --menu "您想要通过软件源镜像站来安装，还是在线下载恢复包来安装?" 0 50 0 \
+		"1" "arm64 xfce4.14桌面+音乐app,1.2GB-20200710" \
+		"2" "Software source(通过软件源来安装)" \
+		"0" "Return to previous menu 返回上级菜单" \
+		3>&1 1>&2 2>&3)
 	##############################
 	case "${BETA_SYSTEM}" in
 	0 | "") install_debian_gnu_linux_distro ;;

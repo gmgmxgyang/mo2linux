@@ -826,7 +826,12 @@ tmoe_locales_settings() {
 	if [ -e "${DEBIAN_CHROOT}" ]; then
 		TMOE_SCRIPT_PATH=${DEBIAN_CHROOT}
 	else
-		TMOE_SCRIPT_PATH=''
+		if [ "${LINUX_DISTRO}" = "Android" ]; then
+			press_enter_to_return
+			tmoe_manager_main_menu
+		else
+			TMOE_SCRIPT_PATH=''
+		fi
 	fi
 	if [ ! -z "${PROOT_LANG}" ]; then
 		sed -i "s@${PROOT_LANG}@${TMOE_LANG}@" $(command -v debian)

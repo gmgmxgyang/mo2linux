@@ -54,7 +54,7 @@ main() {
 ################
 check_pic_go_sandbox() {
 	if [ $(command -v picgo) ]; then
-		sed -i 's+picgo %U+picgo --no-sandbox %U+' picgo.desktop
+		sed -i 's+picgo %U+picgo --no-sandbox %U+' /usr/share/applications/picgo.desktop
 	fi
 }
 #############

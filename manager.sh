@@ -149,7 +149,7 @@ gnu_linux() {
 		PACKAGES_UPDATE_COMMAND='opkg update'
 		PACKAGES_REMOVE_COMMAND='opkg remove'
 		cd /tmp
-		wget --no-check-certificate -qO "router-debian.bash" https://gitee.com/mo2/linux/raw/master/debian.sh
+		wget --no-check-certificate -qO "router-debian.bash" https://gitee.com/mo2/linux/raw/master/manager.sh
 		chmod +x 'router-debian.bash'
 		#bash -c "$(cat 'router-zsh.bash' |sed 's@/usr/bin@/opt/bin@g' |sed 's@-e /bin@-e /opt/bin@g' |sed 's@whiptail@dialog@g')"
 		sed -i 's@/usr/bin@/opt/bin@g' 'router-debian.bash'
@@ -1686,7 +1686,7 @@ space_occupation() {
 ########################################################################
 update_tmoe_linux_manager() {
 	#curl -L -o ${PREFIX}/bin/debian-i 'https://gitee.com/mo2/linux/raw/master/debian.sh'
-	aria2c --allow-overwrite=true -d ${PREFIX}/bin -o debian-i 'https://gitee.com/mo2/linux/raw/master/debian.sh' || curl -Lo ${PREFIX}/bin/debian-i 'https://gitee.com/mo2/linux/raw/master/debian.sh' || sudo aria2c --allow-overwrite=true -d ${PREFIX}/bin -o debian-i 'https://gitee.com/mo2/linux/raw/master/debian.sh'
+	aria2c --allow-overwrite=true -d ${PREFIX}/bin -o debian-i 'https://gitee.com/mo2/linux/raw/master/manager.sh' || curl -Lo ${PREFIX}/bin/debian-i 'https://gitee.com/mo2/linux/raw/master/manager.sh' || sudo -E aria2c --allow-overwrite=true -d ${PREFIX}/bin -o debian-i 'https://gitee.com/mo2/linux/raw/master/manager.sh'
 	if [ "${LINUX_DISTRO}" != "Android" ]; then
 		sed -i '1 c\#!/bin/bash' ${PREFIX}/bin/debian-i
 	fi

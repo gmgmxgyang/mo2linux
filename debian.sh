@@ -6,6 +6,8 @@ fi
 cd ${TMPDIR}
 if [ $(command -v curl) ]; then
 	curl -Lvo .tmoe-linux.sh https://gitee.com/mo2/linux/raw/master/manager.sh
+elif [ $(command -v aria2c) ]; then
+	aria2c --allow-overwrite=true -o .tmoe-linux.sh https://gitee.com/mo2/linux/raw/master/manager.sh
 else
 	wget -O .tmoe-linux.sh https://gitee.com/mo2/linux/raw/master/manager.sh
 fi

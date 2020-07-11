@@ -614,7 +614,7 @@ EndOfFile
 creat_linux_container_remove_script
 ################
 #wget -qO ${PREFIX}/bin/debian-i 'https://gitee.com/mo2/linux/raw/master/debian.sh'
-aria2c --allow-overwrite=true -d ${PREFIX}/bin -o debian-i 'https://gitee.com/mo2/linux/raw/master/debian.sh'
+aria2c --allow-overwrite=true -d ${PREFIX}/bin -o debian-i 'https://gitee.com/mo2/linux/raw/master/manager.sh'
 #############
 if [ ! -L '/data/data/com.termux/files/home/storage/external-1' ]; then
 	sed -i 's@^command+=" -b /data/data/com.termux/files/home/storage/external-1@#&@g' ${PREFIX}/bin/debian 2>/dev/null
@@ -1002,6 +1002,12 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 			LANGUAGE="${TMOE_LANG_HALF}:${TMOE_LANG_QUATER}"
 			LC_ALL="${TMOE_LANG}"
 		EOF
+		if ! grep -q "^${TMOE_LANG_HALF}" "/etc/locale.gen"; then
+			sed -i 's@^@#@g' /etc/locale.gen 2>/dev/null
+	        sed -i 's@##@#@g' /etc/locale.gen 2>/dev/null
+			echo '' >>/etc/locale.gen
+			sed -i '$ a\${TMOE_LANG} UTF-8' /etc/locale.gen
+		fi
 	locale-gen ${TMOE_LANG}
 	sed -i "s@zh_CN@${TMOE_LANG_HALF}@" $(command -v debian-i)
 	sed -i "s@en_US@${TMOE_LANG_HALF}@" $(command -v debian-i)

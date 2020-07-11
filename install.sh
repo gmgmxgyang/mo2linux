@@ -996,7 +996,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	TMOE_LANG_HALF=$(echo ${TMOE_LANG} | cut -d '.' -f 1)
 	TMOE_LANG_QUATER=$(echo ${TMOE_LANG} | cut -d '.' -f 1 | cut -d '_' -f 1)
 	echo "Configuring ${TMOE_LANG_HALF} environment..."
-	sed -i 's/^#.*${TMOE_LANG} UTF-8/${TMOE_LANG} UTF-8/' /etc/locale.gen
+	sed -i "s/^#.*${TMOE_LANG} UTF-8/${TMOE_LANG} UTF-8/" /etc/locale.gen
 	cat >>/etc/default/locale <<-EOF
 			LANG="${TMOE_LANG}"
 			LANGUAGE="${TMOE_LANG_HALF}:${TMOE_LANG_QUATER}"
@@ -1006,7 +1006,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 			sed -i 's@^@#@g' /etc/locale.gen 2>/dev/null
 	        sed -i 's@##@#@g' /etc/locale.gen 2>/dev/null
 			echo '' >>/etc/locale.gen
-			sed -i '$ a\${TMOE_LANG} UTF-8' /etc/locale.gen
+			sed -i "$ a\${TMOE_LANG} UTF-8" /etc/locale.gen
 		fi
 	locale-gen ${TMOE_LANG}
 	sed -i "s@zh_CN@${TMOE_LANG_HALF}@" $(command -v debian-i)

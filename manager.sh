@@ -2322,7 +2322,7 @@ install_debian_testing_via_tuna() {
 install_debian_buster_gnu_linux_container() {
 	DISTRO_CODE='buster'
 	BETA_SYSTEM=$(
-		whiptail --title "DEBIAN CONTAINER" --menu "BUSTER更加稳定且bug较少,但软件包较旧,而sid较新。\nBuster is more stable and has fewer bugs,\nbut the packages inside the buster software source are older.\nThe sid package is relatively new." 0 50 0 \
+		whiptail --title "DEBIAN CONTAINER" --menu "BUSTER更加稳定且bug较少,但软件包较旧,而sid较新。\nBuster is more stable and has fewer bugs" 0 50 0 \
 			"1" "Arm64 rec pkg(20200710,xfce4.12桌面,638MB)" \
 			"2" "Software source(通过软件源来安装)" \
 			"0" "Return to previous menu 返回上级菜单" \

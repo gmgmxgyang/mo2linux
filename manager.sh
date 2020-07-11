@@ -822,7 +822,9 @@ tmoe_locales_settings() {
 	mkdir -p ${HOME}/.config/tmoe-linux
 	cd ${HOME}/.config/tmoe-linux
 	echo ${TMOE_LANG} >locale.txt
-	PROOT_LANG=$(cat $(command -v debian) | grep LANG= | cut -d '"' -f 2 | cut -d '=' -f 2 | tail -n 1)
+	if [ $(command -v debian) ]; then
+		PROOT_LANG=$(cat $(command -v debian) | grep LANG= | cut -d '"' -f 2 | cut -d '=' -f 2 | tail -n 1)
+	fi
 	if [ -e "${DEBIAN_CHROOT}" ]; then
 		TMOE_SCRIPT_PATH=${DEBIAN_CHROOT}
 	else

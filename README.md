@@ -172,7 +172,7 @@ wsl --set-default-version 2
 > 2.打开 termux，输入以下命令
 
 ```shell
-    bash -c "$(curl -L gitee.com/mo2/linux/raw/2/2)"
+    . <(curl -L gitee.com/mo2/linux/raw/2/2)
 ```
 
 > 3.如需使用 gui,可能还需要安装 VNC apk,您可以前往 Google play 或使用 Tmoe-linux 的 debian-i 来下载。  
@@ -213,8 +213,9 @@ wsl --set-default-version 2
 ```shell
     apk update
     apk add wget bash
-    wget -O /tmp/.debian.sh https://gitee.com/mo2/linux/raw/2/2
-    bash /tmp/.debian.sh
+    cd /tmp
+    wget -O .tmoe-linux.sh https://gitee.com/mo2/linux/raw/2/2
+    bash .tmoe-linux.sh
 ```
 
 #### 8.Void

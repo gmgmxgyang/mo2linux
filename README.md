@@ -133,7 +133,7 @@ wsl --set-default-version 2
 ```shell
     sudo apt update
     sudo apt install -y curl
-    bash -c "$(curl -L gitee.com/mo2/linux/raw/master/debian.sh)"
+    bash -c "$(curl -L gitee.com/mo2/linux/raw/2/2)"
 ```
 
 若已经为 root 用户，则可以去掉 sudo。
@@ -172,7 +172,7 @@ wsl --set-default-version 2
 > 2.打开 termux，输入以下命令
 
 ```shell
-    bash -c "$(curl -L gitee.com/mo2/linux/raw/master/debian.sh)"
+    bash -c "$(curl -L gitee.com/mo2/linux/raw/2/2)"
 ```
 
 > 3.如需使用 gui,可能还需要安装 VNC apk,您可以前往 Google play 或使用 Tmoe-linux 的 debian-i 来下载。  
@@ -183,21 +183,21 @@ wsl --set-default-version 2
 ```shell
     sudo apt update
     sudo apt install -y curl
-    bash <(curl -L gitee.com/mo2/linux/raw/master/debian.sh)
+    bash <(curl -L gitee.com/mo2/linux/raw/2/2)
 ```
 
 #### 4.RedHat/Fedora/CentOS
 
 ```shell
     dnf install -y curl || yum install -y curl
-    bash -c "$(curl -L https://gitee.com/mo2/linux/raw/master/debian.sh)"
+    bash -c "$(curl -L https://gitee.com/mo2/linux/raw/2/2)"
 ```
 
 #### 5.Arch/Manjaro
 
 ```shell
     pacman -Syu --noconfirm curl
-    bash -c "$(curl -L https://gitee.com/mo2/linux/raw/master/debian.sh)"
+    bash -c "$(curl -L https://gitee.com/mo2/linux/raw/2/2)"
 ```
 
 #### 6.OpenWRT/Entware
@@ -205,7 +205,7 @@ wsl --set-default-version 2
 ```shell
     opkg update
     opkg install libustream-openssl ca-bundle ca-certificates wget bash
-    bash -c "$(wget --no-check-certificate -O- https://gitee.com/mo2/linux/raw/master/debian.sh)"
+    bash -c "$(wget --no-check-certificate -O- https://gitee.com/mo2/linux/raw/2/2)"
 ```
 
 #### 7.Alpine
@@ -213,7 +213,7 @@ wsl --set-default-version 2
 ```shell
     apk update
     apk add wget bash
-    wget -O /tmp/.debian.sh https://gitee.com/mo2/linux/raw/master/debian.sh
+    wget -O /tmp/.debian.sh https://gitee.com/mo2/linux/raw/2/2
     bash /tmp/.debian.sh
 ```
 
@@ -222,14 +222,14 @@ wsl --set-default-version 2
 ```shell
     xbps-install -S
     xbps-install -y wget
-    bash -c "$(wget -O- https://gitee.com/mo2/linux/raw/master/debian.sh)"
+    bash -c "$(wget -O- https://gitee.com/mo2/linux/raw/2/2)"
 ```
 
 #### 9.Gentoo/Funtoo
 
 ```shell
     emerge -avk net-misc/wget
-    bash -c "$(wget -O- https://gitee.com/mo2/linux/raw/master/debian.sh)"
+    bash -c "$(wget -O- https://gitee.com/mo2/linux/raw/2/2)"
 ```
 
 #### 10.其它 system 未测试,以下系统请自行解决依赖关系
@@ -247,7 +247,7 @@ wsl --set-default-version 2
 - 1.安装 Tmoe GNU/Linux 管理工具的命令(仅支持在原系统内输)
 
 ```shell
-bash -c "$(curl -L https://gitee.com/mo2/linux/raw/master/debian.sh)"
+bash -c "$(curl -L https://gitee.com/mo2/linux/raw/2/2)"
 ```
 
 > 进入工具后，按方向键和回车键进行操作，基本上所有操作都有提示。
@@ -297,7 +297,7 @@ startvnc
 ```shell
 apt update
 apt install -y wget
-bash -c "$(wget -O- https://gitee.com/mo2/linux/raw/master/debian.sh)"
+bash -c "$(wget -O- https://gitee.com/mo2/linux/raw/2/2)"
 ```
 
 **(旧版)视频教程**[链接](https://pan.baidu.com/s/1rh7Nkcd0gG9RPx77JyGqZA) 提取码: **debb**

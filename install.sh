@@ -700,6 +700,13 @@ elif [ -f "${HOME}/.MANJARO_ARM_DETECTION_FILE" ]; then
 	sed -i 's@^#SigLevel.*@SigLevel = Never@' "${DEBIAN_CHROOT}/etc/pacman.conf"
 fi
 ########
+if [ -e "${HOME}/.config/tmoe-linux/locale.txt" ]; then
+	mkdir -p ./.config/tmoe-linux
+	cp ${HOME}/.config/tmoe-linux/locale.txt ./.config/tmoe-linux/locale.txt
+	TMOE_LANG=$(cat ${HOME}/.config/tmoe-linux/locale.txt | head -n 1)
+	PROOT_LANG=$(cat $(command -v debian) | grep LANG= | cut -d '"' -f 2 | cut -d '=' -f 2 | tail -n 1)
+	sed -i "s@${PROOT_LANG}@${TMOE_LANG}@" $(command -v debian)
+fi
 
 ########################
 #配置zsh
@@ -970,12 +977,13 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	#配置国内时区
 	echo 'Asia/Shanghai' >/etc/timezone
 	ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-
+	sed -i 's/^/#&/g' /etc/default/locale
+	sed -i 's/##/#/g' /etc/default/locale
+	if [ ! -e "${HOME}/.config/tmoe-linux/locale.txt" ]; then
 	echo "正在配置中文环境..."
 	echo "Configuring Chinese environment..."
 	#sed -i 's/^#.*zh_CN.UTF-8.*/zh_CN.UTF-8 UTF-8/' /etc/locale.gen
 	sed -i 's/^#.*zh_CN.UTF-8 UTF-8/zh_CN.UTF-8 UTF-8/' /etc/locale.gen
-	sed -i 's/^/#&/g' /etc/default/locale
 	cat >>/etc/default/locale <<-'EOF'
 			LANG="zh_CN.UTF-8"
 			LANGUAGE="zh_CN:zh"
@@ -983,6 +991,19 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 		EOF
 	#locale-gen
 	locale-gen zh_CN.UTF-8
+	else
+	TMOE_LANG=$(cat ${HOME}/.config/tmoe-linux/locale.txt |head -n 1)
+	TMOE_LANG_HALF=$(echo ${TMOE_LANG} | cut -d '.' -f 1)
+	TMOE_LANG_QUATER=$(echo ${TMOE_LANG} | cut -d '.' -f 1 | cut -d '_' -f 1)
+	echo "Configuring ${TMOE_LANG_HALF} environment..."
+	sed -i 's/^#.*${TMOE_LANG} UTF-8/${TMOE_LANG} UTF-8/' /etc/locale.gen
+	cat >>/etc/default/locale <<-EOF
+			LANG="${TMOE_LANG}"
+			LANGUAGE="${TMOE_LANG_HALF}:${TMOE_LANG_QUATER}"
+			LC_ALL="${TMOE_LANG}"
+		EOF
+	local-gen ${TMOE_LANG}
+	fi
 	source /etc/default/locale 2>/dev/null
 	#################
 	printf "$YELLOW"

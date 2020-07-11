@@ -14,19 +14,19 @@ You can also run Gentoo, Arch and other systems in WSL.
 Supported containers:
 
 - [x] **Debian buster/sid**
-- [x] **Ubuntu 20.04**
+- [x] **Ubuntu LTS**
 - [x] **Kali rolling**
 - [x] **Arch**
-- [x] **Fedora 31**
-- [x] **CentOS 8**
+- [x] **Fedora**
+- [x] **CentOS**
 - [x] **Gentoo**
 - [x] **Funtoo**
 - [x] **Alpine edge**
 - [x] **OpenSUSE tumbleweed**
 - [x] **Void**
-- [x] **Raspbian buster**
-- [x] **Mint tricia**
-- [x] **Devuan ascii**
+- [x] **Raspbian**
+- [x] **Mint**
+- [x] **Devuan**
 - [x] **Slackware**
 - [x] **Armbian**
 

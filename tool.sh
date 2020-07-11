@@ -448,7 +448,19 @@ check_dependencies() {
 	fi
 	##############
 	CurrentLANG=$LANG
-	export LANG=$(echo 'emhfQ04uVVRGLTgK' | base64 -d)
+	#export LANG=$(echo 'emhfQ04uVVRGLTgK' | base64 -d)
+	#20200711為解決多區域設定問題，故不設定語言
+	if [ -e "${HOME}/.config/tmoe-linux/locale.txt" ]; then
+		TMOE_LANG=$(cat ${HOME}/.config/tmoe-linux/locale.txt | head -n 1)
+		TMOE_LANG_HALF=$(echo ${TMOE_LANG} | cut -d '.' -f 1)
+		TMOE_LANG_QUATER=$(echo ${TMOE_LANG} | cut -d '.' -f 1 | cut -d '_' -f 1)
+		cd /usr/local/bin
+		if grep -q '\^zh_CN' $(command -v debian-i); then
+			sed -i "s@zh_CN@${TMOE_LANG_HALF}@" debian-i
+		else
+			sed -i "s@en_US@${TMOE_LANG_HALF}@" debian-i
+		fi
+	fi
 	tmoe_linux_tool_menu
 }
 ####################################################

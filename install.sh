@@ -1003,6 +1003,8 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 			LC_ALL="${TMOE_LANG}"
 		EOF
 	local-gen ${TMOE_LANG}
+	sed -i "s@zh_CN@${TMOE_LANG_HALF}@" $(command -v debian-i)
+	sed -i "s@en_US@${TMOE_LANG_HALF}@" $(command -v debian-i)
 	fi
 	source /etc/default/locale 2>/dev/null
 	#################

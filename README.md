@@ -172,7 +172,7 @@ wsl --set-default-version 2
 > 2.打开 termux，输入以下命令
 
 ```shell
-    bash -c "$(curl -Lv gitee.com/mo2/linux/raw/master/debian.sh)"
+    bash -c "$(curl -L gitee.com/mo2/linux/raw/master/debian.sh)"
 ```
 
 > 3.如需使用 gui,可能还需要安装 VNC apk,您可以前往 Google play 或使用 Tmoe-linux 的 debian-i 来下载。  
@@ -190,14 +190,14 @@ wsl --set-default-version 2
 
 ```shell
     dnf install -y curl || yum install -y curl
-    bash -c "$(curl -Lv https://gitee.com/mo2/linux/raw/master/debian.sh)"
+    bash -c "$(curl -L https://gitee.com/mo2/linux/raw/master/debian.sh)"
 ```
 
 #### 5.Arch/Manjaro
 
 ```shell
     pacman -Syu --noconfirm curl
-    bash -c "$(curl -Lv https://gitee.com/mo2/linux/raw/master/debian.sh)"
+    bash -c "$(curl -L https://gitee.com/mo2/linux/raw/master/debian.sh)"
 ```
 
 #### 6.OpenWRT/Entware
@@ -247,7 +247,7 @@ wsl --set-default-version 2
 - 1.安装 Tmoe GNU/Linux 管理工具的命令(仅支持在原系统内输)
 
 ```shell
-bash -c "$(curl -Lv https://gitee.com/mo2/linux/raw/master/debian.sh)"
+bash -c "$(curl -L https://gitee.com/mo2/linux/raw/master/debian.sh)"
 ```
 
 > 进入工具后，按方向键和回车键进行操作，基本上所有操作都有提示。
@@ -672,7 +672,12 @@ nano $(which startvnc)
 
 ##### 2020 年 06 月上旬 更新日志
 
-- 1.增加更多系统配置选项，例如配置时间同步服务，开机自启脚本和管理sudo用户组等。
+- 1.增加更多系统配置选项，例如配置时间同步服务，开机自启脚本和管理 sudo 用户组等。
 - 2.增加 Debian 配置 Ubuntu ppa 软件源的功能。Debian 使用原版的 add-apt-repository 存在某些弊端，例如添加 gpg 密钥失败，而此功能的目的就是解决这些问题。
 - 填写完 ppa 源名称后，会自动检测 launchpad 中该软件描述页面的 gpg 密钥，并添加。接着，需要指定 ubuntu 版本代号，完成后会自动修改软件源列表。
 - 此功能对于 ubuntu 同样有效，经测试部分 ppa 软件源不包含 ubuntu 20.10 groovy 的仓库，此功能可以帮你解决手动修改/etc/apt/sources.list.d/中相关软件源列表的烦恼。
+
+##### 2020 年 07 月上旬 更新日志
+
+- 1.修复 qemu 模板仓库
+- 2.支持更多的 debian 容器版本，自动检测 debian12 bookworm 等未发布版本。

@@ -829,6 +829,7 @@ tmoe_locales_settings() {
 		TMOE_SCRIPT_PATH=${DEBIAN_CHROOT}
 	else
 		if [ "${LINUX_DISTRO}" = "Android" ]; then
+			echo "Detected that you have not installed a container."
 			press_enter_to_return
 			tmoe_manager_main_menu
 		else

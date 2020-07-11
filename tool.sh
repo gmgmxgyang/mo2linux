@@ -25,6 +25,7 @@ main() {
 	passwd | -passwd)
 		set_vnc_passwd
 		check_libreoffice_patch
+		check_pic_go_sandbox
 		;;
 	h | -h | --help)
 		cat <<-'EOF'
@@ -51,6 +52,12 @@ main() {
 	esac
 }
 ################
+check_pic_go_sandbox() {
+	if [ $(command -v picgo) ]; then
+		sed -i 's+picgo %U+picgo --no-sandbox %U+' picgo.desktop
+	fi
+}
+#############
 check_root() {
 	if [ "$(id -u)" != "0" ]; then
 		export PATH=${PATH}:/usr/sbin:/sbin

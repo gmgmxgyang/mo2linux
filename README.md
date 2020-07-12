@@ -682,3 +682,6 @@ nano $(which startvnc)
 
 - 1.修复 qemu 模板仓库
 - 2.支持更多的 debian 容器版本，自动检测 debian12 bookworm 等未发布版本。
+- 3.多区域/语言环境配置
+  ![locales](https://images.gitee.com/uploads/images/2020/0712/084930_79c38987_5617340.png "Screenshot_20200712-084151_1.png")
+  ![日本語](https://images.gitee.com/uploads/images/2020/0712/084535_cf5bff2d_5617340.png "Screenshot_20200711-155224.png")

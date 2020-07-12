@@ -7,6 +7,9 @@ main() {
 	i | -i)
 		tmoe_linux_tool_menu
 		;;
+	aria2)
+		tmoe_aria2_manager
+		;;
 	--install-gui | install-gui)
 		install_gui
 		;;
@@ -2272,10 +2275,6 @@ tmoe_desktop_faq() {
 			因为我不想把时间浪费在无所谓的事情上，所以就不想改了。
 			虽然修改相关命令和文件夹名称很简单，但是需要花费大量的时间去调试。
 			-----------------------
-			Q:${YELLOW}有隐藏的彩蛋或功能吗？${RESET}
-
-			A:应该算有吧！emmmmm...
-			-----------------------
 			Q:${YELLOW}安装过程中，当提示输入密码时，termux无法弹出虚拟键盘${RESET}
 
 			A:有四种解决方法：
@@ -2322,6 +2321,10 @@ tmoe_desktop_faq() {
 	EOF
 }
 #####################
+#Q:${YELLOW}有隐藏的彩蛋或功能吗？${RESET}
+
+#A:应该算有吧！emmmmm...
+#-----------------------
 tmoe_container_desktop() {
 	INSTALLDESKTOP=$(whiptail --title "Desktop environment" --menu \
 		"您想要安装哪个桌面环境?\n仅GTK+环境(如xfce等)支持在本工具内便捷下载主题。 \n Which desktop environment do you want to install? " 0 0 0 \
@@ -5189,11 +5192,12 @@ china_bussiness_mirror_station() {
 		whiptail --title "软件源列表" --menu \
 			"您想要切换为哪个镜像源呢？目前仅支持debian,ubuntu,kali,arch,manjaro,fedora和alpine" 17 55 7 \
 			"1" "mirrors.huaweicloud.com华为云" \
-			"2" "mirrors.aliyun.com阿里云" \
-			"3" "mirrors.163.com网易" \
-			"4" "mirrors.cnnic.cn中国互联网络信息中心" \
-			"5" "mirrors.sohu.com搜狐" \
-			"6" "mirrors.yun-idc.com首都在线" \
+			"2" "mirrors.cloud.tencent.com腾讯云" \
+			"3" "mirrors.aliyun.com阿里云" \
+			"4" "mirrors.163.com网易" \
+			"5" "mirrors.cnnic.cn中国互联网络信息中心" \
+			"6" "mirrors.sohu.com搜狐" \
+			"7" "mirrors.yun-idc.com首都在线" \
 			"0" "Return to previous menu 返回上级菜单" \
 			3>&1 1>&2 2>&3
 	)
@@ -5201,11 +5205,12 @@ china_bussiness_mirror_station() {
 	case "${SOURCES_LIST}" in
 	0 | "") tmoe_sources_list_manager ;;
 	1) SOURCE_MIRROR_STATION='mirrors.huaweicloud.com' ;;
-	2) SOURCE_MIRROR_STATION='mirrors.aliyun.com' ;;
-	3) SOURCE_MIRROR_STATION='mirrors.163.com' ;;
-	4) SOURCE_MIRROR_STATION='mirrors.cnnic.cn' ;;
-	5) SOURCE_MIRROR_STATION='mirrors.sohu.com' ;;
-	6) SOURCE_MIRROR_STATION='mirrors.yun-idc.com' ;;
+	2) SOURCE_MIRROR_STATION='mirrors.cloud.tencent.com' ;;
+	3) SOURCE_MIRROR_STATION='mirrors.aliyun.com' ;;
+	4) SOURCE_MIRROR_STATION='mirrors.163.com' ;;
+	5) SOURCE_MIRROR_STATION='mirrors.cnnic.cn' ;;
+	6) SOURCE_MIRROR_STATION='mirrors.sohu.com' ;;
+	7) SOURCE_MIRROR_STATION='mirrors.yun-idc.com' ;;
 	esac
 	######################################
 	auto_check_distro_and_modify_sources_list
@@ -6206,14 +6211,16 @@ tmoe_download_class() {
 	TMOE_APP=$(
 		whiptail --title "documents" --menu \
 			"Which software do you want to install?" 0 50 0 \
-			"1" "📉百度网盘(x64,提供文件的网络备份,同步和分享服务)" \
+			"1" "aria2(linux平台超强文件下载器)" \
+			"2" "📉百度网盘(x64,提供文件的网络备份,同步和分享服务)" \
 			"0" "Return to previous menu 返回上级菜单" \
 			3>&1 1>&2 2>&3
 	)
 	##########################
 	case "${TMOE_APP}" in
 	0 | "") other_software ;;
-	1) install_baidu_netdisk ;;
+	1) tmoe_aria2_manager ;;
+	2) install_baidu_netdisk ;;
 	esac
 	##########################
 	press_enter_to_return

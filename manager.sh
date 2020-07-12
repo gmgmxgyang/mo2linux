@@ -2370,8 +2370,8 @@ install_debian_gnu_linux_distro() {
 	BETA_SYSTEM=$(
 		DISTRO_NAME='debian'
 		whiptail --title "请选择您需要安装的debian version" --menu "Buster为2019~2021年的stable版,sid永远都为unstable,sid的软件包较新。\nStable has fewer bugs,\nbut the packages inside the software source are older." 0 50 0 \
-			"1" "Sid(滚动更新,隔壁的男孩席德,玩具终结者)" \
-			"2" "🐕10-buster(2019~2022,安弟一家养的小狗)" \
+			"1" "👦Sid(滚动更新,隔壁的男孩席德,玩具终结者)" \
+			"2" "🐶10-buster(2019~2022,安弟一家养的小狗)" \
 			"3" "Custom code手动输入版本代号" \
 			"4" "🐎11-bullseye(2021~2024,胡迪骑的马)" \
 			"5" "📕🐛12-bookworm(2023~2026,熊抱哥的手下)" \

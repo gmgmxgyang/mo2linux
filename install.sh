@@ -992,35 +992,35 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	sed -i 's/^/#&/g' /etc/default/locale
 	sed -i 's/##/#/g' /etc/default/locale
 	if [ ! -e "/usr/local/etc/tmoe-linux/locale.txt" ]; then
-	echo "正在配置中文环境..."
-	echo "Configuring Chinese environment..."
-	#sed -i 's/^#.*zh_CN.UTF-8.*/zh_CN.UTF-8 UTF-8/' /etc/locale.gen
-	sed -i 's/^#.*zh_CN.UTF-8 UTF-8/zh_CN.UTF-8 UTF-8/' /etc/locale.gen
-	cat >>/etc/default/locale <<-'EOF'
+	  echo "正在配置中文环境..."
+	  echo "Configuring Chinese environment..."
+	  #sed -i 's/^#.*zh_CN.UTF-8.*/zh_CN.UTF-8 UTF-8/' /etc/locale.gen
+	  sed -i 's/^#.*zh_CN.UTF-8 UTF-8/zh_CN.UTF-8 UTF-8/' /etc/locale.gen
+	  cat >>/etc/default/locale <<-'EOF'
 			LANG="zh_CN.UTF-8"
 			LANGUAGE="zh_CN:zh"
 			LC_ALL="zh_CN.UTF-8"
 		EOF
-	#locale-gen
-	locale-gen zh_CN.UTF-8
+	  #locale-gen
+	  locale-gen zh_CN.UTF-8
 	else
-	TMOE_LANG=$(cat /usr/local/etc/tmoe-linux/locale.txt |head -n 1)
-	TMOE_LANG_HALF=$(echo ${TMOE_LANG} | cut -d '.' -f 1)
-	TMOE_LANG_QUATER=$(echo ${TMOE_LANG} | cut -d '.' -f 1 | cut -d '_' -f 1)
-	echo "Configuring ${TMOE_LANG_HALF} environment..."
-	sed -i "s/^#.*${TMOE_LANG} UTF-8/${TMOE_LANG} UTF-8/" /etc/locale.gen
-	cat >>/etc/default/locale <<-EOF
+	  TMOE_LANG=$(cat /usr/local/etc/tmoe-linux/locale.txt | head -n 1)
+	  TMOE_LANG_HALF=$(echo ${TMOE_LANG} | cut -d '.' -f 1)
+	  TMOE_LANG_QUATER=$(echo ${TMOE_LANG} | cut -d '.' -f 1 | cut -d '_' -f 1)
+	  echo "Configuring ${TMOE_LANG_HALF} environment..."
+	  sed -i "s/^#.*${TMOE_LANG} UTF-8/${TMOE_LANG} UTF-8/" /etc/locale.gen
+	  cat >>/etc/default/locale <<-EOF
 			LANG="${TMOE_LANG}"
 			LANGUAGE="${TMOE_LANG_HALF}:${TMOE_LANG_QUATER}"
 			LC_ALL="${TMOE_LANG}"
 		EOF
-		if ! grep -q "^${TMOE_LANG_HALF}" "/etc/locale.gen"; then
-			sed -i 's@^@#@g' /etc/locale.gen 2>/dev/null
-	        sed -i 's@##@#@g' /etc/locale.gen 2>/dev/null
-			echo '' >>/etc/locale.gen
-			sed -i "$ a\${TMOE_LANG} UTF-8" /etc/locale.gen
-		fi
-	locale-gen ${TMOE_LANG}
+	  if ! grep -q "^${TMOE_LANG_HALF}" "/etc/locale.gen"; then
+	    sed -i 's@^@#@g' /etc/locale.gen 2>/dev/null
+	    sed -i 's@##@#@g' /etc/locale.gen 2>/dev/null
+	    echo '' >>/etc/locale.gen
+	    sed -i "$ a\${TMOE_LANG} UTF-8" /etc/locale.gen
+	  fi
+	  locale-gen ${TMOE_LANG}
 	fi
 	source /etc/default/locale 2>/dev/null
 	#################

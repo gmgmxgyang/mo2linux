@@ -15012,7 +15012,6 @@ install_nginx_webdav() {
 		configure_nginx_webdav
 	fi
 }
-
 #############
 configure_nginx_webdav() {
 	#进入nginx webdav配置文件目录
@@ -15031,82 +15030,59 @@ configure_nginx_webdav() {
 		"0" "Return to previous menu 返回上级菜单" \
 		3>&1 1>&2 2>&3)
 	##############################
-	if [ "${TMOE_OPTION}" == '0' ]; then
-		#tmoe_linux_tool_menu
-		personal_netdisk
-	fi
-	##############################
-	if [ "${TMOE_OPTION}" == '1' ]; then
+	case "${TMOE_OPTION}" in
+	0 | "") personal_netdisk ;;
+	1)
 		pkill nginx
 		service nginx stop 2>/dev/null || systemctl stop nginx
 		nginx_onekey
-	fi
-	##############################
-	if [ "${TMOE_OPTION}" == '2' ]; then
-		nginx_add_admin
-	fi
-	##############################
-	if [ "${TMOE_OPTION}" == '3' ]; then
-		nginx_logs
-	fi
-	##############################
-	if [ "${TMOE_OPTION}" == '4' ]; then
-		nginx_webdav_port
-	fi
-	##############################
-	if [ "${TMOE_OPTION}" == '5' ]; then
-		nginx_port
-	fi
-	##############################
-	if [ "${TMOE_OPTION}" == '6' ]; then
-		nginx_systemd
-	fi
-	##############################
-	if [ "${TMOE_OPTION}" == '7' ]; then
+		;;
+	2) nginx_add_admin ;;
+	3) nginx_logs ;;
+	4) nginx_webdav_port ;;
+	5) nginx_port ;;
+	6) nginx_systemd ;;
+	7)
 		echo "正在停止服务进程..."
 		echo "Stopping..."
 		pkill nginx
 		service nginx stop 2>/dev/null || systemctl stop nginx
 		service nginx status || systemctl status nginx
-	fi
-	##############################
-	if [ "${TMOE_OPTION}" == '8' ]; then
-		nginx_webdav_root_dir
-	fi
-	##############################
-	if [ "${TMOE_OPTION}" == '9' ]; then
+		;;
+	8) nginx_webdav_root_dir ;;
+	9)
 		echo "正在停止nginx进程..."
 		echo "Stopping nginx..."
 		pkill nginx
 		service nginx stop 2>/dev/null || systemctl stop nginx
 		nginx_reset
-	fi
+		;;
+	10)
+		remove_nginx
+		;;
+	esac
 	##############################
-	if [ "${TMOE_OPTION}" == '10' ]; then
-		pkill nginx
-		echo "正在停止nginx进程..."
-		echo "Stopping nginx..."
-		service nginx stop 2>/dev/null || systemctl stop nginx
-		rm -fv /etc/nginx/conf.d/webdav.conf
-		echo "${YELLOW}已删除webdav配置文件,${RESET}"
-		echo "是否继续卸载nginx?"
-		echo "您正在执行危险操作，卸载nginx将导致您部署的所有网站无法访问！！！"
-		echo "${YELLOW}This is a dangerous operation, you must press Enter to confirm${RESET}"
-		service nginx restart || systemctl restart nginx
-		RETURN_TO_WHERE='configure_nginx_webdav'
-		do_you_want_to_continue
-		service nginx stop || systemctl stop nginx
-		${PACKAGES_REMOVE_COMMAND} nginx nginx-extras
-	fi
-	########################################
-	if [ -z "${TMOE_OPTION}" ]; then
-		personal_netdisk
-	fi
-	###########
 	press_enter_to_return
 	configure_nginx_webdav
 }
 ##############
+remove_nginx() {
+	pkill nginx
+	echo "正在停止nginx进程..."
+	echo "Stopping nginx..."
+	service nginx stop 2>/dev/null || systemctl stop nginx
+	rm -fv /etc/nginx/conf.d/webdav.conf
+	echo "${YELLOW}已删除webdav配置文件,${RESET}"
+	echo "是否继续卸载nginx?"
+	echo "您正在执行危险操作，卸载nginx将导致您部署的所有网站无法访问！！！"
+	echo "${YELLOW}This is a dangerous operation, you must press Enter to confirm${RESET}"
+	service nginx restart || systemctl restart nginx
+	RETURN_TO_WHERE='configure_nginx_webdav'
+	do_you_want_to_continue
+	service nginx stop || systemctl stop nginx
+	${PACKAGES_REMOVE_COMMAND} nginx nginx-extras
+}
+###################
 nginx_onekey() {
 	if [ -e "/tmp/.Chroot-Container-Detection-File" ] || [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
 		echo "检测到您处于${BLUE}chroot/proot容器${RESET}环境下，部分功能可能出现异常。"

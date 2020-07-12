@@ -3160,7 +3160,7 @@ install_gentoo_linux_distro() {
 	if [ "${ARCH_TYPE}" = 'arm64' ]; then
 		echo "检测到您当前使用的是arm64架构，将为您下载armhf版容器"
 		bash -c "$(curl -LfsS gitee.com/mo2/linux/raw/master/install.sh |
-			sed '70 a\ARCH_TYPE="armhf"' |
+			sed '45 a\ARCH_TYPE="armhf"' |
 			sed 's/debian system/gentoo system/g' |
 			sed 's:debian-sid:gentoo-current:g' |
 			sed 's:debian/sid:gentoo/current:g' |

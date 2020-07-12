@@ -991,7 +991,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 	sed -i 's/^/#&/g' /etc/default/locale
 	sed -i 's/##/#/g' /etc/default/locale
-	if [ ! -e "/usr/local/etc/tmoe-linux" ]; then
+	if [ ! -e "/usr/local/etc/tmoe-linux/locale.txt" ]; then
 	echo "正在配置中文环境..."
 	echo "Configuring Chinese environment..."
 	#sed -i 's/^#.*zh_CN.UTF-8.*/zh_CN.UTF-8 UTF-8/' /etc/locale.gen
@@ -1004,7 +1004,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	#locale-gen
 	locale-gen zh_CN.UTF-8
 	else
-	TMOE_LANG=$(cat /usr/local/etc/tmoe-linux |head -n 1)
+	TMOE_LANG=$(cat /usr/local/etc/tmoe-linux/locale.txt |head -n 1)
 	TMOE_LANG_HALF=$(echo ${TMOE_LANG} | cut -d '.' -f 1)
 	TMOE_LANG_QUATER=$(echo ${TMOE_LANG} | cut -d '.' -f 1 | cut -d '_' -f 1)
 	echo "Configuring ${TMOE_LANG_HALF} environment..."

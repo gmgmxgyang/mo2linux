@@ -10,4 +10,10 @@ recycle_bin.sh
 test.xml
 LANG
 locale
-aria2.conf
+001
+002
+003
+004
+file.conf
+aria2.session
+.config/aria2_test.conf

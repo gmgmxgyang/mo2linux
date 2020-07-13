@@ -684,7 +684,7 @@ tmoe_locale_settings() {
 	else
 		TMOE_LANG="zh_CN.UTF-8"
 	fi
-	TMOE_LOCALE_STATUS="Your current lang/locale is ${TMOE_LANG}"
+	TMOE_LOCALE_STATUS="Your current locale is ${TMOE_LANG}"
 	#######################
 	CONTAINER_LOCALE=$(
 		whiptail --title "LOCALE SETTINGS" \
@@ -836,7 +836,7 @@ tmoe_locale_settings() {
 	else
 		if [ "${LINUX_DISTRO}" = "Android" ]; then
 			#echo "Detected that you have not installed a container."
-			echo "${RED}Congratulations${RESET},your current lang/locale has been modified to ${BLUE}${TMOE_LANG}${RESET}"
+			echo "${RED}Congratulations${RESET},your current locale has been modified to ${BLUE}${TMOE_LANG}${RESET}"
 			press_enter_to_return
 			tmoe_manager_main_menu
 		else
@@ -891,7 +891,7 @@ tmoe_locale_settings() {
 		fi
 	fi
 	#############
-	echo "${RED}Congratulations${RESET},your current lang/locale has been modified to ${BLUE}${TMOE_LANG}${RESET}"
+	echo "${RED}Congratulations${RESET},your current locale has been modified to ${BLUE}${TMOE_LANG}${RESET}"
 	press_enter_to_return
 	#tmoe_manager_main_menu
 	tmoe_locale_settings

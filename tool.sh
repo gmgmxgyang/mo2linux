@@ -6250,13 +6250,12 @@ tmoe_download_class() {
 }
 ####################
 tmoe_aria2_manager() {
-	if [ "$(command -v aria2-i)" ]; then
-		aria2-i
-	else
+	if [ ! "$(command -v aria2-i)" ]; then
 		cd /usr/local/bin/
 		aria2c --allow-overwrite=true -o aria2-i https://gitee.com/mo2/linux/raw/master/tool/aria2.sh
 		chmod +x aria2-i
 	fi
+	aria2-i
 }
 #############
 tmoe_documents_menu() {

@@ -1693,7 +1693,7 @@ configure_aria2_rpc_server() {
     RETURN_TO_WHERE='configure_aria2_rpc_server'
     #进入aria2配置文件目录
     cd ${TMOE_ARIA2_PATH}
-    TMOE_OPTION=$(whiptail --title "2020071412-CONFIGURE ARIA2 RPC SERVER" --menu "您想要修改哪项配置？\nWhich conf do you want to modify?" 0 50 0 \
+    TMOE_OPTION=$(whiptail --title "Tmoe-aria2-tool 2020071412" --menu "您想要修改哪项配置？输aria2-i启动本工具\nWhich conf do you want to modify?" 0 50 0 \
         "1" "One-key conf 初始化一键配置" \
         "2" "process进程管理" \
         "3" "FAQ常见问题" \

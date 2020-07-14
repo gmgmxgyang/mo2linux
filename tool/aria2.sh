@@ -103,7 +103,7 @@ tmoe_aria2_manager() {
     if [ -d "${TMOE_ARIA2_PATH}" ]; then
         mkdir -p ${TMOE_ARIA2_PATH}
     fi
-    if (whiptail --title "你想要对这个小可爱做什么" --yes-button "${TMOE_ARIA2_PROCESS}" --no-button 'Configure配置' --yesno "本功能正在开发中,暂勿配置本服务。您是想要启动服务还是配置服务？\n${TMOE_ARIA2_STATUS}\n${TMOE_ARIA2_WARNING}" 0 50); then
+    if (whiptail --title "你想要对这个小可爱做什么" --yes-button "${TMOE_ARIA2_PROCESS}" --no-button 'Configure配置' --yesno "您是想要启动服务还是配置服务？\n${TMOE_ARIA2_STATUS}\n${TMOE_ARIA2_WARNING}" 0 50); then
         if [ ! -e "${TMOE_ARIA2_FILE}" ]; then
             echo "检测到配置文件不存在，1s后将为您自动配置服务。"
             sleep 1s
@@ -194,7 +194,7 @@ tmoe_aria2_file() {
     09)
         TMOE_ARIA2_OPTION_01="0"
         TMOE_ARIA2_OPTION_02="99"
-        TM OE_ARIA2_GREP_NAME='rlimit-nofile'
+        TMOE_ARIA2_GREP_NAME='rlimit-nofile'
         TMOE_ARIA2_TIPS='设置打开的文件描述符的软限制 (soft limit). 此选项仅当满足如下条件时开放: a. 系统支持它 (posix). b. 限制没有超过硬限制 (hard limit). c. 指定的限制比当前的软限制高. 这相当于设置 ulimit, 除了其不能降低限制. 此选项仅当系统支持 rlimit API 时有效.'
         ;;
     10)
@@ -438,6 +438,59 @@ tmoe_aria2_connection_threads() {
     tmoe_aria2_connection_threads
 }
 ######################
+tmoe_aria2_hook() {
+    TMOE_ARIA2_OPTION_01="${TMOE_ARIA2_PATH}/auto_upload_onedrive.sh"
+    TMOE_ARIA2_OPTION_02="${TMOE_ARIA2_PATH}/auto_move_media_files.sh"
+    TMOE_ARIA2_SETTINGS_MODEL='01'
+    RETURN_TO_WHERE='tmoe_aria2_hook'
+    TMOE_OPTION=$(whiptail --title "钩子" --menu "您想要修改哪项配置？\nWhich conf do you want to modify?" 0 50 0 \
+        "00" "Return to previous menu 返回上级菜单" \
+        "01" "(全局)下载完成后执行的操作" \
+        "02" "BT下载完成" \
+        "03" "下载错误" \
+        "04" "下载暂停" \
+        "05" "下载开始" \
+        "06" "下载停止" \
+        3>&1 1>&2 2>&3)
+    ##############################
+    case "${TMOE_OPTION}" in
+    00 | "") configure_aria2_rpc_server ;;
+    01)
+        TMOE_ARIA2_GREP_NAME='on-download-complete'
+        TMOE_ARIA2_TIPS='您可以在下载完成后，执行特定脚本来实现高级功能。\n例如：配合第三方网盘的插件实现下载完成后自动上传的功能，或对下载完成后的文件进行自动分类。'
+        ;;
+    02)
+        TMOE_ARIA2_GREP_NAME='on-bt-download-complete'
+        TMOE_ARIA2_TIPS='如有做种将包含做种，如需调用请务必确定设定完成做种条件'
+        ;;
+    03)
+        TMOE_ARIA2_GREP_NAME='on-download-error'
+        TMOE_ARIA2_TIPS='下载错误时执行的脚本'
+        ;;
+    04)
+        TMOE_ARIA2_GREP_NAME='on-download-pause'
+        TMOE_ARIA2_TIPS='下载暂停时执行的脚本'
+        ;;
+    05)
+        TMOE_ARIA2_GREP_NAME='on-download-start'
+        TMOE_ARIA2_TIPS='下载开始时执行的脚本'
+        ;;
+    06)
+        TMOE_ARIA2_GREP_NAME='on-download-stop'
+        TMOE_ARIA2_TIPS='下载停止时执行的脚本'
+        ;;
+    esac
+    ##############################
+    if [ "${TMOE_ARIA2_SETTINGS_MODEL}" = "01" ]; then
+        tmoe_aria2_settings_model_01
+    elif [ "${TMOE_ARIA2_SETTINGS_MODEL}" = "02" ]; then
+        tmoe_aria2_settings_model_02
+    fi
+    press_enter_to_return
+    ${RETURN_TO_WHERE}
+}
+######################
+##################
 tmoe_aria2_port() {
     TMOE_ARIA2_OPTION_01='true'
     TMOE_ARIA2_OPTION_02='false'
@@ -484,40 +537,606 @@ tmoe_aria2_port() {
     ${RETURN_TO_WHERE}
 }
 ######################
-tmoe_aria2_http() {
-    TMOE_ARIA2_OPTION_01='true'
-    TMOE_ARIA2_OPTION_02='false'
+tmoe_aria2_proxy() {
+    TMOE_ARIA2_OPTION_01='password'
+    TMOE_ARIA2_OPTION_02='123456'
     TMOE_ARIA2_SETTINGS_MODEL='01'
-    RETURN_TO_WHERE='tmoe_aria2_port'
-    TMOE_OPTION=$(whiptail --title "端口" --menu "您想要修改哪项配置？\nWhich conf do you want to modify?" 0 50 0 \
+    TMOE_ARIA2_TIPS=' 默认为空'
+    RETURN_TO_WHERE='tmoe_aria2_proxy'
+    TMOE_OPTION=$(whiptail --title "PROXY" --menu "您想要修改哪项配置？\nWhich conf do you want to modify?" 0 50 0 \
         "00" "Return to previous menu 返回上级菜单" \
-        "01" "RPC监听端口" \
-        "02" "BT监听端口" \
-        "03" "DHT网络监听端口" \
+        "01" "all-proxy 所有协议的代理服务器" \
+        "02" "all-proxy-user 代理服务器用户名" \
+        "03" "all-proxy-passwd 代理服务器密码" \
+        "04" "proxy-method 代理服务器请求方法" \
+        "05" "no-proxy 不使用代理服务器列表" \
+        "06" "https-proxy HTTPS 代理服务器" \
+        "07" "https-proxy-user HTTPS 代理服务器用户名" \
+        "08" "https-proxy-passwd HTTPS 代理服务器密码" \
+        "09" "ftp-proxy FTP 代理服务器" \
+        "10" "ftp-proxy-user FTP 代理服务器用户名" \
+        "11" "ftp-proxy-passwd FTP 代理服务器密码" \
         3>&1 1>&2 2>&3)
     ##############################
     case "${TMOE_OPTION}" in
     00 | "") configure_aria2_rpc_server ;;
     01)
-        TMOE_ARIA2_OPTION_01="16800"
-        TMOE_ARIA2_OPTION_02="6800"
-        TMOE_ARIA2_OPTION_03="8443"
-        TMOE_ARIA2_OPTION_04="18443"
-        TMOE_ARIA2_SETTINGS_MODEL='02'
-        TMOE_ARIA2_GREP_NAME='rpc-listen-port'
-        TMOE_ARIA2_TIPS='RPC监听端口, 端口被占用时可以修改, 默认:6800'
+        TMOE_ARIA2_OPTION_01='192.168.1.1:8022'
+        TMOE_ARIA2_OPTION_02='192.168.0.1:8088'
+        TMOE_ARIA2_GREP_NAME='all-proxy'
+        TMOE_ARIA2_TIPS='设置所有协议的代理服务器地址. 如果覆盖之前设置的代理服务器, 使用 "" 即可. 您还可以针对特定的协议覆盖此选项, 即使用 --http-proxy, --https-proxy 和 --ftp-proxy 选项. 此设置将会影响所有下载. 代理服务器地址的格式为 [http://][USER:PASSWORD@]HOST[:PORT].'
         ;;
     02)
-        TMOE_ARIA2_OPTION_01="36881-36999"
-        TMOE_ARIA2_OPTION_02="6881-6999"
-        TMOE_ARIA2_GREP_NAME='listen-port'
-        TMOE_ARIA2_TIPS='BT监听端口, 当端口被屏蔽时使用, 默认:6881-6999'
+        TMOE_ARIA2_GREP_NAME='all-proxy-user'
+        TMOE_ARIA2_TIPS='设置所有协议的代理服务器用户名'
         ;;
     03)
-        TMOE_ARIA2_OPTION_01="56881-56999"
-        TMOE_ARIA2_OPTION_02="6881-6999"
-        TMOE_ARIA2_GREP_NAME='min-split-size'
-        TMOE_ARIA2_TIPS='默认:6881-6999\n设置 BT 下载的 TCP 端口. 多个端口可以使用逗号 "," 分隔, 例如: 6881,6885. 您还可以使用短横线 "-" 表示范围: 6881-6999, 或可以一起使用: 6881-6889, 6999'
+        TMOE_ARIA2_GREP_NAME='all-proxy-passwd'
+        TMOE_ARIA2_TIPS='设置所有协议的代理服务器密码'
+        ;;
+    04)
+        TMOE_ARIA2_OPTION_01="tunnel"
+        TMOE_ARIA2_OPTION_02="get"
+        TMOE_ARIA2_GREP_NAME='proxy-method'
+        TMOE_ARIA2_TIPS='设置用来请求代理服务器的方法. 方法可设置为 GET 或 TUNNEL. HTTPS 下载将忽略此选项并总是使用 TUNNEL.'
+        ;;
+    05)
+        TMOE_ARIA2_OPTION_01='192.168.1.1'
+        TMOE_ARIA2_OPTION_02='192.168.0.1'
+        TMOE_ARIA2_GREP_NAME='no-proxy'
+        TMOE_ARIA2_TIPS='设置不使用代理服务器的主机名, 域名, 包含或不包含子网掩码的网络地址, 多个使用逗号分隔.'
+        ;;
+    06)
+        TMOE_ARIA2_OPTION_01='192.168.1.1:8443'
+        TMOE_ARIA2_OPTION_02='192.168.0.1:443'
+        TMOE_ARIA2_GREP_NAME='https-proxy'
+        ;;
+    07)
+        TMOE_ARIA2_GREP_NAME='https-proxy-user'
+        ;;
+    08)
+        TMOE_ARIA2_GREP_NAME='https-proxy-passwd'
+        ;;
+    09)
+        TMOE_ARIA2_OPTION_01='192.168.1.1:8021'
+        TMOE_ARIA2_OPTION_02='192.168.0.1:8821'
+        TMOE_ARIA2_GREP_NAME='ftp-proxy'
+        ;;
+    10)
+        TMOE_ARIA2_GREP_NAME='ftp-proxy-user'
+        ;;
+    11)
+        TMOE_ARIA2_GREP_NAME='ftp-proxy-passwd'
+        ;;
+    esac
+    ##############################
+    if [ "${TMOE_ARIA2_SETTINGS_MODEL}" = "01" ]; then
+        tmoe_aria2_settings_model_01
+    elif [ "${TMOE_ARIA2_SETTINGS_MODEL}" = "02" ]; then
+        tmoe_aria2_settings_model_02
+    fi
+    press_enter_to_return
+    ${RETURN_TO_WHERE}
+}
+######################
+###############
+tmoe_aria2_logs() {
+    TMOE_ARIA2_OPTION_01='true'
+    TMOE_ARIA2_OPTION_02='false'
+    TMOE_ARIA2_SETTINGS_MODEL='01'
+    RETURN_TO_WHERE='tmoe_aria2_logs'
+    TMOE_OPTION=$(whiptail --title "日志与输出信息" --menu "您想要修改哪项配置？\nWhich conf do you want to modify?" 0 50 0 \
+        "00" "Return to previous menu 返回上级菜单" \
+        "01" "conf-path 配置文件路径" \
+        "02" "daemon 后台运行" \
+        "03" "log 日志文件" \
+        "04" "console-log-level 控制台日志级别" \
+        "05" "log-level 日志级别" \
+        "06" "enable-color 终端输出使用颜色" \
+        "07" "show-console-readout 显示控制台输出" \
+        "08" "summary-interval 下载摘要输出间隔" \
+        "09" "quiet 禁用控制台输出" \
+        "10" "truncate-console-readout 缩短控制台输出内容" \
+        "11" "stop 自动关闭时间" \
+        "12" "deferred-input 延迟加载" \
+        "13" "download-result 下载结果" \
+        "14" "human-readable 控制台可读输出" \
+        3>&1 1>&2 2>&3)
+    ##############################
+    case "${TMOE_OPTION}" in
+    00 | "") configure_aria2_rpc_server ;;
+    01)
+        TMOE_ARIA2_OPTION_01="/usr/local/etc/tmoe-linux/aria2/aria2.conf"
+        TMOE_ARIA2_OPTION_02="${HOME}/.aria2/aria2.conf"
+        TMOE_ARIA2_GREP_NAME='conf-path'
+        TMOE_ARIA2_TIPS='默认为${HOME}/.aria2/aria2.conf'
+        ;;
+    02)
+        TMOE_ARIA2_GREP_NAME='daemon'
+        TMOE_ARIA2_TIPS='默认为false,建议保持false状态'
+        ;;
+    03)
+        TMOE_ARIA2_OPTION_01="-"
+        TMOE_ARIA2_OPTION_02=""
+        TMOE_ARIA2_GREP_NAME='log'
+        TMOE_ARIA2_TIPS='日志文件的路径. 如果设置为 "-", 日志则写入到 stdout. 如果设置为空字符串(""), 日志将不会记录到磁盘上.'
+        ;;
+    04)
+        TMOE_ARIA2_OPTION_01="debug"
+        TMOE_ARIA2_OPTION_02="info"
+        TMOE_ARIA2_OPTION_03="notice"
+        TMOE_ARIA2_OPTION_04="warn"
+        TMOE_ARIA2_SETTINGS_MODEL='02'
+        TMOE_ARIA2_GREP_NAME='console-log-level'
+        TMOE_ARIA2_TIPS='默认为notice'
+        ;;
+    05)
+        TMOE_ARIA2_OPTION_01="debug"
+        TMOE_ARIA2_OPTION_02="info"
+        TMOE_ARIA2_OPTION_03="notice"
+        TMOE_ARIA2_OPTION_04="warn"
+        TMOE_ARIA2_SETTINGS_MODEL='02'
+        TMOE_ARIA2_GREP_NAME='log-level'
+        TMOE_ARIA2_TIPS='可选值：debug, info, notice, warn , error. 默认: debug'
+        ;;
+    06)
+        TMOE_ARIA2_GREP_NAME='enable-color'
+        TMOE_ARIA2_TIPS='默认为true'
+        ;;
+    07)
+        TMOE_ARIA2_GREP_NAME='show-console-readout'
+        TMOE_ARIA2_TIPS='默认为true'
+        ;;
+    08)
+        TMOE_ARIA2_OPTION_01="0"
+        TMOE_ARIA2_OPTION_02="60"
+        TMOE_ARIA2_GREP_NAME='summary-interval'
+        TMOE_ARIA2_TIPS='设置下载进度摘要的输出间隔(秒). 设置为 0 禁止输出.'
+        ;;
+    09)
+        TMOE_ARIA2_GREP_NAME='quiet'
+        TMOE_ARIA2_TIPS='默认为false'
+        ;;
+    10)
+        TMOE_ARIA2_GREP_NAME='truncate-console-readout'
+        TMOE_ARIA2_TIPS='缩短控制台输出的内容在一行中.'
+        ;;
+    11)
+        TMOE_ARIA2_OPTION_01="60"
+        TMOE_ARIA2_OPTION_02="0"
+        TMOE_ARIA2_GREP_NAME='stop'
+        TMOE_ARIA2_TIPS='在此选项设置的时间(秒)后关闭应用. 如果设置为 0, 此功能将禁用.'
+        ;;
+    12)
+        TMOE_ARIA2_GREP_NAME='deferred-input'
+        TMOE_ARIA2_TIPS='如果设置为"true", aria2 在启动时不会读取 --input-file 选项设置的文件中的所有 URI 地址, 而是会在之后需要时按需读取. 如果输入文件中包含大量要下载的 URI, 此选项可以减少内存的使用. 如果设置为"false", aria2 会在启动时读取所有的 URI. 当 -save-session 使用时将会禁用 --deferred-input 选项.'
+        ;;
+    13)
+        TMOE_ARIA2_OPTION_01="hide"
+        TMOE_ARIA2_OPTION_02="default"
+        TMOE_ARIA2_GREP_NAME='download-result'
+        TMOE_ARIA2_TIPS='此选项将修改下载结果的格式. 如果设置为"default"(默认), 将打印 GID, 状态, 平均下载速度和路径/URI. 如果涉及多个文件, 仅打印第一个请求文件的路径/URI, 其余的将被忽略. 如果设置为"full"(完整), 将打印 GID, 状态, 平均下载速度, 下载进度和路径/URI. 其中, 下载进度和路径/URI 将会每个文件打印一行. 如果设置为"hide"(隐藏), 下载结果将会隐藏.'
+        ;;
+    14)
+        TMOE_ARIA2_GREP_NAME='human-readable'
+        TMOE_ARIA2_TIPS='在控制台输出可读格式的大小和速度 (例如, 1.2Ki, 3.4Mi).'
+        ;;
+    esac
+    ##############################
+    if [ "${TMOE_ARIA2_SETTINGS_MODEL}" = "01" ]; then
+        tmoe_aria2_settings_model_01
+    elif [ "${TMOE_ARIA2_SETTINGS_MODEL}" = "02" ]; then
+        tmoe_aria2_settings_model_02
+    fi
+    press_enter_to_return
+    ${RETURN_TO_WHERE}
+}
+######################
+################
+# cat http.conf| grep '^#2' | sed 's@#2@@' |sed "s@^@TMOE_ARIA2_TIPS='@" |sed "s@\$@\'\;\;@" >002
+#paste -d ' ' 001 002 | sed 's@233@\n@g' >003
+tmoe_aria2_rpc_server_and_tls() {
+    TMOE_ARIA2_OPTION_01='true'
+    TMOE_ARIA2_OPTION_02='false'
+    TMOE_ARIA2_SETTINGS_MODEL='01'
+    RETURN_TO_WHERE='tmoe_aria2_rpc_server_and_tls'
+    TMOE_OPTION=$(whiptail --title "RPC & TLS" --menu "您想要修改哪项配置？\nWhich conf do you want to modify?" 0 50 0 \
+        "00" "Return to previous menu 返回上级菜单" \
+        "01" "rpc-secret RPC 令牌密钥（token secret）" \
+        "02" "enable-rpc 启用JSON-RPC/XML-RPC 服务器" \
+        "03" "rpc-allow-origin-all 允许所有来源(接受所有远程请求)" \
+        "04" "rpc-listen-all 在所有网卡上监听" \
+        "05" "rpc-secure  启用SSL/TLS 加密" \
+        "06" "rpc-certificate  在 RPC 服务中启用 SSL/TLS 加密时的证书文件" \
+        "07" "rpc-private-key  在 RPC 服务中启用 SSL/TLS 加密时的私钥文件" \
+        "08" "check-certificate  证书校验" \
+        "09" "ca-certificate  ca证书路径" \
+        "10" "min-tls-version 最低 TLS 版本" \
+        "11" "event-poll  事件轮询方式,不同系统默认值不同" \
+        "12" "rpc-max-request-size 最大请求大小" \
+        "13" "rpc-save-upload-metadata 保存上传的种子文件" \
+        3>&1 1>&2 2>&3)
+    ##############################
+    case "${TMOE_OPTION}" in
+    00 | "") configure_aria2_rpc_server ;;
+    01)
+        OPENSSL_RANDOM_KEY=$(openssl rand -base64 33)
+        TMOE_ARIA2_OPTION_01="${OPENSSL_RANDOM_KEY}"
+        TMOE_ARIA2_OPTION_02="123456"
+        TMOE_ARIA2_GREP_NAME='rpc-secret'
+        TMOE_ARIA2_TIPS='第一个选项为openssl随机生成的33位字符，v1.18.4新增功能, 取代 --rpc-user 和 --rpc-passwd 选项'
+        ;;
+    02)
+        TMOE_ARIA2_GREP_NAME='enable-rpc'
+        TMOE_ARIA2_TIPS='默认:false,web-gui控制需要开启此功能'
+        ;;
+    03)
+        TMOE_ARIA2_GREP_NAME='rpc-allow-origin-all'
+        TMOE_ARIA2_TIPS='默认:false,在 RPC 响应头增加 Access-Control-Allow-Origin 字段, 值为 *'
+        ;;
+    04)
+        TMOE_ARIA2_GREP_NAME='rpc-listen-all'
+        TMOE_ARIA2_TIPS='在所有网络适配器上监听 JSON-RPC/XML-RPC 的请求, 如果设置为"false", 仅监听本地网络的请求.'
+        ;;
+    05)
+        TMOE_ARIA2_GREP_NAME='rpc-secure'
+        TMOE_ARIA2_TIPS='经测试无法使用自签名证书，若启用此选项，则建议您使用Let’s Encrypt等组织签发的有效证书\n启用加密后 ，RPC 将通过 SSL/TLS 加密传输, RPC 服务需要使用 https 或者 wss 协议连接\nRPC 客户端需要使用 https 协议连接服务器. 对于 WebSocket 客户端, 使用 wss 协议. 使用 --rpc-certificate 和 --rpc-private-key 选项设置服务器的证书和私钥.'
+        ;;
+    06)
+        TMOE_ARIA2_OPTION_01="/www/server/ca-certificates.pem"
+        TMOE_ARIA2_OPTION_02="./ca-certificates.pem"
+        TMOE_ARIA2_GREP_NAME='rpc-certificate'
+        TMOE_ARIA2_TIPS=' 使用 PEM 格式时，您必须通过 --rpc-private-key 指定私钥'
+        ;;
+    07)
+        TMOE_ARIA2_OPTION_01="/www/server/ca-certificates.key"
+        TMOE_ARIA2_OPTION_02="./ca-certificates.key"
+        TMOE_ARIA2_GREP_NAME='rpc-private-key'
+        TMOE_ARIA2_TIPS=' 默认未加载'
+        ;;
+    08)
+        TMOE_ARIA2_GREP_NAME='check-certificate'
+        TMOE_ARIA2_TIPS=' 默认为false'
+        ;;
+    09)
+        TMOE_ARIA2_OPTION_01="/usr/share/ca-certificates/mozilla/SecureTrust_CA.crt"
+        TMOE_ARIA2_OPTION_02="./ca-certificates.crt"
+        TMOE_ARIA2_GREP_NAME='ca-certificate'
+        TMOE_ARIA2_TIPS=' 默认未启用'
+        ;;
+    10)
+        TMOE_ARIA2_OPTION_01="TLSv1.3"
+        TMOE_ARIA2_OPTION_02="TLSv1.2"
+        TMOE_ARIA2_GREP_NAME='min-tls-version'
+        TMOE_ARIA2_TIPS='指定启用的最低 SSL/TLS 版本.'
+        ;;
+    11)
+        TMOE_ARIA2_OPTION_01="epoll"
+        TMOE_ARIA2_OPTION_02="select"
+        TMOE_ARIA2_OPTION_03="kqueue"
+        TMOE_ARIA2_OPTION_04="port"
+        TMOE_ARIA2_SETTINGS_MODEL='02'
+        TMOE_ARIA2_GREP_NAME='event-poll'
+        TMOE_ARIA2_TIPS='设置事件轮训的方法. 可选的值包括 epoll, kqueue, port, poll 和 select. 对于 epoll, kqueue, port 和 poll, 只有系统支持时才可用. 最新的 Linux 支持 epoll. 各种 *BSD 系统包括 Mac OS X 支持 kqueue. Open Solaris 支持 port. 默认值根据您使用的操作系统不同而不同.'
+        ;;
+    12)
+        TMOE_ARIA2_OPTION_01="10M"
+        TMOE_ARIA2_OPTION_02="2M"
+        TMOE_ARIA2_GREP_NAME='rpc-max-request-size'
+        TMOE_ARIA2_TIPS='设置 JSON-RPC/XML-RPC 最大的请求大小. 如果 aria2 检测到请求超过设定的字节数, 会直接取消连接.'
+        ;;
+    13)
+        TMOE_ARIA2_GREP_NAME='rpc-save-upload-metadata'
+        TMOE_ARIA2_TIPS='在 dir 选项设置的目录中保存上传的种子文件或 Metalink 文件. 文件名包括 SHA-1 哈希后的元数据和扩展名两部分. 对于种子文件, 扩展名为 '.torrent'. 对于 Metalink 为 '.meta4'. 如果此选项设置为"false", 通过 aria2.addTorrent() 或 aria2.addMetalink() 方法添加的下载将无法通过 --save-session 选项保存.'
+        ;;
+    esac
+    ##############################
+    if [ "${TMOE_ARIA2_SETTINGS_MODEL}" = "01" ]; then
+        tmoe_aria2_settings_model_01
+    elif [ "${TMOE_ARIA2_SETTINGS_MODEL}" = "02" ]; then
+        tmoe_aria2_settings_model_02
+    fi
+    press_enter_to_return
+    ${RETURN_TO_WHERE}
+}
+######################
+tmoe_aria2_ftp_and_metalink() {
+    TMOE_ARIA2_OPTION_01='true'
+    TMOE_ARIA2_OPTION_02='false'
+    TMOE_ARIA2_SETTINGS_MODEL='01'
+    RETURN_TO_WHERE='tmoe_aria2_ftp_and_metalink'
+    TMOE_OPTION=$(whiptail --title "FTP和metalink" --menu "您想要修改哪项配置？\nWhich conf do you want to modify?" 0 50 0 \
+        "00" "Return to previous menu 返回上级菜单" \
+        "01" "ftp-user FTP默认用户名" \
+        "02" "ftp-passwd FTP默认密码" \
+        "03" "ftp-pasv 被动模式" \
+        "04" "ftp-type 传输类型" \
+        "05" "ftp-reuse-connection 连接复用" \
+        "06" "ssh-host-key-md SSH 公钥校验和" \
+        "07" "metalink-preferred-protocol 首选使用协议" \
+        "08" "metalink-enable-unique-protocol 仅使用唯一协议" \
+        "09" "follow-metalink 下载 Metalink 中的文件" \
+        "10" "metalink-base-uri 基础 URI" \
+        "11" "metalink-language 语言" \
+        "12" "metalink-location 首选服务器位置" \
+        "13" "metalink-os 操作系统" \
+        "14" "metalink-version 版本号" \
+        "15" "pause-metadata 种子文件下载完后暂停" \
+        3>&1 1>&2 2>&3)
+    ##############################
+    case "${TMOE_OPTION}" in
+    00 | "") tmoe_aria2_download_protocol ;;
+    01)
+        TMOE_ARIA2_OPTION_02="anonymous"
+        TMOE_ARIA2_OPTION_01="admin"
+        TMOE_ARIA2_GREP_NAME='ftp-user'
+        TMOE_ARIA2_TIPS='默认为anonymous'
+        ;;
+    02)
+        TMOE_ARIA2_OPTION_01="123456"
+        TMOE_ARIA2_OPTION_02="password"
+        TMOE_ARIA2_GREP_NAME='ftp-passwd'
+        TMOE_ARIA2_TIPS='如果 URI 中包含用户名单不包含密码, aria2 首先会从 .netrc 文件中获取密码. 如果在 .netrc 文件中找到密码, 则使用该密码. 否则, 使用此选项设置的密码.'
+        ;;
+    03)
+        TMOE_ARIA2_GREP_NAME='ftp-pasv'
+        TMOE_ARIA2_TIPS='在 FTP 中使用被动模式. 如果设置为"false", 则使用主动模式. 此选项不适用于 SFTP 传输.'
+        ;;
+    04)
+        TMOE_ARIA2_OPTION_01="ascii"
+        TMOE_ARIA2_OPTION_02="binary"
+        TMOE_ARIA2_GREP_NAME='ftp-type'
+        TMOE_ARIA2_TIPS='默认为binary'
+        ;;
+    05)
+        TMOE_ARIA2_GREP_NAME='ftp-reuse-connection'
+        TMOE_ARIA2_TIPS='默认为true'
+        ;;
+    06)
+        TMOE_ARIA2_OPTION_01="md5=7a27be7e19d2bc264707dc128b15faab"
+        TMOE_ARIA2_OPTION_02="sha-1=b030503d4de4539dc7885e6f0f5e256704edf4c3"
+        TMOE_ARIA2_GREP_NAME='ssh-host-key-md'
+        TMOE_ARIA2_TIPS='设置 SSH 主机公钥的校验和. TYPE 为哈希类型. 支持的哈希类型为 sha-1 和 md5. DIGEST 是十六进制摘要. 例如: sha-1=b030503d4de4539dc7885e6f0f5e256704edf4c3. 此选项可以在使用 SFTP 时用来验证服务器的公钥. 如果此选项不设置, 即保留默认, 不会进行任何验证。'
+        ;;
+    07)
+        TMOE_ARIA2_OPTION_01="http"
+        TMOE_ARIA2_OPTION_02="https"
+        TMOE_ARIA2_OPTION_03="ftp"
+        TMOE_ARIA2_OPTION_04="none"
+        TMOE_ARIA2_SETTINGS_MODEL='02'
+        TMOE_ARIA2_GREP_NAME='metalink-preferred-protocol'
+        TMOE_ARIA2_TIPS='指定首选使用的协议. 可以设置为 "http", "https", "ftp" 或"none". 设置为"none"时禁用此选项.'
+        ;;
+    08)
+        TMOE_ARIA2_GREP_NAME='metalink-enable-unique-protocol'
+        TMOE_ARIA2_TIPS='如果一个 Metalink 文件可用多种协议, 并且此选项设置为"true", aria2 将只会使用其中一种. 使用 --metalink-preferred-protocol 参数指定首选的协议.'
+        ;;
+    09)
+        TMOE_ARIA2_OPTION_03="mem"
+        TMOE_ARIA2_OPTION_04=""
+        TMOE_ARIA2_SETTINGS_MODEL='02'
+        TMOE_ARIA2_GREP_NAME='follow-metalink'
+        TMOE_ARIA2_TIPS='如果设置为"true"或"mem"(仅内存), 当后缀为 .meta4 或 .metalink 或内容类型为 application/metalink4+xml 或 application/metalink+xml 的文件下载完成时, aria2 将按 Metalink 文件读取并下载该文件中提到的文件. 如果设置为"mem", 该 Metalink 文件将不会写入到磁盘中, 而仅会存储在内存中. 如果设置为"false", 则 .metalink 文件会下载到磁盘中, 但不会按 Metalink 文件读取并且其中的文件不会进行下载.'
+        ;;
+    10)
+        TMOE_ARIA2_OPTION_01="meta://"
+        TMOE_ARIA2_OPTION_02="metalink://"
+        TMOE_ARIA2_GREP_NAME='metalink-base-uri'
+        TMOE_ARIA2_TIPS='指定基础 URI 以便解析本地磁盘中存储的 Metalink 文件里 metalink:url 和 metalink:metaurl 中的相对 URI 地址. 如果 URI 表示的为目录, 最后需要以 / 结尾.'
+        ;;
+    11)
+        TMOE_ARIA2_OPTION_01="zh"
+        TMOE_ARIA2_OPTION_02="en"
+        TMOE_ARIA2_GREP_NAME='metalink-language'
+        TMOE_ARIA2_TIPS='默认为空'
+        ;;
+    12)
+        TMOE_ARIA2_OPTION_01="jp"
+        TMOE_ARIA2_OPTION_02="cn"
+        TMOE_ARIA2_GREP_NAME='metalink-location'
+        TMOE_ARIA2_TIPS='首选服务器所在的位置. 可以使用逗号分隔的列表, 例如: jp,us.'
+        ;;
+    13)
+        TMOE_ARIA2_OPTION_01="linux"
+        TMOE_ARIA2_OPTION_02="windows"
+        TMOE_ARIA2_GREP_NAME='metalink-os'
+        TMOE_ARIA2_TIPS='下载文件的操作系统.'
+        ;;
+    14)
+        TMOE_ARIA2_OPTION_01="latest"
+        TMOE_ARIA2_OPTION_02=""
+        TMOE_ARIA2_GREP_NAME='metalink-version'
+        TMOE_ARIA2_TIPS='下载文件的版本号.'
+        ;;
+    15)
+        TMOE_ARIA2_GREP_NAME='pause-metadata'
+        TMOE_ARIA2_TIPS='当种子文件下载完成后暂停后续的下载. 在 aria2 中有 3 种种子文件的下载类型: (1) 下载 .torrent 文件. (2) 通过磁链下载的种子文件. (3) 下载 Metalink 文件. 这些种子文件下载完后会根据文件内容继续进行下载. 此选项会暂停这些后续的下载. 此选项仅当 --enable-rpc 选项启用时生效.'
+        ;;
+    esac
+    ##############################
+    if [ "${TMOE_ARIA2_SETTINGS_MODEL}" = "01" ]; then
+        tmoe_aria2_settings_model_01
+    elif [ "${TMOE_ARIA2_SETTINGS_MODEL}" = "02" ]; then
+        tmoe_aria2_settings_model_02
+    fi
+    press_enter_to_return
+    ${RETURN_TO_WHERE}
+}
+######################
+tmoe_aria2_http() {
+    TMOE_ARIA2_OPTION_01='true'
+    TMOE_ARIA2_OPTION_02='false'
+    TMOE_ARIA2_SETTINGS_MODEL='01'
+    RETURN_TO_WHERE='tmoe_aria2_http'
+    TMOE_OPTION=$(whiptail --title "HTTP" --menu "您想要修改哪项配置？\nWhich conf do you want to modify?" 0 50 0 \
+        "00" "Return to previous menu 返回上级菜单" \
+        "01" "user-agent 自定义 User Agent" \
+        "02" "http-accept-gzip 支持 GZip" \
+        "03" "connect-timeout 连接超时时间" \
+        "04" "dry-run 模拟运行" \
+        "05" "lowest-speed-limit 最小速度限制" \
+        "06" "max-file-not-found 文件未找到重试次数" \
+        "07" "netrc-path .netrc 文件路径" \
+        "08" "no-netrc 禁用 netrc" \
+        "09" "out 文件名" \
+        "10" "remote-time 获取服务器文件时间" \
+        "11" "reuse-uri URI 复用" \
+        "12" "server-stat-of 服务器状态保存文件" \
+        "13" "server-stat-timeout 服务器状态超时" \
+        "14" "stream-piece-selector 分片选择算法" \
+        "15" "uri-selector URI 选择算法" \
+        "16" "http-auth-challenge 认证质询" \
+        "17" "http-no-cache 禁用缓存" \
+        "18" "http-user HTTP 默认用户名" \
+        "19" "http-passwd HTTP 默认密码" \
+        "20" "referer 请求来源" \
+        "21" "enable-http-keep-alive 启用持久连接" \
+        "22" "enable-http-pipelining 启用 HTTP 管线化" \
+        "23" "header 自定义请求头" \
+        "24" "save-cookies Cookies 保存路径" \
+        "25" "use-head 启用 HEAD 方法" \
+        3>&1 1>&2 2>&3)
+    ##############################
+    case "${TMOE_OPTION}" in
+    00 | "") tmoe_aria2_download_protocol ;;
+    01)
+        # TMOE_ARIA2_OPTION_01="netdisk;5.2.7;PC;PC-Windows；6.2.9200;WindowsBaiduYunGuanJia"
+        TMOE_ARIA2_OPTION_01='netdisk;6.7.4.2;PC;PC-Windows;10.0.17763;WindowsBaiduYunGuanJia'
+        TMOE_ARIA2_OPTION_02='Opera/9.80 (Windows NT 6.0) Presto/2.12.388 Version/12.14'
+        TMOE_ARIA2_OPTION_03='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36'
+        TMOE_ARIA2_OPTION_04='Mozilla/5.0 (Symbian/3; Series60/5.2 NokiaN8-00/012.002; Profile/MIDP-2.1 Configuration/CLDC-1.1 ) AppleWebKit/533.4 (KHTML, like Gecko) NokiaBrowser/7.3.0 Mobile Safari/533.4 3gpp-gba'
+        TMOE_ARIA2_SETTINGS_MODEL='02'
+        TMOE_ARIA2_GREP_NAME='user-agent'
+        TMOE_ARIA2_TIPS=' User Agent中文名为用户代理，简称 UA，它是一个特殊字符串头，使得服务器能够识别客户使用的操作系统及版本、CPU 类型、浏览器及版本、浏览器渲染引擎、浏览器语言、浏览器插件等'
+        ;;
+    02)
+        TMOE_ARIA2_GREP_NAME='http-accept-gzip'
+        TMOE_ARIA2_TIPS='如果远程服务器的响应头中包含 Content-Encoding: gzip 或 Content-Encoding: deflate , 将发送包含 Accept: deflate, gzip 的请求头并解压缩响应.'
+        ;;
+    03)
+        TMOE_ARIA2_OPTION_01='0'
+        TMOE_ARIA2_OPTION_02='60'
+        TMOE_ARIA2_GREP_NAME='connect-timeout'
+        TMOE_ARIA2_TIPS='设置建立 HTTP/FTP/代理服务器 连接的超时时间(秒). 当连接建立后, 此选项不再生效, 请使用 --timeout 选项.'
+        ;;
+    04)
+        TMOE_ARIA2_GREP_NAME='dry-run'
+        TMOE_ARIA2_TIPS='如果设置为"true", aria2 将仅检查远程文件是否存在而不会下载文件内容. 此选项仅对 HTTP/FTP 下载生效. 如果设置为 true, BT 下载将会直接取消.'
+        ;;
+    05)
+        TMOE_ARIA2_OPTION_01='1K'
+        TMOE_ARIA2_OPTION_02='0'
+        TMOE_ARIA2_GREP_NAME='lowest-speed-limit'
+        TMOE_ARIA2_TIPS='当下载速度低于此选项设置的值(B/s) 时将会关闭连接. 0 表示不设置最小速度限制. 您可以增加数值的单位 K 或 M (1K = 1024, 1M = 1024K). 此选项不会影响 BT 下载.'
+        ;;
+    06)
+        TMOE_ARIA2_OPTION_01='10'
+        TMOE_ARIA2_OPTION_02='0'
+        TMOE_ARIA2_GREP_NAME='max-file-not-found'
+        TMOE_ARIA2_TIPS='如果 aria2 从远程 HTTP/FTP 服务器收到 "文件未找到" 的状态超过此选项设置的次数后下载将会失败. 设置为 0 将会禁用此选项. 此选项仅影响 HTTP/FTP 服务器. 重试时同时会记录重试次数, 所以也需要设置 --max-tries 这个选项.'
+        ;;
+    07)
+        TMOE_ARIA2_OPTION_01="${HOME}/.aria2/.netrc"
+        TMOE_ARIA2_OPTION_02='./.netrc'
+        TMOE_ARIA2_GREP_NAME='netrc-path'
+        TMOE_ARIA2_TIPS='.默认为./.netrc'
+        ;;
+    08)
+        TMOE_ARIA2_GREP_NAME='no-netrc'
+        TMOE_ARIA2_TIPS='默认为false'
+        ;;
+    09)
+        TMOE_ARIA2_OPTION_01="不建议在配置文件中设定此参数"
+        TMOE_ARIA2_OPTION_02=''
+        TMOE_ARIA2_GREP_NAME='out'
+        TMOE_ARIA2_TIPS='下载文件的文件名. 其总是相对于 --dir 选项中设置的路径. 当使用 --force-sequential 参数时此选项无效.'
+        ;;
+    10)
+        TMOE_ARIA2_GREP_NAME='remote-time'
+        TMOE_ARIA2_TIPS='从 HTTP/FTP 服务获取远程文件的时间戳, 如果可用将设置到本地文件'
+        ;;
+    11)
+        TMOE_ARIA2_GREP_NAME='reuse-uri'
+        TMOE_ARIA2_TIPS='当所有给定的 URI 地址都已使用, 继续使用已经使用过的 URI 地址.'
+        ;;
+    12)
+        TMOE_ARIA2_OPTION_01=".server_stat"
+        TMOE_ARIA2_OPTION_02=''
+        TMOE_ARIA2_GREP_NAME='server-stat-of'
+        TMOE_ARIA2_TIPS='指定用来保存服务器状态的文件名. 您可以使用 --server-stat-if 参数读取保存的数据.'
+        ;;
+    13)
+        TMOE_ARIA2_OPTION_01="100"
+        TMOE_ARIA2_OPTION_02='60'
+        TMOE_ARIA2_GREP_NAME='server-stat-timeout'
+        TMOE_ARIA2_TIPS='指定服务器状态的过期时间 (单位为秒).'
+        ;;
+    14)
+        TMOE_ARIA2_OPTION_01="inorder"
+        TMOE_ARIA2_OPTION_02="default"
+        TMOE_ARIA2_OPTION_03="random"
+        TMOE_ARIA2_OPTION_04="geom"
+        TMOE_ARIA2_SETTINGS_MODEL='02'
+        TMOE_ARIA2_GREP_NAME='stream-piece-selector'
+        TMOE_ARIA2_TIPS='指定 HTTP/FTP 下载使用的分片选择算法. 分片表示的是并行下载时固定长度的分隔段. 如果设置为"default"(默认), aria2 将会按减少建立连接数选择分片. 由于建立连接操作的成本较高, 因此这是合理的默认行为. 如果设置为"inorder"(顺序), aria2 将选择索引最小的分片. 索引为 0 时表示为文件的第一个分片. 这将有助于视频的边下边播. --enable-http-pipelining 选项有助于减少重连接的开销. 请注意, aria2 依赖于 --min-split-size 选项, 所以有必要对 --min-split-size 选项设置一个合理的值. 如果设置为"random"(随机), aria2 将随机选择一个分片. 就像"inorder"(顺序)一样, 依赖于 --min-split-size 选项. 如果设置为"geom"(几何), aria2 会先选择索引最小的分片, 然后会为之前选择的分片保留指数增长的空间. 这将减少建立连接的次数, 同时文件开始部分将会先行下载. 这也有助于视频的边下边播.'
+        ;;
+    15)
+        TMOE_ARIA2_OPTION_01="inorder"
+        TMOE_ARIA2_OPTION_02=""
+        TMOE_ARIA2_OPTION_03="feedback"
+        TMOE_ARIA2_OPTION_04="adaptive"
+        TMOE_ARIA2_GREP_NAME='uri-selector'
+        TMOE_ARIA2_TIPS='指定 URI 选择的算法. 可选的值包括"inorder"(按顺序), "feedback"(反馈） 和 "adaptive"(自适应). 如果设置为"inorder", URI 将按列表中出现的顺序使用. 如果设置为"feedback", aria2 将根据之前的下载速度选择 URI 列表中下载速度最快的服务器. 同时也将有效跳过无效镜像. 之前统计的下载速度将作为服务器状态文件的一部分, 参见 --server-stat-of 和 --server-stat-if 选项. 如果设置为"adaptive", 将从最好的镜像和保留的连接里选择一项. 补充说明, 其返回的镜像没有被测试过, 同时如果每个镜像都已经被测试过时, 返回的镜像还会被重新测试. 否则, 其将不会选择其他镜像. 例如"feedback", 其使用服务器状态文件.'
+        ;;
+    16)
+        TMOE_ARIA2_GREP_NAME='http-auth-challenge'
+        TMOE_ARIA2_TIPS='仅当服务器需要时才发送 HTTP 认证请求头. 如果设置为"false", 每次都会发送认证请求头. 例外: 如果用户名和密码包含在 URI 中, 将忽略此选项并且每次都会发送认证请求头.'
+        ;;
+    17)
+        TMOE_ARIA2_GREP_NAME='http-no-cache'
+        TMOE_ARIA2_TIPS='发送的请求头中将包含 Cache-Control: no-cache 和 Pragma: no-cache header 以避免内容被缓存. 如果设置为"false", 上述请求头将不会发送, 同时您也可以使用 --header 选项将 Cache-Control 请求头添加进去.'
+        ;;
+    18)
+        TMOE_ARIA2_OPTION_01="root"
+        TMOE_ARIA2_OPTION_02="user"
+        TMOE_ARIA2_GREP_NAME='http-user'
+        TMOE_ARIA2_TIPS='默认为空'
+        ;;
+    19)
+        TMOE_ARIA2_OPTION_01="password"
+        TMOE_ARIA2_OPTION_02="123456"
+        TMOE_ARIA2_GREP_NAME='http-passwd'
+        TMOE_ARIA2_TIPS='默认为空'
+        ;;
+    20)
+        TMOE_ARIA2_OPTION_01=""
+        TMOE_ARIA2_OPTION_02="*"
+        TMOE_ARIA2_GREP_NAME='referer'
+        TMOE_ARIA2_TIPS='设置 HTTP 请求来源 (Referer). 此选项将影响所有 HTTP/HTTPS 下载. 如果设置为 *, 请求来源将设置为下载链接. 此选项可以配合 --parameterized-uri 选项使用.'
+        ;;
+    21)
+        TMOE_ARIA2_GREP_NAME='enable-http-keep-alive'
+        TMOE_ARIA2_TIPS='启用 HTTP/1.1 持久连接.'
+        ;;
+    22)
+        TMOE_ARIA2_GREP_NAME='enable-http-pipelining'
+        TMOE_ARIA2_TIPS='启用 HTTP/1.1 管线化.'
+        ;;
+    23)
+        TMOE_ARIA2_OPTION_01="X-B: 9J1"
+        TMOE_ARIA2_OPTION_02="X-A: b78"
+        TMOE_ARIA2_GREP_NAME='header'
+        TMOE_ARIA2_TIPS='增加 HTTP 请求头内容.'
+        ;;
+    24)
+        TMOE_ARIA2_OPTION_01="${HOME}/sd/Download/cookies.sqlite"
+        TMOE_ARIA2_OPTION_02="${HOME}/sd/Download/cookies.txt"
+        TMOE_ARIA2_GREP_NAME='save-cookies'
+        TMOE_ARIA2_TIPS='以 Mozilla/Firefox(1.x/2.x)/Netscape 格式将 Cookies 保存到文件中. 如果文件已经存在, 将被覆盖. 会话过期的 Cookies 也将会保存, 其过期时间将会设置为 0.'
+        ;;
+    25)
+        TMOE_ARIA2_GREP_NAME='use-head'
+        TMOE_ARIA2_TIPS='第一次请求 HTTP 服务器时使用 HEAD 方法.'
         ;;
     esac
     ##############################
@@ -535,7 +1154,7 @@ tmoe_aria2_bt_and_pt() {
     TMOE_ARIA2_OPTION_02='false'
     TMOE_ARIA2_SETTINGS_MODEL='01'
     RETURN_TO_WHERE='tmoe_aria2_bt_and_pt'
-    TMOE_OPTION=$(whiptail --title "端口" --menu "您想要修改哪项配置？\nWhich conf do you want to modify?" 0 50 0 \
+    TMOE_OPTION=$(whiptail --title "BT AND PT" --menu "您想要修改哪项配置？\nWhich conf do you want to modify?" 0 50 0 \
         "00" "Return to previous menu 返回上级菜单" \
         "01" "更新BT-tracker服务器" \
         "02" "follow-torrent 当下载的是一个种子(以.torrent结尾)时, 自动开始BT任务" \
@@ -575,7 +1194,7 @@ tmoe_aria2_bt_and_pt() {
         3>&1 1>&2 2>&3)
     ##############################
     case "${TMOE_OPTION}" in
-    00 | "") configure_aria2_rpc_server ;;
+    00 | "") tmoe_aria2_download_protocol ;;
     01)
         TMOE_ARIA2_GREP_NAME='bt-tracker'
         # TMOE_ARIA2_TIPS='如果服务器地址在 --bt-exclude-tracker 选项中, 其将不会生效.\nwiki: BitTorrent tracker（中文可称：BT服务器、tracker服务器等）是帮助BitTorrent协议在节点与节点之间做连接的服务器。\nBitTorrent客户端下载一开始就要连接到tracker，从tracker获得其他客户端IP地址后，才能连接到其他客户端下载。在传输过程中，也会一直与tracker通信，上传自己的信息，获取其它客户端的信息。\n一般BitTorrent客户端可以手动添加tracker。tracker也会提供很多端口。\n由于tracker对BT下载起到客户端协调和调控的重要作用，所以一旦被封锁会严重影响BT下载。'
@@ -587,7 +1206,7 @@ tmoe_aria2_bt_and_pt() {
         TMOE_ARIA2_OPTION_04=""
         TMOE_ARIA2_SETTINGS_MODEL='02'
         TMOE_ARIA2_GREP_NAME='follow-torrent'
-        TMOE_ARIA2_TIPS='默认:true,如果设置为"true"或"mem", 当后缀为 .torrent 或内容类型为 application/x-bittorrent 的文件下载完成时, aria2 将按种子文件读取并下载该文件中提到的文件. 如果设置为"mem"(仅内存), 该种子文件将不会写入到磁盘中, 而仅会存储在内存中. 如果设置为"false"(否), 则 .torrent 文件会下载到磁盘中, 但不会按种子文件读取并且其中的文件不会进行下载.'
+        TMOE_ARIA2_TIPS='选项4为空，默认:true,如果设置为"true"或"mem", 当后缀为 .torrent 或内容类型为 application/x-bittorrent 的文件下载完成时, aria2 将按种子文件读取并下载该文件中提到的文件. 如果设置为"mem"(仅内存), 该种子文件将不会写入到磁盘中, 而仅会存储在内存中. 如果设置为"false"(否), 则 .torrent 文件会下载到磁盘中, 但不会按种子文件读取并且其中的文件不会进行下载.'
         ;;
     03)
         TMOE_ARIA2_OPTION_01="0"
@@ -904,12 +1523,147 @@ custom_aria2_config() {
 }
 #############
 #############
+other_tmoe_aria2_conf() {
+    TMOE_OPTION=$(whiptail --title "RROTOCAL" --menu "您想要修改哪项配置？\nWhich conf do you want to modify?" 0 50 0 \
+        "1" "update 更新" \
+        "2" "DEL conf删除配置文件" \
+        "3" "DEL ariang删除AriaNG" \
+        "0" "Back 返回" \
+        3>&1 1>&2 2>&3)
+    ##############################
+    case "${TMOE_OPTION}" in
+    0 | "") configure_aria2_rpc_server ;;
+    1) upgrade_tmoe_aria2_tool ;;
+    2) del_tmoe_aria2_conf ;;
+    3) del_ariang ;;
+    esac
+    ##############################
+    press_enter_to_return
+    other_tmoe_aria2_conf
+}
+############
+del_ariang() {
+    rm -rv /usr/share/applications/ariang.desktop /usr/local/bin/startariang ${TMOE_ARIA2_PATH}/ariang_dark.html
+}
+###########
+tmoe_aria2_faq() {
+    TMOE_OPTION=$(whiptail --title "ARIA2_FAQ" --menu "您有哪些疑问？\nWhat questions do you have?" 0 50 0 \
+        "1" "如何连接" \
+        "2" "AriaNG地址与RPC服务地址的区别" \
+        "3" "如何搭建属于自己的AriaNG网页" \
+        "4" "查看文档" \
+        "5" "Aria2是什么" \
+        "6" "如何突破线程数" \
+        "0" "Back 返回" \
+        3>&1 1>&2 2>&3)
+    ##############################
+    case "${TMOE_OPTION}" in
+    0 | "") configure_aria2_rpc_server ;;
+    1) how_to_connect_to_aria2_rpc_server ;;
+    2) what_is_the_different_of_ariang_and_rpc ;;
+    3) how_to_build_an_aria_ng_page ;;
+    4) view_aria2_man ;;
+    5) what_is_the_aria2 ;;
+    6) aria2_17_threads ;;
+    esac
+    ##############################
+    press_enter_to_return
+    tmoe_aria2_faq
+}
+############
+view_aria2_man() {
+    cat <<-EOF
+   ① 您可以前往官网阅览详细文档资料
+http://aria2.github.io/manual/en/html/aria2c.html
+   ② 您亦可直接在终端下输man aria2c
+EOF
+    xdg-open http://aria2.github.io/manual/en/html/aria2c.html 2>/dev/null
+    man aria2c
+}
+############
+aria2_17_threads() {
+    cat <<-EOF
+Q:如何突破16线程数的限制？
+A:请自行编译aria2
+
+Q:更高的线程真的能带来更快的速度吗？
+A：从理论上来说，应该没错。
+
+我曾经也和你持有相同的看法，可是后来，我发现在更多情况下，这种做法弊大于利。
+
+一是不道德(商业公司除外)，盲目且无节制地调高线程数，会增大服务器的负担。
+服务器酱变得更容易坏掉了呢！笑ˋ( ° ▽、° ) 
+
+二是你的ip可能会被服务器防火墙拉黑，反而导致下载速度缓慢，甚至无法下载，最终适得其反。
+
+EOF
+}
+#############
+what_is_the_aria2() {
+    cat <<-EOF
+  Aria2是一款优秀且强大的开源下载工具。
+  在十多年的光阴中，集成了众多开发者的精华，是谓集大成者之作。
+  若您此前对此工具不甚了解，则初次研读文档资料，或将花费数小时。
+  我们不应该因它的文档中某些术语晦涩难懂而抛弃了它，更不能就此否定了开发者们的努力。
+  希望大家多给用爱发电的开发者们一点包容。 (。・ω・。)
+  ------------------------------------
+  Aria2本身就已经足够强大了，借助第三方插件更是如虎添翼。
+  借助油猴脚本，你可以快速下载xx盘，爬取Pxx站，下载Bxx站视频等。
+  利用HOOK功能+脚本，能实现下载完成后自动上传至网盘，并同时删除已下载的本地文件。
+  利用第三方RSS插件，实现RSS订阅下载。
+  举个例子：比如某部番剧名为《转生成为史莱姆第二季》,你订阅了某个B..啊◑﹏◐不对，你订阅了某个正版资源交流网站的rss链接。
+  每当字幕组更新时，aria2就能开始自动下载。
+  ------------------------------------
+EOF
+}
+##############
+how_to_build_an_aria_ng_page() {
+    cat <<-EOF
+   ${YELLOW}https://github.com/mayswind/AriaNg/releases${RESET}
+   1.前往大魔王mAysWINd的AriaNG发布页面，下载文件，解压后得到${BLUE}index.html${RESET}
+   新建一个gitee公开仓库，并上传index.html。
+   2.点击“服务”，选择“gitee pages”,此时不要选择“强制使用https”。若您的Aria2 rpc服务未开启TLS加密，则有可能导致RPC服务无法正常连接。
+   3.最后在AriaNG设置中输入Aria2的RPC服务地址，端口号以及密钥 
+   图文说明${YELLOW}https://gitee.com/mo2/a2${RESET}
+EOF
+}
+############
+how_to_connect_to_aria2_rpc_server() {
+    ARIA2_RPC_PORT=$(cat ${TMOE_ARIA2_FILE} | grep 'rpc-listen-port=' | cut -d '=' -f 2)
+    echo "本机默认RPC服务地址为ws://localhost:${ARIA2_RPC_PORT}/jsonrpc"
+    echo The LAN RPC address 局域网RPC服务地址 ws://$(ip -4 -br -c a | tail -n 1 | cut -d '/' -f 1 | cut -d 'P' -f 2 | awk '{print $1}'):${ARIA2_RPC_PORT}/jsonrpc
+    echo The WAN RPC address 外网RPC服务地址 ws://$(curl -sL ip.sb | head -n 1):${ARIA2_RPC_PORT}/jsonrpc
+    echo '若存在兼容问题，则可将websocket(ws)替换为http'
+    cat <<-'EOF'
+    AriaNG网页地址
+    http://mo2.gitee.io/a2
+    http://aria2.me
+    http://aria2.net
+EOF
+    echo "您可以使用浏览器来打开${YELLOW}AriaNG网页地址${RESET}，并在AriaNG设置页面中连接至${RESET}RPC服务${RESET}(需输入地址，端口和密钥)"
+    echo Q:为什么无法连接？明明RPC地址，密钥和端口都没错
+    echo A:防火墙放行${ARIA2_RPC_PORT}端口
+}
+###########
+what_is_the_different_of_ariang_and_rpc() {
+    cat <<-EOF
+    AriaNG是大魔王mAysWINd开发的Aria2 web前端，你也可以把它理解成客户端，而Aria2 RPC则是服务端。
+    你可以通过客户端来访问服务端。
+    也就是说，你在浏览器里输入了AriaNG地址，访问到了客户端，然后在客户端里输入RPC服务端地址，最后才连接到了服务端。
+    
+    在web服务器上搭建AriaNG网页，表面上看起来它同时具备了服务端和客户端两种属性。
+    但从功能上来看，它仍然是客户端。
+
+    举个例子：如果你想要喝水的话，那么你是直接到水源处去喝，还是去自来水厂喝，亦或是通过某样工具（比如说水龙头这种东西）去喝呢？
+    相信你一定会有自己的见解。
+EOF
+}
+##############
 tmoe_aria2_download_protocol() {
     TMOE_OPTION=$(whiptail --title "RROTOCAL" --menu "您想要修改哪项配置？\nWhich conf do you want to modify?" 0 50 0 \
         "1" "BT/磁力+PT种子" \
         "2" "HTTP" \
-        "3" "FTP" \
-        "4" "metalink" \
+        "3" "FTP与metalink" \
         "0" "Back 返回" \
         3>&1 1>&2 2>&3)
     ##############################
@@ -917,8 +1671,7 @@ tmoe_aria2_download_protocol() {
     0 | "") configure_aria2_rpc_server ;;
     1) tmoe_aria2_bt_and_pt ;;
     2) tmoe_aria2_http ;;
-    3) tmoe_aria2_ftp ;;
-    4) tmoe_aria2_metalink ;;
+    3) tmoe_aria2_ftp_and_metalink ;;
     esac
     ##############################
     press_enter_to_return
@@ -937,15 +1690,12 @@ configure_aria2_rpc_server() {
         "5" "edit manually手动编辑" \
         "6" "connection网络连接与下载限制" \
         "7" "port端口" \
-        "8" "RPC服务器" \
+        "8" "RPC服务器与TLS加密" \
         "9" "HTTP/BT/FTP:下载协议" \
         "10" "logs & info日志与输出信息" \
-        "11" "TLS加密与安全" \
-        "12" "事件HOOK" \
-        "13" "proxy代理" \
-        "14" "other其它选项" \
-        "15" "update 更新" \
-        "16" "DEL 删除配置文件" \
+        "11" "事件HOOK" \
+        "12" "proxy代理" \
+        "13" "other其它选项" \
         "0" "exit 退出" \
         3>&1 1>&2 2>&3)
     ##############################
@@ -958,14 +1708,12 @@ configure_aria2_rpc_server() {
     5) edit_tmoe_aria2_config_manually ;;
     6) tmoe_aria2_connection_threads ;;
     7) tmoe_aria2_port ;;
-    8) tmoe_aria2_rpc_server ;;
+    8) tmoe_aria2_rpc_server_and_tls ;;
     9) tmoe_aria2_download_protocol ;;
     10) tmoe_aria2_logs ;;
-    11) tmoe_aria2_tls_crypt ;;
-    12) tmoe_aria2_hook ;;
-    13) tmoe_aria2_proxy ;;
-    14) other_tmoe_aria2_conf ;;
-    15) del_tmoe_aria2_conf ;;
+    11) tmoe_aria2_hook ;;
+    12) tmoe_aria2_proxy ;;
+    13) other_tmoe_aria2_conf ;;
     esac
     ##############################
     press_enter_to_return
@@ -1065,7 +1813,10 @@ tmoe_aria2_onekey() {
     if [ ! -e "aria2.session" ]; then
         echo '' >aria2.session
     fi
-    cp aria2.conf aria2.conf.bak 2>/dev/null
+    if [ -e "aria2.conf" ]; then
+        cp -vf aria2.conf aria2.conf.bak 2>/dev/null
+    fi
+
     #cp -pvf ${HOME}/gitee/linux-gitee/.config/aria2.conf ./
     aria2c --allow-overwrite=true -o aria2.conf 'https://gitee.com/mo2/linux/raw/master/.config/aria2.conf'
     if [ -e "/tmp/.Chroot-Container-Detection-File" ] || [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
@@ -1082,20 +1833,255 @@ After=network.target
 
 [Service]
 PIDFile=/run/aria2.pid
-ExecStart=su ${CURRENT_USER_NAME} -c  "cd /usr/local/etc/tmoe-linux/aria2 &&aria2c --conf-path=/usr/local/etc/tmoe-linux/aria2/aria2.conf"
-ExecStop=/bin/kill \$MAINPID ;su ${CURRENT_USER_NAME} -c "pkill aria2c"
+ExecStart=su - ${CURRENT_USER_NAME} -c  "cd /usr/local/etc/tmoe-linux/aria2 &&aria2c --conf-path=/usr/local/etc/tmoe-linux/aria2/aria2.conf"
+ExecStop=/bin/kill \$MAINPID ;su - ${CURRENT_USER_NAME} -c "pkill aria2c"
 RestartSec=always
 
 [Install]
 WantedBy=multi-user.target
 	EndOFaria
+
+    cd /etc/init.d
+    cat >aria2 <<-EndOFaria
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          aria2
+# Required-Start:    $network $local_fs $remote_fs
+# Required-Stop:     $remote_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: High speed download utility
+### END INIT INFO
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+DAEMON=/usr/bin/aria2c
+NAME="aria2"
+DESC="High speed download utility"
+PIDFILE=/run/aria2.pid
+
+
+[ -x "\$DAEMON" ] || exit 0
+
+. /lib/lsb/init-functions
+
+DAEMON_OPTS=""
+
+
+case "\$1" in
+  start)
+    echo "Starting aria2c... "
+    su - ${CURRENT_USER_NAME} -c  "cd /usr/local/etc/tmoe-linux/aria2 && aria2c --conf-path=/usr/local/etc/tmoe-linux/aria2/aria2.conf & "
+    ;;
+  stop)
+    echo "Stopping aria2c... "
+    pkill aria2c
+     log_daemon_msg "Stopping $DESC" "$NAME"
+     start-stop-daemon --stop --quiet --oknodo --pidfile $PIDFILE --remove-pidfile --exec $DAEMON
+     log_end_msg $?
+
+    ;;
+  status)
+  status_of_proc -p $PIDFILE "\$DAEMON" "\$NAME" && exit 0 || exit \$?
+    ;;
+  *)
+    echo "Usage: /etc/init.d/aria2 {start|stop|status}"
+    exit 1
+    ;;
+esac
+exit 0
+	EndOFaria
+    chmod +x aria2
     #############
-    #  aria2_restart
+    if [ ! -e "/usr/local/bin/startariang" ]; then
+        creat_ariang_script
+    fi
+
+    #if [ ! -e "/usr/share/applications/ariang.desktop" ]; then
+    creat_ariang_script
+    cd /usr/share/applications/
+    creat_aria_ng_desktop_link
+    # fi
     ########################################
+    cd ${TMOE_ARIA2_PATH}
+    if [ ! -e "dht.dat" ]; then
+        aria2c --allow-overwrite=true -o dht.dat https://gitee.com/mo2/linux/raw/master/.config/dht.dat
+        chmod 666 dht.dat
+    fi
+    if [ ! -e "dht6.dat" ]; then
+        aria2c --allow-overwrite=true -o dht6.dat https://gitee.com/mo2/linux/raw/master/.config/dht6.dat
+        chmod 666 dht6.dat
+    fi
+    creat_aria2_hook_script
     upgrade_tmoe_aria2_tool
+    aria2_restart
     press_enter_to_return
     configure_aria2_rpc_server
     #此处的返回步骤并非多余
+}
+#########
+aria2_restart() {
+    pkill aria2c
+    echo '正在启动aria2 rpc服务...'
+    su - ${CURRENT_USER_NAME} -c "cd /usr/local/etc/tmoe-linux/aria2 && nohup aria2c --conf-path=/usr/local/etc/tmoe-linux/aria2/aria2.conf &>/dev/null &"
+}
+#############
+creat_aria2_hook_script() {
+    cd ${TMOE_ARIA2_PATH}
+    craet_aria2_auto_move_sh
+    chmod +x auto_move_media_files.sh
+    creat_auto_upload_onedrive_sh
+    chmod +x auto_upload_onedrive.sh
+}
+###############
+creat_auto_upload_onedrive_sh() {
+    cat >auto_upload_onedrive.sh <<-'EOF'
+    #!/bin/bash
+    #https://github.com/MoeClub/OneList/tree/master/OneDriveUploader
+    #https://www.moerats.com/archives/1006/
+    #需配合萌咖大佬的OnedriveUploader使用
+    GID="$1"
+    FileNum="$2"
+    File="$3"
+    MaxSize="15728640"
+    Thread="10"                             #默认3线程，自行修改，服务器配置不好的话，不建议太多
+    Block="20"                              #默认分块20m，自行修改
+    RemoteDIR="/share/Downloads/"           #上传到Onedrive的路径，默认为根目录
+    LocalDIR="${HOME}/sd/Download/"         #Aria2下载目录，记得最后面加上/
+    Uploader="/usr/bin/OneDriveUploader"    #上传的程序完整路径
+    Config="${HOME}/.aria2/auth.json"  #初始化生成的配置auth.json绝对路径，参考第3步骤生成的路径
+
+    if [[ -z $(echo "$FileNum" | grep -o '[0-9]*' | head -n1) ]]; then FileNum='0'; fi
+    if [[ "$FileNum" -le '0' ]]; then exit 0; fi
+    if [[ "$#" != '3' ]]; then exit 0; fi
+
+    function LoadFile() {
+        if [[ ! -e "${Uploader}" ]]; then return; fi
+        IFS_BAK=$IFS
+        IFS=$'\n'
+        tmpFile="$(echo "${File/#$LocalDIR/}" | cut -f1 -d'/')"
+        FileLoad="${LocalDIR}${tmpFile}"
+        if [[ ! -e "${FileLoad}" ]]; then return; fi
+        ItemSize=$(du -s "${FileLoad}" | cut -f1 | grep -o '[0-9]*' | head -n1)
+        if [[ -z "$ItemSize" ]]; then return; fi
+        if [[ "$ItemSize" -ge "$MaxSize" ]]; then
+            echo -ne "\033[33m${FileLoad} \033[0mtoo large to spik.\n"
+            return
+        fi
+        ${Uploader} -c "${Config}" -t "${Thread}" -b "${Block}" -s "${FileLoad}" -r "${RemoteDIR}"
+        if [[ $? == '0' ]]; then
+            rm -rf "${FileLoad}"
+        fi
+        IFS=$IFS_BAK
+    }
+    LoadFile
+EOF
+}
+#################################
+craet_aria2_auto_move_sh() {
+    #https://github.com/liberize/liberize.github.com/blob/e9b48700c4457463a82e100d0df23df9ead16576/_posts/2015-07-26-turn-raspberry-pi-into-a-downloader.md
+    cat >auto_move_media_files.sh <<-'EOF'
+        #!/bin/bash
+
+        if [ "$(ps -o comm= $PPID)" = 'aria2c' ]; then
+            shift 2
+        fi
+
+        if [ "$1" = "" ]; then
+            echo "usage: $(basename "$0") <file>"
+            exit 0
+        fi
+
+        VIDEO_DIR=${HOME}/视频
+        AUDIO_DIR=${HOME}/音乐
+        IMAGE_DIR=${HOME}/图片
+
+        FILE_PATH="$1"
+        DIR_PATH="$(dirname "$FILE_PATH")"
+        FILE_NAME="$(basename "$FILE_PATH")"
+        FILE_NAME="${FILE_NAME%.*}"
+
+        auto_move() {
+            case "$1" in
+            *.avi | *.mpg | *.wmv | *.mp4 | *.mov | *.mkv | *.rm | *.rmvb | *.3gp | *.flv | *.swf | *.srt | *.ass)
+                echo "moving $1 to $VIDEO_DIR ..."
+                mv "$1" "$VIDEO_DIR"
+                ;;
+            *.mp3 | *.wav | *.wma | *.mid | *.ape | *.flac)
+                echo "moving $1 to $AUDIO_DIR ..."
+                mv "$1" "$AUDIO_DIR"
+                ;;
+            *.jpg | *.jpeg | *.png | *.bmp | *.gif | *.tiff | *.psd | *.ico | *.svg)
+                echo "moving $1 to $IMAGE_DIR ..."
+                mv "$1" "$IMAGE_DIR"
+                ;;
+            esac
+        }
+
+        cd "$DIR_PATH"
+        case "$FILE_PATH" in
+        *.tar.bz2 | *.tbz2) tar jxvf "$FILE_PATH" -C "$FILE_NAME" ;;
+        *.tar.gz | *.tgz) tar zxvf "$FILE_PATH" -C "$FILE_NAME" ;;
+        *.bz2) bunzip2 -c "$FILE_PATH" >"$FILE_NAME" ;;
+        *.rar) mkdir -p "$FILE_NAME" && cd "$FILE_NAME" && unrar x "$FILE_PATH" && cd .. ;;
+        *.gz) gunzip -c "$FILE_PATH" >"$FILE_NAME" ;;
+        *.tar) tar xvf "$FILE_PATH" -C "$FILE_NAME" ;;
+        *.zip) unzip -d "$FILE_NAME" "$FILE_PATH" ;;
+        *.7z) 7z x -o"$FILE_NAME" "$FILE_PATH" ;;
+        *)
+            auto_move "$FILE_PATH"
+            exit 0
+            ;;
+        esac
+
+        [ "$?" != 0 ] && exit 1
+
+        rm -f "$FILE_PATH"
+        for file in $(find "$FILE_NAME" -type f); do
+            auto_move $file
+        done
+EOF
+}
+###############
+creat_ariang_script() {
+    ARIANG_DARK_INDEX_FILE="${TMOE_ARIA2_PATH}/ariang_dark.html"
+    if [ ! -e "${ARIANG_DARK_INDEX_FILE}" ]; then
+        cd /tmp
+        git clone -b dark --depth=1 https://gitee.com/mo2/a2.git .ARIA_NG_DARK_INDEX
+        mv .ARIA_NG_DARK_INDEX/index.html ${ARIANG_DARK_INDEX_FILE}
+        chmod +r ${ARIANG_DARK_INDEX_FILE}
+        rm -rf .ARIA_NG_DARK_INDEX
+    fi
+    cd /usr/local/bin
+    cat >startariang <<-'EOF'
+    #!/bin/sh
+    set -e
+    TMOE_ARIA2_PATH='/usr/local/etc/tmoe-linux/aria2'
+    if [ ! $(pgrep aria2c) ]; then
+        cd ${TMOE_ARIA2_PATH}
+        aria2c --conf-path=${TMOE_ARIA2_PATH}/aria2.conf &
+    fi
+
+    ARIANG_DARK_INDEX_FILE='/usr/local/etc/tmoe-linux/aria2/ariang_dark.html'
+    if [ -r ${ARIANG_DARK_INDEX_FILE} ]; then
+        /usr/bin/sensible-browser ${ARIANG_DARK_INDEX_FILE}
+    fi
+EOF
+    chmod +x startariang
+}
+############
+creat_aria_ng_desktop_link() {
+    cat >ariang.desktop <<-'EOF'
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=AriaNg
+Comment=AriaNg, a modern web frontend making aria2 easier to use.
+Keywords=aria2;web-frontend;index;html;download;webgui;javascript;ui;ariang;web
+Exec=/usr/local/bin/startariang
+Icon=wine-internet-explorer
+Terminal=false
+Categories=Network;
+EOF
+    chmod +r ariang.desktop
 }
 ############
 main "$@"

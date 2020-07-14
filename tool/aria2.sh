@@ -1425,7 +1425,7 @@ update_aria2_bt_tracker() {
         cd trackerslist
     else
         cd trackerslist
-        git reset --hard origin/master
+        git reset --hard
         git pull || git pull --depth=1 origin master --allow-unrelated-histories
     fi
     list=$(cat ./trackers_all.txt | awk NF | sed ":a;N;s/\n/,/g;ta")
@@ -2094,6 +2094,7 @@ creat_aria_ng_desktop_link() {
     if [ ! -e "/usr/share/icons/ariang.png" ]; then
         aria2c --allow-overwrite=true -d /usr/share/icons -o ariang.png https://gitee.com/mo2/linux/raw/master/.mirror/ariang.png
     fi
+    catimg "/usr/share/icons/ariang.png" 2>/dev/null
     cat >ariang.desktop <<-'EOF'
 [Desktop Entry]
 Type=Application

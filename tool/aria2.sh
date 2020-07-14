@@ -1535,7 +1535,7 @@ custom_aria2_config() {
 #############
 #############
 other_tmoe_aria2_conf() {
-    TMOE_OPTION=$(whiptail --title "RROTOCAL" --menu "您想要修改哪项配置？\nWhich conf do you want to modify?" 0 50 0 \
+    TMOE_OPTION=$(whiptail --title "其它选项" --menu "您想要修改哪项配置？\nWhich conf do you want to modify?" 0 50 0 \
         "1" "update 更新" \
         "2" "DEL conf删除配置文件" \
         "3" "DEL ariang删除AriaNG" \

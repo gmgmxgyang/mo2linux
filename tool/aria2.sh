@@ -507,13 +507,13 @@ tmoe_aria2_port() {
     case "${TMOE_OPTION}" in
     00 | "") configure_aria2_rpc_server ;;
     01)
-        TMOE_ARIA2_OPTION_01="16800"
+        TMOE_ARIA2_OPTION_01="2086"
         TMOE_ARIA2_OPTION_02="6800"
         TMOE_ARIA2_OPTION_03="8443"
-        TMOE_ARIA2_OPTION_04="18443"
+        TMOE_ARIA2_OPTION_04="2096"
         TMOE_ARIA2_SETTINGS_MODEL='02'
         TMOE_ARIA2_GREP_NAME='rpc-listen-port'
-        TMOE_ARIA2_TIPS='RPC监听端口, 端口被占用时可以修改, 默认:6800'
+        TMOE_ARIA2_TIPS='RPC监听端口, 端口被占用时可以修改, 默认:6800\n若您需要套Cloudflare CDN,则需要选用CF支持的端口'
         ;;
     02)
         TMOE_ARIA2_OPTION_01="36881-36999"

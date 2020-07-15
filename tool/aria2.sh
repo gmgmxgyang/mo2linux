@@ -236,7 +236,7 @@ tmoe_aria2_file() {
         TMOE_ARIA2_OPTION_01="5M"
         TMOE_ARIA2_OPTION_02="10M"
         TMOE_ARIA2_GREP_NAME='no-file-allocation-limit'
-        TMOE_ARIA2_TIPS='不对比此参数设置大小的分配文件. 您可以增加数值的单位 K 或 M (1K = 1024, 1M = 1024K).'
+        TMOE_ARIA2_TIPS='不分配尺寸小于该参数值的文件. 您可以增加数值的单位 K 或 M (1K = 1024, 1M = 1024K).'
         ;;
     18)
         TMOE_ARIA2_GREP_NAME='no-conf'

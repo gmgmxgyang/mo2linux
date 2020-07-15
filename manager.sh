@@ -2270,7 +2270,7 @@ check_tmoe_linux_container_rec_pkg_file_and_git() {
 ########################
 debian_sid_arm64_xfce_recovery_package() {
 	echo "即将为您下载至${DOWNLOAD_PATH}"
-	echo '下载大小1.1G,解压后约占3.6G'
+	echo '下载大小1.5G,解压后约占5G'
 	#echo "2020-07-11凌晨注：忘记给LibreOffice打补丁了 (ㄒoㄒ)/~~，请在安装完成后使用tmoe-linux tool给libreoffice打补丁"
 	CORRENTSHA256SUM='f838d3151ce9019ecc74c214d5e23952ca9de2a74406a04d457840ebbe0e21e9' #DevSkim: ignore DS173237
 	BRANCH_NAME='arm64'

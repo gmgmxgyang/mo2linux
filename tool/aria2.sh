@@ -236,7 +236,7 @@ tmoe_aria2_file() {
         TMOE_ARIA2_OPTION_01="5M"
         TMOE_ARIA2_OPTION_02="10M"
         TMOE_ARIA2_GREP_NAME='no-file-allocation-limit'
-        TMOE_ARIA2_TIPS='不对比此参数设置大小小的分配文件. 您可以增加数值的单位 K 或 M (1K = 1024, 1M = 1024K).'
+        TMOE_ARIA2_TIPS='不对比此参数设置大小的分配文件. 您可以增加数值的单位 K 或 M (1K = 1024, 1M = 1024K).'
         ;;
     18)
         TMOE_ARIA2_GREP_NAME='no-conf'
@@ -562,7 +562,7 @@ tmoe_aria2_proxy() {
     case "${TMOE_OPTION}" in
     00 | "") configure_aria2_rpc_server ;;
     01)
-        TMOE_ARIA2_OPTION_01='http://192.168.1.1:8022'
+        TMOE_ARIA2_OPTION_01='http://192.168.1.1:7890'
         TMOE_ARIA2_OPTION_02='http://192.168.0.1:8088'
         TMOE_ARIA2_GREP_NAME='all-proxy'
         TMOE_ARIA2_TIPS='设置所有协议的代理服务器地址. 如果覆盖之前设置的代理服务器, 使用 "" 即可. 您还可以针对特定的协议覆盖此选项, 即使用 --http-proxy, --https-proxy 和 --ftp-proxy 选项. 此设置将会影响所有下载. 代理服务器地址的格式为 [http://][USER:PASSWORD@]HOST[:PORT].'

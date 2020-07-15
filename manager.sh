@@ -2270,14 +2270,14 @@ check_tmoe_linux_container_rec_pkg_file_and_git() {
 ########################
 debian_sid_arm64_xfce_recovery_package() {
 	echo "即将为您下载至${DOWNLOAD_PATH}"
-	echo '下载大小1.12GB,解压后约占3.9GB'
-	echo "2020-07-11凌晨注：忘记给LibreOffice打补丁了 (ㄒoㄒ)/~~，请在安装完成后使用tmoe-linux tool给libreoffice打补丁"
-	CORRENTSHA256SUM='d6d5604bb5559336921ddb7b1055c742ce6e146a5562e965cb3967055b45f5e8' #DevSkim: ignore DS173237
+	echo '下载大小1.1G,解压后约占3.6G'
+	#echo "2020-07-11凌晨注：忘记给LibreOffice打补丁了 (ㄒoㄒ)/~~，请在安装完成后使用tmoe-linux tool给libreoffice打补丁"
+	CORRENTSHA256SUM='f838d3151ce9019ecc74c214d5e23952ca9de2a74406a04d457840ebbe0e21e9' #DevSkim: ignore DS173237
 	BRANCH_NAME='arm64'
 	TMOE_LINUX_CONTAINER_REPO_01='https://gitee.com/ak2/debian_sid_rootfs_01'
 	TMOE_LINUX_CONTAINER_REPO_02='https://gitee.com/ak2/debian_sid_rootfs_02'
 	TMOE_LINUX_CONTAINER_REPO_03='https://gitee.com/ak2/debian_sid_rootfs_03'
-	DOWNLOAD_FILE_NAME='debian-sid+xfce4.14-2020-07-10_16-00-rootfs_bak.tar.xz'
+	DOWNLOAD_FILE_NAME='debian-sid_arm64+xfce4.14-2020-07-15_14-06-rootfs_bak.tar.xz'
 	check_tmoe_linux_container_rec_pkg_file_and_git
 }
 ##################
@@ -2306,7 +2306,7 @@ install_debian_sid_gnu_linux_container() {
 	DISTRO_CODE='sid'
 	BETA_SYSTEM=$(whiptail --title "Install sid via tuna station or DL rec PKG?" --menu "您想要通过软件源镜像站来安装，还是在线下载恢复包来安装?" 0 50 0 \
 		"1" "netinstall(通过软件源在线安装)" \
-		"2" "arm64 xfce4.14桌面+音乐app,1.13G-20200710" \
+		"2" "arm64 xfce4.14桌面+音乐app,1.1G-20200715" \
 		"0" "Return to previous menu 返回上级菜单" \
 		3>&1 1>&2 2>&3)
 	##############################

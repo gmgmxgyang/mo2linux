@@ -2483,6 +2483,18 @@ verify_sha256sum() {
 	fi
 }
 ##########################
+copy_tmoe_locale_file_to_container() {
+	TMOE_LOCALE_FILE="${HOME}/.config/tmoe-linux/locale.txt"
+	if [ -e "${TMOE_LOCALE_FILE}" ]; then
+		TMOE_LOCALE_NEW_PATH="${DEBIAN_CHROOT}/usr/local/etc/tmoe-linux"
+		mkdir -p ${TMOE_LOCALE_NEW_PATH}
+		cp -f ${TMOE_LOCALE_FILE} ${TMOE_LOCALE_NEW_PATH}
+		TMOE_LANG=$(cat ${TMOE_LOCALE_FILE} | head -n 1)
+		PROOT_LANG=$(cat $(command -v debian) | grep LANG= | cut -d '"' -f 2 | cut -d '=' -f 2 | tail -n 1)
+		sed -i "s@${PROOT_LANG}@${TMOE_LANG}@" $(command -v debian)
+	fi
+}
+########################
 un_xz_debian_recovery_kit() {
 	echo "正在解压${DOWNLOAD_FILE_NAME}，Decompressing recovery package, please be patient."
 	#pv "debian_2020-03-11_17-31.tar.xz" | tar -PpJx 2>/dev/null
@@ -2506,6 +2518,7 @@ un_xz_debian_recovery_kit() {
 	#echo '即将为您启动vnc服务，您需要输两遍（不可见的）密码。'
 	#echo "When prompted for a view-only password, it is recommended that you enter 'n'"
 	#echo '如果提示view-only,那么建议您输n,选择权在您自己的手上。'
+	copy_tmoe_locale_file_to_container
 	echo '请输入6至8位的VNC密码'
 	switch_termux_rootfs_to_linux
 	source ${PREFIX}/bin/startvnc

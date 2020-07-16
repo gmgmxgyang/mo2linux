@@ -6357,7 +6357,8 @@ tmoe_download_class() {
 		whiptail --title "documents" --menu \
 			"Which software do you want to install?" 0 50 0 \
 			"1" "🍨aria2(linux平台超强文件下载器)" \
-			"2" "📉百度网盘(x64,提供文件的网络备份,同步和分享服务)" \
+			"2" "🖼work_crawler:漫畫、小説下載工具@kanasimi" \
+			"3" "📉百度网盘(x64,提供文件的网络备份,同步和分享服务)" \
 			"0" "Return to previous menu 返回上级菜单" \
 			3>&1 1>&2 2>&3
 	)
@@ -6365,11 +6366,74 @@ tmoe_download_class() {
 	case "${TMOE_APP}" in
 	0 | "") other_software ;;
 	1) tmoe_aria2_manager ;;
-	2) install_baidu_netdisk ;;
+	2) start_kanasimi_work_crawler ;;
+	3) install_baidu_netdisk ;;
 	esac
 	##########################
 	press_enter_to_return
 	tmoe_download_class
+}
+####################
+start_kanasimi_work_crawler() {
+	RETURN_TO_WHERE='check_kanasimi_work_crawler'
+	install_nodejs
+	check_kanasimi_work_crawler
+}
+###############
+install_nodejs() {
+	NON_DEBIAN='false'
+	DEPENDENCY_01=""
+	DEPENDENCY_02=""
+	if [ ! $(command -v 7za) ]; then
+		if [ "${LINUX_DISTRO}" = "debian" ]; then
+			DEPENDENCY_01="p7zip-full"
+		else
+			DEPENDENCY_01="p7zip"
+		fi
+	fi
+	if [ ! $(command -v node) ]; then
+		DEPENDENCY_02="nodejs"
+	fi
+	if [ ! -z "${DEPENDENCY_01}" ] && [ ! -z "${DEPENDENCY_02}" ]; then
+		beta_features_quick_install
+	fi
+
+	if [ ! $(command -v npm) ]; then
+		bash -c "$(curl -Lv https://npmjs.org/install.sh | sed 's@registry.npmjs.org@registry.npm.taobao.org@g')"
+		cat <<-'EOF'
+			npm config set registry https://registry.npm.taobao.org
+			npm config set disturl https://npm.taobao.org/dist
+			npm config set electron_mirror https://npm.taobao.org/mirrors/electron/
+		EOF
+		echo "${YELLOW}是否需要将npm官方源更换为淘宝源[Y/n]${RESET} "
+		echo "更换后可以加快国内的下载速度,${YELLOW}按回车键确认，输n拒绝。${RESET}"
+		echo "If you are not living in the People's Republic of China, then please type ${YELLOW}n${RESET} .[Y/n]"
+		do_you_want_to_continue
+		npm config set registry https://registry.npm.taobao.org
+		npm config set disturl https://npm.taobao.org/dist
+		npm config set electron_mirror https://npm.taobao.org/mirrors/electron/
+	fi
+}
+############
+download_kanasimi_work_crawler() {
+	cd /usr/local/bin/
+	aria2c --allow-overwrite=true -o work-i 'https://gitee.com/mo2/linux/raw/master/tool/work_crawler@kanasimi.sh'
+	chmod +x work-i
+}
+############
+check_kanasimi_work_crawler() {
+	cd /usr/local/bin/
+	if [ -e "work-i" ]; then
+		FILE_SIZE=$(du -s work-i | awk '{print $1}')
+		if ((${FILE_SIZE} < 10)); then
+			download_kanasimi_work_crawler
+		fi
+	fi
+
+	if [ ! "$(command -v work-i)" ]; then
+		download_kanasimi_work_crawler
+	fi
+	bash work-i
 }
 ####################
 download_tmoe_aria2() {

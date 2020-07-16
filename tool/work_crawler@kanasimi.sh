@@ -208,7 +208,7 @@ install_tmoe_work_crawler_electron() {
 		║   ║ software ║    ✨最新版本     ║   本地版本 🎪
 		║   ║          ║  Latest version   ║  Local version     
 		║---║----------║-------------------║--------------------
-		║ 1 ║ work     ║                      ${LOCAL_VSCODE_VERSION} 
+		║ 1 ║ work     ║                   ║${LOCAL_VSCODE_VERSION} 
 		║   ║crawler   ║${LATEST_VSCODE_VERSION} 
 
 	ENDofTable

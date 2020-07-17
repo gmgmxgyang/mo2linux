@@ -1338,7 +1338,7 @@ tmoe_aria2_bt_and_pt() {
         ;;
     27)
         TMOE_ARIA2_OPTION_01="head=100K"
-        TMOE_ARIA2_OPTION_02="tail=100k"
+        TMOE_ARIA2_OPTION_02="tail=100K"
         TMOE_ARIA2_GREP_NAME='bt-prioritize-piece'
         TMOE_ARIA2_TIPS='尝试先下载每个文件开头或结尾的分片. 此选项有助于预览文件. 参数可以包括两个关键词: head 和 tail. 如果包含两个关键词, 需要使用逗号分隔. 每个关键词可以包含一个参数, SIZE. 例如, 如果指定 head=SIZE, 每个文件的最前 SIZE 数据将会获得更高的优先级. tail=SIZE 表示每个文件的最后 SIZE 数据. SIZE 可以包含 K 或 M (1K = 1024, 1M = 1024K).'
         ;;

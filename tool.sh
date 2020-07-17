@@ -15105,12 +15105,11 @@ install_electronic_wechat() {
 	################
 	beta_features_quick_install
 	if [ -e "/opt/wechat/electronic-wechat" ] || [ "$(command -v electronic-wechat)" ]; then
-		beta_features_install_completed
+		#beta_features_install_completed
 		echo "按回车键重新安装"
 		echo "Press enter to reinstall it?"
 		do_you_want_to_continue
 	fi
-
 	non_debian_function
 	cd /tmp
 	GREP_NAME='electronic-wechat'

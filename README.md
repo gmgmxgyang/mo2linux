@@ -13,8 +13,8 @@ You can also run Gentoo, Arch and other systems in WSL.
 🍸 目前支持的容器：
 Supported containers:
 
-- [x] **Debian buster/sid**
-- [x] **Ubuntu LTS**
+- [x] **Debian**
+- [x] **Ubuntu**
 - [x] **Kali rolling**
 - [x] **Arch**
 - [x] **Fedora**
@@ -68,11 +68,11 @@ Support one-key graphical user interface installation.
 2.如下图所示，Debian sid + KDE Plasma 5 转发 X11 后，窗口显示会出现问题。  
 注：在 RDP 下此问题未复现  
 注 2：qemu 虚拟机运行的 Debian+KDE+x11vnc 也没有问题。  
-![Snipaste_2020-04-12_07-28-58.png](https://i.loli.net/2020/04/18/5g1Nn9DQpPqEhuz.png)
+![Snipaste_2020-04-12_07-28-58.png](https://images.gitee.com/uploads/images/2020/0718/103734_4fb64b1f_5617340.png)
 
 3.GNOME3 的 VNC 配置脚本也没有问题。  
 虽然在 Proot 容器上跑可能会出问题，但是换 qemu 虚拟机后就没问题了。
-![Screenshot_20200608-003126.png](https://i.loli.net/2020/06/08/IjKLvXyNfBFTMCr.png)
+![Screenshot_20200608-003126.png](https://images.gitee.com/uploads/images/2020/0718/103733_9b989b37_5617340.png)
 
 ### 支持的架构 Supported architecture
 
@@ -116,7 +116,7 @@ After restarting the system, run _powershell_ again as an administrator, then pr
 wsl --set-default-version 2
 ```
 
-[![enable](https://i.loli.net/2020/04/03/I9zdphVgMc5Zky3.png)](https://sm.ms/image/I9zdphVgMc5Zky3)  
+[![enable](https://images.gitee.com/uploads/images/2020/0718/103733_306b06df_5617340.png)](https://sm.ms/image/I9zdphVgMc5Zky3)  
 ![store](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/FLpQu0i7LbIP2K9L.png)  
 若无法连接*Microsoft Store*,那么也可以手动安装。  
 请从以下三者中选择：  
@@ -488,7 +488,7 @@ nano $(which startvnc)
 > **对 WSL2 的支持已经称得上完善了!**  
 > 最关键的地方在于脚本大量调用了 win10 原系统的程序。  
 > **在 win10 2004 下同时运行 linux 和 windows 程序的预览截图**：
-> ![GlyxZ8.png](https://s1.ax1x.com/2020/04/01/GlyxZ8.png)  
+> ![GlyxZ8.png](https://images.gitee.com/uploads/images/2020/0718/103735_8403852b_5617340.png)  
 > WSL2 与宿主机原系统（win10）的交互联动要比普通虚拟机强数倍，在 linux 子系统下可以直接调用 powershell.exe 等 windows 程序。  
 > ~~如上图所示，目前已经可以接近完美地将 win10 和 GNU/Linux 融为一体。~~
 
@@ -580,8 +580,8 @@ nano $(which startvnc)
 - 注：我仅测试了 xfce4。未测试的桌面可以配置，但可能存在无法连接的问题。
 - 特点：可以打开 X11VNC 无法打开的某些应用，但是 bug 超级多。
 - 由于 bug 实在过多，故我已经不想维护了。
-  ![Screenshot_20200507-193422_1.png](https://i.loli.net/2020/05/08/JhLxPTor1GiDgtY.png)
-  ![Screenshot_20200507-222532.png](https://i.loli.net/2020/05/08/QJp8LelVakxyqA5.png)
+  ![Screenshot_20200507-193422_1.png](https://images.gitee.com/uploads/images/2020/0718/103733_f23c0e2d_5617340.png)
+  ![Screenshot_20200507-222532.png](https://images.gitee.com/uploads/images/2020/0718/103819_3ded1b74_5617340.png)
   触控操作体验极差！建议使用蓝牙鼠标进行操作！  
   由于目前在 Android 手机上暂时无法使用 gpu 硬件渲染加速，故实际体验非常糟糕！
   不建议配置该服务!  
@@ -600,7 +600,7 @@ nano $(which startvnc)
 - 1.支持配置 X11vnc 服务, 比 XSDL 强太多。
 - 输`startx11vnc`启动，输`stopx11vnc`停止。
 - 2.支持安装窗口管理器
-  ![Snipaste_2020-05-11_21-36-18.png](https://i.loli.net/2020/05/11/ZIF7G9jApySEDeV.png)
+  ![Snipaste_2020-05-11_21-36-18.png](https://images.gitee.com/uploads/images/2020/0718/103736_846ae27a_5617340.png)
   在安装时会自动配置 vnc 服务，我没有为它们写单独的 rdp 配置步骤。
 
 ##### 2020-05-13 更新日志
@@ -678,11 +678,11 @@ nano $(which startvnc)
 - 填写完 ppa 源名称后，会自动检测 launchpad 中该软件描述页面的 gpg 密钥，并添加。接着，需要指定 ubuntu 版本代号，完成后会自动修改软件源列表。
 - 此功能对于 ubuntu 同样有效，经测试部分 ppa 软件源不包含 ubuntu 20.10 groovy 的仓库，此功能可以帮你解决手动修改/etc/apt/sources.list.d/中相关软件源列表的烦恼。
 
-##### 2020 年 07 月上旬 更新日志
+##### 2020 年 07 月 更新日志
 
 - 1.修复 qemu 模板仓库
 - 2.支持更多的 debian 容器版本，自动检测 debian12 bookworm 等未发布版本。
 - 3.多区域/语言环境配置
   ![locales](https://images.gitee.com/uploads/images/2020/0712/084930_79c38987_5617340.png "Screenshot_20200712-084151_1.png")
   ![日本語](https://images.gitee.com/uploads/images/2020/0712/084535_cf5bff2d_5617340.png "Screenshot_20200711-155224.png")
-  -4.增加 aria2 配置工具
+- 4.增加 aria2 配置工具

@@ -13,8 +13,8 @@ You can also run Gentoo, Arch and other systems in WSL.
 🍸 目前支持的容器：
 Supported containers:
 
-- [x] **Debian**
-- [x] **Ubuntu**
+- [x] **Debian stable+sid**
+- [x] **Ubuntu LTS + dev**
 - [x] **Kali rolling**
 - [x] **Arch**
 - [x] **Fedora**

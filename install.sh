@@ -243,19 +243,17 @@ echo "检测到您当前的架构为${ARCH_TYPE} ，debian system将安装至~/$
 cd ${HOME}
 
 if [ -d "${DEBIAN_FOLDER}" ]; then
-	downloaded=1
 	echo "Detected that you have debian installed 检测到您已安装debian"
 fi
 
 mkdir -p ~/${DEBIAN_FOLDER}
 
-DebianTarXz="debian-sid-rootfs.tar.xz"
+DebianTarXz="debian-sid_${ARCH_TYPE}-rootfs.tar.xz"
 
-#if [ "$downloaded" != 1 ];then
 if [ ! -f ${DebianTarXz} ]; then
 	if [ "${ARCH_TYPE}" != 'mipsel' ]; then
 		echo "正在从清华大学开源镜像站下载容器镜像"
-		echo "Downloading debian-sid-rootfs.tar.xz from Tsinghua University Open Source Mirror Station."
+		echo "Downloading ${DebianTarXz} from Tsinghua University Open Source Mirror Station."
 		TTIME=$(curl -L "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/sid/${ARCH_TYPE}/default/" | grep date | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)
 		if [ "${LINUX_DISTRO}" != 'iSH' ]; then
 			aria2c -x 5 -k 1M --split 5 -o ${DebianTarXz} "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/sid/${ARCH_TYPE}/default/${TTIME}rootfs.tar.xz"
@@ -268,7 +266,7 @@ if [ ! -f ${DebianTarXz} ]; then
 fi
 cur=$(pwd)
 cd ${DEBIAN_CHROOT}
-echo "正在解压debian-sid-rootfs.tar.xz，decompressing rootfs, please be patient."
+echo "正在解压${DebianTarXz}，decompressing rootfs, please be patient."
 if [ "${LINUX_DISTRO}" = "Android" ]; then
 	pv ${cur}/${DebianTarXz} | proot --link2symlink tar -pJx
 elif [ "${LINUX_DISTRO}" = "iSH" ]; then

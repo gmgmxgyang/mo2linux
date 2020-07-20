@@ -96,7 +96,7 @@ check_arch() {
 	if [ -e "${LINUX_CONTAINER_DISTRO_FILE}" ]; then
 		LINUX_CONTAINER_DISTRO=$(cat ${LINUX_CONTAINER_DISTRO_FILE} | head -n 1)
 		if [ ! -z "${LINUX_CONTAINER_DISTRO}" ]; then
-			DEBIAN_FOLDER="${LINUX_CONTAINER_DISTRO}__${ARCH_TYPE}"
+			DEBIAN_FOLDER="${LINUX_CONTAINER_DISTRO}_${ARCH_TYPE}"
 		fi
 	fi
 	DEBIAN_CHROOT=${HOME}/${DEBIAN_FOLDER}
@@ -2265,6 +2265,15 @@ same_arch_or_different_arch() {
 	###################
 }
 ###############
+disale_qemu_user_static() {
+	if (whiptail --title "若无法向下兼容，则尝试禁用该参数" --yes-button 'disable禁用' --no-button 'enable启用' --yesno "Do you want to disable it?" 0 0); then
+		sed -i "s@qemu-x86_64-staic@#&@" ${PREFIX}/bin/debian
+	else
+		sed -i 's@#command+=" -q qemu-x86_64-staic"@command+=" -q qemu-x86_64-staic"@' ${PREFIX}/bin/debian
+		sed -i "s@qemu-x86_64-staic@qemu-${QEMU_ARCH}-static@" ${PREFIX}/bin/debian
+	fi
+}
+#############
 tmoe_qemu_user_static() {
 	RETURN_TO_WHERE='tmoe_qemu_user_static'
 	BETA_SYSTEM=$(
@@ -2272,6 +2281,7 @@ tmoe_qemu_user_static() {
 			"1" "chart架构支持表格" \
 			"2" "install/upgrade(安装/更新)" \
 			"3" "remove(移除/卸载)" \
+			"4" "disable qemu(禁用以适用于向下兼容)" \
 			"0" "Back to the main menu 返回主菜单" \
 			3>&1 1>&2 2>&3
 	)
@@ -2281,6 +2291,7 @@ tmoe_qemu_user_static() {
 	1) tmoe_qemu_user_chart ;;
 	2) install_qemu_user_static ;;
 	3) remove_qemu_user_static ;;
+	4) disale_qemu_user_static ;;
 	esac
 	######################
 	press_enter_to_return

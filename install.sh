@@ -273,7 +273,7 @@ elif [ "${LINUX_DISTRO}" = "iSH" ]; then
 	tar -pJxvf ${cur}/${DebianTarXz}
 elif [ "${ARCH_TYPE}" = "mipsel" ]; then
 	pv ${cur}/${DebianTarXz} | tar -pJx
-	mv -b ${DEBIAN_CHROOT}/debian_mipsel/* ./${DEBIAN_CHROOT}
+	mv -b ${DEBIAN_CHROOT}/debian_mipsel/* ${DEBIAN_CHROOT}
 elif [ "${LINUX_DISTRO}" = "redhat" ]; then
 	if [ "${REDHAT_DISTRO}" != "fedora" ]; then
 		tar -pJxvf ${cur}/${DebianTarXz}

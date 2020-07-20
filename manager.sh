@@ -2431,7 +2431,10 @@ tmoe_qemu_user_manager() {
 	00) tmoe_qemu_user_static ;;
 	01)
 		NEW_TMOE_ARCH='i386'
-		TMOE_QEMU_ARCH="${NEW_TMOE_ARCH}"
+		case ${TRUE_ARCH_TYPE} in
+		amd64 | i386) TMOE_QEMU_ARCH="" ;;
+		*) TMOE_QEMU_ARCH="${NEW_TMOE_ARCH}" ;;
+		esac
 		;;
 	02)
 		NEW_TMOE_ARCH='amd64'
@@ -2443,11 +2446,17 @@ tmoe_qemu_user_manager() {
 		;;
 	04)
 		NEW_TMOE_ARCH='armhf'
-		TMOE_QEMU_ARCH="arm"
+		case ${TRUE_ARCH_TYPE} in
+		arm64 | armhf) TMOE_QEMU_ARCH="" ;;
+		*) TMOE_QEMU_ARCH="arm" ;;
+		esac
 		;;
 	05)
 		NEW_TMOE_ARCH='armel'
-		TMOE_QEMU_ARCH="armeb"
+		case ${TRUE_ARCH_TYPE} in
+		arm64 | armhf | armel) TMOE_QEMU_ARCH="" ;;
+		*) TMOE_QEMU_ARCH="armeb" ;;
+		esac
 		;;
 	06)
 		NEW_TMOE_ARCH='ppc64el'
@@ -2474,8 +2483,12 @@ tmoe_qemu_user_manager() {
 	esac
 	######################
 	if [ ! -z "${NEW_TMOE_ARCH}" ]; then
+		if [ "${TRUE_ARCH_TYPE}" = "${NEW_TMOE_ARCH}" ]; then
+			TMOE_QEMU_ARCH=""
+		fi
 		creat_tmoe_arch_file
 		ARCH_TYPE=${NEW_TMOE_ARCH}
+
 		if [ ! -e "$PREFIX/bin/qemu-x86_64-static" ] && [ ! -e "/usr/bin/qemu-x86_64-static" ]; then
 			install_qemu_user_static
 		fi

@@ -49,9 +49,37 @@ esac
 #gentoo_arm64在下一行修改ARCH_TYPE的变量为armhf
 
 #requirements and DEPENDENCIES.
+TRUE_ARCH_TYPE=${ARCH_TYPE}
+QEMU_ARCH=''
+CONFIG_FOLDER="${HOME}/.config/tmoe-linux/"
+ACROSS_ARCH_FILE="${CONFIG_FOLDER}across_architecture_container.txt"
+if [ -e "${ACROSS_ARCH_FILE}" ]; then
+	ARCH_TYPE="$(cat ${ACROSS_ARCH_FILE} | head -n 1)"
+	QEMU_ARCH="$(cat ${ACROSS_ARCH_FILE} | sed -n 2p)"
+fi
+
+LINUX_CONTAINER_DISTRO_FILE="${CONFIG_FOLDER}linux_container_distro.txt"
+if [ -e "${LINUX_CONTAINER_DISTRO_FILE}" ]; then
+	LINUX_CONTAINER_DISTRO=$(cat ${LINUX_CONTAINER_DISTRO_FILE} | head -n 1)
+	if [ ! -z "${LINUX_CONTAINER_DISTRO}" ]; then
+		DEBIAN_FOLDER="${LINUX_CONTAINER_DISTRO}__${ARCH_TYPE}"
+	else
+		DEBIAN_FOLDER=debian_${ARCH_TYPE}
+	fi
+fi
+DEBIAN_CHROOT=${HOME}/${DEBIAN_FOLDER}
+
+#创建必要文件夹，防止挂载失败
+mkdir -p ~/storage/external-1
+#DEBIAN_FOLDER=debian_arm64
+RED=$(printf '\033[31m')
+GREEN=$(printf '\033[32m')
+YELLOW=$(printf '\033[33m')
+BLUE=$(printf '\033[34m')
+BOLD=$(printf '\033[1m')
+RESET=$(printf '\033[m')
 
 DEPENDENCIES=""
-
 if [ "$(uname -o)" = "Android" ]; then
 	LINUX_DISTRO='Android'
 	if [ ! -h "/data/data/com.termux/files/home/storage/shared" ]; then
@@ -182,19 +210,6 @@ elif grep -Eqi "Fedora|CentOS|Red Hat|redhat" '/etc/os-release' 2>/dev/null; the
 		REDHAT_DISTRO='fedora'
 	fi
 fi
-
-#创建必要文件夹，防止挂载失败
-mkdir -p ~/storage/external-1
-DEBIAN_FOLDER=debian_${ARCH_TYPE}
-DEBIAN_CHROOT=${HOME}/${DEBIAN_FOLDER}
-#DEBIAN_FOLDER=debian_arm64
-RED=$(printf '\033[31m')
-GREEN=$(printf '\033[32m')
-YELLOW=$(printf '\033[33m')
-BLUE=$(printf '\033[34m')
-BOLD=$(printf '\033[1m')
-RESET=$(printf '\033[m')
-
 echo "                                        "
 echo "                 .::::..                "
 echo "      ::::rrr7QQJi::i:iirijQBBBQB.      "
@@ -438,6 +453,7 @@ creat_proot_startup_script() {
 			command+=" --link2symlink"
 			command+=" -0"
 			command+=" -r ${DEBIAN_FOLDER}"
+			#command+=" -q qemu-x86_64-staic"
 			command+=" -b /dev"
 			command+=" -b /proc"
 			command+=" -b ${DEBIAN_FOLDER}/root:/dev/shm"
@@ -484,6 +500,10 @@ creat_proot_startup_script() {
 	fi
 	if [ ! -e "/data/data/com.termux/files/home" ]; then
 		sed -i 's@command+=" -b /data/data/com.termux/files/home:/root/termux"@#&@g' ${PREFIX}/bin/debian
+	fi
+	if [ ! -z "${QEMU_ARCH}" ]; then
+		sed -i 's@#command+=" -q qemu-x86_64-staic"@command+=" -q qemu-x86_64-staic"@' ${PREFIX}/bin/debian
+		sed -i "s@qemu-x86_64-staic@qemu-${QEMU_ARCH}-static@" ${PREFIX}/bin/debian
 	fi
 }
 ######################
@@ -558,7 +578,7 @@ creat_linux_container_remove_script() {
 		  pkill proot 2>/dev/null
 			read
 		    chmod 777 -R ${DEBIAN_FOLDER}
-			rm -rfv "${DEBIAN_FOLDER}" ${PREFIX}/bin/debian ${PREFIX}/bin/startvnc ${PREFIX}/bin/stopvnc ${PREFIX}/bin/startxsdl ${PREFIX}/bin/debian-rm ${PREFIX}/bin/code 2>/dev/null || sudo rm -rfv "${DEBIAN_FOLDER}" ${PREFIX}/bin/debian ${PREFIX}/bin/startvnc ${PREFIX}/bin/stopvnc ${PREFIX}/bin/startxsdl ${PREFIX}/bin/debian-rm ${PREFIX}/bin/code 2>/dev/null
+			rm -rfv "${DEBIAN_FOLDER}" ${PREFIX}/bin/debian ${PREFIX}/bin/startvnc ${PREFIX}/bin/stopvnc ${PREFIX}/bin/startxsdl ${PREFIX}/bin/debian-rm ${PREFIX}/bin/code ~/.config/tmoe-linux/across_architecture_container.txt 2>/dev/null || sudo rm -rfv "${DEBIAN_FOLDER}" ${PREFIX}/bin/debian ${PREFIX}/bin/startvnc ${PREFIX}/bin/stopvnc ${PREFIX}/bin/startxsdl ${PREFIX}/bin/debian-rm ${PREFIX}/bin/code ~/.config/tmoe-linux/across_architecture_container.txt 2>/dev/null
 
 		    sed -i '/alias debian=/d' ${PREFIX}/etc/profile
 			  sed -i '/alias debian-rm=/d' ${PREFIX}/etc/profile
@@ -633,24 +653,6 @@ alias debian-rm="${PREFIX}/bin/debian-rm"
 echo "You can type rm ~/${DebianTarXz} to delete the image file"
 echo "您可以输rm ~/${DebianTarXz}来删除容器镜像文件"
 ls -lh ~/${DebianTarXz}
-
-cd ${HOME}/${DEBIAN_FOLDER}
-#配置卸载脚本
-cat >remove-debian.sh <<-EOF
-	#!/data/data/com.termux/files/usr/bin/bash
-	cd ${HOME}
-	chmod 777 -R ${DEBIAN_FOLDER}
-	rm -rfv "${DEBIAN_FOLDER}" ${PREFIX}/bin/debian ${PREFIX}/bin/startvnc ${PREFIX}/bin/stopvnc 2>/dev/null || sudo rm -rf "debian_$ARCH_TYPE" ${PREFIX}/bin/debian ${PREFIX}/bin/startvnc ${PREFIX}/bin/stopvnc
-	if grep -q 'alias debian' "${PREFIX}/etc/profile"; then
-	  sed -i '/alias debian=/d' ${PREFIX}/etc/profile
-	  sed -i '/alias debian-rm=/d' ${PREFIX}/etc/profile
-	  source profile >/dev/null 2>&1
-	fi
-	echo '删除完成，如需卸载aria2,请输apt remove aria2'
-	echo '如需删除镜像文件，请输rm -f ~/debian-sid-rootfs.tar.xz'
-EOF
-chmod +x remove-debian.sh
-
 ########################
 if [ ! -d "${DEBIAN_CHROOT}/usr/local/bin" ]; then
 	mkdir -p ${DEBIAN_CHROOT}/usr/local/bin

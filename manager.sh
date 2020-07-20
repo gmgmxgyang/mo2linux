@@ -921,15 +921,29 @@ tmoe_locale_settings() {
 #####################
 edit_tmoe_locale_file_manually() {
 	if [ -e "/etc/locale.gen" ]; then
-		editor /etc/default/locale
-		editor /etc/locale.gen
+		if [ $(command -v editor) ]; then
+			editor /etc/default/locale
+			editor /etc/locale.gen
+		else
+			nano /etc/default/locale
+			nano /etc/locale.gen
+		fi
 	fi
 	if [ $(command -v debian) ]; then
-		editor $(command -v debian)
+		if [ $(command -v editor) ]; then
+			editor $(command -v debian)
+		else
+			nano $(command -v debian)
+		fi
 	fi
 	if [ -e "${DEBIAN_CHROOT}/etc" ]; then
-		editor ${DEBIAN_CHROOT}/etc/default/locale
-		editor ${DEBIAN_CHROOT}/etc/locale.gen
+		if [ $(command -v editor) ]; then
+			editor ${DEBIAN_CHROOT}/etc/default/locale
+			editor ${DEBIAN_CHROOT}/etc/locale.gen
+		else
+			nano ${DEBIAN_CHROOT}/etc/default/locale
+			nano ${DEBIAN_CHROOT}/etc/locale.gen
+		fi
 	fi
 	press_enter_to_return
 	#tmoe_manager_main_menu

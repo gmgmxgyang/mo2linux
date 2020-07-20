@@ -648,12 +648,12 @@ android_termux() {
 #-- 主菜单 main menu
 tmoe_manager_main_menu() {
 	TMOE_OPTION=$(
-		whiptail --title "GNU/Linux Tmoe manager(20200715-15)" --backtitle "$(
+		whiptail --title "GNU/Linux Tmoe manager(20200720-04)" --backtitle "$(
 			base64 -d <<-'DoYouWantToSeeWhatIsInside'
 				6L6TZGViaWFuLWnlkK/liqjmnKznqIvluo8sVHlwZSBkZWJpYW4taSB0byBzdGFydCB0aGUgdG9v
 				bCzokIzns7vnlJ/niannoJTnqbblkZgK
 			DoYouWantToSeeWhatIsInside
-		)" --menu "Please use the enter and arrow keys to operate.当前主菜单下有十几个选项,请使用方向键和回车键进行操作。更新日志：0509升级备份与还原功能,0510修复sudo,0514支持最新的ubuntu20.10" 17 50 6 \
+		)" --menu "Please use the enter and arrow keys to operate.当前主菜单下有十几个选项,请使用方向键和回车键进行操作。更新日志：0509升级备份与还原功能,0510修复sudo,0514支持最新的ubuntu20.10,0720优化跨架构运行" 17 50 6 \
 			"1" "proot安装(๑•̀ㅂ•́)و✧" \
 			"2" "chroot安装" \
 			"3" "🌏locales/区域/ロケール/로케일" \
@@ -2254,7 +2254,7 @@ tmoe_linux_container_eula() {
 }
 ###################################################
 same_arch_or_different_arch() {
-	if (whiptail --title "您是想要同架构运行,还是跨架构呢？" --yes-button 'same同' --no-button 'across跨' --yesno "Your current architecture is ${TRUE_ARCH_TYPE}\nDo you want to run on the same architecture or across architectures?\n除向下兼容外,跨架构运行的效率可能偏低" 0 0); then
+	if (whiptail --title "您是想要同架构运行,还是跨架构呢？" --yes-button 'same同' --no-button 'across跨' --yesno "Your current architecture is ${TRUE_ARCH_TYPE}.\nDo you want to run on the same architecture or across architectures?\n除向下兼容外,跨架构运行的效率可能偏低" 0 0); then
 		rm ~/.config/tmoe-linux/across_architecture_container.txt 2>/dev/null
 		choose_which_gnu_linux_distro
 	else

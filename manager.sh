@@ -3164,7 +3164,7 @@ termux_tuna_sources_list() {
 }
 ##################
 creat_container_edition_txt() {
-	echo ${TMOE_LINUX_CONTAINER_DISTRO} >${CONFIG_FOLDER}/linux_container_distro.txt
+	echo ${TMOE_LINUX_CONTAINER_DISTRO} >${CONFIG_FOLDER}linux_container_distro.txt
 }
 #############
 choose_which_gnu_linux_distro() {

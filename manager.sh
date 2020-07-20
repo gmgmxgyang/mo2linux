@@ -2650,10 +2650,14 @@ install_debian_gnu_linux_distro() {
 	0 | "") choose_which_gnu_linux_distro ;;
 	1)
 		DISTRO_CODE='sid'
+		TMOE_LINUX_CONTAINER_DISTRO="${DISTRO_NAME}_${DISTRO_CODE}"
+		creat_container_edition_txt
 		install_debian_sid_gnu_linux_container
 		;;
 	2)
 		DISTRO_CODE='buster'
+		TMOE_LINUX_CONTAINER_DISTRO="${DISTRO_NAME}_${DISTRO_CODE}"
+		creat_container_edition_txt
 		install_debian_buster_gnu_linux_container
 		;;
 	3) custom_debian_version ;;

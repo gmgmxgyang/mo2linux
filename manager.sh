@@ -2320,7 +2320,7 @@ tmoe_qemu_user_chart() {
 }
 ###############
 install_qemu_user_static() {
-	if [ "${LINUX_DISTRO}" = "Debian" ]; then
+	if [ "${LINUX_DISTRO}" = "debian" ]; then
 		apt update
 		echo 'apt install -y qemu-user-static'
 		apt install -y qemu-user-static
@@ -2342,10 +2342,10 @@ unxz_deb_file() {
 		echo "apt install -y ${DEPENDENCY_01}"
 		apt install -y ${DEPENDENCY_01} || pacman -S ${DEPENDENCY_01} || dnf install ${DEPENDENCY_01} || apk add ${DEPENDENCY_01} || zypper in ${DEPENDENCY_01} || port install ${DEPENDENCY_01} || guix package -i ${DEPENDENCY_01} || pkg install ${DEPENDENCY_01} || pkg_add ${DEPENDENCY_01} || pkgutil -i ${DEPENDENCY_01} || eopkg install ${DEPENDENCY_01}
 	fi
-	ar xv ${THE_LATEST_THEME_VERSION}
+	ar xv ${THE_LATEST_DEB_VERSION}
 	#tar -Jxvf data.tar.xz ./usr/bin -C $PREFIX/..
 	tar -Jxvf data.tar.xz
-	cp -rf ./usr/bin/* $PREFIX
+	cp -rf ./usr/bin $PREFIX
 	cd ..
 	rm -rv ${TEMP_FOLDER}
 }

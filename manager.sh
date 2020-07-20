@@ -989,6 +989,7 @@ frequently_asked_questions() {
 		"您有哪些疑问？\nWhat questions do you have?" 15 60 5 \
 		"1" "VNC无法调用音频" \
 		"2" "给Linux Deploy配置VNC音频" \
+		"3" "disable qemu(禁用以适用于向下兼容)" \
 		"0" "Back to the main menu 返回主菜单" \
 		3>&1 1>&2 2>&3)
 	##############################
@@ -996,11 +997,8 @@ frequently_asked_questions() {
 	0 | "") tmoe_manager_main_menu ;;
 	1) vnc_can_not_call_pulse_audio ;;
 	2) linux_deploy_pulse_server ;;
+	3) disale_qemu_user_static ;;
 	esac
-	############################
-	if [ -z ${TMOE_FAQ} ]; then
-		tmoe_manager_main_menu
-	fi
 	#############
 	press_enter_to_return
 	tmoe_manager_main_menu
@@ -2281,17 +2279,15 @@ tmoe_qemu_user_static() {
 			"1" "chart架构支持表格" \
 			"2" "install/upgrade(安装/更新)" \
 			"3" "remove(移除/卸载)" \
-			"4" "disable qemu(禁用以适用于向下兼容)" \
-			"0" "Back to the main menu 返回主菜单" \
+			"0" "Return to previous menu 返回上级菜单" \
 			3>&1 1>&2 2>&3
 	)
 	##############################
 	case "${BETA_SYSTEM}" in
-	0 | "") tmoe_manager_main_menu ;;
+	0 | "") tmoe_qemu_user_manager ;;
 	1) tmoe_qemu_user_chart ;;
 	2) install_qemu_user_static ;;
 	3) remove_qemu_user_static ;;
-	4) disale_qemu_user_static ;;
 	esac
 	######################
 	press_enter_to_return
@@ -2331,6 +2327,28 @@ tmoe_qemu_user_chart() {
 }
 ###############
 install_qemu_user_static() {
+	echo "正在检测版本信息..."
+	if [ -e "${QEMU_USER_LOCAL_VERSION_FILE}" ]; then
+		LOCAL_QEMU_USER_VERSION=$(cat ${QEMU_USER_LOCAL_VERSION_FILE} | head -n 1)
+	else
+		LOCAL_QEMU_USER_VERSION='您尚未安装QEMU-USER-STATIC'
+	fi
+	check_qemu_user_version
+	cat <<-ENDofTable
+		╔═══╦══════════╦═══════════════════╦════════════════════
+		║   ║          ║                   ║                    
+		║   ║ software ║    ✨最新版本     ║   本地版本 🎪
+		║   ║          ║  Latest version   ║  Local version     
+		║---║----------║-------------------║--------------------
+		║ 1 ║qemu-user ║                    ${LOCAL_QEMU_USER_VERSION} 
+		║   ║ static   ║${THE_LATEST_DEB_VERSION_CODE}
+
+	ENDofTable
+	do_you_want_to_continue
+	#check_qemu_user_version
+	THE_LATEST_DEB_LINK="${REPO_URL}${THE_LATEST_DEB_VERSION}"
+	echo ${THE_LATEST_DEB_LINK}
+	echo "${THE_LATEST_DEB_VERSION_CODE}" >${QEMU_USER_LOCAL_VERSION_FILE}
 	if [ "${LINUX_DISTRO}" = "debian" ]; then
 		apt update
 		echo 'apt install -y qemu-user-static'
@@ -2362,28 +2380,6 @@ unxz_deb_file() {
 }
 ########################
 download_qemu_user() {
-	echo "正在检测版本信息..."
-	if [ -e "${QEMU_USER_LOCAL_VERSION_FILE}" ]; then
-		LOCAL_QEMU_USER_VERSION=$(cat ${QEMU_USER_LOCAL_VERSION_FILE} | head -n 1)
-	else
-		LOCAL_QEMU_USER_VERSION='您尚未安装QEMU-USER-STATIC'
-	fi
-	check_qemu_user_version
-	cat <<-ENDofTable
-		╔═══╦══════════╦═══════════════════╦════════════════════
-		║   ║          ║                   ║                    
-		║   ║ software ║    ✨最新版本     ║   本地版本 🎪
-		║   ║          ║  Latest version   ║  Local version     
-		║---║----------║-------------------║--------------------
-		║ 1 ║qemu-user ║                    ${LOCAL_QEMU_USER_VERSION} 
-		║   ║ static   ║${THE_LATEST_DEB_VERSION_CODE}
-
-	ENDofTable
-	do_you_want_to_continue
-	#check_qemu_user_version
-	THE_LATEST_DEB_LINK="${REPO_URL}${THE_LATEST_DEB_VERSION}"
-	echo ${THE_LATEST_DEB_LINK}
-	echo "${THE_LATEST_DEB_VERSION_CODE}" >${QEMU_USER_LOCAL_VERSION_FILE}
 	if [ -z ${TMPDIR} ]; then
 		TMPDIR=/tmp
 		#mkdir -p ${TMPDIR}

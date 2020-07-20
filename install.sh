@@ -267,13 +267,13 @@ fi
 cur=$(pwd)
 cd ${DEBIAN_CHROOT}
 echo "正在解压${DebianTarXz}，decompressing rootfs, please be patient."
-if [ "${LINUX_DISTRO}" = "Android" ]; then
+if [ "${ARCH_TYPE}" = "mipsel" ]; then
+	pv ${cur}/${DebianTarXz} | tar -pJx
+	mv -b ${DEBIAN_CHROOT}/debian_mipsel/* ${DEBIAN_CHROOT}
+elif [ "${LINUX_DISTRO}" = "Android" ]; then
 	pv ${cur}/${DebianTarXz} | proot --link2symlink tar -pJx
 elif [ "${LINUX_DISTRO}" = "iSH" ]; then
 	tar -pJxvf ${cur}/${DebianTarXz}
-elif [ "${ARCH_TYPE}" = "mipsel" ]; then
-	pv ${cur}/${DebianTarXz} | tar -pJx
-	mv -b ${DEBIAN_CHROOT}/debian_mipsel/* ${DEBIAN_CHROOT}
 elif [ "${LINUX_DISTRO}" = "redhat" ]; then
 	if [ "${REDHAT_DISTRO}" != "fedora" ]; then
 		tar -pJxvf ${cur}/${DebianTarXz}

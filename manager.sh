@@ -2386,7 +2386,7 @@ download_qemu_user() {
 }
 ##############
 remove_qemu_user_static() {
-	rm -rv $PREFIX/bin/qemu-user* "$PREFIX/bin/qemu-user*"
+	rm -rv $PREFIX/bin/qemu-*-static "$PREFIX/bin/qemu-*-static"
 	apt remove ^qemu-user
 }
 ##############
@@ -2620,6 +2620,10 @@ install_debian_buster_gnu_linux_container() {
 	tmoe_manager_main_menu
 }
 ########################
+creat_container_edition_txt() {
+	echo ${TMOE_LINUX_CONTAINER_DISTRO} >${CONFIG_FOLDER}linux_container_distro.txt
+}
+#############
 install_debian_gnu_linux_distro() {
 	RETURN_TO_WHERE='install_debian_gnu_linux_distro'
 	DOWNLOAD_PATH="/sdcard/Download/backup"
@@ -3163,10 +3167,6 @@ termux_tuna_sources_list() {
 	#此处要返回依赖检测处！
 }
 ##################
-creat_container_edition_txt() {
-	echo ${TMOE_LINUX_CONTAINER_DISTRO} >${CONFIG_FOLDER}linux_container_distro.txt
-}
-#############
 choose_which_gnu_linux_distro() {
 	RETURN_TO_WHERE='choose_which_gnu_linux_distro'
 	TMOE_LINUX_CONTAINER_DISTRO=''

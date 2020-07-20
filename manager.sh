@@ -1230,8 +1230,9 @@ remove_gnu_linux_container() {
 	#ls -lh ~/funtoo-1.3-rootfs.tar.xz 2>/dev/null
 	cd ${HOME}
 	ls -lh *-rootfs.tar.xz
+	ROOTFS_NAME=$(echo ${DEBIAN_FOLDER} | cut -d '-' -f 1)
 	echo "${YELLOW}请问您是否需要删除镜像文件？[Y/n]${RESET} "
-	echo 'Do you need to delete the image file (debian-sid-rootfs.tar.xz)?[Y/n]'
+	echo 'Do you need to delete the image file (${DEBIAN_FOLDER}*rootfs.tar.xz)?[Y/n]'
 
 	read opt
 	case $opt in
@@ -1241,7 +1242,9 @@ remove_gnu_linux_container() {
 		#rm -vf ~/ubuntu-focal-rootfs.tar.xz 2>/dev/null
 		#rm -vf ~/kali-rolling-rootfs.tar.xz 2>/dev/null
 		#rm -vf ~/funtoo-1.3-rootfs.tar.xz 2>/dev/null
-		rm -vf *-rootfs.tar.xz 2>/dev/null
+		#rm -vf *-rootfs.tar.xz 2>/dev/null
+		rm -fv ~/${DEBIAN_FOLDER}-rootfs.tar.xz
+		rm -fv ~/${ROOTFS_NAME}*rootfs.tar.xz
 		echo "Deleted已删除"
 		;;
 	n* | N*) echo "${YELLOW}Skipped,已跳过，按回车键返回。${RESET} " ;;

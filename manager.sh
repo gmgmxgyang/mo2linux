@@ -92,15 +92,15 @@ check_arch() {
 		QEMU_ARCH="$(cat ${ACROSS_ARCH_FILE} | sed -n 2p)"
 	fi
 	LINUX_CONTAINER_DISTRO_FILE="${CONFIG_FOLDER}linux_container_distro.txt"
+	DEBIAN_FOLDER=debian_${ARCH_TYPE}
 	if [ -e "${LINUX_CONTAINER_DISTRO_FILE}" ]; then
 		LINUX_CONTAINER_DISTRO=$(cat ${LINUX_CONTAINER_DISTRO_FILE} | head -n 1)
 		if [ ! -z "${LINUX_CONTAINER_DISTRO}" ]; then
 			DEBIAN_FOLDER="${LINUX_CONTAINER_DISTRO}__${ARCH_TYPE}"
-		else
-			DEBIAN_FOLDER=debian_${ARCH_TYPE}
 		fi
 	fi
 	DEBIAN_CHROOT=${HOME}/${DEBIAN_FOLDER}
+	#echo $DEBIAN_FOLDER $DEBIAN_CHROOT
 	RED=$(printf '\033[31m')
 	GREEN=$(printf '\033[32m')
 	YELLOW=$(printf '\033[33m')
@@ -1036,6 +1036,7 @@ install_chroot_container() {
 }
 ########################
 install_gnu_linux_container() {
+	#此处不能用变量debian_chroot
 	if [ -d ~/${DEBIAN_FOLDER} ]; then
 		if (whiptail --title "检测到您已安装GNU/Linux容器,请选择您需要执行的操作！" --yes-button 'Start启动o(*￣▽￣*)o' --no-button 'Reinstall重装(っ °Д °)' --yesno "Container has been installed, please choose what you need to do" 0 0); then
 			debian

@@ -586,16 +586,18 @@ creat_linux_container_remove_script() {
 			echo '若需要重装，则不建议移除镜像文件。'
 			#echo '若需要跨架构运行,则建议移除该文件,以便重新下载相应架构的镜像文件'
 			echo "\${YELLOW}是否需要删除镜像文件？[Y/n]\${RESET} "
-			echo 'Do you need to delete the image file (debian-sid-rootfs.tar.xz)?[Y/n]'
+			echo 'Do you need to delete the image file (*rootfs.tar.xz)?[Y/n]'
 
 		    read opt
 			case \$opt in
-				y*|Y*|"") rm -vf ~/debian-sid-rootfs.tar.xz 2>/dev/null
+				y*|Y*|"") rm -vf ~/debian-sid*rootfs.tar.xz 2>/dev/null
 		    rm -f ${PREFIX}/bin/debian-rm
-				rm -vf ~/debian-buster-rootfs.tar.xz 2>/dev/null
-				rm -vf ~/ubuntu-focal-rootfs.tar.xz 2>/dev/null
-				rm -vf ~/kali-rolling-rootfs.tar.xz 2>/dev/null
-				rm -vf ~/funtoo-1.3-rootfs.tar.xz 2>/dev/null
+			rm -vf ~/fedora*rootfs.tar.xz 2>/dev/null
+			rm -vf ~/arch*rootfs.tar.xz 2>/dev/null
+				rm -vf ~/debian-buster*rootfs.tar.xz 2>/dev/null
+				rm -vf ~/ubuntu-focal*rootfs.tar.xz 2>/dev/null
+				rm -vf ~/kali-rolling*rootfs.tar.xz 2>/dev/null
+				rm -vf ~/funtoo*rootfs.tar.xz 2>/dev/null
 		    echo "Deleted已删除" ;;
 				n*|N*) echo "skipped." ;;
 				*) echo "Invalid choice. skipped." ;;

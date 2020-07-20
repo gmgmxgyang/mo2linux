@@ -2375,7 +2375,8 @@ download_qemu_user() {
 	echo "${THE_LATEST_DEB_VERSION_CODE}" >${QEMU_USER_LOCAL_VERSION_FILE}
 	if [ -z ${TMPDIR} ]; then
 		TMPDIR=/tmp
-		mkdir -p ${TMPDIR}
+		#mkdir -p ${TMPDIR}
+		#chmod 777 /tmp
 	fi
 	cd ${TMPDIR}
 	TEMP_FOLDER='.QEMU_USER_BIN'
@@ -2772,7 +2773,7 @@ copy_tmoe_locale_file_to_container() {
 }
 ########################
 un_xz_debian_recovery_kit() {
-	echo "正在解压${DOWNLOAD_FILE_NAME}，Decompressing recovery package, please be patient."
+	echo "正在解压${DOWNLOAD_FILE_NAME}，decompressing recovery package, please be patient."
 	#pv "debian_2020-03-11_17-31.tar.xz" | tar -PpJx 2>/dev/null
 	echo '正在解压中...'
 	if [ $(command -v pv) ]; then

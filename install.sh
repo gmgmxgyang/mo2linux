@@ -584,7 +584,7 @@ creat_linux_container_remove_script() {
 		  echo '移除完成，如需卸载aria2,请手动输apt remove aria2'
 			echo 'If you want to reinstall, it is not recommended to remove the image file.'
 			echo '若需要重装，则不建议移除镜像文件。'
-			echo '若需要跨架构运行,则建议移除该文件,以便重新下载相应架构的镜像文件'
+			#echo '若需要跨架构运行,则建议移除该文件,以便重新下载相应架构的镜像文件'
 			echo "\${YELLOW}是否需要删除镜像文件？[Y/n]\${RESET} "
 			echo 'Do you need to delete the image file (debian-sid-rootfs.tar.xz)?[Y/n]'
 

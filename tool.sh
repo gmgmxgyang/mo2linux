@@ -88,7 +88,7 @@ check_root() {
 		export PATH=${PATH}:/usr/sbin:/sbin
 		if [ -z ${TMPDIR} ]; then
 			TMPDIR=/tmp
-			mkdir -p ${TMPDIR}
+			#mkdir -p ${TMPDIR}
 		fi
 		cd ${TMPDIR}
 		if [ -e ".tmoe-linux-tool.sh" ]; then

@@ -9000,7 +9000,7 @@ configure_scrcpy() {
 	)
 	##########################
 	case "${SCRCPY_OPTION}" in
-	0 | "") beta_features ;;
+	0 | "") tmoe_other_app_menu ;;
 	1) install_scrcpy ;;
 	2) scrcpy_connect_to_android_device ;;
 	3) switch_scrcpy_device ;;

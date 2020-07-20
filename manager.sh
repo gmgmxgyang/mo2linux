@@ -2796,7 +2796,7 @@ switch_termux_rootfs_to_linux() {
 	if [ "${LINUX_DISTRO}" != 'Android' ]; then
 		cd /data/data/com.termux/files/usr/bin
 		sed -i 's:#!/data/data/com.termux/files/usr/bin/bash:#!/bin/bash:g' $(grep -rl 'com.termux' ./)
-		sed -i 's:#!/data/data/com.termux/files/usr/bin/bash:#!/bin/bash:' ${DEBIAN_CHROOT}/remove-debian.sh
+		#sed -i 's:#!/data/data/com.termux/files/usr/bin/bash:#!/bin/bash:' ${DEBIAN_CHROOT}/remove-debian.sh
 		cp -pf ./* ${PREFIX}/bin/
 	fi
 }

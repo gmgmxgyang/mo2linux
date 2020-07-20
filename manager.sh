@@ -648,7 +648,7 @@ android_termux() {
 #-- 主菜单 main menu
 tmoe_manager_main_menu() {
 	TMOE_OPTION=$(
-		whiptail --title "GNU/Linux Tmoe manager(20200720-04)" --backtitle "$(
+		whiptail --title "GNU/Linux Tmoe manager(20200721-04)" --backtitle "$(
 			base64 -d <<-'DoYouWantToSeeWhatIsInside'
 				6L6TZGViaWFuLWnlkK/liqjmnKznqIvluo8sVHlwZSBkZWJpYW4taSB0byBzdGFydCB0aGUgdG9v
 				bCzokIzns7vnlJ/niannoJTnqbblkZgK

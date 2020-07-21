@@ -35,7 +35,7 @@ You can also run Gentoo, Arch and other systems in WSL.
 Supported containers:
 
 - [x] **Debian stable+sid**
-- [x] **Ubuntu LTS + dev**
+- [x] **Ubuntu LTS+dev**
 - [x] **Kali rolling**
 - [x] **Arch**
 - [x] **Fedora**
@@ -342,7 +342,7 @@ wsl --set-default-version 2
 
 ---
 
-### 使用说明
+### 七.使用说明
 
 #### 简易版说明（萌新专用）
 
@@ -459,7 +459,7 @@ _gnome_ 和 _kde_ 是用来卖萌用的，不要安装。如需安装，请自�
 
 ```shell
 apt install -y nano
-nano $(which startvnc)
+nano $(command -v startvnc)
 ```
 
 > 将 **1440x720**（竖屏）改成你需要的分辨率，例如 **1920x10780**（横屏)
@@ -475,7 +475,7 @@ nano $(which startvnc)
 
 ---
 
-#### 更新日志
+### 八.更新日志 logs
 
 ##### 2019-11、12 月
 
@@ -498,7 +498,8 @@ nano $(which startvnc)
 
 ##### 2020-02-15 更新内容
 
-- 1.获取镜像途径依旧是清华镜像站，但把下载工具从 wget 换成了 aria2，从原本的单线程变成现在的 16 线程，加快了下载速度。
+- 1.获取镜像途径依旧是清华镜像站，但把下载工具从 wget 换成了 aria2，从原本的单线程变成现在的 16 线程，加快了下载速度。  
+后期注：盲目调大线程最终适得其反，后期已改为5线程。
 
 - ​ 2.自动配置中文环境，默认就是中文，无需手动配置。
 

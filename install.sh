@@ -653,7 +653,7 @@ alias debian="${PREFIX}/bin/debian"
 alias debian-rm="${PREFIX}/bin/debian-rm"
 ################
 echo "You can type rm ~/${DebianTarXz} to delete the image file"
-echo "您可以输rm ~/${DebianTarXz}来删除容器镜像文件"
+echo "您可以输${RED}rm ~/${DebianTarXz}${RESET}来删除容器镜像文件"
 ls -lh ~/${DebianTarXz}
 ########################
 if [ ! -d "${DEBIAN_CHROOT}/usr/local/bin" ]; then

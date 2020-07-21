@@ -580,8 +580,13 @@ creat_linux_container_remove_script() {
 			echo 'The debian system has been removed. If you want to uninstall aria2, enter "apt remove aria2" or "apt purge aria2"'
 		  echo '移除完成，如需卸载aria2,请手动输apt remove aria2'
 		   echo "Deleted已删除" ;;
-				n*|N*) echo "skipped." ;;
-				*) echo "Invalid choice. skipped." ;;
+				n*|N*) echo "skipped."
+				exit 1
+				 ;;
+				*) 
+				echo "Invalid choice. skipped." 
+				exit 1
+				;;
 			esac
 			echo 'If you want to reinstall, it is not recommended to remove the image file.'
 			echo '若需要重装，则不建议移除镜像文件。'

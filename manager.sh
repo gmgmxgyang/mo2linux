@@ -1153,13 +1153,13 @@ enable_root_mode() {
 		fi
 
 		echo "You have modified debian to run with root privileges, this action will destabilize debian."
-		echo "If you want to restore, please reinstall debian."
-		echo "您已将debian修改为以root权限运行，如需还原，请重新安装debian。"
+		echo "If you want to restore, please reinstall container."
+		echo "您已将container修改为以root权限运行，如需还原，请重新安装GNU/Linux 容器。"
 		echo "The next time you start debian, it will automatically run as root."
-		echo "下次启动debian，将自动以root权限运行。"
+		echo "下次启动容器，将自动以root权限运行。"
 
-		echo 'Debian will start automatically after 2 seconds.'
-		echo '2s后将为您自动启动debian'
+		echo 'Container will start automatically after 2 seconds.'
+		echo '2s后将为您自动启动容器'
 		echo 'If you do not need to display the task progress in the login interface, please manually add "#" (comment symbol) before the "ps -e" line in "~/.zshrc" or "~/.bashrc"'
 		echo '如果您不需要在登录界面显示任务进程，请手动注释掉"~/.zshrc"里的"ps -e"'
 		sleep 2

@@ -6,12 +6,12 @@
 
 化繁为简，让 GNU/Linux 的乐趣触手可及。
 
-## 介绍
+## 介绍 Introduction
 
 🍭Without any basic knowledge of linux shell,🍹 you can run GNU/Linux on your android phone and windows PC, and you can easily install a graphical desktop environment and configure pulseaudio server.✨
 You can also run Gentoo, Arch and other systems in WSL.
 
-在 **GNU/Linux**、**Android Termux** 和**Windows10 的 linux 子系统**上配置 **GNU/Linux chroot 或 proot** 容器环境，并配置远程桌面和系统。
+在 **GNU/Linux**、**Android Termux** 和**Windows10 的 linux 子系统**上配置 **GNU/Linux chroot 或 proot** 容器环境，并配置远程桌面、音频服务和系统。
 
 ### 一：Android 篇
 
@@ -773,7 +773,7 @@ nano $(command -v startvnc)
 
 - 1.支持配置显示管理器 (Display manager)
 
-##### 2020 年 06 月上旬 更新日志
+##### 2020 年 06 月上旬至中旬 更新日志
 
 - 1.增加更多系统配置选项，例如配置时间同步服务，开机自启脚本和管理 sudo 用户组等。
 - 2.增加 Debian 配置 Ubuntu ppa 软件源的功能。Debian 使用原版的 add-apt-repository 存在某些问题，例如添加 gpg 密钥失败，而此功能的目的就是解决这些问题。

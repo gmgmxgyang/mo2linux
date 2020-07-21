@@ -685,5 +685,6 @@ nano $(which startvnc)
 - 3.多区域/语言环境配置
   ![locales](https://images.gitee.com/uploads/images/2020/0712/084930_79c38987_5617340.png "Screenshot_20200712-084151_1.png")
   ![日本語](https://images.gitee.com/uploads/images/2020/0712/084535_cf5bff2d_5617340.png "Screenshot_20200711-155224.png")
-- 4.增加 aria2 配置工具  
-- 5.优化跨cpu架构运行容器的功能  
+- 4.0711-0716:增加 aria2 配置工具 
+- 5.0716-0719:为防止版权争议，对漫画/轻小说下载工具进行额外的限制。
+- 6.0720-0721:优化跨cpu架构运行容器的功能  

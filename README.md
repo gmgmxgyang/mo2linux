@@ -43,9 +43,9 @@ Supported containers:
 ### 一：Android 篇
 
 1.Debian 容器  
-① .在 Android 系统上运行 debian GNU/Linux arm64 应用  
+① 在 Android 系统上运行 debian GNU/Linux arm64 应用  
 ![debian arm64](https://images.gitee.com/uploads/images/2020/0721/190834_db02f784_5617340.png "截图_2020-07-15_13-48-40.png")  
-② .跨架构支持，在 Qualcomm 高通 arm64 cpu 的手机上借助 qemu-user 来模拟运行 x86(i686)架构的 Debian GNU/Linux，并通过 pulseaudio 来传输音频。
+② 跨架构支持，在 Qualcomm 高通 arm64 cpu 的手机上借助 qemu-user 来模拟运行 x86(i686)架构的 Debian GNU/Linux，并通过 pulseaudio 来传输音频。
 ![debian i386](https://images.gitee.com/uploads/images/2020/0721/192119_96d0b95d_5617340.png "Screenshot_20200721-173852.png")  
 2.Ubuntu 容器  
 在 Android 设备上运行的 Ubuntu 容器，你可以通过 VNC 来连接自己；  
@@ -89,7 +89,7 @@ Support one-key graphical user interface installation.
 
 3.对于不同系统，不同虚拟化环境进行适配
 
-3-1 以 tightvnc/tigervnc 为例：
+3-1.以 tightvnc/tigervnc 为例：
 对于 deb 系的虚拟机和实体机，启动 de/wm 的脚本中包含了 dbus-launch --exit-with-session,不加的话可能会出现无法连接至设置服务的错误，而 deb 系的 proot 容器加上这个会很容易闪退，所以对 proot 容器和虚拟机分别进行适配。  
 而 arch 系虚拟机只需要 dbus-launch,不要加那个参数。
 
@@ -202,13 +202,13 @@ Containers other than debian may only support mainstream architectures, not s390
 
 **您不仅可以在 Android 手机上运行本工具，亦可在 GNU/Linux 上运行。**
 
-#### 1.Windows10
+#### 1.Windows10  
 
-Tutorial（教程）：
-![我不知道怎么用](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/247f4fvoKnj56MwN.png)
+Tutorial（教程）：  
+![我不知道怎么用](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/247f4fvoKnj56MwN.png)  
 Q:I don't know how to use it?
-![以admin身份运行powershell](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/h4IrTwyx4AaC8joE.png)
-A:Run PowerShell as an administrator and enter the following command.
+![以admin身份运行powershell](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/h4IrTwyx4AaC8joE.png)  
+A:Run PowerShell as an administrator and enter the following command.  
 
 ```powershell
 dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart

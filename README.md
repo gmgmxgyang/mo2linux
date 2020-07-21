@@ -55,6 +55,10 @@ Supported containers:
   🍹
   All configuration and optimization steps only apply to Debian,Ubuntu,Kali,Fedora and Arch.
 
+部分功能预览：
+![secret garden](https://images.gitee.com/uploads/images/2020/0721/221603_079fc8d5_5617340.png "Capture+_2020-07-21-22-12-33.png")  
+![steam](https://images.gitee.com/uploads/images/2020/0721/221625_594e5123_5617340.png "Capture+_2020-07-21-22-13-13.png")  
+
 ### 二：System 配置篇
 
 1.✨ 支持配置多国语言环境，并执行其它优化步骤。  

@@ -549,7 +549,7 @@ creat_linux_container_remove_script() {
 		  ps -e | grep startvnc
 		  pgrep proot &> /dev/null
 		if [ "\$?" = "0" ]; then
-		    echo '检测到proot容器正在运行，请先输stopvnc或手动强制停止容器运行'
+		    echo '检测到proot容器正在运行，请先输stopvnc或手动强制停止容器运行,亦或者是重启设备'
 		fi
 
 			ls -l ${DEBIAN_CHROOT}/root/sd/* 2>/dev/null

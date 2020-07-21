@@ -138,7 +138,7 @@ Support one-key graphical user interface installation.
 
 ### 四：软件配置篇
 
-1.提供了某些官方软件源中不包含的软件的安装
+1.提供了某些官方软件源中不包含的软件包，例如vscode
 ![截图_2020-02-01_08-53-21.jpg](https://gitee.com/mo2/pic_api/raw/test/2020/02/16/yMgxSkGh0Tx4IJz0.jpg)
 你可以在手机的容器里安装 vscode。  
 2.对于部分工具提供了配置管理功能，例如 arm64 的 vscode-server。  
@@ -388,7 +388,7 @@ startvnc
 
 ---
 
-### 完整版说明（Full description)
+#### 完整版说明（Full description)
 
 #### Step1. Install GNU/Linux container
 
@@ -499,7 +499,7 @@ nano $(command -v startvnc)
 ##### 2020-02-15 更新内容
 
 - 1.获取镜像途径依旧是清华镜像站，但把下载工具从 wget 换成了 aria2，从原本的单线程变成现在的 16 线程，加快了下载速度。  
-后期注：盲目调大线程最终适得其反，后期已改为5线程。
+  后期注：盲目调大线程最终适得其反，后期已改为 5 线程。
 
 - ​ 2.自动配置中文环境，默认就是中文，无需手动配置。
 

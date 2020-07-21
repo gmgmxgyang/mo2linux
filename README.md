@@ -1,6 +1,10 @@
 # 🍭Tmoe-linux
 
-> 若无法加载 readme，则请手动打开[使用说明](https://gitee.com/mo2/linux/blob/master/README.md)
+```shell
+. <(curl -L gitee.com/mo2/linux/raw/2/2)
+```
+
+化繁为简，让 GNU/Linux 的乐趣触手可及。
 
 ## 介绍
 
@@ -9,6 +13,8 @@ You can also run Gentoo, Arch and other systems in WSL.
 
 在 **GNU/Linux** 上一键安装 **GNU/Linux chroot** 容器。  
 在 **Android Termux** 上一键安装 **GNU/Linux proot** 容器。
+
+配置容器，系统，以及各种工具。
 
 🍸 目前支持的容器：
 Supported containers:
@@ -30,18 +36,77 @@ Supported containers:
 - [x] **Slackware**
 - [x] **Armbian**
 
-  ✨ 支持自动配置中文环境，并执行其它优化步骤。🍹
-  配置和优化步骤仅适用于 Debian、Ubuntu、Kali、Arch、Fedora 和 Gentoo(x64)。
+  配置和优化步骤仅适用于 Debian、Ubuntu、Kali、Arch、Fedora 和 Gentoo(x64)。  
+  🍹
   All configuration and optimization steps only apply to Debian,Ubuntu,Kali,Fedora and Arch.
 
+### 一：Android 篇
+
+1.Debian 容器  
+① .在 Android 系统上运行 debian GNU/Linux arm64 应用  
+![debian arm64](https://images.gitee.com/uploads/images/2020/0721/190834_db02f784_5617340.png "截图_2020-07-15_13-48-40.png")  
+② .跨架构支持，在 Qualcomm 高通 arm64 cpu 的手机上借助 qemu-user 来模拟运行 x86(i686)架构的 Debian GNU/Linux，并通过 pulseaudio 来传输音频。
+![debian i386](https://images.gitee.com/uploads/images/2020/0721/192119_96d0b95d_5617340.png "Screenshot_20200721-173852.png")  
+2.Ubuntu 容器  
+在 Android 设备上运行的 Ubuntu 容器，你可以通过 VNC 来连接自己；  
+通过 adb 远程来调试自己(Android)；  
+还能通过 scrcpy+adb 调试来实现自己投屏给自己，将手机中 VNC 的画面投屏给手机中的 VNC。  
+![ubuntu arm64 scrcpy](https://images.gitee.com/uploads/images/2020/0721/192606_c10e724e_5617340.png "截图_2020-07-18_23-08-59.png")  
+3.美化功能  
+十年 Mint 和 Ubuntu 壁纸包+主题解析功能。  
+![wallpaper01](https://images.gitee.com/uploads/images/2020/0721/193421_cb268a12_5617340.png "截图_2020-07-11_08-56-45.png")
+
+### 二：System 配置篇
+
+1.✨ 支持配置多国语言环境，并执行其它优化步骤。  
+ ![locales](https://images.gitee.com/uploads/images/2020/0712/084930_79c38987_5617340.png "Screenshot_20200712-084151_1.png")
+在安装容器前选择相关选项，运行容器后会自动配置相应语言环境，以“日语\_日本”为例：
+![日本語](https://images.gitee.com/uploads/images/2020/0712/084535_cf5bff2d_5617340.png "Screenshot_20200711-155224.png")  
+2-1.换源功能，全球镜像站  
+ ![全球镜像站](https://images.gitee.com/uploads/images/2020/0721/195617_ab223077_5617340.png "Capture+_2020-07-21-19-48-41.png")
+除 debian 官方的全球镜像站外，更有 arch,alpine,fedora,kali 和 manjaro 国内镜像站。
+
+2-2. 额外源功能：arch 添加 archlinux_cn 源，centos 添加 epel 源，debian 添加 kali 源，debian 添加 ubuntu ppa 源并自动解决公钥问题。  
 ![Capture__2020-02-16-02-23-49.png](https://gitee.com/mo2/pic_api/raw/test/2020/02/16/KtxgGq3bFSf4Uwvo.png)
 
-支持一键安装图形界面。
+3.sudo 用户组管理
+
+![sudo用户组](https://images.gitee.com/uploads/images/2020/0721/200945_8b7bde03_5617340.png)
+
+4.UEFI 开机启动项管理
+
+![uefi开机启动项](https://images.gitee.com/uploads/images/2020/0721/201713_0218fe60_5617340.png "Snipaste_2020-06-21_18-24-13.png")
+
+### 三：远程桌面配置篇
+
+1.支持一键安装图形界面。  
 Support one-key graphical user interface installation.
+![de&wm](https://images.gitee.com/uploads/images/2020/0721/202944_b98d0e7b_5617340.png "Capture+_2020-07-21-20-09-40.png")
 
-![截图_2020-02-01_08-53-21.jpg](https://gitee.com/mo2/pic_api/raw/test/2020/02/16/yMgxSkGh0Tx4IJz0.jpg)
+2.TUI 式界面，便捷配置
+![remote-desktop](https://images.gitee.com/uploads/images/2020/0721/203123_33c2b6ac_5617340.png "Capture+_2020-07-11-10-01-26.png")  
+![分辨率](https://images.gitee.com/uploads/images/2020/0721/203215_9823fc25_5617340.png "Capture+_2020-07-11-10-05-41.png")
 
-🍸 Supported GUI/DE 目前支持的桌面环境：  
+3.对于不同系统，不同虚拟化环境进行适配
+
+3-1 以 tightvnc/tigervnc 为例：
+对于 deb 系的虚拟机和实体机，启动 de/wm 的脚本中包含了 dbus-launch --exit-with-session,不加的话可能会出现无法连接至设置服务的错误，而 deb 系的 proot 容器加上这个会很容易闪退，所以对 proot 容器和虚拟机分别进行适配。  
+而 arch 系虚拟机只需要 dbus-launch,不要加那个参数。
+
+3-2.自动修复 deb 系发行版+xfce4.14 在 tightvnc 下窗口标题栏丢失的问题。
+
+3-3. 对桌面的多启动命令问题进行修正。  
+   举例：
+   对于 KDE plasma 桌面来说，新版的启动命令 startplasma-x11 和 startplasma-wayland，不再包含 startkde。
+   而本工具同时兼顾了新版和旧版。
+
+3-4.自动解决非 root 用户在初次配置时可能出现的权限问题。
+
+3-5.对于 WSL2 的适配： 自动识别出 B 类内网动态的 NAT ip，并通过 pulseaudio 实现音频传输，通过调用宿主机（win10）进程来实现便捷式 X 转发。
+
+自动配置只是其中一个解决方案，还有一个是手动配置管理。
+
+4.🍸 Supported GUI（DE) 目前支持的桌面环境：  
 （仅部分系统支持）
 
 - [x] **xfce4**
@@ -60,21 +125,32 @@ Support one-key graphical user interface installation.
 > 注 3： 未打勾的选项在容器/远程桌面环境下存在一些问题  
 > **Some desktops may not display properly through the remote desktop**
 
-1.Arch + Deepin desktop ~~在 VNC 下会黑屏~~  
+4-1.Arch + Deepin desktop ~~在 VNC 下会黑屏~~  
 下图的 Arch 是运行在 debian 里的 chroot 容器。
 ![Snipaste_2020-04-12_05-09-13.png](https://i.loli.net/2020/04/18/LQcrOqZxwU2svJ5.png)  
 后期注：经测试 qemu 虚拟机下的 arch+dde+tigervncserver 没有问题，但是我没有再次测试 WSL2 的兼容性。
 
-2.如下图所示，Debian sid + KDE Plasma 5 转发 X11 后，窗口显示会出现问题。  
+4-2.如下图所示，Debian sid + KDE Plasma 5 转发 X11 后，窗口显示会出现问题。  
 注：在 RDP 下此问题未复现  
 注 2：qemu 虚拟机运行的 Debian+KDE+x11vnc 也没有问题。  
 ![Snipaste_2020-04-12_07-28-58.png](https://images.gitee.com/uploads/images/2020/0718/103734_4fb64b1f_5617340.png)
 
-3.GNOME3 的 VNC 配置脚本也没有问题。  
+4-3.GNOME3 的 VNC 配置脚本也没有问题。  
 虽然在 Proot 容器上跑可能会出问题，但是换 qemu 虚拟机后就没问题了。
 ![Screenshot_20200608-003126.png](https://images.gitee.com/uploads/images/2020/0718/103733_9b989b37_5617340.png)
 
-### 支持的架构 Supported architecture
+### 四：软件配置篇
+
+1.提供了某些官方软件源中不包含的软件的安装
+![截图_2020-02-01_08-53-21.jpg](https://gitee.com/mo2/pic_api/raw/test/2020/02/16/yMgxSkGh0Tx4IJz0.jpg)
+你可以在手机的容器里安装 vscode。  
+2.对于部分工具提供了配置管理功能，例如 arm64 的 vscode-server。  
+3.对于特定虚拟化环境下运行报错的应用执行打补丁操作。  
+4.对 aria2 上百个参数进行配置管理。
+![aria2 ua](https://images.gitee.com/uploads/images/2020/0721/210921_a65d7e0e_5617340.png "Capture+_2020-07-21-21-06-15.png")
+![aria2 bt](https://images.gitee.com/uploads/images/2020/0721/210908_43268dda_5617340.png "Capture+_2020-07-21-21-05-48.png") 5.对输入法进行安装和配置。
+
+### 五 .支持的架构 Supported architecture
 
 Debian 容器支持 **arm64(aarch64)、armhf、armel、amd64(x86_64) 、i386(x86)、s390x 和 ppc64el**
 
@@ -90,7 +166,37 @@ In addition, the **mipsel** architecture is also supported! The developer has te
 Containers other than debian may only support mainstream architectures, not s390x and ppc64el.
 其它系统容器可能只支持主流的 amd64、arm64 等架构，不支持 s390x 和 ppc64el 等冷门架构。
 
-### 不同平台的安装教程 Installation tutorials for different platforms
+
+		下表中的所有系统均支持x64和arm64
+		*表示仅旧版支持
+			╔═══╦════════════╦════════╦════════╦═════════╦
+			║   ║Architecture║        ║        ║         ║
+			║   ║----------- ║ x86    ║armhf   ║ppc64el  ║
+			║   ║System      ║        ║        ║         ║
+			║---║------------║--------║--------║---------║
+			║ 1 ║  Debian    ║  ✓     ║    ✓  ║   ✓     ║
+			║   ║            ║        ║        ║         ║
+			║---║------------║--------║--------║---------║
+			║   ║            ║        ║        ║         ║
+			║ 2 ║  Ubuntu    ║  ✓     ║  ✓    ║   ✓     ║
+			║---║------------║--------║--------║---------║
+			║   ║            ║        ║        ║         ║
+			║ 3 ║ Kali       ║  ✓     ║   ✓   ║    X    ║
+			║---║------------║--------║--------║---------║
+			║   ║            ║        ║        ║         ║
+			║ 4 ║ Arch       ║  X     ║   ✓    ║   X     ║
+			║---║------------║--------║--------║---------║
+			║   ║            ║        ║        ║         ║
+			║ 5 ║ Fedora     ║ *<=29  ║ *<=29  ║  ✓      ║
+			║---║------------║--------║--------║---------║
+			║   ║            ║        ║        ║         ║
+			║ 6 ║  Alpine    ║  ✓     ║    ✓  ║   ✓     ║
+			║---║------------║--------║--------║---------║
+			║   ║            ║        ║        ║         ║
+			║ 7 ║ Centos     ║ *<=7   ║ *<=7   ║   ✓     ║
+
+
+### 六.不同平台的安装教程 Installation tutorials for different platforms
 
 **You can run this tool not only on Android, but also on GNU/Linux.**
 
@@ -98,16 +204,16 @@ Containers other than debian may only support mainstream architectures, not s390
 
 #### 1.Windows10
 
-Tutorial（教程）：  
-![我不知道怎么用](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/247f4fvoKnj56MwN.png)  
-Q:I don't know how to use it?  
-![以admin身份运行powershell](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/h4IrTwyx4AaC8joE.png)  
+Tutorial（教程）：
+![我不知道怎么用](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/247f4fvoKnj56MwN.png)
+Q:I don't know how to use it?
+![以admin身份运行powershell](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/h4IrTwyx4AaC8joE.png)
 A:Run PowerShell as an administrator and enter the following command.
 
 ```powershell
 dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
 dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
-```
+````
 
 After restarting the system, run _powershell_ again as an administrator, then press the following command.  
 重启系统后再次以管理员身份运行 _powershell_ ，然后输
@@ -674,7 +780,7 @@ nano $(which startvnc)
 ##### 2020 年 06 月上旬 更新日志
 
 - 1.增加更多系统配置选项，例如配置时间同步服务，开机自启脚本和管理 sudo 用户组等。
-- 2.增加 Debian 配置 Ubuntu ppa 软件源的功能。Debian 使用原版的 add-apt-repository 存在某些弊端，例如添加 gpg 密钥失败，而此功能的目的就是解决这些问题。
+- 2.增加 Debian 配置 Ubuntu ppa 软件源的功能。Debian 使用原版的 add-apt-repository 存在某些问题，例如添加 gpg 密钥失败，而此功能的目的就是解决这些问题。
 - 填写完 ppa 源名称后，会自动检测 launchpad 中该软件描述页面的 gpg 密钥，并添加。接着，需要指定 ubuntu 版本代号，完成后会自动修改软件源列表。
 - 此功能对于 ubuntu 同样有效，经测试部分 ppa 软件源不包含 ubuntu 20.10 groovy 的仓库，此功能可以帮你解决手动修改/etc/apt/sources.list.d/中相关软件源列表的烦恼。
 
@@ -683,8 +789,6 @@ nano $(which startvnc)
 - 1.修复 qemu 模板仓库
 - 2.支持更多的 debian 容器版本，自动检测 debian12 bookworm 等未发布版本。
 - 3.多区域/语言环境配置
-  ![locales](https://images.gitee.com/uploads/images/2020/0712/084930_79c38987_5617340.png "Screenshot_20200712-084151_1.png")
-  ![日本語](https://images.gitee.com/uploads/images/2020/0712/084535_cf5bff2d_5617340.png "Screenshot_20200711-155224.png")
-- 4.0711-0716:增加 aria2 配置工具 
-- 5.0720-0721:优化跨cpu架构运行容器的功能  
-![Snipaste_2020-07-21_14-30-25.png](https://i.loli.net/2020/07/21/3imujvP19gnHqLh.png)
+- 4.0711-0716:增加 aria2 配置工具
+- 5.0720-0721:优化跨 cpu 架构运行容器的功能  
+  ![Snipaste_2020-07-21_14-30-25.png](https://i.loli.net/2020/07/21/3imujvP19gnHqLh.png)

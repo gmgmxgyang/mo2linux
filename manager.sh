@@ -1060,11 +1060,16 @@ install_gnu_linux_container() {
 			case $opt in
 			y* | Y* | "")
 				bash ${PREFIX}/bin/debian-rm 2>/dev/null
-				sed -i '/alias debian=/d' ${PREFIX}/etc/profile 2>/dev/null
-				sed -i '/alias debian-rm=/d' ${PREFIX}/etc/profile 2>/dev/null
-				source ${PREFIX}/etc/profile >/dev/null 2>&1
-				tmoe_linux_container_eula
+				if [ "$?" != '0' ]; then
+					echo "容器没有被移除"
+					press_enter_to_return
+					tmoe_manager_main_menu
+				else
+					tmoe_linux_container_eula
+				fi
+
 				;;
+
 			n* | N*)
 				echo "skipped."
 				press_enter_to_return

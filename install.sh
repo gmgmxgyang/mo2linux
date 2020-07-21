@@ -567,7 +567,8 @@ creat_linux_container_remove_script() {
 		  #echo "若容器未停止运行，则建议你先手动在termux原系统中执行stopvnc，再进行移除操作。"
 			echo 'Detecting debian system size... 正在检测debian system占用空间大小'
 		   du -sh ./${DEBIAN_FOLDER} --exclude=./${DEBIAN_FOLDER}/root/tf --exclude=./${DEBIAN_FOLDER}/root/sd --exclude=./${DEBIAN_FOLDER}/root/termux
-			echo "\${YELLOW}按回车键确认移除 Press enter to confirm.\${RESET} "
+			echo "Do you want to remove it?[Y/n]"
+			echo "\${YELLOW}按回车键确认移除 Press enter to remove.\${RESET} "
 		    pkill proot 2>/dev/null
 			read opt
 			case \$opt in

@@ -11,7 +11,25 @@
 🍭Without any basic knowledge of linux shell,🍹 you can run GNU/Linux on your android phone and windows PC, and you can easily install a graphical desktop environment and configure pulseaudio server.✨
 You can also run Gentoo, Arch and other systems in WSL.
 
-在 **GNU/Linux**、**Android Termux** 和**Windows10的linux子系统**上配置 **GNU/Linux chroot或proot** 容器环境，并配置远程桌面和系统。
+在 **GNU/Linux**、**Android Termux** 和**Windows10 的 linux 子系统**上配置 **GNU/Linux chroot 或 proot** 容器环境，并配置远程桌面和系统。
+
+### 一：Android 篇
+
+1.Debian 容器  
+① 在 Android 系统上运行 debian GNU/Linux arm64 应用  
+![debian arm64](https://images.gitee.com/uploads/images/2020/0721/190834_db02f784_5617340.png "截图_2020-07-15_13-48-40.png")  
+② 跨架构支持，在 Qualcomm 高通 arm64 cpu 的手机上借助 qemu-user 来模拟运行 x86(i686)架构的 Debian GNU/Linux，并通过 pulseaudio 来传输音频。
+![debian i386](https://images.gitee.com/uploads/images/2020/0721/192119_96d0b95d_5617340.png "Screenshot_20200721-173852.png")  
+2.Ubuntu 容器  
+在 Android 设备上运行的 Ubuntu 容器，你可以通过 VNC 来连接自己；  
+通过 adb 远程来调试自己(Android)；  
+还能通过 scrcpy+adb 调试来实现自己投屏给自己，将手机中 VNC 的画面投屏给手机中的 VNC。  
+![ubuntu arm64 scrcpy](https://images.gitee.com/uploads/images/2020/0721/192606_c10e724e_5617340.png "截图_2020-07-18_23-08-59.png")  
+3.美化功能  
+十年 Mint 和 Ubuntu 壁纸包+主题解析功能。  
+![wallpaper01](https://images.gitee.com/uploads/images/2020/0721/193421_cb268a12_5617340.png "截图_2020-07-11_08-56-45.png")
+
+### 番外篇  
 
 🍸 目前支持的容器：
 Supported containers:
@@ -36,22 +54,6 @@ Supported containers:
   配置和优化步骤仅适用于 Debian、Ubuntu、Kali、Arch、Fedora 和 Gentoo(x64)。  
   🍹
   All configuration and optimization steps only apply to Debian,Ubuntu,Kali,Fedora and Arch.
-
-### 一：Android 篇
-
-1.Debian 容器  
-① 在 Android 系统上运行 debian GNU/Linux arm64 应用  
-![debian arm64](https://images.gitee.com/uploads/images/2020/0721/190834_db02f784_5617340.png "截图_2020-07-15_13-48-40.png")  
-② 跨架构支持，在 Qualcomm 高通 arm64 cpu 的手机上借助 qemu-user 来模拟运行 x86(i686)架构的 Debian GNU/Linux，并通过 pulseaudio 来传输音频。
-![debian i386](https://images.gitee.com/uploads/images/2020/0721/192119_96d0b95d_5617340.png "Screenshot_20200721-173852.png")  
-2.Ubuntu 容器  
-在 Android 设备上运行的 Ubuntu 容器，你可以通过 VNC 来连接自己；  
-通过 adb 远程来调试自己(Android)；  
-还能通过 scrcpy+adb 调试来实现自己投屏给自己，将手机中 VNC 的画面投屏给手机中的 VNC。  
-![ubuntu arm64 scrcpy](https://images.gitee.com/uploads/images/2020/0721/192606_c10e724e_5617340.png "截图_2020-07-18_23-08-59.png")  
-3.美化功能  
-十年 Mint 和 Ubuntu 壁纸包+主题解析功能。  
-![wallpaper01](https://images.gitee.com/uploads/images/2020/0721/193421_cb268a12_5617340.png "截图_2020-07-11_08-56-45.png")
 
 ### 二：System 配置篇
 
@@ -93,9 +95,9 @@ Support one-key graphical user interface installation.
 3-2.自动修复 deb 系发行版+xfce4.14 在 tightvnc 下窗口标题栏丢失的问题。
 
 3-3. 对桌面的多启动命令问题进行修正。  
-   举例：
-   对于 KDE plasma 桌面来说，新版的启动命令 startplasma-x11 和 startplasma-wayland，不再包含 startkde。
-   而本工具同时兼顾了新版和旧版。
+ 举例：
+对于 KDE plasma 桌面来说，新版的启动命令 startplasma-x11 和 startplasma-wayland，不再包含 startkde。
+而本工具同时兼顾了新版和旧版。
 
 3-4.自动解决非 root 用户在初次配置时可能出现的权限问题。
 
@@ -163,35 +165,33 @@ In addition, the **mipsel** architecture is also supported! The developer has te
 Containers other than debian may only support mainstream architectures, not s390x and ppc64el.
 其它系统容器可能只支持主流的 amd64、arm64 等架构，不支持 s390x 和 ppc64el 等冷门架构。
 
-
-		下表中的所有系统均支持x64和arm64
-		*表示仅旧版支持
-			╔═══╦════════════╦════════╦════════╦═════════╦
-			║   ║Architecture║        ║        ║         ║
-			║   ║----------- ║ x86    ║armhf   ║ppc64el  ║
-			║   ║System      ║        ║        ║         ║
-			║---║------------║--------║--------║---------║
-			║ 1 ║  Debian    ║  ✓     ║    ✓  ║   ✓     ║
-			║   ║            ║        ║        ║         ║
-			║---║------------║--------║--------║---------║
-			║   ║            ║        ║        ║         ║
-			║ 2 ║  Ubuntu    ║  ✓     ║  ✓    ║   ✓     ║
-			║---║------------║--------║--------║---------║
-			║   ║            ║        ║        ║         ║
-			║ 3 ║ Kali       ║  ✓     ║   ✓   ║    X    ║
-			║---║------------║--------║--------║---------║
-			║   ║            ║        ║        ║         ║
-			║ 4 ║ Arch       ║  X     ║   ✓    ║   X     ║
-			║---║------------║--------║--------║---------║
-			║   ║            ║        ║        ║         ║
-			║ 5 ║ Fedora     ║ *<=29  ║ *<=29  ║  ✓      ║
-			║---║------------║--------║--------║---------║
-			║   ║            ║        ║        ║         ║
-			║ 6 ║  Alpine    ║  ✓     ║    ✓  ║   ✓     ║
-			║---║------------║--------║--------║---------║
-			║   ║            ║        ║        ║         ║
-			║ 7 ║ Centos     ║ *<=7   ║ *<=7   ║   ✓     ║
-
+    	下表中的所有系统均支持x64和arm64
+    	*表示仅旧版支持
+    		╔═══╦════════════╦════════╦════════╦═════════╦
+    		║   ║Architecture║        ║        ║         ║
+    		║   ║----------- ║ x86    ║armhf   ║ppc64el  ║
+    		║   ║System      ║        ║        ║         ║
+    		║---║------------║--------║--------║---------║
+    		║ 1 ║  Debian    ║  ✓     ║    ✓  ║   ✓     ║
+    		║   ║            ║        ║        ║         ║
+    		║---║------------║--------║--------║---------║
+    		║   ║            ║        ║        ║         ║
+    		║ 2 ║  Ubuntu    ║  ✓     ║  ✓    ║   ✓     ║
+    		║---║------------║--------║--------║---------║
+    		║   ║            ║        ║        ║         ║
+    		║ 3 ║ Kali       ║  ✓     ║   ✓   ║    X    ║
+    		║---║------------║--------║--------║---------║
+    		║   ║            ║        ║        ║         ║
+    		║ 4 ║ Arch       ║  X     ║   ✓    ║   X     ║
+    		║---║------------║--------║--------║---------║
+    		║   ║            ║        ║        ║         ║
+    		║ 5 ║ Fedora     ║ *<=29  ║ *<=29  ║  ✓      ║
+    		║---║------------║--------║--------║---------║
+    		║   ║            ║        ║        ║         ║
+    		║ 6 ║  Alpine    ║  ✓     ║    ✓  ║   ✓     ║
+    		║---║------------║--------║--------║---------║
+    		║   ║            ║        ║        ║         ║
+    		║ 7 ║ Centos     ║ *<=7   ║ *<=7   ║   ✓     ║
 
 ### 六.不同平台的安装教程 Installation tutorials for different platforms
 
@@ -199,18 +199,18 @@ Containers other than debian may only support mainstream architectures, not s390
 
 **您不仅可以在 Android 手机上运行本工具，亦可在 GNU/Linux 上运行。**
 
-#### 1.Windows10  
+#### 1.Windows10
 
 Tutorial（教程）：  
 ![我不知道怎么用](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/247f4fvoKnj56MwN.png)  
 Q:I don't know how to use it?  
 ![以admin身份运行powershell](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/h4IrTwyx4AaC8joE.png)  
-A:Run PowerShell as an administrator and enter the following command.  
+A:Run PowerShell as an administrator and enter the following command.
 
 ```powershell
 dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
 dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
-````
+```
 
 After restarting the system, run _powershell_ again as an administrator, then press the following command.  
 重启系统后再次以管理员身份运行 _powershell_ ，然后输

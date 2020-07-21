@@ -11,10 +11,7 @@
 🍭Without any basic knowledge of linux shell,🍹 you can run GNU/Linux on your android phone and windows PC, and you can easily install a graphical desktop environment and configure pulseaudio server.✨
 You can also run Gentoo, Arch and other systems in WSL.
 
-在 **GNU/Linux** 上一键安装 **GNU/Linux chroot** 容器。  
-在 **Android Termux** 上一键安装 **GNU/Linux proot** 容器。
-
-配置容器，系统，以及各种工具。
+在 **GNU/Linux**、**Android Termux** 和**Windows10的linux子系统**上配置 **GNU/Linux chroot或proot** 容器环境，并配置远程桌面和系统。
 
 🍸 目前支持的容器：
 Supported containers:
@@ -206,7 +203,7 @@ Containers other than debian may only support mainstream architectures, not s390
 
 Tutorial（教程）：  
 ![我不知道怎么用](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/247f4fvoKnj56MwN.png)  
-Q:I don't know how to use it?
+Q:I don't know how to use it?  
 ![以admin身份运行powershell](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/h4IrTwyx4AaC8joE.png)  
 A:Run PowerShell as an administrator and enter the following command.  
 

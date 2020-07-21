@@ -1199,7 +1199,7 @@ remove_gnu_linux_container() {
 	pkill proot 2>/dev/null
 	pgrep proot &>/dev/null
 	if [ "$?" = "0" ]; then
-		echo '检测到proot容器正在运行，请先输stopvnc或手动停止运行'
+		echo '检测到proot容器正在运行，请先输stopvnc或手动强制停止容器运行'
 	fi
 	ls -l ${DEBIAN_CHROOT}/root/sd/* 2>/dev/null
 	if [ "$?" = "0" ]; then

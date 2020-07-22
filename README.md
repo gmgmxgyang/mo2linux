@@ -24,9 +24,7 @@ You can also run Gentoo, Arch and other systems in WSL.
 ① 在 Android 设备上运行的 Ubuntu 容器，你可以通过 VNC 来连接自己；  
 通过 adb 远程来调试自己(Android)；  
 还能通过 scrcpy+adb 调试来实现自己投屏给自己，将手机中 VNC 的画面投屏给手机中的 VNC。    
-![ubuntu arm64 scrcpy](https://images.gitee.com/uploads/images/2020/0721/192606_c10e724e_5617340.png "截图_2020-07-18_23-08-59.png")  
-② 在Ubuntu里玩各种有趣♂的东西  
-![island](https://images.gitee.com/uploads/images/2020/0722/181116_710a9cd1_5617340.png "Snipaste_2020-07-22_18-05-57.png")   
+![ubuntu arm64 scrcpy](https://images.gitee.com/uploads/images/2020/0721/192606_c10e724e_5617340.png "截图_2020-07-18_23-08-59.png")   
 3.美化功能  
 十年 Mint 和 Ubuntu 壁纸包+主题解析功能。  
 ![wallpaper01](https://images.gitee.com/uploads/images/2020/0721/193421_cb268a12_5617340.png "截图_2020-07-11_08-56-45.png")

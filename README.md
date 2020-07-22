@@ -21,10 +21,12 @@ You can also run Gentoo, Arch and other systems in WSL.
 ② 跨架构支持，在 Qualcomm 高通 arm64 cpu 的手机上借助 qemu-user 来模拟运行 x86(i686)架构的 Debian GNU/Linux，并通过 pulseaudio 来传输音频。
 ![debian i386](https://images.gitee.com/uploads/images/2020/0721/192119_96d0b95d_5617340.png "Screenshot_20200721-173852.png")  
 2.Ubuntu 容器  
-在 Android 设备上运行的 Ubuntu 容器，你可以通过 VNC 来连接自己；  
+① 在 Android 设备上运行的 Ubuntu 容器，你可以通过 VNC 来连接自己；  
 通过 adb 远程来调试自己(Android)；  
-还能通过 scrcpy+adb 调试来实现自己投屏给自己，将手机中 VNC 的画面投屏给手机中的 VNC。  
+还能通过 scrcpy+adb 调试来实现自己投屏给自己，将手机中 VNC 的画面投屏给手机中的 VNC。    
 ![ubuntu arm64 scrcpy](https://images.gitee.com/uploads/images/2020/0721/192606_c10e724e_5617340.png "截图_2020-07-18_23-08-59.png")  
+② 在Ubuntu里玩各种有趣♂的东西  
+![island](https://images.gitee.com/uploads/images/2020/0722/181116_710a9cd1_5617340.png "Snipaste_2020-07-22_18-05-57.png")   
 3.美化功能  
 十年 Mint 和 Ubuntu 壁纸包+主题解析功能。  
 ![wallpaper01](https://images.gitee.com/uploads/images/2020/0721/193421_cb268a12_5617340.png "截图_2020-07-11_08-56-45.png")
@@ -133,7 +135,7 @@ Support one-key graphical user interface installation.
 ![Snipaste_2020-04-12_07-28-58.png](https://images.gitee.com/uploads/images/2020/0718/103734_4fb64b1f_5617340.png)
 
 4-3.GNOME3 的 VNC 配置脚本也没有问题。  
-虽然在 Proot 容器上跑可能会出问题，但是换 qemu 虚拟机后就没问题了。
+虽然在 Proot 容器上跑可能会出问题，但是换 qemu-system 虚拟机后就没问题了。
 ![Screenshot_20200608-003126.png](https://images.gitee.com/uploads/images/2020/0718/103733_9b989b37_5617340.png)
 
 ### 四：软件配置篇

@@ -14779,6 +14779,13 @@ install_fcitx5(){
 	fi
 	configure_system_fcitx5
 	beta_features_quick_install
+	if [ "${LINUX_DISTRO}" = "debian" ]; then
+	  if [ ! $(command -v fcitx5-config-qt) ]; then
+		  DEPENDENCY_01=""
+		  add-apt-repository ppa:hosxy/test
+		  beta_features_quick_install
+	  fi
+	fi
 }
 ##############
 install_fcitx5_rime(){ 

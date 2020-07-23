@@ -885,6 +885,7 @@ tmoe_locale_settings() {
 		if [ ! -z "${TMOE_SCRIPT_PATH}"];then
             TMOE_SCRIPT_PATH=''
 		    set_debian_default_locale
+			source /etc/default/locale
 	    fi
 		mkdir -p /usr/local/etc/tmoe-linux/
 		cd /usr/local/etc/tmoe-linux/

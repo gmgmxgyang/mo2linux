@@ -161,6 +161,11 @@ gnu_linux() {
 		LINUX_DISTRO='debian'
 		PACKAGES_INSTALL_COMMAND='apt install -y'
 		PACKAGES_REMOVE_COMMAND='apt purge -y'
+		if grep -q 'ubuntu' /etc/os-release; then
+			DEBIAN_DISTRO='ubuntu'
+		elif [ "$(cat /etc/issue | cut -c 1-4)" = "Kali" ]; then
+			DEBIAN_DISTRO='kali'
+		fi
 
 	elif grep -Eq "opkg|entware" '/opt/etc/opkg.conf' 2>/dev/null || grep -q 'openwrt' "/etc/os-release"; then
 		LINUX_DISTRO='openwrt'

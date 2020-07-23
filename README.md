@@ -788,3 +788,4 @@ nano $(command -v startvnc)
 - 4.0711-0716:增加 aria2 配置工具
 - 5.0720-0721:优化跨 cpu 架构运行容器的功能  
   ![Snipaste_2020-07-21_14-30-25.png](https://i.loli.net/2020/07/21/3imujvP19gnHqLh.png)
+- 6.0723:配置fcitx5

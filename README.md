@@ -182,10 +182,10 @@ Containers other than debian may only support mainstream architectures, not s390
 | Debian       |     ✓     |   ✓    |    ✓    | 
 | Ubuntu       | \*<=19.10 |   ✓    |    ✓    | 
 | Kali         |     ✓     |   ✓    |    X    | 
-| Arch         |     ✓     |   ✓    |    X    | 
+| Arch         |     X     |   ✓    |    X    | 
 | Fedora       |  \*<=29   | \*<=29 |    ✓     | 
 | Alpine       |     ✓     |   ✓    |    ✓    | 
-| CentOS       |   \*<=7   | \*<=7   |   ×    |
+| CentOS       |   \*<=7   | \*<=7   |   ✓    |
 
 ### 六.不同平台的安装教程 Installation tutorials for different platforms
 

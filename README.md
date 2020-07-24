@@ -13,25 +13,27 @@ You can also run Gentoo, Arch and other systems in WSL.
 
 在 **GNU/Linux**、**Android Termux** 和**Windows10 的 linux 子系统**上配置 **GNU/Linux chroot 或 proot** 容器环境，并配置远程桌面、音频服务和系统。
 
-### 一：容器篇  
+### 一：容器篇
 
 1.Debian 容器  
 ① 在 Android 系统上运行 debian GNU/Linux arm64 应用  
 ![debian arm64](https://images.gitee.com/uploads/images/2020/0721/190834_db02f784_5617340.png "截图_2020-07-15_13-48-40.png")  
+![debian version](https://images.gitee.com/uploads/images/2020/0725/022931_5b2aa814_7793225.png "Capture+_2020-07-24-12-36-02.png")  
 ② 跨架构支持，在 Qualcomm 高通 arm64 cpu 的手机上借助 qemu-user 来模拟运行 x86(i686)架构的 Debian GNU/Linux，并通过 pulseaudio 来传输音频。
 ![debian i386](https://images.gitee.com/uploads/images/2020/0721/192119_96d0b95d_5617340.png "Screenshot_20200721-173852.png")  
+![arch](https://images.gitee.com/uploads/images/2020/0725/023007_2cb90736_7793225.png "Capture+_2020-07-24-12-40-59.png")  
 2.Ubuntu 容器  
 ① 在 Android 设备上运行的 Ubuntu 容器，你可以通过 VNC 来连接自己；  
 通过 adb 远程来调试自己(Android)；  
-还能通过 scrcpy+adb 调试来实现自己投屏给自己，将手机中 VNC 的画面投屏给手机中的 VNC。    
-![ubuntu arm64 scrcpy](https://images.gitee.com/uploads/images/2020/0721/192606_c10e724e_5617340.png "截图_2020-07-18_23-08-59.png")   
+还能通过 scrcpy+adb 调试来实现自己投屏给自己，将手机中 VNC 的画面投屏给手机中的 VNC。  
+![ubuntu arm64 scrcpy](https://images.gitee.com/uploads/images/2020/0721/192606_c10e724e_5617340.png "截图_2020-07-18_23-08-59.png")  
 3.美化功能  
 十年 Mint 和 Ubuntu 壁纸包+主题解析功能。  
 ![wallpaper01](https://images.gitee.com/uploads/images/2020/0721/193421_cb268a12_5617340.png "截图_2020-07-11_08-56-45.png")
 
 ### 番外篇
 
-🍸 目前支持的容器：
+#### 🍸 目前支持的容器：
 Supported containers:
 
 - [x] **Debian stable+sid**
@@ -51,13 +53,19 @@ Supported containers:
 - [x] **Slackware**
 - [x] **Armbian**
 
-  配置和优化步骤仅适用于 Debian、Ubuntu、Kali、Arch、Fedora 和 Gentoo(x64)。  
-  🍹
-  All configuration and optimization steps only apply to Debian,Ubuntu,Kali,Fedora and Arch.
+![gentoo](https://images.gitee.com/uploads/images/2020/0725/023040_88655e91_7793225.png "Capture+_2020-07-22-13-20-47.png")  
+ 配置和优化步骤仅适用于 Debian、Ubuntu、Kali、Arch、Fedora 和 Alpine。  
+ 🍹
+All configuration and optimization steps only apply to Debian,Ubuntu,Kali,Fedora and Arch.
 
-部分功能预览：
+#### 部分功能预览：  
+qemu虚拟机管理  
+![qemu虚拟机管理](https://images.gitee.com/uploads/images/2020/0725/023844_8d7d0eca_7793225.png "Capture+_2020-07-15-18-47-28.png")   
+安装和配置各种工具  
 ![secret garden](https://images.gitee.com/uploads/images/2020/0721/221603_079fc8d5_5617340.png "Capture+_2020-07-21-22-12-33.png")  
-![steam](https://images.gitee.com/uploads/images/2020/0721/221625_594e5123_5617340.png "Capture+_2020-07-21-22-13-13.png")
+![steam](https://images.gitee.com/uploads/images/2020/0721/221625_594e5123_5617340.png "Capture+_2020-07-21-22-13-13.png")   
+部分软件因其已存在强大的第三方GUI配置工具,故仅提供安装,不提供配置脚本。  
+![ATRI](https://images.gitee.com/uploads/images/2020/0725/015859_4b32d612_7793225.png "截图_2020-07-25_01-29-32.png")
 
 ### 二：System 配置篇
 
@@ -87,7 +95,7 @@ Support one-key graphical user interface installation.
 ![de&wm](https://images.gitee.com/uploads/images/2020/0721/202944_b98d0e7b_5617340.png "Capture+_2020-07-21-20-09-40.png")
 
 2.TUI 式界面，便捷配置
-![remote desktop configuration](https://images.gitee.com/uploads/images/2020/0722/143751_d5f4d9c4_5617340.png "Capture+_2020-07-22-14-36-25.png")   
+![remote desktop configuration](https://images.gitee.com/uploads/images/2020/0722/143751_d5f4d9c4_5617340.png "Capture+_2020-07-22-14-36-25.png")  
 ![分辨率](https://images.gitee.com/uploads/images/2020/0721/203215_9823fc25_5617340.png "Capture+_2020-07-11-10-05-41.png")
 
 3.对于不同系统，不同虚拟化环境进行适配
@@ -138,14 +146,15 @@ Support one-key graphical user interface installation.
 
 ### 四：软件配置篇
 
-1.提供了某些官方软件源中不包含的软件包，例如vscode
+1.提供了某些官方软件源中不包含的软件包，例如 vscode
 ![截图_2020-02-01_08-53-21.jpg](https://gitee.com/mo2/pic_api/raw/test/2020/02/16/yMgxSkGh0Tx4IJz0.jpg)
 你可以在手机的容器里安装 vscode。  
 2.对于部分工具提供了配置管理功能，例如 arm64 的 vscode-server。  
 3.对于特定虚拟化环境下运行报错的应用执行打补丁操作。  
 4.对 aria2 上百个参数进行配置管理。
 ![aria2 ua](https://images.gitee.com/uploads/images/2020/0721/210921_a65d7e0e_5617340.png "Capture+_2020-07-21-21-06-15.png")
-![aria2 bt](https://images.gitee.com/uploads/images/2020/0721/210908_43268dda_5617340.png "Capture+_2020-07-21-21-05-48.png") 5.对输入法进行安装和配置。
+![aria2 bt](https://images.gitee.com/uploads/images/2020/0721/210908_43268dda_5617340.png "Capture+_2020-07-21-21-05-48.png")  
+5.对输入法进行安装和配置。  
 
 ### 五 .支持的架构 Supported architecture
 
@@ -174,7 +183,7 @@ Containers other than debian may only support mainstream architectures, not s390
     		║   ║            ║        ║        ║         ║
     		║---║------------║--------║--------║---------║
     		║   ║            ║        ║        ║         ║
-    		║ 2 ║  Ubuntu    ║  ✓     ║  ✓    ║   ✓     ║
+    		║ 2 ║  Ubuntu    ║*<=19.10║  ✓    ║   ✓     ║
     		║---║------------║--------║--------║---------║
     		║   ║            ║        ║        ║         ║
     		║ 3 ║ Kali       ║  ✓     ║   ✓   ║    X    ║
@@ -788,4 +797,4 @@ nano $(command -v startvnc)
 - 4.0711-0716:增加 aria2 配置工具
 - 5.0720-0721:优化跨 cpu 架构运行容器的功能  
   ![Snipaste_2020-07-21_14-30-25.png](https://i.loli.net/2020/07/21/3imujvP19gnHqLh.png)
-- 6.0723:配置fcitx5
+- 6.0723:配置 fcitx5

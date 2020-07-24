@@ -75,7 +75,7 @@ qemu虚拟机管理
 ![日本語](https://images.gitee.com/uploads/images/2020/0712/084535_cf5bff2d_5617340.png "Screenshot_20200711-155224.png")  
 2-1.换源功能，全球镜像站  
  ![全球镜像站](https://images.gitee.com/uploads/images/2020/0721/195617_ab223077_5617340.png "Capture+_2020-07-21-19-48-41.png")
-除 debian 官方的全球镜像站外，更有 arch,alpine,fedora,kali 和 manjaro 国内镜像站。
+除 debian 官方的全球镜像站外，更有 ubuntu,arch,alpine,fedora,kali 和 manjaro 国内镜像站。
 
 2-2. 额外源功能：arch 添加 archlinux_cn 源，centos 添加 epel 源，debian 添加 kali 源，debian 添加 ubuntu ppa 源并自动解决公钥问题。  
 ![Capture__2020-02-16-02-23-49.png](https://gitee.com/mo2/pic_api/raw/test/2020/02/16/KtxgGq3bFSf4Uwvo.png)

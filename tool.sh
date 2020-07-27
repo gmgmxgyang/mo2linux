@@ -2120,12 +2120,12 @@ tmoe_desktop_faq() {
 			     
 			另外最麻烦的一点在于：如果上游发生了变更，那么就有可能导致脚本的部分地方失效。
 			
-			举个简单的例子：Termux在v0.95版中不再预装debianutils,导致novnc无法正常连接，其本质原因是novnc依赖于which这种最基础的命令。
+			举个例子：Termux在v0.95版中不再预装debianutils,导致novnc无法正常连接，其本质原因是novnc依赖于which这种最基础的命令。
 			解决方法特别简单，把该依赖（debianutils）再装回来就可以了。
 
 			注：novnc相当于浏览器版的vnc客户端，让您无需安装vnc app即可使用vnc连接。
 
-			再举个麻烦的例子。
+			再举个例子:
 			VScode server在之前某次更新中发生了重大变更。
 			我必须要修改远程服务器的自动打包方案，并且几乎完全重写了配置脚本。
 

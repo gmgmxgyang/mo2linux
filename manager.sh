@@ -1343,7 +1343,7 @@ backup_filename() {
 ######################
 backup_system() {
 	unmount_proc_dev
-	OPTION=$(whiptail --title "Backup System" --menu "Choose your option" 15 60 4 \
+	OPTION=$(whiptail --title "Backup System" --menu "Choose your option" 0 50 0 \
 		"0" "Back to the main menu 返回主菜单" \
 		"1" "备份GNU/Linux容器" \
 		"2" "备份Termux" \
@@ -1417,15 +1417,22 @@ backup_gnu_linux_container() {
 		tmoe_manager_main_menu
 
 	else
-		echo "您选择了tar.gz,即将为您备份至/sdcard/Download/backup/${TMPtime}.tar.gz"
-		echo "${YELLOW}按回车键开始备份,按Ctrl+C取消。Press Enter to start the backup.${RESET} "
-		press_enter_to_continue
-		if [ "$(command -v pv)" ]; then
-
+		if (whiptail --title "Choose the type of backup选择备份类型" --yes-button "tar.gz" --no-button "tar" --yesno "Which do yo like better? \n tar只进行打包，不压缩，速度快。\ntar.gz在打包的基础上进行压缩。" 0 50); then
+			echo "您选择了tar.gz,即将为您备份至/sdcard/Download/backup/${TMPtime}.tar.gz"
+			echo "${YELLOW}按回车键开始备份,按Ctrl+C取消。${RESET} "
+			press_enter_to_continue
+			if [ "$(command -v pv)" ]; then
 				tar -Ppczf - --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ${BACKUP_FOLDER} | (pv -p --timer --rate --bytes >${TMPtime}.tar.gz)
-		else
+			else
 				tar -Ppczvf ${TMPtime}.tar.gz --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ${BACKUP_FOLDER}
+			fi
+		else
+			echo "您选择了tar,只进行打包,不进行压缩，即将为您备份至/sdcard/Download/backup/${TMPtime}.tar"
+			echo "${YELLOW}按回车键开始备份,按Ctrl+C取消。${RESET} "
+			press_enter_to_continue
+			tar -Ppcvf ${TMPtime}.tar --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ${BACKUP_FOLDER}
 		fi
+
 		#最新版弃用了whiptail的进度条！！！
 		#tar -Ppczf - --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ~/${DEBIAN_FOLDER} ${PREFIX}/bin/debian | (pv -n >${TMPtime}.tar.gz) 2>&1 | whiptail --gauge "Packaging into tar.gz \n正在打包成tar.gz" 10 70
 
@@ -1435,7 +1442,7 @@ backup_gnu_linux_container() {
 		#  whiptail --gauge "正在备份,可能需要几分钟的时间请稍后.........." 6 60 0
 		pwd
 		ls -lth ./*tar* | grep ^- | head -n 1
-		echo 'gzip压缩至60%完成是正常现象。'
+		#echo 'gzip压缩至60%完成是正常现象。'
 		echo '备份完成'
 		press_enter_to_return
 		tmoe_manager_main_menu
@@ -1661,10 +1668,20 @@ backup_termux() {
 		backup_system
 	fi
 }
-###############
-
 ##################################
 ##################################
+uncompress_other_format_file() {
+	pwd
+	echo "即将为您解压..."
+	if [ ! "$(command -v pv)" ] || [ "${COMPATIBILITY_MODE}" = 'true' ]; then
+		echo "${GREEN} tar -Ppxvf ${RESTORE} ${RESET}"
+		tar -Ppxvf ${RESTORE}
+	else
+		echo "${GREEN} pv ${RESTORE} | tar -Ppx ${RESET}"
+		pv ${RESTORE} | tar -Ppx
+	fi
+}
+##############
 uncompress_tar_xz_file() {
 	pwd
 	echo 'tar.xz'
@@ -1710,6 +1727,8 @@ uncompress_tar_gz_file_test() {
 		uncompress_tar_gz_file
 	elif [ "${FILE_EXT_6}" = 'tar.xz' ]; then
 		uncompress_tar_xz_file
+	else
+		uncompress_other_format_file
 	fi
 }
 ################

@@ -1112,6 +1112,8 @@ install_gnu_linux_container() {
 				bash ${PREFIX}/bin/debian-rm 2>/dev/null
 				if [ "$?" != '0' ]; then
 					echo "容器没有被移除"
+					echo '正在强制删除'
+					remove_gnu_linux_container
 					press_enter_to_return
 					tmoe_manager_main_menu
 				else

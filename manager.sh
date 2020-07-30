@@ -653,7 +653,7 @@ android_termux() {
 #-- 主菜单 main menu
 tmoe_manager_main_menu() {
 	TMOE_OPTION=$(
-		whiptail --title "GNU/Linux Tmoe manager(20200721-04)" --backtitle "$(
+		whiptail --title "GNU/Linux Tmoe manager(20200730-16)" --backtitle "$(
 			base64 -d <<-'DoYouWantToSeeWhatIsInside'
 				6L6TZGViaWFuLWnlkK/liqjmnKznqIvluo8sVHlwZSBkZWJpYW4taSB0byBzdGFydCB0aGUgdG9v
 				bCzokIzns7vnlJ/niannoJTnqbblkZgK
@@ -1835,7 +1835,7 @@ where_is_start_dir() {
 ###############
 file_directory_selection() {
 
-	if (whiptail --title "FILE PATH" --yes-button '自动' --no-button '手动' --yesno "您想要手动指定文件目录还是自动选择？" 9 50); then
+	if (whiptail --title "FILE PATH" --yes-button '自动auto' --no-button '手动manually' --yesno "您想要手动指定文件目录还是自动选择？" 9 50); then
 		where_is_start_dir
 	else
 		manually_select_the_file_directory
@@ -2654,14 +2654,14 @@ check_tmoe_linux_container_rec_pkg_file_and_git() {
 ########################
 debian_sid_arm64_xfce_recovery_package() {
 	echo "即将为您下载至${DOWNLOAD_PATH}"
-	echo '下载大小1.41GB,解压后约占5G'
+	echo '下载大小1302.2MiB,解压后约占4.9GiB'
 	#echo "2020-07-11凌晨注：忘记给LibreOffice打补丁了 (ㄒoㄒ)/~~，请在安装完成后使用tmoe-linux tool给libreoffice打补丁"
-	CORRENTSHA256SUM='f838d3151ce9019ecc74c214d5e23952ca9de2a74406a04d457840ebbe0e21e9' #DevSkim: ignore DS173237
+	CORRENTSHA256SUM='0a3f6f964903d8a20d255754386a754020db71b12ef0c26659f2a54cb7e5ebf1' #DevSkim: ignore DS173237
 	BRANCH_NAME='arm64'
 	TMOE_LINUX_CONTAINER_REPO_01='https://gitee.com/ak2/debian_sid_rootfs_01'
 	TMOE_LINUX_CONTAINER_REPO_02='https://gitee.com/ak2/debian_sid_rootfs_02'
 	TMOE_LINUX_CONTAINER_REPO_03='https://gitee.com/ak2/debian_sid_rootfs_03'
-	DOWNLOAD_FILE_NAME='debian-sid_arm64+xfce4.14-2020-07-15_14-06-rootfs_bak.tar.xz'
+	DOWNLOAD_FILE_NAME='debian-sid_arm64+xfce4.14-2020-07-30_16-08-rootfs_bak.tar.xz'
 	check_tmoe_linux_container_rec_pkg_file_and_git
 }
 ##################
@@ -2690,7 +2690,7 @@ install_debian_sid_gnu_linux_container() {
 	DISTRO_CODE='sid'
 	BETA_SYSTEM=$(whiptail --title "Install sid via tuna station or DL rec PKG?" --menu "您想要通过软件源镜像站来安装，还是在线下载恢复包来安装?" 0 50 0 \
 		"1" "netinstall(通过软件源在线安装)" \
-		"2" "arm64 xfce4.14桌面+音乐app,1.41GB-20200715" \
+		"2" "arm64 xfce4.14桌面+音乐app,1.3G-20200730" \
 		"0" "Return to previous menu 返回上级菜单" \
 		3>&1 1>&2 2>&3)
 	##############################

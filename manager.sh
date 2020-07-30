@@ -1372,6 +1372,12 @@ backup_system() {
 	tmoe_manager_main_menu
 }
 ###########################
+check_backup_file() {
+	if [ -e "${BACKUP_FILE}" ]; then
+		BACKUP_FOLDER="${BACKUP_FOLDER} ${BACKUP_FILE}"
+	fi
+}
+############
 backup_gnu_linux_container() {
 
 	#ls -lth ./debian*.tar.* 2>/dev/null | head -n 5
@@ -1381,6 +1387,13 @@ backup_gnu_linux_container() {
 	#press_enter_to_continue
 	termux_backup_pre
 	TMPtime="${TARGET_BACKUP_FILE_NAME}-$(cat backuptime.tmp)-rootfs_bak"
+	BACKUP_FOLDER="${DEBIAN_CHROOT} ${PREFIX}/bin/debian ${PREFIX}/bin/debian-rm ${PREFIX}/bin/startxsdl ${PREFIX}/bin/startvnc"
+	BACKUP_FILE="${PREFIX}/bin/stopvnc"
+	check_backup_file
+	BACKUP_FILE="${ACROSS_ARCH_FILE}"
+	check_backup_file
+	BACKUP_FILE="${LINUX_CONTAINER_DISTRO_FILE}"
+	check_backup_file
 
 	if (whiptail --title "Select compression type 选择压缩类型 " --yes-button "tar.xz" --no-button "tar.gz" --yesno "Which do yo like better? \n tar.xz压缩率高，但速度慢。tar.xz has a higher compression ration, but is slower.\n tar.gz速度快,但压缩率低。tar.gz compresses faster, but with a lower compression ratio.\n 压缩过程中，进度条倒着跑是正常现象。" 12 50); then
 
@@ -1388,11 +1401,7 @@ backup_gnu_linux_container() {
 		echo "${YELLOW}按回车键开始备份,按Ctrl+C取消。Press Enter to start the backup.${RESET} "
 		press_enter_to_continue
 		#stopvnc（pkill all）在linux不会自动生成
-		if [ -e "${PREFIX}/bin/stopvnc" ]; then
-			tar -PJpcvf ${TMPtime}.tar.xz --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ~/${DEBIAN_FOLDER} ${PREFIX}/bin/debian ${PREFIX}/bin/debian-rm ${PREFIX}/bin/startxsdl ${PREFIX}/bin/startvnc ${PREFIX}/bin/stopvnc ${ACROSS_ARCH_FILE} ${LINUX_CONTAINER_DISTRO_FILE}
-		else
-			tar -PJpcvf ${TMPtime}.tar.xz --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ~/${DEBIAN_FOLDER} ${PREFIX}/bin/debian ${PREFIX}/bin/debian-rm ${PREFIX}/bin/startxsdl ${PREFIX}/bin/startvnc ${ACROSS_ARCH_FILE} ${ACROSS_ARCH_FILE} ${LINUX_CONTAINER_DISTRO_FILE}
-		fi
+		tar -PJpcvf ${TMPtime}.tar.xz --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ${BACKUP_FOLDER}
 
 		#whiptail进度条已弃用
 		#tar -PJpcf - --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ~/${DEBIAN_FOLDER} ${PREFIX}/bin/debian | (pv -n >${TMPtime}.tar.xz) 2>&1 | whiptail --gauge "Packaging into tar.xz" 10 70
@@ -1412,17 +1421,10 @@ backup_gnu_linux_container() {
 		echo "${YELLOW}按回车键开始备份,按Ctrl+C取消。Press Enter to start the backup.${RESET} "
 		press_enter_to_continue
 		if [ "$(command -v pv)" ]; then
-			if [ -e "${PREFIX}/bin/stopvnc" ]; then
-				tar -Ppczf - --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ~/${DEBIAN_FOLDER} ${PREFIX}/bin/debian ${PREFIX}/bin/debian-rm ${PREFIX}/bin/startxsdl ${PREFIX}/bin/startvnc ${PREFIX}/bin/stopvnc ${ACROSS_ARCH_FILE} ${LINUX_CONTAINER_DISTRO_FILE} | (pv -p --timer --rate --bytes >${TMPtime}.tar.gz)
-			else
-				tar -Ppczf - --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ~/${DEBIAN_FOLDER} ${PREFIX}/bin/debian ${PREFIX}/bin/debian-rm ${PREFIX}/bin/startxsdl ${PREFIX}/bin/startvnc ${ACROSS_ARCH_FILE} ${LINUX_CONTAINER_DISTRO_FILE} | (pv -p --timer --rate --bytes >${TMPtime}.tar.gz)
-			fi
+
+				tar -Ppczf - --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ${BACKUP_FOLDER} | (pv -p --timer --rate --bytes >${TMPtime}.tar.gz)
 		else
-			if [ -e "${PREFIX}/bin/stopvnc" ]; then
-				tar -Ppczvf ${TMPtime}.tar.gz --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ~/${DEBIAN_FOLDER} ${PREFIX}/bin/debian ${PREFIX}/bin/startvnc ${PREFIX}/bin/stopvnc ${ACROSS_ARCH_FILE} ${LINUX_CONTAINER_DISTRO_FILE}
-			else
-				tar -Ppczvf ${TMPtime}.tar.gz --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ~/${DEBIAN_FOLDER} ${PREFIX}/bin/debian ${PREFIX}/bin/startvnc ${ACROSS_ARCH_FILE} ${LINUX_CONTAINER_DISTRO_FILE}
-			fi
+				tar -Ppczvf ${TMPtime}.tar.gz --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ${BACKUP_FOLDER}
 		fi
 		#最新版弃用了whiptail的进度条！！！
 		#tar -Ppczf - --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ~/${DEBIAN_FOLDER} ${PREFIX}/bin/debian | (pv -n >${TMPtime}.tar.gz) 2>&1 | whiptail --gauge "Packaging into tar.gz \n正在打包成tar.gz" 10 70

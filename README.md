@@ -784,4 +784,4 @@ nano $(command -v startvnc)
 - 5.0720-0721:优化跨 cpu 架构运行容器的功能  
   ![Snipaste_2020-07-21_14-30-25.png](https://i.loli.net/2020/07/21/3imujvP19gnHqLh.png)
 - 6.0723:配置 fcitx5
-- 7.更新教育类，增加高考和考研
+- 7.0730更新教育类，增加高考和考研

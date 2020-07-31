@@ -154,6 +154,7 @@ gnu_linux() {
 			sudo -E bash -c "$(wget -qO- https://gitee.com/mo2/linux/raw/master/debian.sh)" ||
 				su -c "$(wget -qO- https://gitee.com/mo2/linux/raw/master/debian.sh)"
 		fi
+		#此处一定为debian.sh，而非manager.sh
 		exit 0
 	fi
 	##############

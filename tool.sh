@@ -8769,7 +8769,7 @@ tty_chinese_code() {
 		fbterm
 	else
 		export LANG='C.UTF-8'
-		echo '请手动执行LANG=C.UTF-8'
+		echo "请手动执行${GREEN}export LANG=C.UTF-8${RESET}"
 	fi
 }
 ################

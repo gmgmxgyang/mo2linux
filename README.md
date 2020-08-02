@@ -22,9 +22,8 @@ You can also run Gentoo, Arch and other systems in WSL.
 #### 1.Windows10
 
 Tutorial（教程）：  
-![我不知道怎么用](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/247f4fvoKnj56MwN.png)  
+
 Q:I don't know how to use it?  
-![以admin身份运行powershell](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/h4IrTwyx4AaC8joE.png)  
 A:Run PowerShell as an administrator and enter the following command.
 
 ```powershell
@@ -64,29 +63,7 @@ wsl --set-default-version 2
 
 > 注：WSL 请选择安装工具
 
-![你这个小可爱](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/EOErMiCMvxKOTUI1.png)  
-![不可以骂人家](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/WJRMr0Gk64p5D2eJ.png)  
-![并没有在说你](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/b2oKdVCvZmlx9aZI.png)  
-![01](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/kGTCjub8kg4WbMU6.png)  
-![02](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/5B20sqYFe0ZV15Hg.png)  
-![03](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/UvqZWPa3XSkEEprK.png)
-![04](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/CLvZ5AQaslZDZHWu.png)  
-![05](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/gXWDvCibdouH6IqX.png)
-
 > 后期注：建议 WSL 用户直接安装 gui ，不要在里面先套娃安装 chroot 容器，再装 gui，因为这将导致 windows 程序调用失败。
-
-![停止VNC](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/KvMfXNGnHKbspTNs.png)  
-![stopvnc](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/buq1rhY6i55M2Dv4.png)  
-![06](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/6CDOlyOZb6qDbYqb.png)  
-![07](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/GrPC2ckH7KavXw0p.png)  
-![08](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/DZNjgwyVIrUjd3TH.png)  
-![09](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/ACPJKw4lYfedt9D6.png)  
-![10](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/nqvK1beXuKXsrljA.png)  
-![11](https://gitee.com/mo2/pic_api/raw/test/2020/03/24/3luF9hHGPnPuhwHu.png)  
-![12](https://gitee.com/mo2/pic_api/raw/test/2020/03/24/YsZou4mIXZUFUYdZ.png)
-
-![14](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/56LaqsyefesPOa2t.png)  
-![perfect](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/ILwcxdCOYVCS3lB6.png)
 
 #### 2.Android-Termux
 

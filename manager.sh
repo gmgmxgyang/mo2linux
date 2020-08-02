@@ -2000,7 +2000,6 @@ space_occupation() {
 	fi
 	tmoe_manager_main_menu
 }
-
 ########################################################################
 update_tmoe_linux_manager() {
 	#curl -L -o ${PREFIX}/bin/debian-i 'https://gitee.com/mo2/linux/raw/master/debian.sh'

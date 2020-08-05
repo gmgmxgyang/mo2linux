@@ -21,7 +21,7 @@ Tutorial（教程）：
 
 Q:I don't know how to use it?  
 A:Run PowerShell as an administrator and type the following command.
-##### 序章  WSL篇
+##### 第一章  WSL篇
 ###### 本(伪)漫画讲述的是少女们机缘巧合之下卷入了debian状的旋涡，最终穿梭时空拯救世界的故事。  
 ![001](https://gitee.com/mo2/tmoe-linux-comic/raw/master/001.png)
 ![002](https://gitee.com/mo2/tmoe-linux-comic/raw/master/002.png)
@@ -52,7 +52,7 @@ wsl --set-default-version 2
 ![008](https://gitee.com/mo2/tmoe-linux-comic/raw/master/008.png)
 ![009](https://gitee.com/mo2/tmoe-linux-comic/raw/master/009.png)  
 
-**序章WSL篇完结，如需阅览第二章，则请继续阅读README。**
+**第一章WSL篇完结，如需阅览第二章，则请继续阅读README。**
 ---  
 打开子系统，然后根据提示更新 WSL2 的 linux 内核。更新完成后，当提示输普通账号用户名时，直接关掉窗口。
 

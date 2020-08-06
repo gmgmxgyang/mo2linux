@@ -328,8 +328,8 @@ Support one-key graphical user interface installation.
 ![remote desktop configuration](https://images.gitee.com/uploads/images/2020/0722/143751_d5f4d9c4_5617340.png "Capture+_2020-07-22-14-36-25.png")  
 ![分辨率](https://images.gitee.com/uploads/images/2020/0721/203215_9823fc25_5617340.png "Capture+_2020-07-11-10-05-41.png")
 
-3.对于不同系统，不同虚拟化环境进行适配
-
+3.对于不同系统，不同虚拟化环境进行适配  
+![map](https://images.gitee.com/uploads/images/2020/0807/012512_6bf5acb8_5617340.png "map.png")  
 3-1.以 tightvnc/tigervnc 服务为例：  
 对于 deb 系的虚拟机和实体机，启动 de/wm 的脚本中包含了 dbus-launch --exit-with-session,不加的话可能会出现无法连接至设置服务的错误，而 deb 系的 proot 容器加上这个会很容易闪退，所以对 proot 容器和虚拟机分别进行适配。  
 而 arch 系虚拟机只需要 dbus-launch,不要加那个参数。  
@@ -860,6 +860,6 @@ nano $(command -v startvnc)
 - 3.多区域/语言环境配置
 - 4.0711-0716:增加 aria2 配置工具
 - 5.0720-0721:优化跨 cpu 架构运行容器的功能  
-  ![Snipaste_2020-07-21_14-30-25.png](https://i.loli.net/2020/07/21/3imujvP19gnHqLh.png)
+  ![Snipaste_2020-07-21_14-30-25.png](https://images.gitee.com/uploads/images/2020/0807/012632_c98e4bf0_5617340.png)
 - 6.0723:配置 fcitx5
 - 7.0730更新教育类，增加高考和考研

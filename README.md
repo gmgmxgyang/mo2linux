@@ -332,7 +332,7 @@ Support one-key graphical user interface installation.
 ![map](https://images.gitee.com/uploads/images/2020/0807/015255_d4c64165_5617340.png "map.png")     
 3-1.以 tightvnc/tigervnc 服务为例：  
 对于 deb 系的虚拟机和实体机，启动 de/wm 的脚本中包含了 dbus-launch --exit-with-session,不加的话可能会出现无法连接至设置服务的错误，而 deb 系的 proot 容器加上这个会很容易闪退，所以对 proot 容器和虚拟机分别进行适配。  
-而 arch 系虚拟机只需要 dbus-launch,不要加那个参数。  
+而 arch 系虚拟机只需要 dbus-launch,不需要加那个参数。  
 3-2.自动修复 deb 系发行版+xfce4.14 在 tightvnc 下窗口标题栏丢失的问题。  
 3-3. 对桌面的多启动命令问题进行修正。  
  举例：对于 KDE plasma 桌面来说，新版的启动命令为 startplasma-x11 和 startplasma-wayland，不再包含 startkde，而本工具同时兼顾了新版和旧版。  
@@ -492,12 +492,7 @@ If you want to start GNU/Linux next time, you can just type `debian`.
 
 ##### 2-1.安装前（关于桌面环境的安装与卸载）
 
-进入 GNU/Linux 容器后，请从 _xfce、lxde、mate_ 中选择一种。
-
-_gnome_ 和 _kde_ 是用来卖萌用的，不要安装。如需安装，请自行解决依赖关系和其它问题。
-四选一！千万不要一下子装两个桌面！
-
-> 后期注：_KDE_ 已经在 _chroot_ 环境中测试成功，但由于操作流畅度堪忧，且存在 bug，故和 _lxqt_ 一样移除了支持，但您仍然可以使用主目录下的脚本进行安装。
+进入 GNU/Linux 容器后，您可以从 _xfce、lxde、mate_ 中选择一种。
 
 ##### 2-2.安装中
 

@@ -1761,7 +1761,7 @@ modify_xfce_window_scaling_factor() {
 }
 ##################
 modify_vnc_pulse_audio() {
- 	TARGET=$(whiptail --inputbox "若您需要转发音频到其它设备,那么您可在此处修改。linux默认为127.0.0.1,WSL2默认为宿主机ip,当前为$(grep 'PULSE_SERVER' ~/.vnc/xstartup | cut -d '=' -f 2 | head -n 1) \n本功能适用于局域网传输，本机操作无需任何修改。若您曾在音频服务端（接收音频的设备）上运行过Tmoe-linux(仅限Android和win10),并配置允许局域网连接,则只需输入该设备ip,无需加端口号。注：您需要手动启动音频服务端,Android-Termux需输pulseaudio --start,win10需手动打开'C:\Users\Public\Downloads\pulseaudio\pulseaudio.bat' \n至于其它第三方app,例如安卓XSDL,若其显示的PULSE_SERVER地址为192.168.1.3:4713,那么您需要输入192.168.1.3:4713" 20 50 --title "MODIFY PULSE SERVER ADDRESS" 3>&1 1>&2 2>&3)
+ 	TARGET=$(whiptail --inputbox "若您需要转发音频到其它设备,那么您可在此处修改。linux默认为127.0.0.1,WSL2默认为宿主机ip,当前为$(grep 'PULSE_SERVER' ~/.vnc/xstartup | cut -d '=' -f 2 | head -n 1) \n本功能适用于局域网传输，本机操作无需任何修改。若您曾在音频服务端（接收音频的设备）上运行过Tmoe-linux(仅限Android和win10),并配置允许局域网连接,则只需输入该设备ip,无需加端口号。注：您需要手动启动音频服务端,Android-Termux需输pulseaudio --start,win10需手动打开'C:\Users\Public\Downloads\pulseaudio\pulseaudio.bat' \n至于其它第三方app,例如安卓XSDL,若���显示的PULSE_SERVER地址为192.168.1.3:4713,那么您需要输入192.168.1.3:4713" 20 50 --title "MODIFY PULSE SERVER ADDRESS" 3>&1 1>&2 2>&3)
 	if [ "$?" != "0" ]; then
 		modify_other_vnc_conf
 	elif [ -z "${TARGET}" ]; then
@@ -7049,7 +7049,7 @@ install_chinese_manpages() {
 }
 #####################
 install_libre_office() {
-	#ps -e >/dev/null || echo "/proc分区未挂载，请勿安装libreoffice,赋予proot容器真实root权限可解决相关问题，但强烈不推荐！"
+	#ps -e >/dev/null || echo "/proc分区未挂载，请勿安��libreoffice,赋予proot容器真实root权限可解决相关问题，但强烈不推荐！"
 	ps -e >/dev/null
 	EXIT_STATUS="$?"
 	if [ "${EXIT_STATUS}" != "0" ]; then
@@ -10199,8 +10199,13 @@ install_gparted() {
 	beta_features_quick_install
 }
 ##################
-install_xournal (){ 
+install_xournal(){ 
 	DEPENDENCY_02="xournal"
+	beta_features_quick_install
+}
+##########
+install_evince(){ 
+	DEPENDENCY_02="evince"
 	beta_features_quick_install
 }
 ##########
@@ -10215,6 +10220,7 @@ tmoe_read_app_menu() {
 		"3" "WPS office(办公软件)" \
 		"4" "typora(markdown编辑器)" \
 		"5" "Xournal(手写编辑PDF)" \
+		"6" "evince(gnome-pdf文档阅读器)" \
 		"0" "Return to previous menu 返回上级菜单" \
 		3>&1 1>&2 2>&3)
 	##########################
@@ -10225,6 +10231,7 @@ tmoe_read_app_menu() {
 	3) install_wps_office ;;
 	4) install_typora ;;
 	5) install_xournal ;;
+	6) install_evince ;;
 	esac
 	##########################
 	#beta_features_quick_install
@@ -11114,14 +11121,67 @@ add_current_user_to_docker_group(){
 	echo "若您需要将当前用户移出docker用户组，则请输${RED}gpasswd -d ${CURRENT_USER_NAME} docker${RESET}"
 }
 ##########
+docker_163_mirror() {
+	if [ ! -d /etc/docker ]; then
+		mkdir -p /etc/docker
+	fi
+	cd /etc/docker
+	if [ ! -e daemon.json ]; then
+		echo '' >daemon.json
+	fi
+	if ! grep -q 'registry-mirrors' "daemon.json"; then
+		cat >daemon.json <<-'EOF'
+			{
+			"registry-mirrors": [
+			"https://hub-mirror.c.163.com/"
+			]
+			}
+		EOF
+	else
+		cat <<-'EOF'
+			检测到您已经设定了registry-mirrors,请手动修改daemon.json为以下配置。
+			{
+			"registry-mirrors": [
+			"https://hub-mirror.c.163.com/"
+			]
+			}
+		EOF
+	fi
+}
+##########
+docker_mirror_source(){ 
+	RETURN_TO_WHERE='docker_mirror_source'
+	VIRTUAL_TECH=$(
+		whiptail --title "DOCKER MIRROR" --menu "您想要修改哪些docker配置？" 0 0 0 \
+			"1" "163镜像" \
+			"2" "edit daemon.json" \
+			"3" "edit software source软件本体源" \
+			"0" "Return to previous menu 返回上级菜单" \
+			3>&1 1>&2 2>&3
+	)
+	#############
+	case ${VIRTUAL_TECH} in
+	0 | "") tmoe_docker_menu ;;
+	1) docker_163_mirror ;;
+	2) nano /etc/docker/daemon.json ;;
+	3) non_debian_function
+	nano /etc/apt/sources.list.d/docker.list
+	;;
+	esac
+	###############
+	press_enter_to_return
+	docker_mirror_source
+}
+##########
 tmoe_docker_menu(){
 	RETURN_TO_WHERE='tmoe_docker_menu'
 	VIRTUAL_TECH=$(
-		whiptail --title "DOCKER容器" --menu "您想要选择哪一项呢？" 0 0 0 \
+		whiptail --title "DOCKER容器" --menu "您想要对docker小可爱做什么?" 0 0 0 \
 			"1" "install docker-ce(安装docker社区版引擎)" \
 			"2" "pull distro images(拉取alpine,debian和ubuntu镜像)" \
 			"3" "portainer(web端图形化docker容器管理)" \
-			"4" "add ${CURRENT_USER_NAME} to docker group(添加至docker用户组)" \
+			"4" "mirror source镜像源" \
+			"5" "add ${CURRENT_USER_NAME} to docker group(添加至docker用户组)" \
 			"0" "Return to previous menu 返回上级菜单" \
 			3>&1 1>&2 2>&3
 	)
@@ -11131,7 +11191,8 @@ tmoe_docker_menu(){
 	1) install_docker_ce_or_io ;;
 	2) choose_gnu_linux_docker_images ;;
 	3) install_docker_portainer ;;
-	4) add_current_user_to_docker_group ;;
+	4) docker_mirror_source ;;
+	5) add_current_user_to_docker_group ;;
 	esac
 	###############
 	press_enter_to_return

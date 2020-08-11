@@ -754,7 +754,7 @@ tmoe_linux_tool_upgrade() {
 #####################
 download_videos() {
 	VIDEOTOOL=$(
-		whiptail --title "DOWNLOAD VIDEOS" --menu "你想要使用哪个工具来下载视频呢" 14 50 6 \
+		whiptail --title "DOWNLOAD VIDEOS" --menu "你想要使用哪个工具来下载视频呢" 0 50 0 \
 			"1" "🥂Annie" \
 			"2" "🍷You-get" \
 			"3" "🍾Youtube-dl" \
@@ -1356,7 +1356,7 @@ check_vscode_server_status() {
 ###############
 configure_vscode_server() {
 	CODE_SERVER_OPTION=$(
-		whiptail --title "CONFIGURE VSCODE_SERVER" --menu "您想要修改哪项配置？Which configuration do you want to modify?" 14 50 5 \
+		whiptail --title "CONFIGURE VSCODE_SERVER" --menu "您想要修改哪项配置？Which configuration do you want to modify?" 0 50 0 \
 			"1" "upgrade code-server更新/升级" \
 			"2" "password 设定密码" \
 			"3" "edit config manually手动编辑配置" \
@@ -2460,7 +2460,7 @@ tmoe_display_manager_systemctl() {
 		TMOE_DEPENDENCY_SYSTEMCTL="${DEPENDENCY_02}"
 	fi
 	INSTALLDESKTOP=$(whiptail --title "你想要对这个小可爱做什么？" --menu \
-		"显示管理器软件包基础配置" 14 50 6 \
+		"显示管理器软件包基础配置" 0 50 0 \
 		"1" "install/remove 安装/卸载" \
 		"2" "start启动" \
 		"3" "stop停止" \
@@ -16863,7 +16863,7 @@ install_nginx_webdav() {
 configure_nginx_webdav() {
 	#进入nginx webdav配置文件目录
 	cd /etc/nginx/conf.d/
-	TMOE_OPTION=$(whiptail --title "CONFIGURE WEBDAV" --menu "您想要修改哪项配置？Which configuration do you want to modify?" 14 50 5 \
+	TMOE_OPTION=$(whiptail --title "CONFIGURE WEBDAV" --menu "您想要修改哪项配置？Which configuration do you want to modify?" 0 50 0 \
 		"1" "One-key conf 初始化一键配置" \
 		"2" "管理访问账号" \
 		"3" "view logs 查看日志" \
@@ -17221,7 +17221,7 @@ configure_filebrowser() {
 	#先进入etc目录，防止database加载失败
 	cd /etc
 	TMOE_OPTION=$(
-		whiptail --title "CONFIGURE FILEBROWSER" --menu "您想要修改哪项配置？修改配置前将自动停止服务。" 14 50 5 \
+		whiptail --title "CONFIGURE FILEBROWSER" --menu "您想要修改哪项配置？修改配置前将自动停止服务。" 0 50 0 \
 			"1" "One-key conf 初始化一键配置" \
 			"2" "add admin 新建管理员" \
 			"3" "port 修改端口" \

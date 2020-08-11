@@ -8,7 +8,7 @@ cd ${TMPDIR}
 install_dependency() {
 	if [ $(command -v sudo) ]; then
 		sudo su -c "apt update 2>/dev/null || apk update 2>/dev/null"
-		sudo su -c "apk add ${DEPENDENCY_01} || apt install -y ${DEPENDENCY_01} || port install ${DEPENDENCY_01} || guix package -i ${DEPENDENCY_01} || pkg install ${DEPENDENCY_01} || pkg_add ${DEPENDENCY_01} || pkgutil -i ${DEPENDENCY_01} || pacman -S ${DEPENDENCY_01} || dnf install ${DEPENDENCY_01} || eopkg install ${DEPENDENCY_01}"
+		sudo su -c "apt install -y ${DEPENDENCY_01} || apk add ${DEPENDENCY_01} || port install ${DEPENDENCY_01} || guix package -i ${DEPENDENCY_01} || pkg install ${DEPENDENCY_01} || pkg_add ${DEPENDENCY_01} || pkgutil -i ${DEPENDENCY_01} || pacman -S ${DEPENDENCY_01} || dnf install ${DEPENDENCY_01} || eopkg install ${DEPENDENCY_01}"
 	else
 		su -c "apt update 2>/dev/null || apk update 2>/dev/null"
 		su -c "apt install -y ${DEPENDENCY_01} || apk add ${DEPENDENCY_01} || port install ${DEPENDENCY_01} || guix package -i ${DEPENDENCY_01} || pkg install ${DEPENDENCY_01} || pkg_add ${DEPENDENCY_01} || pkgutil -i ${DEPENDENCY_01} || pacman -S ${DEPENDENCY_01} || dnf install ${DEPENDENCY_01} || eopkg install ${DEPENDENCY_01}"

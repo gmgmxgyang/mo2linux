@@ -19,6 +19,12 @@ install_dependency() {
 	fi
 }
 #########
+tuna_mirror() {
+	if [ "${LANG}" = "zh_CN.UTF-8" ]; then
+		bash /media/docker/.tmoe-linux-docker.sh --tuna
+	fi
+}
+#########
 if [ $(command -v curl) ]; then
 	curl -Lvo .tmoe-linux.sh https://gitee.com/mo2/linux/raw/master/manager.sh
 elif [ $(command -v aria2c) ]; then
@@ -27,11 +33,12 @@ elif [ $(command -v wget) ]; then
 	wget -O .tmoe-linux.sh https://gitee.com/mo2/linux/raw/master/manager.sh
 else
 	DEPENDENCY_01='wget'
+	###tuna_mirror
 	install_dependency
 	wget -O .tmoe-linux.sh https://gitee.com/mo2/linux/raw/master/manager.sh
 fi
 
-###apt install -y locales 2>/dev/null ; locale-gen ${LANG} 
+###apt install -y locales 2>/dev/null ; locale-gen ${LANG}
 ###sed -i '/^apt install -y locales/d' /media/docker/.tmoe-linux-docker.sh
 #用于docker容器自动配置区域与语言环境。
 

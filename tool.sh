@@ -49,7 +49,7 @@ main() {
 	file | filebrowser)
 		filebrowser_restart
 		;;
-	tuna | -tuna | t | -t)
+	tuna | -tuna | --tuna | t | -t)
 		SOURCE_MIRROR_STATION='mirrors.tuna.tsinghua.edu.cn'
 		auto_check_distro_and_modify_sources_list
 		;;
@@ -10817,7 +10817,7 @@ run_special_tag_docker_container(){
 	TMOE_LINUX_DOCKER_SHELL_FILE="${MOUNT_DOCKER_FOLDER}/.tmoe-linux-docker.sh"
 	if [ ! -e "${TMOE_LINUX_DOCKER_SHELL_FILE}" ];then
 		aria2c --allow-overwrite=true -d ${MOUNT_DOCKER_FOLDER} -o ".tmoe-linux-docker.sh" https://gitee.com/mo2/linux/raw/master/debian.sh
-		aria2c --allow-overwrite=true -d ${MOUNT_DOCKER_FOLDER} -o ".tmoe-linux-tool.sh" https://gitee.com/mo2/linux/raw/master/tool.sh
+		#aria2c --allow-overwrite=true -d ${MOUNT_DOCKER_FOLDER} -o ".tmoe-linux-tool.sh" https://gitee.com/mo2/linux/raw/master/tool.sh
 		sed -i 's@###apt@apt@g' ${TMOE_LINUX_DOCKER_SHELL_FILE}
 		sed -i 's@###tuna_mirror@tuna_mirror@g' ${TMOE_LINUX_DOCKER_SHELL_FILE}
 	fi

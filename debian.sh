@@ -21,7 +21,9 @@ install_dependency() {
 #########
 tuna_mirror() {
 	if [ "${LANG}" = "zh_CN.UTF-8" ]; then
-		sed -i 's@deb.debian.org@ftp.cn.debian.org@g' /etc/apt/sources.list
+		CHINA_MIRROR='mirrors.huaweicloud.com'
+		sed -i "s@deb.debian.org@${CHINA_MIRROR}@g" /etc/apt/sources.list
+		sed -i "s@archive.ubuntu.com@${CHINA_MIRROR}@g" /etc/apt/sources.list
 	fi
 }
 #########

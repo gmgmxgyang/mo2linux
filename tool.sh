@@ -9507,6 +9507,11 @@ scrpy_faq() {
 		    启动前请先确保adb已正常连接至您的安卓设备。
 		    若adb无法连接，则请重启adb服务。
 			启动本应用的命令为${GREEN}scrcpy${RESET}
+			---------------
+			① 若Android无root权限，且系统未自带ADB网络调试功能，则请开启USB调试功能，并使用USB数据线连接本机（Linux设备)。
+			② 若Android无root权限，且系统自带ADB网络调试功能，则请同时开启USB和网络调试功能，您无需使用数据线即可连接。
+			③ 若Android有root权限，则您可以通过安装网络ADB调试软件https://coolapk.com/apk/com.yaerin.wadb 来开启网络ADB调试功能。
+			---------------
 			使用说明详见https://github.com/Genymobile/scrcpy/blob/master/README.md
 			https://www.iplaysoft.com/scrcpy.html
 		关闭手机屏幕  scrcpy -S
@@ -9529,10 +9534,10 @@ scrpy_faq() {
 ###############
 scrcpy_connect_to_android_device() {
 	#请输入adb
-	TARGET=$(whiptail --inputbox "① 若Android无root权限，且系统未自带ADB网络调试功能，则请开启USB调试功能，并使用USB数据线连接本机（Linux设备)。\n② 若Android无root权限，且系统自带ADB网络调试功能，则请同时开启USB和网络调试功能，您无需使用数据线即可连接。\n③ 若Android有root权限，则您可以通过安装网络ADB调试软件https://coolapk.com/apk/com.yaerin.wadb 来开启网络ADB调试功能。 \n请输入adb连接地址，例如192.168.99.3:5555。若不添加端口,则使用默认值" 0 0 --title "Please type the adb address" 3>&1 1>&2 2>&3)
+	TARGET=$(whiptail --inputbox "请输入adb连接地址，例如192.168.99.3:5555\n若不添加端口,则使用默认值" 0 0 --title "Please type the adb address" 3>&1 1>&2 2>&3)
 	if [ "$?" != "0" ]; then
 		${RETURN_TO_WHERE}
-	elif [ -z "${TARGET}" ]; then
+	elif [ -z "${TARGET}" ]; then 
 		echo "请输入有效的数值"
 		echo "Please enter a valid value"
 		echo "检测到您未输入有效的adb地址，已自动调整为localhost:5555"

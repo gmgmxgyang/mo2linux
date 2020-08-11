@@ -21,7 +21,7 @@ install_dependency() {
 #########
 tuna_mirror() {
 	if [ "${LANG}" = "zh_CN.UTF-8" ]; then
-		bash /media/docker/.tmoe-linux-docker.sh --tuna
+		bash /media/docker/.tmoe-linux-docker.sh -tuna
 	fi
 }
 #########

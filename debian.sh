@@ -21,7 +21,7 @@ install_dependency() {
 #########
 tuna_mirror() {
 	if [ "${LANG}" = "zh_CN.UTF-8" ]; then
-		bash /media/docker/.tmoe-linux-docker.sh -tuna
+		sed -i 's@deb.debian.org@ftp.cn.debian.org@g' /etc/apt/sources.list
 	fi
 }
 #########

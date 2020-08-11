@@ -11137,7 +11137,6 @@ install_docker_ce_or_io(){
 }
 ##############
 add_current_user_to_docker_group(){
-	cat /etc/passwd | grep "${HOME}" | awk -F ':' '{print $1}'
 	echo "Do you want to add ${CURRENT_USER_NAME} to docker group?"
 	echo "${YELLOW}gpasswd -a ${CURRENT_USER_NAME} docker${RESE}"
 	do_you_want_to_continue

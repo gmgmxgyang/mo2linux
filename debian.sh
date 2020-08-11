@@ -51,6 +51,7 @@ tmoe_locale_gen() {
 		sed -i 's@##@#@g' locale.gen 2>/dev/null
 		sed -i "$ a ${LANG} UTF-8" locale.gen
 		locale-gen ${LANG}
+		cd ${TMPDIR}
 	fi
 	#fi
 }

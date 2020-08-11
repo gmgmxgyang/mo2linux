@@ -11248,12 +11248,12 @@ install_container_and_virtual_machine() {
 	NON_DEBIAN='false'
 	VIRTUAL_TECH=$(
 		whiptail --title "虚拟化与api的转换" --menu "Which option do you want to choose?" 0 0 0 \
-			"1" "💻qemu:开源、跨平台的虚拟机" \
-			"2" "🐋docker:开源的应用容器引擎" \
-			"3" "💿download iso:下载镜像(Android,linux等)" \
+			"1" "💻 qemu:开源、跨平台的虚拟机" \
+			"2" "🐋 docker:开源的应用容器引擎" \
+			"3" "💿 download iso:下载镜像(Android,linux等)" \
 			"4" "VirtualBox(甲骨文开源虚拟机(x64)" \
-			"5" "🍷wine(调用win api并即时转换)" \
-			"6" "🥡anbox(Android in a box)" \
+			"5" "🍷 wine(调用win api并即时转换)" \
+			"6" "🥡 anbox(Android in a box)" \
 			"0" "🌚 Return to previous menu 返回上级菜单" \
 			"00" "Back to the main menu 返回主菜单" \
 			3>&1 1>&2 2>&3

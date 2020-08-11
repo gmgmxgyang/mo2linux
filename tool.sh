@@ -1292,8 +1292,9 @@ upgrade_video_download_tool() {
 which_vscode_edition() {
 	RETURN_TO_WHERE='which_vscode_edition'
 	ps -e >/dev/null 2>&1 || VSCODEtips=$(echo "检测到您无权读取/proc的部分内容，请选择Server版，或使用x11vnc打开VSCode本地版")
+	#15 60 5
 	VSCODE_EDITION=$(whiptail --title "Visual Studio Code" --menu \
-		"${VSCODEtips} Which edition do you want to install" 15 60 5 \
+		"${VSCODEtips} Which edition do you want to install" 0 50 0 \
 		"1" "VS Code Server:web版,含配置选项" \
 		"2" "VS Codium(不跟踪你的使用数据)" \
 		"3" "VS Code OSS(headmelted编译版)" \
@@ -15067,11 +15068,11 @@ download_the_latest_alpine_iso_file() {
 }
 ##################
 download_ubuntu_iso_file() {
-	if (whiptail --title "请选择版本" --yes-button "20.04" --no-button "自定义版本" --yesno "您是想要下载20.04还是自定义版本呢？♪(^∇^*) " 10 50); then
+	if (whiptail --title "请选择版本" --yes-button "20.04" --no-button "custom" --yesno "您是想要下载20.04还是自定义版本呢？\nDo you want to download 20.04 or a custom version?♪(^∇^*) " 0 50); then
 		UBUNTU_VERSION='20.04'
 		download_ubuntu_latest_iso_file
 	else
-		TARGET=$(whiptail --inputbox "请输入版本号，例如18.04\n Please enter the version." 12 50 --title "UBUNTU VERSION" 3>&1 1>&2 2>&3)
+		TARGET=$(whiptail --inputbox "请输入版本号，例如18.04\n Please type the ubuntu version code." 0 50 --title "UBUNTU VERSION" 3>&1 1>&2 2>&3)
 		if [ "$?" != "0" ]; then
 			echo "检测到您取消了操作"
 			UBUNTU_VERSION='20.04'
@@ -15085,7 +15086,7 @@ download_ubuntu_iso_file() {
 download_ubuntu_latest_iso_file() {
 	UBUNTU_MIRROR='tuna'
 	UBUNTU_EDITION=$(
-		whiptail --title "UBUNTU EDITION" --menu "请选择您需要下载的版本？Which edition do you want to download?" 16 55 6 \
+		whiptail --title "UBUNTU EDITION" --menu "请选择您需要下载的版本？\nWhich edition do you want to download?" 0 50 0 \
 			"1" "ubuntu-server(自动识别架构)" \
 			"2" "ubuntu(gnome)" \
 			"3" "xubuntu(xfce)" \
@@ -15194,7 +15195,7 @@ download_debian_qcow2_file() {
 	DOWNLOAD_PATH="${HOME}/sd/Download/backup"
 	mkdir -p ${DOWNLOAD_PATH}
 	cd ${DOWNLOAD_PATH}
-	if (whiptail --title "Edition" --yes-button "tmoe" --no-button 'openstack_arm64' --yesno "您想要下载哪个版本的磁盘镜像文件？\nWhich edition do you want to download?" 9 50); then
+	if (whiptail --title "Edition" --yes-button "tmoe" --no-button 'openstack_arm64' --yesno "您想要下载哪个版本的磁盘镜像文件？\nWhich edition do you want to download?" 0 50); then
 		download_tmoe_debian_x64_or_arm64_qcow2_file
 	else
 		GREP_ARCH='arm64'

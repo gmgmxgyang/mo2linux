@@ -4082,11 +4082,11 @@ configure_theme() {
 	RETURN_TO_WHERE='configure_theme'
 	INSTALL_THEME=$(whiptail --title "桌面环境主题" --menu \
 		"您想要下载哪个主题？\n Which theme do you want to download? " 0 50 0 \
-		"1" "🌈XFCE-LOOK-parser主题链接解析器" \
-		"2" "⚡local-theme-installer本地主题安装器" \
-		"3" "🎭win10:kali卧底模式主题" \
-		"4" "🚥MacOS:Mojave" \
-		"5" "🎋breeze:plasma桌面微风gtk+版主题" \
+		"1" "🌈 XFCE-LOOK-parser主题链接解析器" \
+		"2" "⚡ local-theme-installer本地主题安装器" \
+		"3" "🎭 win10:kali卧底模式主题" \
+		"4" "🚥 MacOS:Mojave" \
+		"5" "🎋 breeze:plasma桌面微风gtk+版主题" \
 		"6" "Kali:Flat-Remix-Blue主题" \
 		"7" "ukui:国产优麒麟ukui桌面主题" \
 		"8" "arc:融合透明元素的平面主题" \

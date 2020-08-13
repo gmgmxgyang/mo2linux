@@ -3196,7 +3196,7 @@ mirror_sources_station_download_speed_test() {
 	echo "此操作可能会消耗您${YELLOW}数十至上百兆${RESET}的${BLUE}流量${RESET}"
 	do_you_want_to_continue
 	cd ${TMPDIR}
-	CLANG_FILE="$(curl -L http://bintray.proxy.ustclug.org/termux/termux-packages-24/aarch64/ | grep clang | head -n 1 | cut -d '"' -f 4 | cut -d ':' -f 2)"
+	CLANG_FILE="$(curl -L dl.bintray.com/termux/termux-packages-24/aarch64/ | grep clang | head -n 1 | cut -d '"' -f 4 | cut -d ':' -f 2)"
 	echo "---------------------------"
 	SOURCE_MIRROR_STATION_NAME='清华镜像站'
 	SOURCE_MIRROR_STATION='mirrors.tuna.tsinghua.edu.cn/termux'

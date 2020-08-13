@@ -3233,8 +3233,18 @@ delete_sources_list_invalid_rows() {
 	cat ${SOURCES_LIST_FILE}
 }
 ###################
+check_termux_repo() {
+	cd ${SOURCES_LIST_FILE}.d
+	if grep -q '^deb' ${TERMUX_REPO}.list; then
+		TERMUX_REPO_ENABLED_STATUS="检测到您已启用本仓库\nYou have enabled ${TERMUX_REPO}-repo."
+	else
+		TERMUX_REPO_ENABLED_STATUS="检测到您已禁用本仓库\nYou have disabled ${TERMUX_REPO}-repo"
+	fi
+}
+##########
 enable_or_disable_termux_repo() {
-	if (whiptail --title "您想要对${TERMUX_REPO}小可爱做什么" --yes-button "enable启用" --no-button "disable禁用" --yesno "Do you want to enable or disable it?\n您是想要启用${TERMUX_REPO}-repo还是禁用呢？♪(^∇^*)" 9 50); then
+	check_termux_repo
+	if (whiptail --title "您想要对${TERMUX_REPO}小可爱做什么" --yes-button "enable启用" --no-button "disable禁用" --yesno "Do you want to enable or disable it?\n您是想要启用${TERMUX_REPO}-repo还是禁用呢？♪(^∇^*)\n${TERMUX_REPO_ENABLED_STATUS}" 9 50); then
 		apt update
 		apt install -y ${TERMUX_REPO}-repo
 		apt list | grep "/${TERMUX_REPO}"

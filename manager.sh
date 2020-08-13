@@ -3234,7 +3234,7 @@ delete_sources_list_invalid_rows() {
 }
 ###################
 enable_or_disable_termux_repo() {
-	if (whiptail --title "您想要对${TERMUX_REPO}小可爱做什么" --yes-button "enable启用" --no-button "disable禁用" --yesno "Do you want to enable or disable it?♪(^∇^*)" 10 50); then
+	if (whiptail --title "您想要对${TERMUX_REPO}小可爱做什么" --yes-button "enable启用" --no-button "disable禁用" --yesno "Do you want to enable or disable it?\n您是想要启用${TERMUX_REPO}-repo还是禁用呢？♪(^∇^*)" 9 50); then
 		apt update
 		apt install -y ${TERMUX_REPO}-repo
 		apt list | grep "/${TERMUX_REPO}"

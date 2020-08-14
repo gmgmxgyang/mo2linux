@@ -1097,21 +1097,54 @@ frequently_asked_questions() {
 	# 15 60 5
 	TMOE_FAQ=$(whiptail --title "FAQ(よくある質問)" --menu \
 		"您有哪些疑问？\nWhat questions do you have?" 0 50 0 \
-		"1" "VNC无法调用音频" \
-		"2" "给Linux Deploy配置VNC音频" \
-		"3" "disable qemu(禁用以适用于向下兼容)" \
+		"1" "About auto conf(关于自动配置)" \
+		"2" "VNC无法调用音频" \
+		"3" "给Linux Deploy配置VNC音频" \
+		"4" "disable qemu(禁用以适用于向下兼容)" \
 		"0" "🌚 Back to the main menu 返回主菜单" \
 		3>&1 1>&2 2>&3)
 	##############################
 	case "${TMOE_FAQ}" in
 	0 | "") tmoe_manager_main_menu ;;
-	1) vnc_can_not_call_pulse_audio ;;
-	2) linux_deploy_pulse_server ;;
-	3) disable_qemu_user_static ;;
+	1) questions_about_tmoe_automatic_configuration ;;
+	2) vnc_can_not_call_pulse_audio ;;
+	3) linux_deploy_pulse_server ;;
+	4) disable_qemu_user_static ;;
 	esac
 	#############
 	press_enter_to_return
 	tmoe_manager_main_menu
+}
+###########################
+questions_about_tmoe_automatic_configuration() {
+	cat <<-ENDOFFAQ
+		    Q:${YELLOW}为什么会自动修改termux的配色、字体和小键盘布局${RESET}
+			Why the color, font and keyboard layout of termux will be automatically modified during installation.
+		    
+			A:只有当${HOME}/.termux目录下的colors.properties、font.ttf和termux.properties${RED}不存在时${RESET}才会自动配置哦！
+			Only when the relevant file in the ~/.termux directory does not exist will it be automatically configured.
+
+			早期会强制更换字体,并自动备份,现在只有当字体不存在时才会自动配置。
+			有人跟我反馈说字体显示异常。
+			这是因为仅部分字体支持zsh的powerlevel 10k主题的特殊字符。
+
+			而配色和键盘一直以来都是只有当文件不存在时，才会自动配置。
+
+			由于本工具严重依赖方向键和回车键，因此修改默认布局稍微有点必要呢！
+			您只需要执行${GREEN}rm ${HOME}/.termux/termux.properties${RESET}即可删除配置并还原回默认布局。
+			You can type ${GREEN}rm ~/.termux/termux.properties${RESET} to delete it and restore to default.
+			-----------------------
+			Q:${YELLOW}为什么每次安装都会自动加载EULA?${RESET}
+		    
+			A:添加许可协议是为了避免不必要的麻烦。
+			作为一个开源项目，您可以随时审查其中的代码，而不必过多担心恶意代码。
+			-----------------------
+			Q:${YELLOW}为什么安装时会自动显示git仓库的链接?${RESET}
+		    
+			A:因为开源项目花了开发者很长的时间，希望大家能尊重原开发者。
+			换位思考一下：假如你辛辛苦苦录制的视频被别人盗了，没有人知道那个视频真正的原作者，而你的努力最终只能付诸于东流。
+			-----------------------
+	ENDOFFAQ
 }
 ###########################
 install_proot_container() {
@@ -1149,19 +1182,19 @@ install_chroot_container() {
 ########################
 startvnc_or_enter_the_container() {
 	if [ -e "${DEBIAN_CHROOT}/usr/local/bin/startvnc" ]; then
-		cat <<-EOF
+		cat <<-EOFVNC
 			You can type ${GREEN}startvnc${RESET} to start ${BLUE}tight/tigervnc server${RESET},type ${RED}stopvnc${RESET} to stop it.
 			You can also type ${GREEN}debian-i${RESET} to start ${BLUE}Tmoe-linux tool.${RESET}
-		EOF
+		EOFVNC
 		if [ "${LINUX_DISTRO}" = 'Android' ]; then
 			echo "在Android宿主机的Termux原系统下输${GREEN}startvnc${RESET}将同时启动Android版Realvnc viewer和${DEBIAN_FOLDER}容器内的tight或tiger vnc服务，输${GREEN}debian${RESET}仅支持进入${BLUE}${DEBIAN_FOLDER}容器${RESET}。"
 		fi
 		startvnc
 	else
-		cat <<-EOF
+		cat <<-EOFDEB
 			You can type ${GREEN}debian${RESET} to enter the ${BLUE}${DEBIAN_FOLDER} container${RESET}.
 			You can also type ${GREEN}debian-i${RESET} to start ${BLUE}Tmoe-linux tool${RESET}.
-		EOF
+		EOFDEB
 		debian
 	fi
 }

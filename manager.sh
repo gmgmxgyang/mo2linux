@@ -3652,35 +3652,39 @@ apt_dist_upgrade() {
 }
 #########
 termux_tuna_sources_list() {
-	if ! grep -q '^deb.*edu.cn.*termux-packages-24' '/data/data/com.termux/files/usr/etc/apt/sources.list'; then
+	#if ! grep -q '^deb.*edu.cn.*termux-packages-24'
+	if ! grep -q '^deb.*bfsu.*termux-packages-24' '/data/data/com.termux/files/usr/etc/apt/sources.list'; then
 		sed -i 's@^\(deb.*stable main\)$@#\1\ndeb https://mirrors.bfsu.edu.cn/termux/termux-packages-24 stable main@' /data/data/com.termux/files/usr/etc/apt/sources.list
 		if ! grep -q '^deb' '/data/data/com.termux/files/usr/etc/apt/sources.list'; then
 			echo -e '\ndeb https://mirrors.bfsu.edu.cn/termux/termux-packages-24 stable main' >>/data/data/com.termux/files/usr/etc/apt/sources.list
 		fi
 	fi
 
-	if ! grep -q '^deb.*tuna' '/data/data/com.termux/files/usr/etc/apt/sources.list.d/game.list'; then
-		sed -i 's@^\(deb.*games stable\)$@#\1\ndeb https://mirrors.bfsu.edu.cn/termux/game-packages-24 games stable@' /data/data/com.termux/files/usr/etc/apt/sources.list.d/game.list
+	if [ -e "/data/data/com.termux/files/usr/etc/apt/sources.list.d/game.list" ]; then
+		if ! grep -q '^deb.*bfsu' '/data/data/com.termux/files/usr/etc/apt/sources.list.d/game.list'; then
+			sed -i 's@^\(deb.*games stable\)$@#\1\ndeb https://mirrors.bfsu.edu.cn/termux/game-packages-24 games stable@' /data/data/com.termux/files/usr/etc/apt/sources.list.d/game.list
+		fi
 	fi
 
-	if ! grep -q '^deb.*tuna' '/data/data/com.termux/files/usr/etc/apt/sources.list.d/science.list'; then
-		sed -i 's@^\(deb.*science stable\)$@#\1\ndeb https://mirrors.bfsu.edu.cn/termux/science-packages-24 science stable@' /data/data/com.termux/files/usr/etc/apt/sources.list.d/science.list
+	if [ -e "/data/data/com.termux/files/usr/etc/apt/sources.list.d/science.list" ]; then
+		if ! grep -q '^deb.*bfsu' '/data/data/com.termux/files/usr/etc/apt/sources.list.d/science.list'; then
+			sed -i 's@^\(deb.*science stable\)$@#\1\ndeb https://mirrors.bfsu.edu.cn/termux/science-packages-24 science stable@' /data/data/com.termux/files/usr/etc/apt/sources.list.d/science.list
+		fi
 	fi
-
 	if [ -e "/data/data/com.termux/files/usr/etc/apt/sources.list.d/x11.list" ]; then
-		if ! grep -q '^deb.*tuna' '/data/data/com.termux/files/usr/etc/apt/sources.list.d/x11.list'; then
+		if ! grep -q '^deb.*bfsu' '/data/data/com.termux/files/usr/etc/apt/sources.list.d/x11.list'; then
 			sed -i 's@^\(deb.*x11 main\)$@#\1\ndeb https://mirrors.bfsu.edu.cn/termux/x11-packages x11 main@' /data/data/com.termux/files/usr/etc/apt/sources.list.d/x11.list
 		fi
 	fi
 
 	if [ -e "/data/data/com.termux/files/usr/etc/apt/sources.list.d/unstable.list" ]; then
-		if ! grep -q '^deb.*tuna' '/data/data/com.termux/files/usr/etc/apt/sources.list.d/unstable.list'; then
+		if ! grep -q '^deb.*bfsu' '/data/data/com.termux/files/usr/etc/apt/sources.list.d/unstable.list'; then
 			sed -i 's@^\(deb.*unstable main\)$@#\1\ndeb https://mirrors.bfsu.edu.cn/termux/unstable-packages unstable main@' /data/data/com.termux/files/usr/etc/apt/sources.list.d/unstable.list
 		fi
 	fi
 
 	if [ -e "/data/data/com.termux/files/usr/etc/apt/sources.list.d/root.list" ]; then
-		if ! grep -q '^deb.*tuna' '/data/data/com.termux/files/usr/etc/apt/sources.list.d/root.list'; then
+		if ! grep -q '^deb.*bfsu' '/data/data/com.termux/files/usr/etc/apt/sources.list.d/root.list'; then
 			sed -i 's@^\(deb.*root stable\)$@#\1\ndeb https://mirrors.bfsu.edu.cn/termux/termux-root-packages-24 root stable@' /data/data/com.termux/files/usr/etc/apt/sources.list.d/root.list
 		fi
 	fi

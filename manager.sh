@@ -3465,7 +3465,7 @@ check_android_version() {
 ###########
 termux_original_system_gui() {
 	RETURN_TO_WHERE='termux_original_system_gui'
-	OPTION=$(whiptail --title "Termux" --menu "这里是termux原系统的配置区域,不是GNU/Linux容器的哦！\nThe following options only apply to termux original system." 0 50 0 \
+	OPTION=$(whiptail --title "Termux" --menu "Termux native GUI has fewer software packages. \nIt is recommended that you install a container.\nTermux原系统GUI可玩性较低，建议您安装GNU/Linux（proot/chroot)容器,\n或通过qemu-system虚拟机来使用docker容器。\n这里是termux原系统的配置区域,不是GNU/Linux容器的哦！\nThe following options only apply to termux original system." 0 50 0 \
 		"1" "modify termux-vnc conf" \
 		"2" "🐹 install termux-xfce4" \
 		"3" "💔 remove xfce4" \
@@ -3488,11 +3488,11 @@ android_termux_tmoe_area() {
 	RETURN_TO_MENU='android_termux_tmoe_area'
 	RETURN_TO_WHERE='android_termux_tmoe_area'
 	#17 60 6
-	OPTION=$(whiptail --title "Termux" --menu "Termux native GUI has fewer software packages. \nIt is recommended that you install a container.\nTermux原系统GUI可玩性较低，建议您安装GNU/Linux（proot/chroot)容器,\n或通过qemu-system虚拟机来使用docker容器。" 0 50 0 \
+	OPTION=$(whiptail --title "Termux" --menu "您可以通过VNC客户端来连接GNU/Linux(proot/chroot)容器的桌面,\n并在此处修改termux音频服务端的配置\nYou can use vncviewer to connect container DE." 0 50 0 \
 		"1" "🎶 configure Termux LAN audio局域网音频传输" \
 		"2" "🎧 switch VNC audio音频传输方式" \
 		"3" "🍅 query space occupation查询空间占用" \
-		"4" "🍑 vnc/xsdl/xwayland.apk下载VNC客户端" \
+		"4" "🍑 vnc/xsdl/xwayland.apk下载远程桌面客户端" \
 		"5" "🤖 termux_fdroid.apk下载termux" \
 		"6" "VSCode Server arm64" \
 		"7" "Video tutorial(2020-02,旧版教程)" \

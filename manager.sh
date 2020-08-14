@@ -3352,7 +3352,7 @@ android_termux_tmoe_area() {
 	check_android_version
 	RETURN_TO_MENU='android_termux_tmoe_area'
 	#17 60 6
-	OPTION=$(whiptail --title "Termux" --menu "Termux native GUI has fewer software packages. \nIt is recommended that you install a container.\nTermux原系统GUI可玩性较低，建议您安装GNU/Linux（proot/chroot)容器,\n或通过qemu-system来使用docker容器。" 0 50 0 \
+	OPTION=$(whiptail --title "Termux" --menu "Termux native GUI has fewer software packages. \nIt is recommended that you install a container.\nTermux原系统GUI可玩性较低，建议您安装GNU/Linux（proot/chroot)容器,\n或通过qemu-system虚拟机来使用docker容器。" 0 50 0 \
 		"1" "📺 modify termux-vnc conf" \
 		"2" "🎶 configure Termux LAN audio局域网音频传输" \
 		"3" "🎧 switch VNC audio音频传输方式" \

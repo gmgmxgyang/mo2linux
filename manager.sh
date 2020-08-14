@@ -3870,12 +3870,13 @@ install_ubuntu_gnu_linux_distro() {
 			"1" "🦍 20.10 Groovy Gorilla 時髦大猩猩" \
 			"2" "🐱 20.04 Focal Fossa 焦點馬島長尾狸貓" \
 			"3" "Custom code手动输入版本代号" \
-			"4" "🦦 18.04 Bionic Beaver 仿生海狸" \
+			"4" "18.04 Bionic Beaver 仿生海狸" \
 			"5" "🐿️ 16.04 Xenial Xerus 好客的非洲地松鼠" \
 			"6" "Latest(自动检测21.04，测试中)" \
 			"0" "🌚 Return to previous menu 返回上级菜单" \
 			3>&1 1>&2 2>&3
 	)
+	#🦦
 	##############################
 	case "${BETA_SYSTEM}" in
 	0 | "") choose_which_gnu_linux_distro ;;

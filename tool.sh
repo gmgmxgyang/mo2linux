@@ -15227,7 +15227,7 @@ download_android_x86_file() {
 	if [ "${ARCH_TYPE}" = 'i386' ]; then
 		THE_LATEST_ISO_VERSION=$(curl -L ${REPO_URL}${REPO_FOLDER} | grep -v 'x86_64' | grep date | grep '.iso' | tail -n 1 | head -n 1 | cut -d '=' -f 4 | cut -d '"' -f 2)
 	else
-		THE_LATEST_ISO_VERSION=$(curl -L ${REPO_URL}${REPO_FOLDER} | grep date | grep '.iso' | tail -n 2 | head -n 1 | cut -d '=' -f 4 | cut -d '"' -f 2)
+		THE_LATEST_ISO_VERSION=$(curl -L ${REPO_URL}${REPO_FOLDER} | grep date | grep '.iso' | tail -n 1 | cut -d '=' -f 4 | cut -d '"' -f 2)
 	fi
 	THE_LATEST_ISO_LINK="${REPO_URL}${REPO_FOLDER}${THE_LATEST_ISO_VERSION}"
 	#echo ${THE_LATEST_ISO_LINK}

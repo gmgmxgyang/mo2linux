@@ -567,13 +567,19 @@ nano $(command -v startvnc)
 
 ---
 
-### 八.更新日志 logs
+### 八.相关项目
+
+[termux/proot-distro](https://github.com/termux/proot-distro)
+[ohmyzsh/ohmyzsh](https://github.com/ohmyzsh/ohmyzsh)
+[romkatv/powerlevel10k](https://github.com/romkatv/powerlevel10k)
+[Aloxaf/fzf-tab](https://github.com/Aloxaf/fzf-tab)
+
+### 九.更新日志 logs
 
 #### 2019 年
 
 ##### 11、12 月
 
-本文首发于酷安网@**萌系生物研究员**
 旧版脚本部分命令借鉴了 atilo-cn 和 AnLinux，除此之外，大部分都是本人手打的。
 可能会有出错的地方，欢迎指正。
 
@@ -890,4 +896,5 @@ nano $(command -v startvnc)
 ##### 08 月 更新日志
 
 - 1.08-11:更新 docker 配置选项
-- 2.08-14:更新termux的换源功能，支持配置多个镜像站。
+- 2.08-14:更新 termux 的换源功能，支持配置多个镜像站。
+- 2.08-16:重构 proot 脚本，修复 deb 系发行版无法使用`ps`命令的问题。

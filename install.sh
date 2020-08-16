@@ -506,17 +506,17 @@ check_tmoe_proot_container_proc() {
 	if [ ! -e "${TMOE_PROC_PATH}" ]; then
 		mkdir -p ${TMOE_PROC_PATH}
 	fi
-	echo "$(uname -a) (gcc version 10.1.0 20200630 (prerelease) (GCC) )" >"${TMOE_PROC_PREFIX}.${FILE_01}"
-	creat_tmoe_proot_stat_file
 	FILE_01=version
 	TMOE_PROC_FILE=$(cat /proc/${FILE_01} 2>/dev/null)
 	if [ -z "${TMOE_PROC_FILE}" ]; then
+		echo "$(uname -a) (gcc version 10.1.0 20200630 (prerelease) (GCC) )" >"${TMOE_PROC_PREFIX}.${FILE_01}"
 		sed -i "s@#test01@@" ${PREFIX}/bin/debian
 	fi
 	#######
 	FILE_02=stat
 	TMOE_PROC_FILE=$(cat /proc/${FILE_02} 2>/dev/null)
 	if [ -z "${TMOE_PROC_FILE}" ]; then
+		creat_tmoe_proot_stat_file
 		sed -i "s@#test02@@" ${PREFIX}/bin/debian
 	fi
 }
@@ -538,7 +538,6 @@ creat_proot_startup_script() {
 	echo "正在创建proot容器启动脚本${PREFIX}/bin/debian "
 	TMOE_PROC_PATH="${DEBIAN_CHROOT}/usr/local/etc/tmoe-linux/proc"
 	TMOE_PROC_PREFIX="${TMOE_PROC_PATH}/.tmoe-container"
-
 	#此处ENDOFPROOT不要加单引号
 	cat >${PREFIX}/bin/debian <<-ENDOFPROOT
 		  #!/data/data/com.termux/files/usr/bin/bash

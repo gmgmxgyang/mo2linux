@@ -503,8 +503,8 @@ creat_tmoe_proot_stat_file() {
 }
 ###############
 check_tmoe_proot_container_proc() {
-	if [ ! -e "${DEBIAN_CHROOT}/proc" ]; then
-		mkdir -p ${DEBIAN_CHROOT}/proc
+	if [ ! -e "${TMOE_PROC_PATH}" ]; then
+		mkdir -p ${TMOE_PROC_PATH}
 	fi
 	echo "$(uname -a) (gcc version 10.1.0 20200630 (prerelease) (GCC) )" >"${TMOE_PROC_PREFIX}.${FILE_01}"
 	creat_tmoe_proot_stat_file
@@ -536,7 +536,9 @@ creat_proot_startup_script() {
 	#需要注释掉
 	echo "Creating proot startup script"
 	echo "正在创建proot容器启动脚本${PREFIX}/bin/debian "
-	TMOE_PROC_PREFIX="${DEBIAN_CHROOT}/proc/.tmoe-container"
+	TMOE_PROC_PATH="${DEBIAN_CHROOT}/usr/local/etc/tmoe-linux/proc"
+	TMOE_PROC_PREFIX="${TMOE_PROC_PATH}/.tmoe-container"
+
 	#此处ENDOFPROOT不要加单引号
 	cat >${PREFIX}/bin/debian <<-ENDOFPROOT
 		  #!/data/data/com.termux/files/usr/bin/bash

@@ -503,6 +503,9 @@ creat_tmoe_proot_stat_file() {
 }
 ###############
 check_tmoe_proot_container_proc() {
+	if [ ! -e "${DEBIAN_CHROOT}/proc" ]; then
+		mkdir -p ${DEBIAN_CHROOT}/proc
+	fi
 	FILE_01=version
 	TMOE_PROC_FILE=$(cat /proc/${FILE_01} 2>/dev/null)
 	if [ -z "${TMOE_PROC_FILE}" ]; then
@@ -1500,6 +1503,8 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	    #dnf install -y glibc-langpack-zh
 	    #localedef -c -f UTF-8 -i zh_CN zh_CN.utf8
 	    #dnf clean packages
+		TMOE_LANG_HALF=$(echo $LANG | cut -d '.' -f 1 |cut -d '_' -f 1)
+		dnf install -y "glibc-langpack-${TMOE_LANG_HALF}*"
 	}
 	######################
 	if [ "$(cat /etc/os-release | grep 'ID=' | head -n 1 | cut -d '=' -f 2 |cut -d '"' -f 2)" = "fedora" ]; then

@@ -587,7 +587,8 @@ creat_proot_startup_script() {
 		    else
 		      TMOE_SHELL="/bin/su"
 		    fi
-		    set -- "\${TMOE_SHELL}" "--login" "\$@"
+			#考虑到兼容性，此处应为-l,而非--login
+		    set -- "\${TMOE_SHELL}" "-l" "\$@"
 		    if [ -e "/data/data/com.termux" ]; then
 		      set -- "PREFIX=/data/data/com.termux/files/usr" "\$@"
 		    fi
@@ -638,7 +639,7 @@ creat_proot_startup_script() {
 		    set -- "--pwd=/root" "\$@"
 		    set -- "--rootfs=${DEBIAN_CHROOT}" "\$@"
 		    if [ "$(uname -o)" = 'Android' ]; then
-		      set_android_mount_dir
+		      #set_android_mount_dir
 		      if [ -e "/system" ]; then
 		        set -- "--mount=/system" "\$@"
 		      fi

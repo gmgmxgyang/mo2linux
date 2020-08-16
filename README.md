@@ -20,9 +20,6 @@
 
 Tutorial（教程）：
 
-Q:I don't know how to use it?  
-A:Run PowerShell as an administrator and type the following command.
-
 ##### 第一章 WSL 篇
 
 ###### 本(伪)漫画讲述的是少女们机缘巧合之下卷入了 debian 状的旋涡，最终穿梭时空拯救世界的故事

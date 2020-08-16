@@ -51,14 +51,14 @@ esac
 #requirements and DEPENDENCIES.
 TRUE_ARCH_TYPE=${ARCH_TYPE}
 QEMU_ARCH=''
-CONFIG_FOLDER="${HOME}/.config/tmoe-linux/"
-ACROSS_ARCH_FILE="${CONFIG_FOLDER}across_architecture_container.txt"
+CONFIG_FOLDER="${HOME}/.config/tmoe-linux"
+ACROSS_ARCH_FILE="${CONFIG_FOLDER}/across_architecture_container.txt"
 if [ -e "${ACROSS_ARCH_FILE}" ]; then
 	ARCH_TYPE="$(cat ${ACROSS_ARCH_FILE} | head -n 1)"
 	QEMU_ARCH="$(cat ${ACROSS_ARCH_FILE} | sed -n 2p)"
 fi
 
-LINUX_CONTAINER_DISTRO_FILE="${CONFIG_FOLDER}linux_container_distro.txt"
+LINUX_CONTAINER_DISTRO_FILE="${CONFIG_FOLDER}/linux_container_distro.txt"
 DEBIAN_FOLDER=debian_${ARCH_TYPE}
 if [ -e "${LINUX_CONTAINER_DISTRO_FILE}" ]; then
 	LINUX_CONTAINER_DISTRO=$(cat ${LINUX_CONTAINER_DISTRO_FILE} | head -n 1)
@@ -506,17 +506,17 @@ check_tmoe_proot_container_proc() {
 	if [ ! -e "${DEBIAN_CHROOT}/proc" ]; then
 		mkdir -p ${DEBIAN_CHROOT}/proc
 	fi
+	echo "$(uname -a) (gcc version 10.1.0 20200630 (prerelease) (GCC) )" >"${TMOE_PROC_PREFIX}.${FILE_01}"
+	creat_tmoe_proot_stat_file
 	FILE_01=version
 	TMOE_PROC_FILE=$(cat /proc/${FILE_01} 2>/dev/null)
 	if [ -z "${TMOE_PROC_FILE}" ]; then
-		echo "$(uname -a) (gcc version 10.1.0 20200630 (prerelease) (GCC) )" >"${TMOE_PROC_PREFIX}.${FILE_01}"
 		sed -i "s@#test01@@" ${PREFIX}/bin/debian
 	fi
 	#######
 	FILE_02=stat
 	TMOE_PROC_FILE=$(cat /proc/${FILE_02} 2>/dev/null)
 	if [ -z "${TMOE_PROC_FILE}" ]; then
-		creat_tmoe_proot_stat_file
 		sed -i "s@#test02@@" ${PREFIX}/bin/debian
 	fi
 }

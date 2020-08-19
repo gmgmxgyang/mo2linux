@@ -1,4 +1,4 @@
-#!/data/data/com.termux/files/usr/bin/bash
+#!/data/data/com.termux/files/usr/bin/env bash
 ########################################################################
 main() {
 	case "$1" in
@@ -144,6 +144,8 @@ auto_check() {
 }
 ########################################
 gnu_linux() {
+	TMOE_LINUX_DIR='/usr/local/etc/tmoe-linux'
+	TMOE_GIT_DIR="${TMOE_LINUX_DIR}/git"
 	if [ "$(id -u)" != "0" ]; then
 		export PATH=${PATH}:/usr/sbin:/sbin
 		if [ -e "${TMOE_GIT_DIR}/manager.sh" ]; then
@@ -173,7 +175,7 @@ gnu_linux() {
 
 	elif grep -Eq "opkg|entware" '/opt/etc/opkg.conf' 2>/dev/null || grep -q 'openwrt' "/etc/os-release"; then
 		LINUX_DISTRO='openwrt'
-		TMOE_INSTALLATON_COMMAND='opkg update'
+		TMOE_INSTALLATON_COMMAND='opkg install'
 		TMOE_REMOVAL_COMMAND='opkg remove'
 		cd /tmp
 		wget --no-check-certificate -qO "router-debian.bash" https://gitee.com/mo2/linux/raw/master/manager.sh
@@ -937,6 +939,12 @@ tmoe_locale_settings() {
 	#if [ ! -z "${DEBIAN_LOCALE_GEN}" ]; then
 	#	sed -i "s@${DEBIAN_LOCALE_GEN}@${TMOE_LANG_HALF}@" debian-i
 	#fi
+	if [ -e "${DEBIAN_CHROOT}"]; then
+		mkdir -p ${DEBIAN_CHROOT}/usr/local/etc/tmoe-linux
+		cd ${DEBIAN_CHROOT}/usr/local/etc/tmoe-linux
+		cp -f ${HOME}/.config/tmoe-linux/locale.txt ./
+		chmod +r locale.txt
+	fi
 	set_debian_default_locale
 	#cd ${TMOE_SCRIPT_PATH}/etc
 	if [ "${LINUX_DISTRO}" != "Android" ]; then
@@ -1063,7 +1071,7 @@ creat_start_linux_deploy_sh() {
 	cd $PREFIX/bin
 	echo ${CUT_TARGET}
 	cat >"${CUT_TARGET}" <<-'EndofFile'
-		#!/data/data/com.termux/files/usr/bin/bash
+		#!/data/data/com.termux/files/usr/bin/env bash
 		pulseaudio --start 2>/dev/null &
 		echo "pulseaudio服务启动完成，将为您自动打开LinuxDeploy,请点击“启动”。"
 		am start -n ru.meefik.linuxdeploy/ru.meefik.linuxdeploy.Launcher
@@ -1154,7 +1162,6 @@ questions_about_tmoe_automatic_configuration() {
 install_proot_container() {
 	rm -f ~/.Chroot-Container-Detection-File
 	rm -f "${DEBIAN_CHROOT}/tmp/.Chroot-Container-Detection-File" 2>/dev/null
-	#touch ~/.Tmoe-Proot-Container-Detection-File
 	install_gnu_linux_container
 	#sed -i 's@^command+=" --link2sy@#&@' $(command -v debian)
 }
@@ -1659,7 +1666,7 @@ backup_termux() {
 		#read
 		#TMPtime=termux-usr_$(cat backuptime.tmp)
 
-		if (whiptail --title "Select compression type 选择压缩类型 " --yes-button "tar.xz" --no-button "tar.gz" --yesno "Which do yo like better? \n tar.xz压缩率高，但速度慢。tar.xz has a higher compression ration, but is slower.\n tar.gz速度快,但压缩率低。tar.gz compresses faster, but with a lower compression ratio.\n 压缩过程中，进度条倒着跑是正常现象。" 10 60); then
+		if (whiptail --title "Select compression type 选择压��类型 " --yes-button "tar.xz" --no-button "tar.gz" --yesno "Which do yo like better? \n tar.xz压缩率高，但速度慢。tar.xz has a higher compression ration, but is slower.\n tar.gz速度快,但压缩率低。tar.gz compresses faster, but with a lower compression ratio.\n 压缩过程中，进度条倒着跑是正常现象。" 10 60); then
 
 			echo "您选择了tar.xz,即将为您备份至/sdcard/Download/backup/${TMPtime}.tar.xz"
 			echo "${YELLOW}按回车键开始备份,按Ctrl+C取消。Press Enter to start the backup.${RESET} "
@@ -2071,7 +2078,7 @@ update_tmoe_linux_manager() {
 	#curl -L -o ${PREFIX}/bin/debian-i 'https://gitee.com/mo2/linux/raw/master/debian.sh'
 	aria2c --allow-overwrite=true -d ${PREFIX}/bin -o debian-i 'https://gitee.com/mo2/linux/raw/master/manager.sh' || curl -Lo ${PREFIX}/bin/debian-i 'https://gitee.com/mo2/linux/raw/master/manager.sh' || sudo -E aria2c --allow-overwrite=true -d ${PREFIX}/bin -o debian-i 'https://gitee.com/mo2/linux/raw/master/manager.sh'
 	if [ "${LINUX_DISTRO}" != "Android" ]; then
-		sed -i '1 c\#!/bin/bash' ${PREFIX}/bin/debian-i
+		sed -i '1 c\#!/usr/bin/env bash' ${PREFIX}/bin/debian-i
 	fi
 	echo "${TMOE_GIT_URL}"
 	echo "${YELLOW}更新完成，按回车键返回。${RESET}"
@@ -2243,7 +2250,7 @@ start_vscode() {
 
 	if [ ! -e "${PREFIX}/bin/code-server" ]; then
 		cat >${PREFIX}/bin/code-server <<-EndOfFile
-			#!/data/data/com.termux/files/usr/bin/bash
+			#!/data/data/com.termux/files/usr/bin/env bash
 			touch "${DEBIAN_CHROOT}/tmp/startcode.tmp"
 			CODE_PORT=$(cat ${HOME}/${DEBIAN_FOLDER}/root/.config/code-server/config.yaml | grep bind-addr | head -n 1 | awk -F ' ' '$0=$NF' | cut -d ':' -f 2)
 			am start -a android.intent.action.VIEW -d "http://localhost:\${CODE_PORT}"
@@ -2418,21 +2425,22 @@ tmoe_linux_container_eula() {
 		echo 'You must agree to the EULA to use this tool.'
 		echo "Press ${GREEN}Enter${RESET} to agree ${BLUE}the EULA${RESET}, otherwise press ${YELLOW}Ctrl + C${RESET} or ${RED}close${RESET} the terminal directly."
 		echo "按${GREEN}回车键${RESET}同意${BLUE}《最终用户许可协议》${RESET} ，否则请按${YELLOW}Ctrl+C${RESET} 或直接${RED}关闭${RESET}终端。 "
-		cat <<-'EndOfFile'
-			本项目的原地址为https://gitee.com/mo2/linux
-			有空的话，可以来看看哦！φ(≧ω≦*)♪
-			听说尊重他人的劳动成果，会让世界变得更加美好呢！
-			The original URL of this project is https://github.com/2moe/tmoe-linux
-			If you give me a star, then I will feel very happy.
-		EndOfFile
-		#if [ "${LINUX_DISTRO}" != 'Android' ]; then
-		#export LANG=${CurrentLANG}
-		#fi
+		note_tmoe_linux_git_repo
 		read
 		touch ${CONFIG_FOLDER}/eula
 	fi
 }
 ###################################################
+note_tmoe_linux_git_repo() {
+	cat <<-'EndOfFile'
+		本项目的原地址为https://gitee.com/mo2/linux
+		有空的话，可以来看看哦！φ(≧ω≦*)♪
+		听说尊重他人的劳动成果，会让世界变得更加美好呢！
+		The original URL of this project is https://github.com/2moe/tmoe-linux
+		If you give me a star, then I will feel very happy.
+	EndOfFile
+}
+#################################################
 same_arch_or_different_arch() {
 	if (whiptail --title "您是想要同架构运行,还是跨架构呢？" --yes-button 'same同' --no-button 'across跨' --yesno "Your current architecture is ${TRUE_ARCH_TYPE}.\nDo you want to run on the same architecture or across architectures?\n除向下兼容外,跨架构运行的效率可能偏低" 0 0); then
 		rm ~/.config/tmoe-linux/across_architecture_container.txt 2>/dev/null
@@ -2742,6 +2750,7 @@ check_tmoe_linux_container_rec_pkg_file_and_git() {
 debian_sid_arm64_xfce_recovery_package() {
 	echo "即将为您下载至${DOWNLOAD_PATH}"
 	echo '下载大小1302.2MiB,解压后约占4.9GiB'
+	#echo "2020-07-11凌晨注：忘记给LibreOffice打补丁了 (ㄒoㄒ)/~~，请在安装完成后使用tmoe-linux tool给libreoffice打补丁"
 	CORRENTSHA256SUM='0a3f6f964903d8a20d255754386a754020db71b12ef0c26659f2a54cb7e5ebf1' #DevSkim: ignore DS173237
 	BRANCH_NAME='arm64'
 	TMOE_LINUX_CONTAINER_REPO_01='https://gitee.com/ak2/debian_sid_rootfs_01'
@@ -3073,8 +3082,8 @@ un_xz_debian_recovery_kit() {
 switch_termux_rootfs_to_linux() {
 	if [ "${LINUX_DISTRO}" != 'Android' ]; then
 		cd /data/data/com.termux/files/usr/bin
-		sed -i 's:#!/data/data/com.termux/files/usr/bin/bash:#!/bin/bash:g' $(grep -rl 'com.termux' ./)
-		#sed -i 's:#!/data/data/com.termux/files/usr/bin/bash:#!/bin/bash:' ${DEBIAN_CHROOT}/remove-debian.sh
+		sed -i 's:#!/data/data/com.termux/files/usr/bin/env bash:#!/usr/bin/env bash:g' $(grep -rl 'com.termux' ./)
+		#sed -i 's:#!/data/data/com.termux/files/usr/bin/env bash:#!/usr/bin/env bash:' ${DEBIAN_CHROOT}/remove-debian.sh
 		cp -pf ./* ${PREFIX}/bin/
 	fi
 }
@@ -3099,7 +3108,7 @@ tmoe_install_xfce() {
 
 	apt install -y xfce tigervnc aterm
 	cat >${PREFIX}/bin/startvnc <<-'EndOfFile'
-		#!/data/data/com.termux/files/usr/bin/bash
+		#!/data/data/com.termux/files/usr/bin/env bash
 		pkill Xvnc 2>/dev/null 
 		pulseaudio --kill 2>/dev/null
 		pulseaudio --start
@@ -3479,7 +3488,7 @@ check_android_version() {
 termux_original_system_gui() {
 	RETURN_TO_WHERE='termux_original_system_gui'
 	#\n这里是termux原系统的配置区域,不是GNU/Linux容器的哦！\nThe following options only apply to termux original system.
-	OPTION=$(whiptail --title "Termux" --menu "Termux native GUI has fewer software packages. \nIt is recommended that you install a container.\nTermux原系统GUI可玩性较低，建议您安装GNU/Linux（proot/chroot)容器,\n或通过qemu-system虚拟机来使用docker容器。" 0 50 0 \
+	OPTION=$(whiptail --title "Termux" --menu "Termux native GUI has fewer software packages.It is recommended that you install a container.Termux原系统GUI可玩性较低,建议您安装GNU/Linux(proot/chroot)容器" 0 50 0 \
 		"1" "modify termux-vnc conf" \
 		"2" "🐹 install termux-xfce4" \
 		"3" "💔 remove xfce4" \

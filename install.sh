@@ -1,5 +1,4 @@
-#!/data/data/com.termux/files/usr/bin/bash
-#检测架构
+#!/data/data/com.termux/files/usr/bin/env bash
 case $(uname -m) in
 armv7* | armv8l)
 	ARCH_TYPE="armhf"
@@ -42,7 +41,7 @@ risc*)
 	exit 1
 	;;
 esac
-
+######################
 #安装必要依赖
 #apt update
 #apt install -y curl openssl proot aria2 procps
@@ -111,7 +110,8 @@ if [ "$(uname -o)" = "Android" ]; then
 	fi
 	cd ${HOME}/.termux || mkdir -p ~/.termux && cd ${HOME}/.termux
 	if [ ! -e "colors.properties" ]; then
-		echo '检测到termux配色文件不存在，正在自动生成...'
+		echo "检测到termux配色文件不存在，正在自动生成..."
+		echo "如需還原，則請輸${RED}rm${RESET} ${BLUE}${HOME}/.termux/colors.properties${RESET}"
 		# aria2c --allow-overwrite=true -o "colors.properties" 'https://gitee.com/mo2/zsh/raw/master/.termux/colors.properties'
 		cat >colors.properties <<-'EndofMonokai'
 			# monokai.dark.colors
@@ -140,6 +140,7 @@ if [ "$(uname -o)" = "Android" ]; then
 
 	if [ ! -e "termux.properties" ]; then
 		echo -e "Detected that the termux.properties file does not exist.\n检测到termux属性文件不存在，正在为您下载..."
+		echo "如需還原，則請輸${RED}rm${RESET} ${BLUE}${HOME}/.termux/termux.properties${RESET}"
 		aria2c --allow-overwrite=true -o "termux.properties" 'https://gitee.com/mo2/zsh/raw/master/.termux/termux.properties'
 	fi
 	#REMOTEP10KFONT='8597c76c4d2978f4ba022dfcbd5727a1efd7b34a81d768362a83a63b798f70e5'
@@ -147,12 +148,14 @@ if [ "$(uname -o)" = "Android" ]; then
 	if [ ! -e "font.ttf" ]; then
 		#if [ "${REMOTEP10KFONT}" != "${LOCALFONT}" ]; then
 		echo -e 'Detected that the font file does not exist.\n检测到字体文件不存在，正在自动配置字体...'
-		echo "只有少部分字体能显示powerlevel10k的特殊字符，例如Iosevka"
-		#仓库为Termux-zsh/raw/p10k，批量重命名的时候要小心一点。
 		aria2c --allow-overwrite=true -o Iosevka.tar.xz 'https://gitee.com/mo2/Termux-zsh/raw/p10k/Iosevka.tar.xz'
+		echo "只有少部分字体能显示powerlevel10k的特殊字符，例如Iosevka和MesloLGS"
+		echo "如需還原，則請輸${RED}rm${RESET} ${BLUE}${HOME}/.termux/font.ttf${RESET}"
+		#仓库为Termux-zsh/raw/p10k，批量重命名的时候要小心一点。
 		#mv -f font.ttf font.ttf.bak
-		tar -Jxf Iosevka.tar.xz
+		tar -Jxvf Iosevka.tar.xz
 		rm -f Iosevka.tar.xz
+		sleep 1
 		termux-reload-settings
 		#fi
 	fi
@@ -425,7 +428,7 @@ creat_chroot_startup_script() {
 
 	#此处EndOfChrootFile不要加单引号
 	cat >${PREFIX}/bin/debian <<-EndOfChrootFile
-		  #!/data/data/com.termux/files/usr/bin/bash
+		  #!/data/data/com.termux/files/usr/bin/env bash
 		  DEBIAN_CHROOT=${HOME}/${DEBIAN_FOLDER}
 		  if [ ! -e "${DEBIAN_CHROOT}/tmp/.Chroot-Container-Detection-File" ]; then
 		    echo "本文件为chroot容器检测文件 Please do not delete this file!" >>${DEBIAN_CHROOT}/tmp/.Chroot-Container-Detection-File 2>/dev/null
@@ -540,7 +543,7 @@ creat_proot_startup_script() {
 	TMOE_PROC_PREFIX="${TMOE_PROC_PATH}/.tmoe-container"
 	#此处ENDOFPROOT不要加单引号
 	cat >${PREFIX}/bin/debian <<-ENDOFPROOT
-		  #!/data/data/com.termux/files/usr/bin/bash
+		  #!/data/data/com.termux/files/usr/bin/env bash
 		  get_tmoe_linux_help_info() {
 		    cat <<-'ENDOFHELP'
 						-i     --启动tmoe-linux manager
@@ -670,7 +673,7 @@ fi
 #######################################################
 creat_linux_container_remove_script() {
 	cat >${PREFIX}/bin/debian-rm <<-EndOfFile
-		    #!/data/data/com.termux/files/usr/bin/bash
+		    #!/data/data/com.termux/files/usr/bin/env bash
 			  YELLOW=\$(printf '\033[33m')
 			  RESET=\$(printf '\033[m')
 		    cd ${HOME}
@@ -777,30 +780,29 @@ creat_linux_container_remove_script() {
 }
 ########################
 cat >${PREFIX}/bin/startvnc <<-EndOfFile
-	#!/data/data/com.termux/files/usr/bin/bash
+	#!/data/data/com.termux/files/usr/bin/env bash
 	am start -n com.realvnc.viewer.android/com.realvnc.viewer.android.app.ConnectionChooserActivity
 	pulseaudio --start 2>/dev/null &
 	touch ~/${DEBIAN_FOLDER}/root/.vnc/startvnc
-	/data/data/com.termux/files/usr/bin/debian
+	${PREFIX}/bin/debian
 EndOfFile
 ln -sf ${PREFIX}/bin/startvnc ${PREFIX}/bin/startx11vnc
+ln -s ${PREFIX}/bin/startvnc ${HOME}/vnc 2>/dev/null
 ###############
-#仅安卓支持终止所有进程
-if [ "$(uname -o)" = 'Android' ]; then
-	cat >${PREFIX}/bin/stopvnc <<-'EndOfFile'
-		#!/data/data/com.termux/files/usr/bin/bash
-		#pkill -u $(whoami)
-		pulseaudio --kill 2>/dev/null &
-		sh -c "$(ps -e | grep -Ev "sshd|pkill|systemd" | awk '{print $4}' | sed '/(/d' | sed 's/^/pkill &/g')"
-	EndOfFile
-fi
+#此處僅適配Android,故shebang爲termux目錄
+cat >${PREFIX}/bin/stopvnc <<-'EndOfFile'
+	#!/data/data/com.termux/files/usr/bin/env bash
+	#pkill -u $(whoami)
+	pulseaudio --kill 2>/dev/null &
+	sh -c "$(ps -e | grep -Ev "sshd|pkill|systemd" | awk '{print $4}' | sed '/(/d' | sed 's/^/pkill &/g')"
+EndOfFile
 #################
 #不要单引号
 cat >${PREFIX}/bin/startxsdl <<-EndOfFile
-	#!/data/data/com.termux/files/usr/bin/bash
+	#!/data/data/com.termux/files/usr/bin/env bash
 	am start -n x.org.server/x.org.server.MainActivity
 	touch ~/${DEBIAN_FOLDER}/root/.vnc/startxsdl
-	/data/data/com.termux/files/usr/bin/debian
+	${PREFIX}/bin/debian
 EndOfFile
 creat_linux_container_remove_script
 ################
@@ -829,9 +831,6 @@ if [ ! -d "${DEBIAN_CHROOT}/usr/local/bin" ]; then
 	mkdir -p ${DEBIAN_CHROOT}/usr/local/bin
 fi
 
-#if [ -f "${HOME}/.Tmoe-Proot-Container-Detection-File" ]; then
-#mv -f "${HOME}/.Tmoe-Proot-Container-Detection-File" ${DEBIAN_CHROOT}/tmp
-#echo "本文件为Proot容器检测文件 Please do not delete this file!" >>${DEBIAN_CHROOT}/tmp/.Tmoe-Proot-Container-Detection-File 2>/dev/null
 if [ -f "${HOME}/.Chroot-Container-Detection-File" ]; then
 	mv -f "${HOME}/.Chroot-Container-Detection-File" ${DEBIAN_CHROOT}/tmp
 	echo "本文件为Chroot容器检测文件 Please do not delete this file!" >>${DEBIAN_CHROOT}/tmp/.Chroot-Container-Detection-File 2>/dev/null
@@ -845,7 +844,7 @@ chmod +x neofetch debian-i
 cd ${DEBIAN_CHROOT}/root
 chmod u+w "${DEBIAN_CHROOT}/root"
 curl -sLo zsh-i.sh 'https://gitee.com/mo2/zsh/raw/master/zsh.sh'
-sed -i 's:#!/data/data/com.termux/files/usr/bin/bash:#!/bin/bash:' zsh-i.sh
+sed -i 's:#!/data/data/com.termux/files/usr/bin/env bash:#!/usr/bin/env bash:' zsh-i.sh
 chmod +x zsh-i.sh
 ###########
 debian_stable_sources_list_and_gpg_key() {
@@ -999,6 +998,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 				# deb http://mirrors.huaweicloud.com/ubuntu-ports/ focal-proposed main restricted universe multiverse
 			EndOfFile
 	    touch ~/.hushlogin
+		touch /home/ubuntu/.hushlogin
 	    if grep -q 'Bionic Beaver' "/etc/os-release"; then
 	        sed -i 's/focal/bionic/g' /etc/apt/sources.list
 	    fi
@@ -1387,7 +1387,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	    #rm -f vnc* zsh* .profile
 	    #mv -f .profile.bak .profile 2>/dev/null
 	    #wget -qO zsh.sh 'https://gitee.com/mo2/zsh/raw/master/zsh.sh'
-	    #sed -i '1 c\#!/bin/bash' zsh.sh
+	    #sed -i '1 c\#!/usr/bin/env bash' zsh.sh
 	    #chmod +x zsh.sh
 	    echo '检测到您当前的系统为Void GNU/Linux,若配置出错，则请手动输debian-i'
 		xbps-reconfigure -f glibc-locales
@@ -1555,8 +1555,8 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 ENDOFbashPROFILE
 #####################
 if [ "${LINUX_DISTRO}" != 'Android' ]; then
-	sed -i 's:#!/data/data/com.termux/files/usr/bin/bash:#!/bin/bash:g' $(grep -rl 'com.termux' "${PREFIX}/bin")
-	#sed -i 's:#!/data/data/com.termux/files/usr/bin/bash:#!/bin/bash:' ${DEBIAN_CHROOT}/remove-debian.sh
+	sed -i 's:#!/data/data/com.termux/files/usr/bin/env bash:#!/usr/bin/env bash:g' $(grep -rl 'com.termux' "${PREFIX}/bin")
+	#sed -i 's:#!/data/data/com.termux/files/usr/bin/env bash:#!/usr/bin/env bash:' ${DEBIAN_CHROOT}/remove-debian.sh
 fi
 
 bash ${PREFIX}/bin/debian

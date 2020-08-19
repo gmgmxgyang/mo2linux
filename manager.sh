@@ -2776,10 +2776,10 @@ install_debian_sid_gnu_linux_container() {
 	DISTRO_CODE='sid'
 	BETA_SYSTEM=$(whiptail --title "Install sid via tuna station or DL rec PKG?" --menu "您想要通过软件源镜像站来安装，还是在线下载恢复包来安装?" 0 50 0 \
 		"1" "netinstall(通过软件源在线安装)" \
-		"2" "arm64 xfce4.14桌面+音乐app,1.27G,20200730" \
 		"0" "🌚 Return to previous menu 返回上级菜单" \
 		3>&1 1>&2 2>&3)
 	##############################
+	#"2" "arm64 xfce4.14桌面+音乐app,1.27G,20200730" \
 	case "${BETA_SYSTEM}" in
 	0 | "") install_debian_gnu_linux_distro ;;
 	1) install_debian_sid_via_tuna ;;
@@ -2819,11 +2819,11 @@ install_debian_buster_gnu_linux_container() {
 	BETA_SYSTEM=$(
 		whiptail --title "DEBIAN CONTAINER" --menu "BUSTER更加稳定且bug较少,但软件包较旧,而sid较新。\nBuster is more stable and has fewer bugs" 0 50 0 \
 			"1" "netinstall(通过软件源在线安装)" \
-			"2" "Arm64 rec pkg(20200710,xfce4.12桌面,638MB)" \
 			"0" "🌚 Return to previous menu 返回上级菜单" \
 			3>&1 1>&2 2>&3
 	)
 	##############################
+	#"2" "Arm64 rec pkg(20200710,xfce4.12桌面,638MB)" \
 	case "${BETA_SYSTEM}" in
 	0 | "") install_debian_gnu_linux_distro ;;
 	1) install_debian_buster_via_tuna ;;
@@ -3052,8 +3052,8 @@ un_xz_debian_recovery_kit() {
 	fi
 	cd "$cur"
 	#用绝对路径
-	if [ ! -L '/data/data/com.termux/files/home/storage/external-1' ]; then
-		#sed -i 's@^command+=" --mount=/data/data/com.termux/files/home/storage/external-1@#&@g' ${PREFIX}/bin/debian 2>/dev/null
+	if [ ! -h '/data/data/com.termux/files/home/storage/external-1' ]; then
+		sed -i 's@^command+=" --mount=/data/data/com.termux/files/home/storage/external-1@#&@g' ${PREFIX}/bin/debian 2>/dev/null
 		rm -f ${DEBIAN_CHROOT}/root/tf 2>/dev/null
 	fi
 	if [ -e "${HOME}/debian_arm64" ]; then

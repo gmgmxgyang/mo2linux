@@ -2425,7 +2425,7 @@ tmoe_linux_container_eula() {
 		echo 'You must agree to the EULA to use this tool.'
 		echo "Press ${GREEN}Enter${RESET} to agree ${BLUE}the EULA${RESET}, otherwise press ${YELLOW}Ctrl + C${RESET} or ${RED}close${RESET} the terminal directly."
 		echo "按${GREEN}回车键${RESET}同意${BLUE}《最终用户许可协议》${RESET} ，否则请按${YELLOW}Ctrl+C${RESET} 或直接${RED}关闭${RESET}终端。 "
-		note_tmoe_linux_git_repo
+		#note_tmoe_linux_git_repo
 		read
 		touch ${CONFIG_FOLDER}/eula
 	fi

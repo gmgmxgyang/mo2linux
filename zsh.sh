@@ -222,10 +222,9 @@ configure_power_level_10k() {
         else
             wget -qO /root/.p10k.zsh 'https://gitee.com/mo2/Termux-zsh/raw/p10k/.p10k.zsh'
         fi
-
         cat >>${HOME}/.zshrc <<-"ENDOFPOWERLEVEL"
-					  [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh 
-				ENDOFPOWERLEVEL
+		[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh 
+		ENDOFPOWERLEVEL
     fi
 }
 ###################

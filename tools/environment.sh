@@ -464,7 +464,7 @@ creat_tmoe_linux_desktop_icon() {
         curl -Lv -o debian-i 'https://gitee.com/mo2/linux/raw/master/tool.sh'
         chmod +x debian-i
     fi
-    cp ${TMOE_TOOL_DIR}/app/tmoe-linux.desktop /usr/share/applications
+    cp ${TMOE_TOOL_DIR}/app/lnk/tmoe-linux.desktop /usr/share/applications
 }
 ####################
 arch_does_not_support() {

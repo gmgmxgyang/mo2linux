@@ -1572,6 +1572,7 @@ kde_warning() {
 }
 ###############
 install_kde_plasma5_desktop() {
+    kde_warning
     REMOTE_DESKTOP_SESSION_01='startkde'
     REMOTE_DESKTOP_SESSION_02='startplasma-x11'
     DEPENDENCY_01="plasma-desktop"

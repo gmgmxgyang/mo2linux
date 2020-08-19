@@ -867,3 +867,34 @@ install_typora() {
     #rm -vf ./typora.deb
     beta_features_install_completed
 }
+################
+check_electron() {
+    if [ ! $(command -v electron) ]; then
+        case ${LINUX_DISTRO} in
+        debian)
+            add_debian_opt_gpg_key
+            ;;
+        arch) ;;
+        esac
+        NON_DEBIAN='false'
+        DEPENDENCY_01=''
+        DEPENDENCY_02='electron'
+        beta_features_quick_install
+    fi
+}
+##########
+tenvideo_env() {
+    DEPENDENCY_02='tenvideo-universal'
+    TENTVIDEO_OPT='/opt/Tenvideo_universal'
+    TENVIDEO_LNK='/usr/share/applications/TencentVideo.desktop'
+    TENVIDEO_GIT='https://gitee.com/ak2/tenvideo.git'
+    TENVIDEO_FOLDER='.TENCENT_VIDEO_TMOE_TMEP_FOLDER'
+    if [ -e "${TENTVIDEO_OPT}" ]; then
+        echo "检测到${YELLOW}您已安装${RESET} ${GREEN}${DEPENDENCY_02} ${RESET}"
+        echo "如需${RED}卸载${RESET}，请手动输${RED}rm -rv${RESET} ${BLUE}${TENTVIDEO_OPT} ${TENVIDEO_LNK}${RESET}"
+        echo "请问您是否需要重装？"
+        echo "Do you want to reinstall it?"
+        do_you_want_to_continue
+    fi
+}
+########

@@ -39,7 +39,7 @@ software_center() {
         whiptail --title "Software center-01" --menu \
             "您想要安装哪个软件？\n Which software do you want to install?" 0 50 0 \
             "1" "🦊 Browser:浏览器(firefox,chromium)" \
-            "2" "🎵 Multimedia:图像与影音(mpv,云音乐)" \
+            "2" "🎵 Multimedia:图像与影音(腾讯视频,云音乐)" \
             "3" "🐧 SNS:社交类(qq)" \
             "4" "🎮 Games:游戏(steam,wesnoth)" \
             "5" "🔯 Packages&system:软件包与系统管理" \
@@ -237,9 +237,10 @@ tmoe_multimedia_menu() {
         "Which software do you want to install?" 0 50 0 \
         "1" "🎶 Music:debian-opt仓库(QQ音乐,云音乐)" \
         "2" "📽️ MPV(开源、跨平台的音视频播放器)" \
-        "3" "🖼 GIMP(GNU 图像处理程序)" \
-        "4" "🎞️ Parole(xfce默认媒体播放器,风格简洁)" \
-        "5" "🎧 网易云音乐(x86_64,专注于发现与分享的音乐产品)" \
+        "3" "🎬 腾讯视频:国产Linux在线视频软件" \
+        "4" "🖼 GIMP(GNU 图像处理程序)" \
+        "5" "🎞️ Parole(xfce默认媒体播放器,风格简洁)" \
+        "6" "🎧 网易云音乐(x86_64,专注于发现与分享的音乐产品)" \
         "0" "🌚 Return to previous menu 返回上级菜单" \
         3>&1 1>&2 2>&3)
     ##########################
@@ -250,15 +251,41 @@ tmoe_multimedia_menu() {
         explore_debian_opt_repo
         ;;
     2) install_mpv ;;
-    3) install_gimp ;;
-    4) install_parole ;;
-    5) install_netease_163_cloud_music ;;
+    3) install_tencent_video ;;
+    4) install_gimp ;;
+    5) install_parole ;;
+    6) install_netease_163_cloud_music ;;
     esac
     ##########################
     press_enter_to_return
     tmoe_multimedia_menu
 }
 #############
+install_tencent_video() {
+    tenvideo_env
+    echo "若安装失败，则请手动前往官网下载安装"
+    echo "URL: ${YELLOW}https://v.qq.com/download.html#Linux${RESET}"
+    case ${LINUX_DISTRO} in
+    debian | arch)
+        check_electron
+        git_clone_tenvideo
+        ;;
+    *)
+        non_debian_function
+        tmoe_multimedia_menu
+        ;;
+    esac
+}
+#############
+git_clone_tenvideo() {
+    cd /tmp
+    rm -rv ${TENVIDEO_FOLDER} 2>/dev/null
+    git clone --depth=1 ${TENVIDEO_GIT} ${TENVIDEO_FOLDER}
+    tar -PpJxvf ${TENVIDEO_FOLDER}/app.tar.xz
+    rm -rv ${TENVIDEO_FOLDER}
+    echo "安装完成，如需卸载，请手动输${RED}rm -rv${RESET} ${BLUE}${TENTVIDEO_OPT} ${TENVIDEO_LNK}${RESET}"
+}
+############
 tmoe_games_menu() {
     RETURN_TO_WHERE='tmoe_games_menu'
     NON_DEBIAN='false'

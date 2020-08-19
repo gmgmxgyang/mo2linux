@@ -640,6 +640,7 @@ creat_proot_startup_script() {
 		    set -- "--rootfs=${DEBIAN_CHROOT}" "\$@"
 		    if [ "$(uname -o)" = 'Android' ]; then
 		      #set_android_mount_dir
+			  set -- "--kill-on-exit" "\$@"
 		      if [ -e "/system" ]; then
 		        set -- "--mount=/system" "\$@"
 		      fi
@@ -652,7 +653,6 @@ creat_proot_startup_script() {
 		      set -- "--link2symlink" "\$@"
 		    fi
 		    set -- "--root-id" "\$@"
-		    set -- "--kill-on-exit" "\$@"
 		    set -- "proot" "\$@"
 		    exec "\$@"
 		  }
@@ -919,9 +919,14 @@ cat >vnc-autostartup <<-'EndOfFile'
 	fi
 	grep 'cat /etc/issue' ~/.bashrc >/dev/null 2>&1 || sed -i '1 a\cat /etc/issue' ~/.bashrc
 	if [ -f "/root/.vnc/startvnc" ]; then
-		/usr/local/bin/startvnc
-		echo "已为您启动vnc服务 Vnc server has been started, enjoy it!"
-		rm -f /root/.vnc/startvnc
+	    if [ -f /usr/local/bin/startvnc ];then
+	        /usr/local/bin/startvnc
+	        echo "已为您启动vnc服务 Vnc server has been started, enjoy it!"
+	    else
+	        echo "Sorry,VNC server启动失败，请输debian-i重新安装并配置桌面环境。"
+	        echo "Please type debian-i to start tmoe-linux tool and reconfigure desktop environment."
+	    fi
+	    rm -f /root/.vnc/startvnc
 	fi
 
 	if [ -f "/root/.vnc/startxsdl" ]; then

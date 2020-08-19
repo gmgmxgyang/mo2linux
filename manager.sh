@@ -37,7 +37,6 @@ main() {
 	esac
 }
 #########################
-#检测架构 CHECK architecture
 check_arch() {
 	case $(uname -m) in
 	armv7* | armv8l)
@@ -83,6 +82,7 @@ check_arch() {
 	esac
 	TRUE_ARCH_TYPE=${ARCH_TYPE}
 	CONFIG_FOLDER="${HOME}/.config/tmoe-linux"
+	TMOE_GIT_URL='https://gitee.com/mo2/linux'
 	if [ ! -e "${CONFIG_FOLDER}" ]; then
 		mkdir -p ${CONFIG_FOLDER}
 	fi
@@ -144,24 +144,27 @@ auto_check() {
 }
 ########################################
 gnu_linux() {
-
 	if [ "$(id -u)" != "0" ]; then
 		export PATH=${PATH}:/usr/sbin:/sbin
-		if [ -e "/usr/bin/curl" ]; then
-			sudo -E bash -c "$(curl -LfsS https://gitee.com/mo2/linux/raw/master/debian.sh)" ||
-				su -c "$(curl -LfsS https://gitee.com/mo2/linux/raw/master/debian.sh)"
+		if [ -e "${TMOE_GIT_DIR}/manager.sh" ]; then
+			sudo -E bash ${TMOE_GIT_DIR}/manager.sh || su -c "bash manager.sh"
 		else
-			sudo -E bash -c "$(wget -qO- https://gitee.com/mo2/linux/raw/master/debian.sh)" ||
-				su -c "$(wget -qO- https://gitee.com/mo2/linux/raw/master/debian.sh)"
+			if [ -e "/usr/bin/curl" ]; then
+				sudo -E bash -c "$(curl -LfsS https://gitee.com/mo2/linux/raw/master/debian.sh)" ||
+					su -c "$(curl -LfsS https://gitee.com/mo2/linux/raw/master/debian.sh)"
+			else
+				sudo -E bash -c "$(wget -qO- https://gitee.com/mo2/linux/raw/master/debian.sh)" ||
+					su -c "$(wget -qO- https://gitee.com/mo2/linux/raw/master/debian.sh)"
+			fi
+			#此处一定为debian.sh，而非manager.sh
 		fi
-		#此处一定为debian.sh，而非manager.sh
 		exit 0
 	fi
 	##############
 	if grep -Eq 'debian|ubuntu' "/etc/os-release"; then
 		LINUX_DISTRO='debian'
-		PACKAGES_INSTALL_COMMAND='apt install -y'
-		PACKAGES_REMOVE_COMMAND='apt purge -y'
+		TMOE_INSTALLATON_COMMAND='apt install -y'
+		TMOE_REMOVAL_COMMAND='apt purge -y'
 		if grep -q 'ubuntu' /etc/os-release; then
 			DEBIAN_DISTRO='ubuntu'
 		elif [ "$(cat /etc/issue | cut -c 1-4)" = "Kali" ]; then
@@ -170,8 +173,8 @@ gnu_linux() {
 
 	elif grep -Eq "opkg|entware" '/opt/etc/opkg.conf' 2>/dev/null || grep -q 'openwrt' "/etc/os-release"; then
 		LINUX_DISTRO='openwrt'
-		PACKAGES_UPDATE_COMMAND='opkg update'
-		PACKAGES_REMOVE_COMMAND='opkg remove'
+		TMOE_INSTALLATON_COMMAND='opkg update'
+		TMOE_REMOVAL_COMMAND='opkg remove'
 		cd /tmp
 		wget --no-check-certificate -qO "router-debian.bash" https://gitee.com/mo2/linux/raw/master/manager.sh
 		chmod +x 'router-debian.bash'
@@ -185,8 +188,8 @@ gnu_linux() {
 
 	elif grep -Eqi "Fedora|CentOS|Red Hat|redhat" '/etc/os-release'; then
 		LINUX_DISTRO='redhat'
-		PACKAGES_REMOVE_COMMAND='dnf remove -y'
-		PACKAGES_INSTALL_COMMAND='dnf install -y --skip-broken'
+		TMOE_REMOVAL_COMMAND='dnf remove -y'
+		TMOE_INSTALLATON_COMMAND='dnf install -y --skip-broken'
 		if [ "$(cat /etc/os-release | grep 'ID=' | head -n 1 | cut -d '"' -f 2)" = "centos" ]; then
 			REDHAT_DISTRO='centos'
 		elif grep -q 'Sliverblue' "/etc/os-release"; then
@@ -197,28 +200,28 @@ gnu_linux() {
 
 	elif grep -q "Alpine" '/etc/issue' || grep -q "Alpine" '/etc/os-release'; then
 		LINUX_DISTRO='alpine'
-		PACKAGES_INSTALL_COMMAND='apk add'
-		PACKAGES_REMOVE_COMMAND='apk del'
+		TMOE_INSTALLATON_COMMAND='apk add'
+		TMOE_REMOVAL_COMMAND='apk del'
 
 	elif grep -Eq "Arch|Manjaro" '/etc/os-release' || grep -Eq "Arch|Manjaro" '/etc/issue'; then
 		LINUX_DISTRO='arch'
-		PACKAGES_REMOVE_COMMAND='pacman -Rsc'
-		PACKAGES_INSTALL_COMMAND='pacman -Syu --noconfirm'
+		TMOE_REMOVAL_COMMAND='pacman -Rsc'
+		TMOE_INSTALLATON_COMMAND='pacman -Syu --noconfirm'
 
 	elif grep -Eq "gentoo|funtoo" '/etc/os-release'; then
 		LINUX_DISTRO='gentoo'
-		PACKAGES_INSTALL_COMMAND='emerge -vk'
-		PACKAGES_REMOVE_COMMAND='emerge -C'
+		TMOE_INSTALLATON_COMMAND='emerge -vk'
+		TMOE_REMOVAL_COMMAND='emerge -C'
 
 	elif grep -qi 'suse' '/etc/os-release'; then
 		LINUX_DISTRO='suse'
-		PACKAGES_INSTALL_COMMAND='zypper in -y'
-		PACKAGES_REMOVE_COMMAND='zypper rm'
+		TMOE_INSTALLATON_COMMAND='zypper in -y'
+		TMOE_REMOVAL_COMMAND='zypper rm'
 
 	elif [ "$(cat /etc/issue | cut -c 1-4)" = "Void" ]; then
 		LINUX_DISTRO='void'
-		PACKAGES_INSTALL_COMMAND='xbps-install -S -y'
-		PACKAGES_REMOVE_COMMAND='xbps-remove -R'
+		TMOE_INSTALLATON_COMMAND='xbps-install -S -y'
+		TMOE_REMOVAL_COMMAND='xbps-remove -R'
 	fi
 
 	######################################
@@ -546,13 +549,13 @@ gnu_linux() {
 ########################################
 notes_of_tmoe_package_installation() {
 	echo "正在${YELLOW}安装${RESET}相关${GREEN}软件包${RESET}及其${BLUE}依赖...${RESET}"
-	echo "${GREEN}${PACKAGES_INSTALL_COMMAND}${BLUE}${DEPENDENCIES}${RESET}"
-	echo "如需${BOLD}${RED}卸载${RESET}${RESET}，请${YELLOW}手动${RESET}输${RED}${PACKAGES_REMOVE_COMMAND}${RESET}${BLUE}${DEPENDENCIES}${RESET}"
+	echo "${GREEN}${TMOE_INSTALLATON_COMMAND}${BLUE}${DEPENDENCIES}${RESET}"
+	echo "如需${BOLD}${RED}卸载${RESET}${RESET}，请${YELLOW}手动${RESET}输${RED}${TMOE_REMOVAL_COMMAND}${RESET}${BLUE}${DEPENDENCIES}${RESET}"
 }
 #####################
 android_termux() {
-	PACKAGES_INSTALL_COMMAND='apt install -y'
-	PACKAGES_REMOVE_COMMAND='apt purge -y'
+	TMOE_INSTALLATON_COMMAND='apt install -y'
+	TMOE_REMOVAL_COMMAND='apt purge -y'
 	DEPENDENCIES=""
 
 	if [ ! -e ${PREFIX}/bin/pv ]; then
@@ -716,10 +719,10 @@ remove_termux_linux_manager() {
 	cd ${PREFIX}/bin
 	echo "${RED}rm -rv ${HOME}/.config/tmoe-linux ${PREFIX}/bin/debian-i${RESET}"
 	DEPENDENCIES='git aria2 pv wget xz newt whiptail dialog'
-	echo "${RED}${PACKAGES_REMOVE_COMMAND} ${DEPENDENCIES}${RESET}"
+	echo "${RED}${TMOE_REMOVAL_COMMAND} ${DEPENDENCIES}${RESET}"
 	do_you_want_to_continue
 	rm -rfv rm -rv ${HOME}/.config/tmoe-linux debian-i
-	${PACKAGES_REMOVE_COMMAND} ${DEPENDENCIES}
+	${TMOE_REMOVAL_COMMAND} ${DEPENDENCIES}
 	exit 1
 }
 ############
@@ -1135,7 +1138,7 @@ questions_about_tmoe_automatic_configuration() {
 			您只需要执行${GREEN}rm ${HOME}/.termux/termux.properties${RESET}即可删除配置并还原回默认布局。
 			You can type ${GREEN}rm ~/.termux/termux.properties${RESET} to delete it and restore to default.
 			-----------------------
-			Q:${YELLOW}为什么每次安装都会自动加载EULA?${RESET}
+			Q:${YELLOW}为什么每次会自动加载EULA?${RESET}
 		    
 			A:添加许可协议是为了避免不必要的麻烦。
 			作为一个开源项目，您可以随时审查其中的代码，而不必过多担心恶意代码。
@@ -1143,7 +1146,7 @@ questions_about_tmoe_automatic_configuration() {
 			Q:${YELLOW}为什么安装时会自动显示git仓库的链接?${RESET}
 		    
 			A:因为开源项目花了开发者很长的时间，希望大家能尊重原开发者。
-			换位思考一下：假如你辛辛苦苦录制的视频被别人盗了，没有人知道那个视频真正的原作者，而你的努力最终只能付诸于东流。
+			换位思考一下：假如你辛辛苦苦录制的视频被别人盗了，没有人知道那个视频真正的原作者是谁，而你的努力最终只能付诸于东流。
 			-----------------------
 	ENDOFFAQ
 }
@@ -1223,7 +1226,7 @@ install_gnu_linux_container() {
 						echo '正在强制删除'
 						remove_gnu_linux_container
 					fi
-					tmoe_linux_container_eula
+					check_and_view_the_eula
 				fi
 				;;
 			n* | N*)
@@ -1240,7 +1243,7 @@ install_gnu_linux_container() {
 		fi
 
 	else
-		tmoe_linux_container_eula
+		check_and_view_the_eula
 		#bash -c "$(curl -fLsS 'https://gitee.com/mo2/linux/raw/master/install.sh')"
 	fi
 }
@@ -2070,7 +2073,7 @@ update_tmoe_linux_manager() {
 	if [ "${LINUX_DISTRO}" != "Android" ]; then
 		sed -i '1 c\#!/bin/bash' ${PREFIX}/bin/debian-i
 	fi
-
+	echo "${TMOE_GIT_URL}"
 	echo "${YELLOW}更新完成，按回车键返回。${RESET}"
 	echo "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
 	chmod +x ${PREFIX}/bin/debian-i
@@ -2348,6 +2351,13 @@ chroot_install_debian() {
 	install_gnu_linux_container
 }
 #################################
+check_and_view_the_eula() {
+	if [ ! -e "${CONFIG_FOLDER}/eula" ]; then
+		tmoe_linux_container_eula
+	fi
+	same_arch_or_different_arch
+}
+########################
 tmoe_linux_container_eula() {
 	if [ ! -d "${DEBIAN_CHROOT}" ]; then
 		#less -meQ
@@ -2419,8 +2429,8 @@ tmoe_linux_container_eula() {
 		#export LANG=${CurrentLANG}
 		#fi
 		read
+		touch ${CONFIG_FOLDER}/eula
 	fi
-	same_arch_or_different_arch
 }
 ###################################################
 same_arch_or_different_arch() {
@@ -2732,7 +2742,6 @@ check_tmoe_linux_container_rec_pkg_file_and_git() {
 debian_sid_arm64_xfce_recovery_package() {
 	echo "即将为您下载至${DOWNLOAD_PATH}"
 	echo '下载大小1302.2MiB,解压后约占4.9GiB'
-	#echo "2020-07-11凌晨注：忘记给LibreOffice打补丁了 (ㄒoㄒ)/~~，请在安装完成后使用tmoe-linux tool给libreoffice打补丁"
 	CORRENTSHA256SUM='0a3f6f964903d8a20d255754386a754020db71b12ef0c26659f2a54cb7e5ebf1' #DevSkim: ignore DS173237
 	BRANCH_NAME='arm64'
 	TMOE_LINUX_CONTAINER_REPO_01='https://gitee.com/ak2/debian_sid_rootfs_01'

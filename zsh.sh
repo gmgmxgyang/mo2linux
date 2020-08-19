@@ -129,10 +129,12 @@ if [ ! -z "${DEPENDENCIES}" ]; then
     fi
 fi
 ###############################
-if [ -e "/usr/bin/curl" ]; then
-    curl -Lo /usr/local/bin/debian-i 'https://gitee.com/mo2/linux/raw/master/tool.sh'
-else
-    wget -qO /usr/local/bin/debian-i 'https://gitee.com/mo2/linux/raw/master/tool.sh'
+if [ ! $(command -v debian-i) ]; then
+    if [ -e "/usr/bin/curl" ]; then
+        curl -Lo /usr/local/bin/debian-i 'https://gitee.com/mo2/linux/raw/master/tool.sh'
+    else
+        wget -qO /usr/local/bin/debian-i 'https://gitee.com/mo2/linux/raw/master/tool.sh'
+    fi
 fi
 chmod +x /usr/local/bin/debian-i
 #########################
@@ -283,8 +285,13 @@ if [ -e "${HOME}/.vnc/xstartup" ] && [ ! -e "${HOME}/.vnc/passwd" ]; then
     /usr/local/bin/debian-i passwd
 fi
 if [ -f "/root/.vnc/startvnc" ]; then
-    /usr/local/bin/startvnc
-    echo "已为您启动vnc服务 Vnc server has been started, enjoy it!"
+    if [ -f /usr/local/bin/startvnc ];then
+        /usr/local/bin/startvnc
+        echo "已为您启动vnc服务 Vnc server has been started, enjoy it!"
+    else
+        echo "Sorry,VNC server启动失败，请输debian-i重新安装并配置桌面环境。"
+	    echo "Please type debian-i to start tmoe-linux tool and reconfigure desktop environment."
+    fi
     rm -f /root/.vnc/startvnc
 fi
 
@@ -384,10 +391,18 @@ if [ -f "/tmp/.openwrtcheckfile" ]; then
 fi
 ########################
 echo 'All optimization steps have been completed, enjoy it!'
-echo 'zsh配置完成，2s后将为您启动Tmoe-linux工具'
+echo 'zsh配置完成，即将为您启动Tmoe-linux工具'
 echo "您也可以手动输${YELLOW}debian-i${RESET}进入"
-echo 'After 2 seconds, Tmoe-linux tool will be launched.'
+echo 'Tmoe-linux tool will be launched.'
 echo 'You can also enter debian-i manually to start it.'
-sleep 2s
+#sleep 1s
+########################
+TMOE_LINUX_DIR='/usr/local/etc/tmoe-linux'
+mkdir -p ${TMOE_LINUX_DIR}
+TMOE_GIT_DIR="${TMOE_LINUX_DIR}/git"
+TMOE_GIT_URL='https://gitee.com/mo2/linux'
+echo "${TMOE_GIT_URL}"
+git clone --depth=1 ${TMOE_GIT_URL} ${TMOE_GIT_DIR}
+cp ${TMOE_GIT_DIR}/tools/app/lnk/tmoe-linux.desktop /usr/share/applications
 bash /usr/local/bin/debian-i
 exec zsh -l || source ~/.zshrc

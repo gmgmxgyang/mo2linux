@@ -5,7 +5,7 @@ main() {
 	check_architecture
 	gnu_linux_env
 	source ${TMOE_TOOL_DIR}/environment.sh 2>/dev/null
-	check_current_user_name_and_group
+	check_current_user_name_and_group 2>/dev/null
 	case "$1" in
 	i | -i) tmoe_linux_tool_menu ;;
 	aria2) tmoe_aria2_manager ;;
@@ -545,21 +545,20 @@ check_dependencies() {
 	fi
 }
 ####################################################
+git_clone_tmoe_linux_repo() {
+	if [ ! -e "${TMOE_LINUX_DIR}" ]; then
+		mkdir -p ${TMOE_LINUX_DIR}
+	fi
+	git clone -b master --depth=1 https://gitee.com/mo2/linux ${TMOE_GIT_DIR}
+}
+#################
 do_you_want_to_git_clone_tmoe_linux_repo() {
 	echo "Do you want to ${GREEN}git clone${RESET} this repo to ${BLUE}${TMOE_GIT_DIR}${RESET}?"
 	echo "您需要克隆本項目倉庫方能繼續使用"
 	#RETURN_TO_WHERE='exit 1'
 	#do_you_want_to_continue
 	press_enter_to_continue
-	read
 	git_clone_tmoe_linux_repo
-}
-#################
-git_clone_tmoe_linux_repo() {
-	if [ ! -e "${TMOE_LINUX_DIR}" ]; then
-		mkdir -p ${TMOE_LINUX_DIR}
-	fi
-	git clone -b master --depth=1 https://gitee.com/mo2/linux ${TMOE_GIT_DIR}
 }
 #################
 check_tmoe_git_folder_00() {

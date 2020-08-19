@@ -97,7 +97,7 @@ gnu_linux_env() {
 	TMOE_LINUX_DIR='/usr/local/etc/tmoe-linux'
 	TMOE_GIT_DIR="${TMOE_LINUX_DIR}/git"
 	TMOE_TOOL_DIR="${TMOE_GIT_DIR}/tools"
-	TMOE_GIT_URL='https://gitee.com/mo2/linux'
+	TMOE_GIT_URL='gitee.com/mo2/linux'
 }
 ################
 check_proot_ps_command() {

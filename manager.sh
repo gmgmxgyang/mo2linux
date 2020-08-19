@@ -82,7 +82,7 @@ check_arch() {
 	esac
 	TRUE_ARCH_TYPE=${ARCH_TYPE}
 	CONFIG_FOLDER="${HOME}/.config/tmoe-linux"
-	TMOE_GIT_URL='https://gitee.com/mo2/linux'
+	TMOE_GIT_URL='gitee.com/mo2/linux'
 	if [ ! -e "${CONFIG_FOLDER}" ]; then
 		mkdir -p ${CONFIG_FOLDER}
 	fi
@@ -1155,6 +1155,7 @@ questions_about_tmoe_automatic_configuration() {
 		    
 			A:因为开源项目花了开发者很长的时间，希望大家能尊重原开发者。
 			换位思考一下：假如你辛辛苦苦录制的视频被别人盗了，没有人知道那个视频真正的原作者是谁，而你的努力最终只能付诸于东流。
+			听说尊重他人的劳动成果，会让世界变得更加美好呢！φ(≧ω≦*)♪
 			-----------------------
 	ENDOFFAQ
 }

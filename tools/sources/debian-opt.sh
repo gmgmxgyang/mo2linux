@@ -186,11 +186,15 @@ copy_debian_opt_usr_bin_file() {
     case ${NOTICE_OF_REPAIR} in
     true) echo "修复完成" ;;
     *)
-        cat <<-ENDOFOPT
-    ${BOLD}${DEPENDENCY_01}${RESET}在启动时，将根据您的用户权限来自动判断${BLUE}沙盒模式${RESET}的关闭与否。
+        ${BOLD}${DEPENDENCY_01}${RESET}在启动时，将根据您的用户权限来自动判断${BLUE}沙盒模式${RESET}的关闭与否。
+        case "${LINUX_DISTRO}" in
+        debian)
+            cat <<-ENDOFOPT
     若您在执行${YELLOW}apt upgrade${RESET}后无法启动${DEPENDENCY_01}，则请执行${GREEN}修复${RESET}操作。
     If you cannot start this app after executing ${YELLOW}apt upgrade${RESET},then please select the ${GREEN}fix${RESET} option.
 ENDOFOPT
+            ;;
+        esac
         ;;
     esac
 }

@@ -904,7 +904,7 @@ download_the_latest_electron() {
 }
 ##########
 check_electron() {
-    if [ -e "/opt/electron/electron" ]; then
+    if [ ! -e "/opt/electron/electron" ]; then
         mkdir -p /opt
         download_the_latest_electron
     fi

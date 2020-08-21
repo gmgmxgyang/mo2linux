@@ -232,10 +232,20 @@ install_opt_app_01() {
     esac
     copy_debian_opt_usr_bin_file
     case ${DEPENDENCY_01} in
-    electron-netease-cloud-music) check_electron_netease_cloud_music ;;
+    electron-netease-cloud-music)
+        check_electron_netease_cloud_music
+        check_163_music_icon
+        ;;
     esac
 }
 ################
+check_163_music_icon() {
+    NETEASE_MUSIC_ICON="/usr/share/icons/hicolor/scalable/apps/${DEPENDENCY_01}.svg"
+    if [ -e "${NETEASE_MUSIC_ICON}" ]; then
+        sed 's@Icon=${DEPENDENCY_01}@Icon=${NETEASE_MUSIC_ICON}@g' "${APPS_LNK_DIR}/${DEPENDENCY_01}.desktop"
+    fi
+}
+#########
 patch_opt_music_app() {
     install_electron_v8
     cd /tmp

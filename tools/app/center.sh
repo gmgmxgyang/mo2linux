@@ -268,7 +268,7 @@ tmoe_multimedia_menu() {
 #############
 install_tencent_video() {
     echo "本文件提取自官方v1.0.10_amd64.deb,开发者分离了amd64的electron环境并对其进行重新打包,以适应arm64架构。"
-    echo "本版本仅适配deb系发行版，开发者未在其他系列的发行版上进行测试。"
+    echo "本版本仅适配deb系和arch系发行版，红帽系用户请自行测试。"
     echo "若安装失败，则请手动前往官网下载安装"
     echo "URL: ${YELLOW}https://v.qq.com/download.html#Linux${RESET}"
     tenvideo_env

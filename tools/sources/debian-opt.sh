@@ -230,6 +230,7 @@ install_opt_app_01() {
         download_debian_opt_app
         ;;
     esac
+    copy_debian_opt_usr_bin_file
     case ${DEPENDENCY_01} in
     electron-netease-cloud-music) check_electron_netease_cloud_music ;;
     hmcl)
@@ -237,7 +238,6 @@ install_opt_app_01() {
         install_java
         ;;
     esac
-    copy_debian_opt_usr_bin_file
 }
 ################
 patch_opt_music_app() {

@@ -37,7 +37,7 @@ software_center() {
         whiptail --title "Software center-01" --menu \
             "您想要安装哪个软件？\n Which software do you want to install?" 0 50 0 \
             "1" "🦊 Browser:浏览器(firefox,chromium)" \
-            "2" "🏤 debian-opt仓库:我的世界,云音乐(支持arch和fedora)" \
+            "2" "🏤 debian-opt仓库:云音乐(支持arch和fedora)" \
             "3" "🎵 Multimedia:图像与影音(腾讯视频,gimp,mpv)" \
             "4" "🐧 SNS:社交类(qq)" \
             "5" "🎮 Games:游戏(steam,wesnoth)" \
@@ -239,6 +239,11 @@ install_emacs() {
     beta_features_quick_install
 }
 #############
+install_clementine() {
+    DEPENDENCY_02="emacs"
+    beta_features_quick_install
+}
+##########
 tmoe_multimedia_menu() {
     RETURN_TO_WHERE='tmoe_multimedia_menu'
     NON_DEBIAN='false'
@@ -248,8 +253,9 @@ tmoe_multimedia_menu() {
         "1" "📽️ MPV(开源、跨平台的音视频播放器)" \
         "2" "🎬 腾讯视频:国产Linux在线视频软件" \
         "3" "🖼 GIMP(GNU 图像处理程序)" \
-        "4" "🎞️ Parole(xfce默认媒体播放器,风格简洁)" \
-        "5" "🎧 网易云音乐(x86_64,专注于发现与分享的音乐产品)" \
+        "4" "🍊 Clementine(小柑橘音乐播放器)" \
+        "5" "🎞️ Parole(xfce默认媒体播放器,风格简洁)" \
+        "6" "🎧 网易云音乐(x86_64,专注于发现与分享的音乐产品)" \
         "0" "🌚 Return to previous menu 返回上级菜单" \
         3>&1 1>&2 2>&3)
     ##########################
@@ -258,8 +264,9 @@ tmoe_multimedia_menu() {
     1) install_mpv ;;
     2) install_tencent_video ;;
     3) install_gimp ;;
-    4) install_parole ;;
-    5) install_netease_163_cloud_music ;;
+    4) install_clementine ;;
+    5) install_parole ;;
+    6) install_netease_163_cloud_music ;;
     esac
     ##########################
     press_enter_to_return

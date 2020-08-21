@@ -233,10 +233,6 @@ install_opt_app_01() {
     copy_debian_opt_usr_bin_file
     case ${DEPENDENCY_01} in
     electron-netease-cloud-music) check_electron_netease_cloud_music ;;
-    hmcl)
-        DEPENDENCY_01=''
-        install_java
-        ;;
     esac
 }
 ################
@@ -376,10 +372,10 @@ debian_opt_game_app() {
     DEPENDENCY_02=''
     RETURN_TO_WHERE='debian_opt_game_app'
     RETURN_TO_MENU='debian_opt_game_app'
-    DEBIAN_INSTALLATION_MENU='01'
+    DEBIAN_INSTALLATION_MENU='00'
     INSTALL_APP=$(whiptail --title "GAMES" --menu \
         "您想要安装哪个软件?\nWhich software do you want to install? " 0 0 0 \
-        "1" "hmcl:跨平台且广受欢迎的Minecraft(我的世界)启动器" \
+        "1" "#hmcl:跨平台且广受欢迎的Minecraft(我的世界)启动器" \
         "2" "#gamehub:管理Steam,GOG,Humble Bundle等平台的游戏" \
         "0" "🌚 Return to previous menu 返回上级菜单" \
         3>&1 1>&2 2>&3)
@@ -391,7 +387,6 @@ debian_opt_game_app() {
         ORIGINAL_URL='https://github.com/huanghongxun/HMCL'
         ;;
     2)
-        DEBIAN_INSTALLATION_MENU='00'
         DEPENDENCY_01='gamehub'
         ORIGINAL_URL='https://tkashkin.tk/projects/gamehub'
         ;;

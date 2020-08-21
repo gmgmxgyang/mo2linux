@@ -967,6 +967,7 @@ aria2c_download_file_no_confirm() {
 ############
 extract_electron() {
     if [ ! $(command -v unzip) ]; then
+        NON_DEBIAN='false'
         DEPENDENCY_01='unzip'
         DEPENDENCY_02=''
         beta_features_quick_install

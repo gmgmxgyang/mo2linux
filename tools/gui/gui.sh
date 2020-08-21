@@ -901,14 +901,14 @@ kali_xfce4_extras() {
     apt install -y kali-undercover
     apt install -y zenmap
     apt install -y kali-themes-common
-    if [ "${ARCH_TYPE}" = "arm64" ] || [ "${ARCH_TYPE}" = "armhf" ]; then
-        apt install -y kali-linux-arm
-        if [ $(command -v chromium) ]; then
-            apt install -y chromium-l10n
-            fix_chromium_root_no_sandbox
-        fi
-        apt search kali-linux
+    case ${ARCH_TYPE} in
+    arm64 | armhf | armel) apt install -y kali-linux-arm ;;
+    esac
+    if [ $(command -v chromium) ]; then
+        apt install -y chromium-l10n
+        fix_chromium_root_no_sandbox
     fi
+    apt search kali-linux
     dbus-launch xfconf-query -c xsettings -p /Net/IconThemeName -s Windows-10-Icons
 }
 ###################

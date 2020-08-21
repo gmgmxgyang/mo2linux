@@ -26,14 +26,14 @@ which_vscode_edition() {
 }
 #################################
 check_vscode_server_arch() {
-    if [ "${ARCH_TYPE}" = "arm64" ] || [ "${ARCH_TYPE}" = "amd64" ]; then
-        install_vscode_server
-    else
+    case ${ARCH_TYPE} in
+    arm64 | amd64) install_vscode_server ;;
+    *)
         echo "非常抱歉，Tmoe-linux的开发者未对您的架构进行适配。"
         echo "请选择其它版本"
         arch_does_not_support
-        which_vscode_edition
-    fi
+        ;;
+    esac
 }
 ###################
 install_vscode_server() {

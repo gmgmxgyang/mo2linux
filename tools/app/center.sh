@@ -11,8 +11,6 @@ remove_browser() {
         ${TMOE_REMOVAL_COMMAND} firefox firefox-l10n-zh-cn
         ${TMOE_REMOVAL_COMMAND} firefox-locale-zh-hans
         apt autopurge 2>/dev/null
-        #dnf remove -y firefox 2>/dev/null
-        #pacman -Rsc firefox 2>/dev/null
         emerge -C firefox-bin firefox 2>/dev/null
 
     else
@@ -39,7 +37,7 @@ software_center() {
         whiptail --title "Software center-01" --menu \
             "您想要安装哪个软件？\n Which software do you want to install?" 0 50 0 \
             "1" "🦊 Browser:浏览器(firefox,chromium)" \
-            "2" "🎶 debian-opt仓库(部分app支持arch和fedora)" \
+            "2" "🏤 debian-opt仓库:我的世界,云音乐(支持arch和fedora)" \
             "3" "🎵 Multimedia:图像与影音(腾讯视频,gimp,mpv)" \
             "4" "🐧 SNS:社交类(qq)" \
             "5" "🎮 Games:游戏(steam,wesnoth)" \
@@ -219,7 +217,8 @@ tmoe_documents_menu() {
         whiptail --title "documents" --menu \
             "Which software do you want to install?" 0 50 0 \
             "1" "LibreOffice(开源、自由的办公文档软件)" \
-            "2" "Chinese manual(中文手册)" \
+            "2" "GNU Emacs(著名的集成开发环境和文本编辑器)" \
+            "3" "Chinese manual(中文手册)" \
             "0" "🌚 Return to previous menu 返回上级菜单" \
             3>&1 1>&2 2>&3
     )
@@ -227,6 +226,7 @@ tmoe_documents_menu() {
     case "${TMOE_APP}" in
     0 | "") software_center ;;
     1) install_libre_office ;;
+    2) install_emacs ;;
     2) install_chinese_manpages ;;
     esac
     ##########################
@@ -234,6 +234,11 @@ tmoe_documents_menu() {
     tmoe_documents_menu
 }
 ####################
+install_emacs() {
+    DEPENDENCY_02="emacs"
+    beta_features_quick_install
+}
+#############
 tmoe_multimedia_menu() {
     RETURN_TO_WHERE='tmoe_multimedia_menu'
     NON_DEBIAN='false'
@@ -267,16 +272,8 @@ install_tencent_video() {
     echo "若安装失败，则请手动前往官网下载安装"
     echo "URL: ${YELLOW}https://v.qq.com/download.html#Linux${RESET}"
     tenvideo_env
-    case ${LINUX_DISTRO} in
-    debian | arch)
-        check_electron
-        git_clone_tenvideo
-        ;;
-    *)
-        non_debian_function
-        tmoe_multimedia_menu
-        ;;
-    esac
+    check_electron
+    git_clone_tenvideo
 }
 #############
 git_clone_tenvideo() {
@@ -540,7 +537,7 @@ install_mpv() {
 install_linux_qq() {
     DEPENDENCY_01="linuxqq"
     DEPENDENCY_02=""
-    if [ -e "/usr/share/applications/qq.desktop" ]; then
+    if [ -e "${APPS_LNK_DIR}/qq.desktop" ]; then
         press_enter_to_reinstall
     fi
     cd /tmp
@@ -655,7 +652,7 @@ install_synaptic() {
         DEPENDENCY_02="gdebi"
         NON_DEBIAN='true'
         beta_features_quick_install
-        sed -i 's/synaptic-pkexec/synaptic/g' /usr/share/applications/synaptic.desktop
+        sed -i 's/synaptic-pkexec/synaptic/g' ${APPS_LNK_DIR}/synaptic.desktop
         echo "synaptic和gdebi安装完成，您可以将deb文件的默认打开程序修改为gdebi"
     else
         echo "${YELLOW}您真的要离开我么？哦呜。。。${RESET}"
@@ -751,10 +748,9 @@ install_baidu_netdisk() {
     DEPENDENCY_02=""
     if [ "${ARCH_TYPE}" != "amd64" ]; then
         arch_does_not_support
-        software_center
     fi
 
-    if [ -e "/usr/share/applications/baidunetdisk.desktop" ]; then
+    if [ -e "${APPS_LNK_DIR}/baidunetdisk.desktop" ]; then
         press_enter_to_reinstall
     fi
     cd /tmp
@@ -781,12 +777,11 @@ install_baidu_netdisk() {
 install_netease_163_cloud_music() {
     DEPENDENCY_01="netease-cloud-music"
     DEPENDENCY_02=""
-
-    if [ "${ARCH_TYPE}" != "amd64" ] && [ "${ARCH_TYPE}" != "i386" ]; then
-        arch_does_not_support
-        software_center
-    fi
-    if [ -e "/usr/share/applications/netease-cloud-music.desktop" ]; then
+    case "${ARCH_TYPE}" in
+    amd64 | i386) ;;
+    *) arch_does_not_support ;;
+    esac
+    if [ -e "${APPS_LNK_DIR}/netease-cloud-music.desktop" ]; then
         press_enter_to_reinstall
     fi
     cd /tmp
@@ -939,11 +934,11 @@ remove_gui() {
 ##########################
 remove_tmoe_linux_tool() {
     cd /usr/local/bin
-    echo "${RED}rm -rv /usr/share/applications/tmoe-linux.desktop ${HOME}/.config/tmoe-linux startvnc stopvnc debian-i startx11vnc startxsdl x11vncpasswd .tmoe-linux-qemu startqemu ${TMOE_GIT_DIR}${RESET}"
+    echo "${RED}rm -rv ${APPS_LNK_DIR}/tmoe-linux.desktop ${HOME}/.config/tmoe-linux startvnc stopvnc debian-i startx11vnc startxsdl x11vncpasswd .tmoe-linux-qemu startqemu ${TMOE_GIT_DIR}${RESET}"
     DEPENDENCIES='git aria2 pv wget curl less xz-utils newt whiptail'
     echo "${RED}${TMOE_REMOVAL_COMMAND} ${DEPENDENCIES}${RESET}"
     do_you_want_to_continue
-    rm -rfv /usr/share/applications/tmoe-linux.desktop ${HOME}/.config/tmoe-linux startvnc stopvnc debian-i startx11vnc ${TMOE_GIT_DIR} startxsdl x11vncpasswd
+    rm -rfv ${APPS_LNK_DIR}/tmoe-linux.desktop ${HOME}/.config/tmoe-linux startvnc stopvnc debian-i startx11vnc ${TMOE_GIT_DIR} startxsdl x11vncpasswd
     ${TMOE_REMOVAL_COMMAND} ${DEPENDENCIES}
     exit 1
 }

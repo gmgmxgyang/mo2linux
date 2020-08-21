@@ -1409,7 +1409,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	apt list --upgradable
 	echo "正在升级所有软件包..."
 	apt dist-upgrade -y
-	apt install -y procps
+	apt install -y procps 2>/dev/null
 	apt clean
 
 	#############################

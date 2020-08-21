@@ -97,7 +97,9 @@ gnu_linux_env() {
 	TMOE_LINUX_DIR='/usr/local/etc/tmoe-linux'
 	TMOE_GIT_DIR="${TMOE_LINUX_DIR}/git"
 	TMOE_TOOL_DIR="${TMOE_GIT_DIR}/tools"
+	TMOE_OPT_BIN_DIR="${TMOE_TOOL_DIR}/sources/opt-bin"
 	TMOE_GIT_URL='gitee.com/mo2/linux'
+	APPS_LNK_DIR='/usr/share/applications'
 }
 ################
 check_proot_ps_command() {
@@ -596,7 +598,7 @@ tmoe_linux_tool_menu() {
 	IMPORTANT_TIPS=""
 	#窗口大小20 50 7
 	TMOE_OPTION=$(
-		whiptail --title "Tmoe-linux running on ${OSRELEASE}(20200818)" --menu "Type 'debian-i' to start this tool.\nPlease use the enter and arrow keys to operate." 0 50 0 \
+		whiptail --title "Tmoe-linux running on ${OSRELEASE}(20200821)" --menu "Type 'debian-i' to start this tool.\nPlease use the enter and arrow keys to operate." 0 50 0 \
 			"1" "🍭 GUI:图形界面(桌面,WM,登录管理器)" \
 			"2" "🥝 Software center:软件(浏览器,游戏,影音)" \
 			"3" "🌈 Desktop beautification:桌面美化(主题)" \

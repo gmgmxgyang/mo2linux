@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 cd /opt/CocoMusic/dist/electron
 ELECTRON_BIN='/opt/electron-v8/electron'
-#cocomusic需打防白屏补丁，还需要指定electron版本
+#2020.08 cocomusic linux-arm64需打防白屏补丁，还需要指定electron版本
 #######################
 export ELECTRON_IS_DEV=0
 case "$(id -u)" in

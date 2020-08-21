@@ -8,6 +8,13 @@ check_current_user_name_and_group() {
     fi
 }
 #########################
+gnu_linux_env_02() {
+    OPT_URL_01='https://bintray.proxy.ustclug.org/debianopt/debianopt'
+    OPT_URL_02='https://dl.bintray.com/debianopt/debianopt'
+    OPT_REPO_LIST='/etc/apt/sources.list.d/debianopt.list'
+    ELECTRON_MIRROR_STATION='https://mirrors.huaweicloud.com/electron'
+}
+########################
 uncompress_theme_file() {
     case "${TMOE_THEME_ITEM:0-6:6}" in
     tar.xz)
@@ -471,6 +478,7 @@ arch_does_not_support() {
     echo "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
     echo "按${GREEN}回车键${RESET}${BLUE}返回${RESET}"
     read
+    ${RETURN_TO_WHERE}
 }
 ##########################
 do_you_want_to_continue() {
@@ -660,10 +668,7 @@ install_browser() {
 }
 ###########
 explore_debian_opt_repo() {
-    echo "维护期间暂时关闭"
-    read
-    ${RETURN_TO_WHERE}
-    #source ${TMOE_TOOL_DIR}/sources/debian-opt.sh
+    source ${TMOE_TOOL_DIR}/sources/debian-opt.sh
 }
 #################
 install_filebrowser() {
@@ -678,7 +683,7 @@ add_debian_opt_gpg_key() {
     cd /tmp
     curl -Lv -o bintray-public.key.asc 'https://bintray.com/user/downloadSubjectPublicKey?username=bintray'
     apt-key add bintray-public.key.asc
-    echo -e "deb https://bintray.proxy.ustclug.org/debianopt/debianopt/ buster main\n#deb https://dl.bintray.com/debianopt/debianopt buster main" >/etc/apt/sources.list.d/debianopt.list
+    echo -e "deb ${OPT_URL_01} buster main\n#deb ${OPT_URL_02} buster main" >${OPT_REPO_LIST}
     apt update
 }
 ###########
@@ -870,27 +875,53 @@ install_typora() {
     beta_features_install_completed
 }
 ################
-check_electron() {
-    if [ ! $(command -v electron) ]; then
-        case ${LINUX_DISTRO} in
-        debian)
+chmod_4755_chrome_sandbox() {
+    SANDBOX_FILE='/opt/electron/chrome-sandbox'
+    chmod 4755 ${SANDBOX_FILE}
+}
+##############
+download_the_latest_electron() {
+    case ${LINUX_DISTRO} in
+    debian)
+        if [ ! -e "${OPT_REPO_LIST}" ]; then
             add_debian_opt_gpg_key
-            ;;
-        arch) ;;
-        esac
+        fi
         NON_DEBIAN='false'
         DEPENDENCY_01=''
         DEPENDENCY_02='electron'
         beta_features_quick_install
-        SANDBOX_FILE='/opt/electron/chrome-sandbox'
-        chmod 4755 ${SANDBOX_FILE}
+        ;;
+    *)
+        latest_electron
+        download_electron
+        if [ ! -e "/usr/bin/electron" ]; then
+            ln -sf /opt/electron/electron /usr/bin/
+        fi
+        ;;
+    esac
+    chmod_4755_chrome_sandbox
+    electron -v --no-sandbox | head -n 1 >${TMOE_LINUX_DIR}/electron_version.txt
+}
+##########
+check_electron() {
+    if [ ! $(command -v electron) ]; then
+        download_the_latest_electron
     fi
 }
 ##########
+install_electron_v8() {
+    #v8不要创建soft link
+    electron_v8_env
+    if [ ! -e "${DOWNLOAD_PATH}/electron" ]; then
+        download_electron
+        chmod 4755 ${DOWNLOAD_PATH}/chrome-sandbox
+    fi
+}
+##############
 tenvideo_env() {
     DEPENDENCY_02='tenvideo-universal'
     TENTVIDEO_OPT='/opt/Tenvideo_universal'
-    TENVIDEO_LNK='/usr/share/applications/TencentVideo.desktop'
+    TENVIDEO_LNK="${APPS_LNK_DIR}/TencentVideo.desktop"
     TENVIDEO_GIT='https://gitee.com/ak2/tenvideo.git'
     TENVIDEO_FOLDER='.TENCENT_VIDEO_TMOE_TMEP_FOLDER'
     if [ -e "${TENTVIDEO_OPT}" ]; then
@@ -910,9 +941,7 @@ aria2c_download_normal_file_s3() {
     wget "${DOWNLOAD_FILE_URL}"
 }
 ######################
-aria2c_download_file() {
-    echo "${YELLOW}${THE_LATEST_ISO_LINK}${RESET}"
-    do_you_want_to_continue
+aria2c_download_file_00() {
     if [ -z "${DOWNLOAD_PATH}" ]; then
         cd ~
     else
@@ -921,7 +950,19 @@ aria2c_download_file() {
         fi
         cd ${DOWNLOAD_PATH}
     fi
+}
+###############
+aria2c_download_file() {
+    echo "${YELLOW}${THE_LATEST_ISO_LINK}${RESET}"
+    do_you_want_to_continue
+    aria2c_download_file_00
     aria2c --allow-overwrite=true -s 5 -x 5 -k 1M "${THE_LATEST_ISO_LINK}"
+}
+############
+aria2c_download_file_no_confirm() {
+    echo "${YELLOW}${ELECTRON_FILE_URL}${RESET}"
+    aria2c_download_file_00
+    aria2c --allow-overwrite=true -s 5 -x 5 -k 1M "${ELECTRON_FILE_URL}"
 }
 ############
 extract_electron() {
@@ -932,16 +973,12 @@ extract_electron() {
     fi
     unzip ${ELECTRON_ZIP_FILE}
     rm -fv ${ELECTRON_ZIP_FILE}
-    SANDBOX_FILE='chrome-sandbox'
     chmod +x electron
-    chmod 4755 ${SANDBOX_FILE}
 }
 #########
 latest_electron() {
-    electron_env
     ELECTRON_VERSION=$(curl -Lv "${ELECTRON_MIRROR_STATION}" | cut -d '=' -f 3 | cut -d '"' -f 2 | grep -E '^1|^2^|^3|^4|^5|^6|^7|^8|^9' | grep -Ev '^v|^1\.|^2\.|^3\.|^4\.|^5\.|^6\.|^7\.|^8\.' | tail -n 1 | cut -d '/' -f 1)
     DOWNLOAD_PATH="/opt/electron"
-    #ln -s /opt/electron/electron /usr/bin
 }
 ###########
 download_electron() {
@@ -950,26 +987,17 @@ download_electron() {
     arm64) ARCH_TYPE_02="${ARCH_TYPE}" ;;
     armhf) ARCH_TYPE_02='armv7l' ;;
     i386) ARCH_TYPE_02='ia32' ;;
-    *)
-        arch_does_not_support
-        ${RETURN_TO_WHERE}
-        ;;
+    *) arch_does_not_support ;;
     esac
     ELECTRON_ZIP_FILE="electron-v${ELECTRON_VERSION}-linux-${ARCH_TYPE_02}.zip"
     ELECTRON_FILE_URL="${ELECTRON_MIRROR_STATION}/${ELECTRON_VERSION}/${ELECTRON_ZIP_FILE}"
-    THE_LATEST_ISO_LINK="${ELECTRON_FILE_URL}"
-    aria2c_download_file
+    aria2c_download_file_no_confirm
     extract_electron
 }
 ###########
 electron_v8_env() {
-    electron_env
     ELECTRON_VERSION='8.5.0'
     DOWNLOAD_PATH="/opt/electron-v8"
-}
-#########
-electron_env() {
-    ELECTRON_MIRROR_STATION='https://mirrors.huaweicloud.com/electron'
 }
 #########
 extract_deb_file_01() {
@@ -977,5 +1005,44 @@ extract_deb_file_01() {
     true) busybox ar xv ${THE_LATEST_DEB_FILE} ;;
     *) ar xv ${THE_LATEST_DEB_FILE} ;;
     esac
+    if [ -e "data.tar.xz" ]; then
+        DEB_FILE_TYPE='tar.xz'
+    elif [ -e "data.tar.gz" ]; then
+        DEB_FILE_TYPE='tar.gz'
+    else
+        DEB_FILE_TYPE='tar'
+    fi
 }
 ###########
+extract_deb_file_02() {
+    cd /
+    case "${DEB_FILE_TYPE}" in
+    tar.xz) tar -PpJxvf ${DOWNLOAD_PATH}/data.tar.xz ".${APPS_LNK_DIR}" ./opt ./usr/share/icons ;;
+    tar.gz) tar -Ppzxvf ${DOWNLOAD_PATH}/data.tar.gz ".${APPS_LNK_DIR}" ./opt ./usr/share/icons ;;
+    *) tar -Ppxvf ${DOWNLOAD_PATH}/data.* ".${APPS_LNK_DIR}" ./opt ./usr/share/icons ;;
+    esac
+    cd /tmp
+    rm -rv ${DOWNLOAD_PATH}
+}
+#############
+install_gpg() {
+    if [ ! $(command -v gpg) ]; then
+        DEPENDENCY_01=""
+        DEPENDENCY_02="gpg"
+        beta_features_quick_install
+    fi
+}
+#########
+install_java() {
+    if [ ! $(command -v java) ]; then
+        case "${LINUX_DISTRO}" in
+        arch) DEPENDENCY_02='jre-openjdk' ;;
+        debian | "") DEPENDENCY_02='default-jre' ;;
+        alpine) DEPENDENCY_02='openjdk11-jre' ;;
+        redhat | *) DEPENDENCY_02='java' ;;
+        esac
+        beta_features_quick_install
+    fi
+}
+#######
+gnu_linux_env_02

@@ -187,7 +187,7 @@ install_scrcpy() {
 }
 ############
 creat_android_studio_application_link() {
-    cd /usr/share/applications
+    cd ${APPS_LNK_DIR}
     #Icon=android-studio
     cat >android_studio.desktop <<-'EOF'
 		[Desktop Entry]
@@ -219,7 +219,7 @@ check_android_studio() {
     cd ${HOME}/sd/Download
     if [ -e "/opt/android-studio" ]; then
         echo '您已安装Android studio'
-        echo "若您需要卸载，则请输${RED}rm -rv${RESET} ${HOME}/sd/Download/android_studio_linux_64bit.tar.gz ${BLUE}/opt/android-studio /usr/share/applications/android_studio.desktop${RESET};${RED}${TMOE_REMOVAL_COMMAND}${RESET} ${BLUE}default-jre${RESET}"
+        echo "若您需要卸载，则请输${RED}rm -rv${RESET} ${HOME}/sd/Download/android_studio_linux_64bit.tar.gz ${BLUE}/opt/android-studio ${APPS_LNK_DIR}/android_studio.desktop${RESET};${RED}${TMOE_REMOVAL_COMMAND}${RESET} ${BLUE}default-jre${RESET}"
         echo "是否需要重新安装？"
         echo "Do you want to reinstall it?"
         do_you_want_to_continue
@@ -228,22 +228,14 @@ check_android_studio() {
         download_android_studio
     fi
     DEPENDENCY_01=''
-    if [ ! $(command -v java) ]; then
-        case "${LINUX_DISTRO}" in
-        arch) DEPENDENCY_02='jre-openjdk' ;;
-        debian | "") DEPENDENCY_02='default-jre' ;;
-        alpine) DEPENDENCY_02='openjdk11-jre' ;;
-        redhat | *) DEPENDENCY_02='java' ;;
-        esac
-        beta_features_quick_install
-    fi
+    install_java
 }
 ##############
 install_android_studio() {
     check_android_studio
     tar -zxvf android_studio_linux_64bit.tar.gz -C /opt
     creat_android_studio_application_link
-    echo "安装完成，如需卸载，则请输${RED}rm -rv${RESET} ${BLUE}/opt/android-studio /usr/share/applications/android_studio.desktop${RESET};${RED}${TMOE_REMOVAL_COMMAND}${RESET} ${BLUE}default-jre${RESET}"
+    echo "安装完成，如需卸载，则请输${RED}rm -rv${RESET} ${BLUE}/opt/android-studio ${APPS_LNK_DIR}/android_studio.desktop${RESET};${RED}${TMOE_REMOVAL_COMMAND}${RESET} ${BLUE}default-jre${RESET}"
 }
 ##################
 install_seahorse() {
@@ -687,7 +679,7 @@ install_wps_office() {
     DEPENDENCY_02=""
     NON_DEBIAN='false'
     cd /tmp
-    if [ -e "/usr/share/applications/wps-office-wps.desktop" ]; then
+    if [ -e "${APPS_LNK_DIR}/wps-office-wps.desktop" ]; then
         press_enter_to_reinstall
     fi
 

@@ -534,7 +534,6 @@ install_debian_baidu_pinyin() {
     else
         echo "架构不支持，跳过安装百度输入法。"
         arch_does_not_support
-        beta_features
     fi
     apt show ./fcitx-baidupinyin.deb
     apt install -y ./fcitx-baidupinyin.deb
@@ -576,7 +575,6 @@ sougou_pinyin_amd64() {
     else
         echo "架构不支持，跳过安装搜狗输入法。"
         arch_does_not_support
-        beta_features
     fi
 }
 ###################
@@ -702,8 +700,8 @@ install_debian_iflyime_pinyin() {
         grep_deb_comman_model_01
         ;;
     *)
-        arch_does_not_support
         echo "请在更换x64架构的设备后，再来尝试"
+        arch_does_not_support
         ;;
     esac
 }

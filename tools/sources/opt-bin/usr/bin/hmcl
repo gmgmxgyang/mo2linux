@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+java --module-path /usr/share/openjfx/lib --add-modules javafx.controls,javafx.graphics,javafx.swing,javafx.fxml,javafx.media,javafx.web -jar /opt/HMCL/HMCL.jar

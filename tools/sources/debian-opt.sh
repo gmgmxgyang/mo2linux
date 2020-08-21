@@ -730,12 +730,12 @@ apt_list_debian_opt() {
 }
 #############
 install_electron_chord() {
-    DEPENDENCY_01="chord"
+    DEPENDENCY_01='chord'
     echo "github url：${YELLOW}https://github.com/PeterDing/chord${RESET}"
 }
 ##############
 install_electron_petal() {
-    DEPENDENCY_01="petal"
+    DEPENDENCY_01='petal'
     echo "github url：${YELLOW}https://ilime.github.io/Petal${RESET}"
 }
 ############

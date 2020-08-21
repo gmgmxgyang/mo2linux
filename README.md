@@ -895,4 +895,5 @@ nano $(command -v startvnc)
 
 - 1.08-11:更新 docker 配置选项
 - 2.08-14:更新 termux 的换源功能，支持配置多个镜像站。
-- 2.08-16:重构 proot 脚本，修复 deb 系发行版无法使用`ps`命令的问题。
+- 3.08-16:重构 proot 脚本，修复 deb 系发行版无法使用`ps`命令的问题。
+- 4.08-21:对 archlinux 等非 deb 系发行版适配音乐 app

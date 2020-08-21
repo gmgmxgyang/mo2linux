@@ -244,7 +244,7 @@ patch_opt_music_app() {
     install_electron_v8
     cd /tmp
     GIT_TEMP_FOLDER=".${DEPENDENCY_01}_TEMP_FOLDER"
-    git clone --depth=1 ${GIT_PATHCH_URL} ${GIT_TEMP_FOLDER}
+    git clone --depth=1 ${GIT_PATCH_URL} ${GIT_TEMP_FOLDER}
     tar -PpJxvf ${GIT_TEMP_FOLDER}/patch.tar.xz
     rm -rv ${GIT_TEMP_FOLDER}
 }

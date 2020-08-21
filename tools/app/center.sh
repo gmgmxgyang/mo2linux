@@ -240,7 +240,7 @@ install_emacs() {
 }
 #############
 install_clementine() {
-    DEPENDENCY_02="emacs"
+    DEPENDENCY_02="clementine"
     beta_features_quick_install
 }
 ##########

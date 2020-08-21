@@ -904,8 +904,13 @@ download_the_latest_electron() {
 }
 ##########
 check_electron() {
-    if [ ! $(command -v electron) ]; then
+    if [ -e "/opt/electron/electron" ]; then
+        mkdir -p /opt
         download_the_latest_electron
+    fi
+    if [ ! $(command -v electron) ]; then
+        chmod +x /opt/electron/electron
+        ln -sf /opt/electron/electron /usr/bin
     fi
 }
 ##########

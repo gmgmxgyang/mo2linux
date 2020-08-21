@@ -781,7 +781,7 @@ creat_linux_container_remove_script() {
 ########################
 cat >${PREFIX}/bin/startvnc <<-EndOfFile
 	#!/data/data/com.termux/files/usr/bin/env bash
-	am start -n com.realvnc.viewer.android/com.realvnc.viewer.android.app.ConnectionChooserActivity
+	am start -n com.realvnc.viewer.android/com.realvnc.viewer.android.app.ConnectionChooserActivity 2>/dev/null
 	pulseaudio --start 2>/dev/null &
 	touch ~/${DEBIAN_FOLDER}/root/.vnc/startvnc
 	${PREFIX}/bin/debian
@@ -800,7 +800,7 @@ EndOfFile
 #不要单引号
 cat >${PREFIX}/bin/startxsdl <<-EndOfFile
 	#!/data/data/com.termux/files/usr/bin/env bash
-	am start -n x.org.server/x.org.server.MainActivity
+	am start -n x.org.server/x.org.server.MainActivity 2>/dev/null
 	touch ~/${DEBIAN_FOLDER}/root/.vnc/startxsdl
 	${PREFIX}/bin/debian
 EndOfFile

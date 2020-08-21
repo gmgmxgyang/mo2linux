@@ -570,6 +570,7 @@ nano $(command -v startvnc)
 [ohmyzsh/ohmyzsh](https://github.com/ohmyzsh/ohmyzsh)
 [romkatv/powerlevel10k](https://github.com/romkatv/powerlevel10k)
 [Aloxaf/fzf-tab](https://github.com/Aloxaf/fzf-tab)
+[coslyk/debianopt-repo](https://github.com/coslyk/debianopt-repo)
 
 ### 九.更新日志 logs
 

@@ -39,16 +39,17 @@ software_center() {
         whiptail --title "Software center-01" --menu \
             "您想要安装哪个软件？\n Which software do you want to install?" 0 50 0 \
             "1" "🦊 Browser:浏览器(firefox,chromium)" \
-            "2" "🎵 Multimedia:图像与影音(腾讯视频,云音乐)" \
-            "3" "🐧 SNS:社交类(qq)" \
-            "4" "🎮 Games:游戏(steam,wesnoth)" \
-            "5" "🔯 Packages&system:软件包与系统管理" \
-            "6" "📚 Documents:文档(libreoffice)" \
-            "7" "📘 VSCode 现代化代码编辑器" \
-            "8" "🎁 Download:下载类(aria2,baidu)" \
-            "9" "🥙 Start zsh tool:启动zsh管理工具" \
-            "10" "🥗 File shared:文件共享与网盘(Webdav)" \
-            "11" "💔 remove:卸载管理" \
+            "2" "🎶 debian-opt仓库(部分app支持arch和fedora)" \
+            "3" "🎵 Multimedia:图像与影音(腾讯视频,gimp,mpv)" \
+            "4" "🐧 SNS:社交类(qq)" \
+            "5" "🎮 Games:游戏(steam,wesnoth)" \
+            "6" "🔯 Packages&system:软件包与系统管理" \
+            "7" "📚 Documents:文档(libreoffice)" \
+            "8" "📘 VSCode 现代化代码编辑器" \
+            "9" "🎁 Download:下载类(aria2,baidu)" \
+            "10" "🥙 Start zsh tool:启动zsh管理工具" \
+            "11" "🥗 File shared:文件共享与网盘(Webdav)" \
+            "12" "💔 remove:卸载管理" \
             "0" "🌚 Back to the main menu 返回主菜单" \
             3>&1 1>&2 2>&3
     )
@@ -56,16 +57,17 @@ software_center() {
     case "${SOFTWARE}" in
     0 | "") tmoe_linux_tool_menu ;;
     1) install_browser ;;
-    2) tmoe_multimedia_menu ;;
-    3) tmoe_social_network_service ;;
-    4) tmoe_games_menu ;;
-    5) tmoe_software_package_menu ;;
-    6) tmoe_documents_menu ;;
-    7) which_vscode_edition ;;
-    8) tmoe_download_class ;;
-    9) start_tmoe_zsh_manager ;;
-    10) personal_netdisk ;;
-    11) tmoe_other_options_menu ;;
+    2) explore_debian_opt_repo ;;
+    3) tmoe_multimedia_menu ;;
+    4) tmoe_social_network_service ;;
+    5) tmoe_games_menu ;;
+    6) tmoe_software_package_menu ;;
+    7) tmoe_documents_menu ;;
+    8) which_vscode_edition ;;
+    9) tmoe_download_class ;;
+    10) start_tmoe_zsh_manager ;;
+    11) personal_netdisk ;;
+    12) tmoe_other_options_menu ;;
     esac
     ############################################
     press_enter_to_return
@@ -182,6 +184,9 @@ install_nodejs() {
 
     if [ ! $(command -v npm) ]; then
         bash -c "$(curl -Lv https://npmjs.org/install.sh | sed 's@registry.npmjs.org@registry.npm.taobao.org@g')"
+        if [ ! $(command -v npm) ]; then
+            ${TMOE_INSTALLATON_COMMAND} npm
+        fi
         cat <<-'EOF'
 			npm config set registry https://registry.npm.taobao.org
 			npm config set disturl https://npm.taobao.org/dist
@@ -235,26 +240,21 @@ tmoe_multimedia_menu() {
     DEPENDENCY_01=""
     TMOE_APP=$(whiptail --title "Picture&Video&Music" --menu \
         "Which software do you want to install?" 0 50 0 \
-        "1" "🎶 Music:debian-opt仓库(QQ音乐,云音乐)" \
-        "2" "📽️ MPV(开源、跨平台的音视频播放器)" \
-        "3" "🎬 腾讯视频:国产Linux在线视频软件" \
-        "4" "🖼 GIMP(GNU 图像处理程序)" \
-        "5" "🎞️ Parole(xfce默认媒体播放器,风格简洁)" \
-        "6" "🎧 网易云音乐(x86_64,专注于发现与分享的音乐产品)" \
+        "1" "📽️ MPV(开源、跨平台的音视频播放器)" \
+        "2" "🎬 腾讯视频:国产Linux在线视频软件" \
+        "3" "🖼 GIMP(GNU 图像处理程序)" \
+        "4" "🎞️ Parole(xfce默认媒体播放器,风格简洁)" \
+        "5" "🎧 网易云音乐(x86_64,专注于发现与分享的音乐产品)" \
         "0" "🌚 Return to previous menu 返回上级菜单" \
         3>&1 1>&2 2>&3)
     ##########################
     case "${TMOE_APP}" in
     0 | "") software_center ;;
-    1)
-        non_debian_function
-        explore_debian_opt_repo
-        ;;
-    2) install_mpv ;;
-    3) install_tencent_video ;;
-    4) install_gimp ;;
-    5) install_parole ;;
-    6) install_netease_163_cloud_music ;;
+    1) install_mpv ;;
+    2) install_tencent_video ;;
+    3) install_gimp ;;
+    4) install_parole ;;
+    5) install_netease_163_cloud_music ;;
     esac
     ##########################
     press_enter_to_return
@@ -262,9 +262,11 @@ tmoe_multimedia_menu() {
 }
 #############
 install_tencent_video() {
-    tenvideo_env
+    echo "本文件提取自官方v1.0.10_amd64.deb,开发者分离了amd64的electron环境并对其进行重新打包,以适应arm64架构。"
+    echo "本版本仅适配deb系发行版，开发者未在其他系列的发行版上进行测试。"
     echo "若安装失败，则请手动前往官网下载安装"
     echo "URL: ${YELLOW}https://v.qq.com/download.html#Linux${RESET}"
+    tenvideo_env
     case ${LINUX_DISTRO} in
     debian | arch)
         check_electron

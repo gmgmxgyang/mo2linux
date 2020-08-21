@@ -106,7 +106,7 @@ check_proot_ps_command() {
 		TMOE_PROOT='no'
 		TERMUX_PS_FILE='/data/data/com.termux/files/usr/bin/ps'
 		if [ -e "${TERMUX_PS_FILE}" ]; then
-			cp ${TERMUX_PS_FILE} /usr/local/bin
+			ln -s ${TERMUX_PS_FILE} /usr/local/bin/ps 2>/dev/null
 		fi
 	fi
 }

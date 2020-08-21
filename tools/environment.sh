@@ -295,7 +295,6 @@ tmoe_file() {
     ############
 }
 ################
-
 install_deb_file_common_model_02() {
     cd /tmp
     echo ${LATEST_DEB_URL}
@@ -661,7 +660,10 @@ install_browser() {
 }
 ###########
 explore_debian_opt_repo() {
-    source ${TMOE_TOOL_DIR}/sources/debian-opt.sh
+    echo "维护期间暂时关闭"
+    read
+    ${RETURN_TO_WHERE}
+    #source ${TMOE_TOOL_DIR}/sources/debian-opt.sh
 }
 #################
 install_filebrowser() {
@@ -880,6 +882,8 @@ check_electron() {
         DEPENDENCY_01=''
         DEPENDENCY_02='electron'
         beta_features_quick_install
+        SANDBOX_FILE='/opt/electron/chrome-sandbox'
+        chmod 4755 ${SANDBOX_FILE}
     fi
 }
 ##########
@@ -898,3 +902,80 @@ tenvideo_env() {
     fi
 }
 ########
+aria2c_download_normal_file_s3() {
+    echo ${YELLOW}${DOWNLOAD_FILE_URL}${RESET}
+    cd ${DOWNLOAD_PATH}
+    #aria2c --allow-overwrite=true -s 3 -x 3 -k 1M "${DOWNLOAD_FILE_URL}"
+    #此处用wget会自动转义url
+    wget "${DOWNLOAD_FILE_URL}"
+}
+######################
+aria2c_download_file() {
+    echo "${YELLOW}${THE_LATEST_ISO_LINK}${RESET}"
+    do_you_want_to_continue
+    if [ -z "${DOWNLOAD_PATH}" ]; then
+        cd ~
+    else
+        if [ ! -e "${DOWNLOAD_PATH}" ]; then
+            mkdir -p ${DOWNLOAD_PATH}
+        fi
+        cd ${DOWNLOAD_PATH}
+    fi
+    aria2c --allow-overwrite=true -s 5 -x 5 -k 1M "${THE_LATEST_ISO_LINK}"
+}
+############
+extract_electron() {
+    if [ ! $(command -v unzip) ]; then
+        DEPENDENCY_01='unzip'
+        DEPENDENCY_02=''
+        beta_features_quick_install
+    fi
+    unzip ${ELECTRON_ZIP_FILE}
+    rm -fv ${ELECTRON_ZIP_FILE}
+    SANDBOX_FILE='chrome-sandbox'
+    chmod +x electron
+    chmod 4755 ${SANDBOX_FILE}
+}
+#########
+latest_electron() {
+    electron_env
+    ELECTRON_VERSION=$(curl -Lv "${ELECTRON_MIRROR_STATION}" | cut -d '=' -f 3 | cut -d '"' -f 2 | grep -E '^1|^2^|^3|^4|^5|^6|^7|^8|^9' | grep -Ev '^v|^1\.|^2\.|^3\.|^4\.|^5\.|^6\.|^7\.|^8\.' | tail -n 1 | cut -d '/' -f 1)
+    DOWNLOAD_PATH="/opt/electron"
+    #ln -s /opt/electron/electron /usr/bin
+}
+###########
+download_electron() {
+    case ${ARCH_TYPE} in
+    amd64) ARCH_TYPE_02='x64' ;;
+    arm64) ARCH_TYPE_02="${ARCH_TYPE}" ;;
+    armhf) ARCH_TYPE_02='armv7l' ;;
+    i386) ARCH_TYPE_02='ia32' ;;
+    *)
+        arch_does_not_support
+        ${RETURN_TO_WHERE}
+        ;;
+    esac
+    ELECTRON_ZIP_FILE="electron-v${ELECTRON_VERSION}-linux-${ARCH_TYPE_02}.zip"
+    ELECTRON_FILE_URL="${ELECTRON_MIRROR_STATION}/${ELECTRON_VERSION}/${ELECTRON_ZIP_FILE}"
+    THE_LATEST_ISO_LINK="${ELECTRON_FILE_URL}"
+    aria2c_download_file
+    extract_electron
+}
+###########
+electron_v8_env() {
+    electron_env
+    ELECTRON_VERSION='8.5.0'
+    DOWNLOAD_PATH="/opt/electron-v8"
+}
+#########
+electron_env() {
+    ELECTRON_MIRROR_STATION='https://mirrors.huaweicloud.com/electron'
+}
+#########
+extract_deb_file_01() {
+    case "${BUSYBOX_AR}" in
+    true) busybox ar xv ${THE_LATEST_DEB_FILE} ;;
+    *) ar xv ${THE_LATEST_DEB_FILE} ;;
+    esac
+}
+###########

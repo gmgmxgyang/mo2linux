@@ -149,9 +149,10 @@ fi
 ######################
 ps -e &>/dev/null
 if [ "$?" != '0' ]; then
-    TERMUX_PS_FILE='/data/data/com.termux/files/usr/bin/ps'
-    if [ -e "${TERMUX_PS_FILE}" ]; then
-        cp ${TERMUX_PS_FILE} /usr/local/bin
+    TERMUX_BIN_PATH='/data/data/com.termux/files/usr/bin/'
+    if [ -e "${TERMUX_BIN_PATH}/ps" ]; then
+        ln -s ${TERMUX_BIN_PATH}/ps /usr/local/bin/ps 2>/dev/null
+        ln -s ${TERMUX_BIN_PATH}/pstree /usr/local/bin/pstree 2>/dev/null        
     fi
 fi
 chsh -s /usr/bin/zsh || chsh -s /bin/zsh

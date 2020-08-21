@@ -3911,25 +3911,6 @@ ubuntu_arm_warning() {
 	download_ubuntu_latest_iso_file
 }
 ################
-aria2c_download_normal_file_s3() {
-	echo ${YELLOW}${DOWNLOAD_FILE_URL}${RESET}
-	cd ${DOWNLOAD_PATH}
-	#aria2c --allow-overwrite=true -s 3 -x 3 -k 1M "${DOWNLOAD_FILE_URL}"
-	#此处用wget会自动转义url
-	wget "${DOWNLOAD_FILE_URL}"
-}
-######################
-aria2c_download_file() {
-	echo ${THE_LATEST_ISO_LINK}
-	do_you_want_to_continue
-	if [ -z "${DOWNLOAD_PATH}" ]; then
-		cd ~
-	else
-		cd ${DOWNLOAD_PATH}
-	fi
-	aria2c --allow-overwrite=true -s 5 -x 5 -k 1M "${THE_LATEST_ISO_LINK}"
-}
-############
 download_ubuntu_huawei_mirror_iso() {
 	if [ "${ARCH_TYPE}" = "i386" ]; then
 		THE_LATEST_ISO_LINK="https://mirrors.huaweicloud.com/ubuntu-releases/16.04.6/ubuntu-16.04.6-desktop-i386.iso"

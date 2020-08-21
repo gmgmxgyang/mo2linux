@@ -172,7 +172,7 @@ download_debian_opt_app() {
     if [ -e "${DOWNLOAD_PATH}" ]; then
         rm -rv ${DOWNLOAD_PATH}
     fi
-    aria2c_download_file
+    aria2c_download_file_no_confirm
     extract_deb_file_01
     extract_deb_file_02
 }

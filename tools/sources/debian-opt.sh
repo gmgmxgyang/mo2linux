@@ -168,7 +168,7 @@ download_debian_opt_app() {
     echo "${THE_LATEST_DEB_FILE}" >${OPT_APP_VERSION_TXT}
     DEBIAN_OPT_APP_URL="${DEBIAN_OPT_APP_PATH_URL}/${THE_LATEST_DEB_FILE}"
     DOWNLOAD_PATH='/tmp/.DEB_OPT_TEMP_FOLDER'
-    THE_LATEST_ISO_LINK="${DEBIAN_OPT_APP_URL}"
+    ELECTRON_FILE_URL="${DEBIAN_OPT_APP_URL}"
     if [ -e "${DOWNLOAD_PATH}" ]; then
         rm -rv ${DOWNLOAD_PATH}
     fi

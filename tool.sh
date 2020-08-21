@@ -687,8 +687,9 @@ tmoe_linux_tool_upgrade() {
 	fi
 	chmod +x /usr/local/bin/debian-i
 	cd ${TMOE_GIT_DIR}
-	git reset --hard
-	git pull || git pull --depth=1 origin master --allow-unrelated-histories
+	git fetch --all
+	git reset --hard origin/master
+	git pull origin master --allow-unrelated-histories
 	if [ -e "/usr/local/bin/work-i" ]; then
 		cp "${TMOE_TOOL_DIR}/downloader/work_crawler@kanasimi.sh" /usr/local/bin
 	fi

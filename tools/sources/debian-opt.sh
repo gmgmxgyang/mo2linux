@@ -309,7 +309,7 @@ remove_electron_stable() {
         apt remove -y ${DEPENDENCY_01}
         ;;
     *)
-        echo "${RED}rm -rv${RESET} ${BLUE}/opt/electron ${OPT_APP_VERSION_TXT}${RESET}"
+        echo "${RED}rm -rv${RESET} ${BLUE}/opt/electron /usr/bin/electron ${OPT_APP_VERSION_TXT}${RESET}"
         do_you_want_to_continue
         rm -rv /opt/electron
         ;;

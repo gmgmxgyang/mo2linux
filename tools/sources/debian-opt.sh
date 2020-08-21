@@ -186,7 +186,7 @@ copy_debian_opt_usr_bin_file() {
     case ${NOTICE_OF_REPAIR} in
     true) echo "修复完成" ;;
     *)
-        ${BOLD}${DEPENDENCY_01}${RESET}在启动时，将根据您的用户权限来自动判断${BLUE}沙盒模式${RESET}的关闭与否。
+        echo "${BOLD}${DEPENDENCY_01}${RESET}在启动时，将根据您的用户权限来自动判断${BLUE}沙盒模式${RESET}的关闭与否。"
         case "${LINUX_DISTRO}" in
         debian)
             cat <<-ENDOFOPT
@@ -663,10 +663,10 @@ debian_opt_music_app() {
         "4" "cocomusic(第三方QQ音乐+白屏修复补丁)" \
         "5" "#netease-cloud-music-gtk(云音乐)" \
         "6" "iease-music(界面华丽的云音乐客户端)" \
-        "7 " "petal:第三方豆瓣FM客户端" \
-        "8 " "chord:支持虾米,云音乐,qq音乐多平台" \
-        "9" "#vocal:强大美观的播客app" \
-        "10" "#flacon:支持从专辑中提取音频文件" \
+        "7" "petal(第三方豆瓣FM客户端)" \
+        "8" "chord(支持虾米、云音乐、qq音乐多平台)" \
+        "9" "#vocal(强大美观的播客app)" \
+        "10" "#flacon(支持从专辑中提取音频文件)" \
         "0" "🌚 Return to previous menu 返回上级菜单" \
         3>&1 1>&2 2>&3)
     ##############
@@ -688,11 +688,12 @@ debian_opt_music_app() {
         non_debian_function
         install_opt_flacon
         ;;
+    11) debian_opt_music_app_test ;;
     esac
     ##########################
     #"7" "feeluown(x64,支持网易云、虾米)" \
     case ${DEBIAN_INSTALLATION_MENU} in
-    00) ;;
+    00) beta_features_quick_install ;;
     01) debian_opt_install_or_remove_01 ;;
     02) debian_opt_install_or_remove_02 ;;
     esac
@@ -701,6 +702,17 @@ debian_opt_music_app() {
     debian_opt_music_app
 }
 ################
+install_electron_chord() {
+    DEPENDENCY_01='chord'
+    echo "${DEPENDENCY_01}"
+    echo "github url：${YELLOW}https://github.com/PeterDing/chord${RESET}"
+}
+##############
+install_electron_petal() {
+    DEPENDENCY_01='petal'
+    echo "github url：${YELLOW}https://ilime.github.io/Petal${RESET}"
+}
+############
 remove_debian_opt_repo() {
     non_debian_function
     rm -vf ${OPT_REPO_LIST}
@@ -718,13 +730,11 @@ debian_opt_other_apps() {
 install_opt_vocal() {
     DEBIAN_INSTALLATION_MENU='00'
     DEPENDENCY_01='vocal'
-    beta_features_quick_install
 }
 ###############
 install_opt_flacon() {
     DEBIAN_INSTALLATION_MENU='00'
     DEPENDENCY_01='flacon'
-    beta_features_quick_install
 }
 ##################
 apt_list_debian_opt() {
@@ -733,16 +743,6 @@ apt_list_debian_opt() {
     echo "请使用${YELLOW}apt install${RESET}软件包名称 来安装"
 }
 #############
-install_electron_chord() {
-    DEPENDENCY_01='chord'
-    echo "github url：${YELLOW}https://github.com/PeterDing/chord${RESET}"
-}
-##############
-install_electron_petal() {
-    DEPENDENCY_01='petal'
-    echo "github url：${YELLOW}https://ilime.github.io/Petal${RESET}"
-}
-############
 install_coco_music() {
     DEBIAN_INSTALLATION_MENU='02'
     DEPENDENCY_01='cocomusic'

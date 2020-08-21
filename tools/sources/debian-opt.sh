@@ -232,7 +232,6 @@ install_opt_app_01() {
     esac
     case ${DEPENDENCY_01} in
     electron-netease-cloud-music) check_electron_netease_cloud_music ;;
-    iease-music) install_electron_v8 ;;
     hmcl)
         DEPENDENCY_01=''
         install_java
@@ -241,6 +240,15 @@ install_opt_app_01() {
     copy_debian_opt_usr_bin_file
 }
 ################
+patch_opt_music_app() {
+    install_electron_v8
+    cd /tmp
+    GIT_TEMP_FOLDER=".${DEPENDENCY_01}_TEMP_FOLDER"
+    git clone --depth=1 ${GIT_PATHCH_URL} ${GIT_TEMP_FOLDER}
+    tar -PpJxvf ${GIT_TEMP_FOLDER}/patch.tar.xz
+    rm -rv ${GIT_TEMP_FOLDER}
+}
+##############
 install_opt_app_02() {
     case "${LINUX_DISTRO}" in
     debian) beta_features_quick_install ;;
@@ -248,13 +256,13 @@ install_opt_app_02() {
     esac
     case ${DEPENDENCY_01} in
     cocomusic)
-        install_electron_v8
-        cd /tmp
-        COCO_PATCH_FOLDER='.COCO_MUSIC_PATCH_TEMP_FOLDER'
-        git clone --depth=1 https://gitee.com/ak2/cocomusic-patch.git ${COCO_PATCH_FOLDER}
-        tar -PpJxvf ${COCO_PATCH_FOLDER}/patch.tar.xz
-        rm -rv ${COCO_PATCH_FOLDER}
+        GIT_PATCH_URL='https://gitee.com/ak2/cocomusic-patch.git'
+        patch_opt_music_app
         echo "在${YELLOW}tightvnc服务${RESET}下，cocomusic可能仍存在${RED}白屏${RESET}现象，您可以换用${BLUE}tiger或x11vnc服务${RESET}来运行本app。"
+        ;;
+    iease-music)
+        GIT_PATCH_URL='https://gitee.com/ak2/iease-music-patch.git'
+        patch_opt_music_app
         ;;
     esac
     copy_debian_opt_usr_bin_file
@@ -750,6 +758,7 @@ install_coco_music() {
 }
 #####################
 install_iease_music() {
+    DEBIAN_INSTALLATION_MENU='02'
     DEPENDENCY_01='iease-music'
     echo "github url：${YELLOW}https://github.com/trazyn/ieaseMusic${RESET}"
 }

@@ -396,14 +396,22 @@ debian_opt_game_app() {
     1)
         DEPENDENCY_01='hmcl'
         ORIGINAL_URL='https://github.com/huanghongxun/HMCL'
+        echo "${YELLOW}${ORIGINAL_URL}${RESET}"
+        case ${ARCH_TYPE} in
+        amd64 | i386) ;;
+        *)
+            echo "hmcl依赖于openjfx,如需安装，则请自行解决依赖问题。"
+            arch_does_not_support
+            ;;
+        esac
         ;;
     2)
+        echo "${YELLOW}${ORIGINAL_URL}${RESET}"
         DEPENDENCY_01='gamehub'
         ORIGINAL_URL='https://tkashkin.tk/projects/gamehub'
         ;;
     esac
     ##########################
-    echo "${YELLOW}${ORIGINAL_URL}${RESET}"
     case ${DEBIAN_INSTALLATION_MENU} in
     00)
         non_debian_function

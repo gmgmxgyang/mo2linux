@@ -484,7 +484,7 @@ debian_opt_video_app() {
         ORIGINAL_URL='https://github.com/mifi/lossless-cut'
         ;;
     3)
-        DEPENDENCY_02='ciano'
+        DEPENDENCY_01='ciano'
         ORIGINAL_URL='https://robertsanseries.github.io/ciano'
         ;;
     esac
@@ -565,11 +565,11 @@ debian_opt_picture_app() {
         ORIGINAL_URL='https://github.com/Molunerfinn/PicGo'
         ;;
     3)
-        DEPENDENCY_02='bingle'
+        DEPENDENCY_01='bingle'
         ORIGINAL_URL='https://coslyk.github.io/bingle'
         ;;
     4)
-        DEPENDENCY_02='fondo'
+        DEPENDENCY_01='fondo'
         ORIGINAL_URL='https://github.com/calo001/fondo'
         ;;
     esac

@@ -883,6 +883,7 @@ chmod_4755_chrome_sandbox() {
 download_the_latest_electron() {
     case ${LINUX_DISTRO} in
     debian)
+        install_gpg
         if [ ! -e "${OPT_REPO_LIST}" ]; then
             add_debian_opt_gpg_key
         fi

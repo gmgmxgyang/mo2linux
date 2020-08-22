@@ -545,7 +545,7 @@ debian_opt_picture_app() {
     DEBIAN_INSTALLATION_MENU='00'
     INSTALL_APP=$(whiptail --title "PIC APP" --menu \
         "您想要安装哪个软件?\nWhich software do you want to install? " 0 0 0 \
-        "1" "draw.io:思维导图绘图软件" \
+        "1" "draw.io:思维导图绘制工具" \
         "2" "picgo:图床上传工具" \
         "3" "#bingle:下载微软必应每日精选壁纸" \
         "4" "#fondo:壁纸app" \

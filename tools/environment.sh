@@ -903,9 +903,16 @@ download_the_latest_electron() {
     electron -v --no-sandbox | head -n 1 >${TMOE_LINUX_DIR}/electron_version.txt
 }
 ##########
+fix_fedora_electron_libxssl() {
+    case ${LINUX_DISTRO} in
+    redhat) dnf install -y libXScrnSaver || yum install -y libXScrnSaver ;;
+    esac
+}
+##########
 check_electron() {
     if [ ! -e "/opt/electron/electron" ]; then
         mkdir -p /opt
+        fix_fedora_electron_libxssl
         download_the_latest_electron
     fi
     if [ ! $(command -v electron) ]; then
@@ -918,6 +925,7 @@ install_electron_v8() {
     #v8不要创建soft link
     electron_v8_env
     if [ ! -e "${DOWNLOAD_PATH}/electron" ]; then
+        fix_fedora_electron_libxssl
         download_electron
         chmod 4755 ${DOWNLOAD_PATH}/chrome-sandbox
     fi

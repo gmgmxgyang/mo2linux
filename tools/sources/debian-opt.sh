@@ -466,7 +466,7 @@ debian_opt_video_app() {
     INSTALL_APP=$(whiptail --title "VIDEO APP" --menu \
         "您想要安装哪个软件?\nWhich software do you want to install? " 0 0 0 \
         "1" "zy-player:搜索全网影视" \
-        "2" "lossless-cut:无损剪切视频音频工具" \
+        "2" "lossless-cut:无损剪切音视频工具" \
         "3" "#ciano:多媒体音视频格式转换器" \
         "0" "🌚 Return to previous menu 返回上级菜单" \
         3>&1 1>&2 2>&3)

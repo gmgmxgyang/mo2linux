@@ -401,6 +401,7 @@ debian_opt_game_app() {
         amd64 | i386) ;;
         *)
             echo "hmcl依赖于openjfx,如需安装，则请自行解决依赖问题。"
+            echo "${GREEN}apt install -y${RESET} ${BLUE}hmcl${RESET}"
             arch_does_not_support
             ;;
         esac

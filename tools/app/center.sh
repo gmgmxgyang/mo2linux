@@ -414,6 +414,15 @@ remove_arch_steam_app() {
 }
 ################
 install_steam_app() {
+    case "${ARCH_TYPE}" in
+    amd64 | i386) ;;
+    *)
+        echo "${RED}WARNING！${RESET}检测到您使用的是${BLUE}${ARCH_TYPE}${RESET}架构，请勿在该架构上安装steam"
+        echo "Do not install steam on this architecture."
+        echo "是否需要继续安装？"
+        do_you_want_to_continue
+        ;;
+    esac
     DEPENDENCY_01='steam-launcher'
     DEPENDENCY_02="steam"
     if [ "${LINUX_DISTRO}" = "debian" ]; then

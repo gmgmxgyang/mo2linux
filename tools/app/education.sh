@@ -78,12 +78,6 @@ tmoe_physics_menu() {
 		"1" "Step(交互式物理模拟器,归属于KDE教育项目)" \
 		"2" "OpenFOAM 简化偏微分方程的数值解法" \
 		"3" "Geant321 物质间离子流动的仿真工具包" \
-		"4" "Octopus 对多种不同体系进行从头计算(ab initio)的模拟" \
-		"5" "CompHEP 高能物理学中的自动计算" \
-		"6" "GerrisFlow Solver 对流的通用数据模拟" \
-		"7" "McStas 中子射线仿真应用" \
-		"8" "Elmer 多物理问题的有限元软件" \
-		"9" "ROOT 解决高能物理学中的数据分析所面临的新的挑战" \
 		"0" "🌚 Return to previous menu 返回上级菜单" \
 		3>&1 1>&2 2>&3)
 	##########################
@@ -100,12 +94,6 @@ tmoe_physics_menu() {
 		;;
 	2) DEPENDENCY_02='openfoam' ;;
 	3) DEPENDENCY_02='geant321' ;;
-	4) DEPENDENCY_02='octopus' ;;
-	5) DEPENDENCY_02='comhep' ;;
-	6) DEPENDENCY_02='gerrisflow-solver' ;;
-	7) DEPENDENCY_02='mcstas' ;;
-	8) DEPENDENCY_02='elmer' ;;
-	9) DEPENDENCY_02='root' ;;
 	esac
 	##########################
 	beta_features_quick_install

@@ -58,10 +58,10 @@ debian_opt_menu() {
         "您想要安装哪个软件？\n Which software do you want to install? " 0 0 0 \
         "1" "🎶 Music:洛雪,listen1,coco音乐" \
         "2" "📝 notes笔记:记录灵感,撰写文档,整理材料,回顾日记" \
-        "3" "🖼️ pictures图像:bing壁纸,流程图绘制" \
-        "4" "📺 videos视频:无损切割视频,全网影视搜索" \
-        "5" "🎮 games游戏:Minecraft启动器" \
-        "6" "📖 reader:悦享生活,品味阅读" \
+        "3" "📺 videos视频:无损切割视频,全网影视搜索" \
+        "4" "🖼️ pictures图像:bing壁纸,流程图绘制" \
+        "5" "📖 reader:悦享生活,品味阅读" \
+        "6" "🎮 games游戏:Minecraft启动器" \
         "7" "development程序开发:神经网络,深度学习,GUI设计" \
         "8" "other:其他软件(electron及软件列表)" \
         "9" "Fix sandbox(修复已安装应用的沙盒模式)" \
@@ -74,10 +74,10 @@ debian_opt_menu() {
     0 | "") software_center ;;
     1) debian_opt_music_app ;;
     2) debian_opt_note_app ;;
-    3) debian_opt_picture_app ;;
-    4) debian_opt_video_app ;;
-    5) debian_opt_game_app ;;
-    6) debian_opt_reader_app ;;
+    3) debian_opt_video_app ;;
+    4) debian_opt_picture_app ;;
+    5) debian_opt_reader_app ;;
+    6) debian_opt_game_app ;;
     7) debian_opt_development_app ;;
     8) debian_opt_other_apps ;;
     9) fix_debian_opt_app_sandbox_mode ;;

@@ -264,7 +264,7 @@ install_opt_app_02() {
     cocomusic)
         GIT_PATCH_URL='https://gitee.com/ak2/cocomusic-patch.git'
         patch_opt_music_app
-        echo "在${YELLOW}tightvnc服务${RESET}下，cocomusic可能仍存在${RED}白屏${RESET}现象，您可以换用${BLUE}tiger或x11vnc服务${RESET}来运行本app。"
+        echo "在${YELLOW}tightvnc服务${RESET}下，cocomusic可能仍存在${RED}白屏${RESET}现象。对于deb系发行版，您可以换用${BLUE}x11vnc服务${RESET};对于arch系发行版，您可以换用${BLUE}tigervnc服务${RESET}来运行本app。"
         ;;
     iease-music)
         GIT_PATCH_URL='https://gitee.com/ak2/iease-music-patch.git'

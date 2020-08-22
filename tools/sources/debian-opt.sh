@@ -819,7 +819,7 @@ git_clone_opt_deb_01() {
 install_debian_netease_cloud_music() {
     DEBIAN_INSTALLATION_MENU='00'
     OPT_APP_NAME='netease-cloud-music-gtk'
-    OPT_APP_GIT_REPO='https://gitee.com/ak2/${OPT_APP_NAME}.git'
+    OPT_APP_GIT_REPO="https://gitee.com/ak2/${OPT_APP_NAME}.git"
     OPT_BRANCH_NAME='arm64'
     OPT_DEB_NAME="${OPT_APP_NAME}_1.1.2_arm64.deb"
     DOWNLOAD_PATH='/tmp'

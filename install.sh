@@ -650,8 +650,9 @@ creat_proot_startup_script() {
 		      if [ -h "${HOME}/storage/external-1" ]; then
 		        set -- "--mount=${HOME}/storage/external-1:/root/tf" "\$@"
 		      fi
-		      if [ -e "/data/data/com.termux" ]; then
+		      if [ -e "/data/data/com.termux/files/home" ]; then
 		        set -- "--mount=/data/data/com.termux" "\$@"
+				set -- "--mount=/data/data/com.termux/files/home:/root/termux" "\$@"
 		      fi
 		      set -- "--link2symlink" "\$@"
 		    fi

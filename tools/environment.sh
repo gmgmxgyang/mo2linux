@@ -645,12 +645,6 @@ modify_xsdl_conf() {
     source ${TMOE_TOOL_DIR}/gui/gui.sh -x
 }
 ########
-press_enter_to_return() {
-    echo "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
-    echo "按${GREEN}回车键${RESET}${BLUE}返回${RESET}"
-    read
-}
-#############
 install_virtual_box() {
     source ${TMOE_TOOL_DIR}/virtualization/vbox.sh
 }

@@ -641,6 +641,12 @@ tmoe_linux_tool_menu() {
 	tmoe_linux_tool_menu
 }
 #########################
+press_enter_to_return() {
+	echo "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
+	echo "按${GREEN}回车键${RESET}${BLUE}返回${RESET}"
+	read
+}
+#############
 software_center() {
 	source ${TMOE_TOOL_DIR}/app/center.sh
 }

@@ -684,12 +684,11 @@ debian_opt_music_app() {
         "2" "electron-netease-cloud-music(云音乐)" \
         "3" "lx-music-desktop(洛雪音乐助手)" \
         "4" "cocomusic(第三方QQ音乐+白屏修复补丁)" \
-        "5" "#netease-cloud-music-gtk(云音乐)" \
-        "6" "iease-music(界面华丽的云音乐客户端)" \
-        "7" "petal(第三方豆瓣FM客户端)" \
-        "8" "chord(支持虾米、云音乐、qq音乐多平台)" \
-        "9" "#vocal(强大美观的播客app)" \
-        "10" "#flacon(支持从专辑中提取音频文件)" \
+        "5" "iease-music(界面华丽的云音乐客户端)" \
+        "6" "petal(第三方豆瓣FM客户端)" \
+        "7" "chord(支持虾米、云音乐、qq音乐多平台)" \
+        "8" "#vocal(强大美观的播客app)" \
+        "9" "#flacon(支持从专辑中提取音频文件)" \
         "0" "🌚 Return to previous menu 返回上级菜单" \
         3>&1 1>&2 2>&3)
     ##############
@@ -699,15 +698,14 @@ debian_opt_music_app() {
     2) install_electron_netease_cloud_music ;;
     3) install_lx_music_desktop ;;
     4) install_coco_music ;;
-    5) install_netease_cloud_music_gtk ;;
-    6) install_iease_music ;;
-    7) install_electron_petal ;;
-    8) install_electron_chord ;;
-    9)
+    5) install_iease_music ;;
+    6) install_electron_petal ;;
+    7) install_electron_chord ;;
+    8)
         non_debian_function
         install_opt_vocal
         ;;
-    10)
+    9)
         non_debian_function
         install_opt_flacon
         ;;
@@ -721,6 +719,7 @@ debian_opt_music_app() {
     esac
     #此处00菜单不要跳转到beta_features_quick_install
     ########################
+    #"5" "#netease-cloud-music-gtk(云音乐)" \ 5) install_netease_cloud_music_gtk ;;
     press_enter_to_return
     debian_opt_music_app
 }

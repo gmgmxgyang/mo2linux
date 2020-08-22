@@ -1031,7 +1031,7 @@ install_xfce4_desktop() {
         ##############
     elif [ "${LINUX_DISTRO}" = "redhat" ]; then
         DEPENDENCY_01='@xfce'
-        rm -v /etc/xdg/autostart/xfce-polkit.desktop
+        rm -v /etc/xdg/autostart/xfce-polkit.desktop 2>/dev/null
         ##################
     elif [ "${LINUX_DISTRO}" = "arch" ]; then
         DEPENDENCY_01="xfce4 xfce4-terminal xfce4-goodies"

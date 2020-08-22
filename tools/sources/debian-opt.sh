@@ -835,7 +835,6 @@ install_netease_cloud_music_gtk() {
     case ${ARCH_TYPE} in
     arm64)
         install_debian_netease_cloud_music
-        beta_features_install_completed
         ;;
     armhf) arch_does_not_support ;;
     *) beta_features_quick_install ;;

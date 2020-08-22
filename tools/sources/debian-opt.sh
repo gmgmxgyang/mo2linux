@@ -702,15 +702,15 @@ debian_opt_music_app() {
         non_debian_function
         install_opt_flacon
         ;;
-    11) debian_opt_music_app_test ;;
     esac
     ##########################
     #"7" "feeluown(x64,支持网易云、虾米)" \
     case ${DEBIAN_INSTALLATION_MENU} in
-    00) beta_features_quick_install ;;
+    00) ;;
     01) debian_opt_install_or_remove_01 ;;
     02) debian_opt_install_or_remove_02 ;;
     esac
+    #此处00菜单不要跳转到beta_features_quick_install
     ########################
     press_enter_to_return
     debian_opt_music_app
@@ -744,11 +744,13 @@ debian_opt_other_apps() {
 install_opt_vocal() {
     DEBIAN_INSTALLATION_MENU='00'
     DEPENDENCY_01='vocal'
+    beta_features_quick_install
 }
 ###############
 install_opt_flacon() {
     DEBIAN_INSTALLATION_MENU='00'
     DEPENDENCY_01='flacon'
+    beta_features_quick_install
 }
 ##################
 apt_list_debian_opt() {

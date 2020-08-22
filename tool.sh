@@ -373,8 +373,11 @@ check_dependencies() {
 				DEPENDENCIES="${DEPENDENCIES} catimg"
 			fi
 			;;
-		arch | fedora | void) DEPENDENCIES="${DEPENDENCIES} catimg" ;;
+		arch | void) DEPENDENCIES="${DEPENDENCIES} catimg" ;;
 		esac
+		if [ "${REDHAT_DISTRO}" = "fedora" ]; then
+			DEPENDENCIES="${DEPENDENCIES} catimg"
+		fi
 	fi
 
 	if [ ! $(command -v curl) ]; then

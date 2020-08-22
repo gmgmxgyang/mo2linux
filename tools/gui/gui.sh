@@ -1996,7 +1996,7 @@ check_theme_url() {
 }
 ###############
 xfce_theme_parsing() {
-    THEME_TMOE_URL=$(whiptail --inputbox "Please enter a url.请输入主题链接\n例如https://www.xfce-look.org/p/xxxx \n Press Enter after the input is completed." 0 50 --title "请在地址栏内输入 主题链接" 3>&1 1>&2 2>&3)
+    THEME_TMOE_URL=$(whiptail --inputbox "请输入主题链接Please enter a url\n例如https://www.gnome-look.org/p/1275087" 0 50 --title "Tmoe xfce&gnome theme parser" 3>&1 1>&2 2>&3)
 
     if [ "$?" != "0" ]; then
         configure_theme

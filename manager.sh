@@ -33,10 +33,17 @@ main() {
 		;;
 	*)
 		check_arch
+		auto_check
+		tmoe_manager_env
+		tmoe_manager_main_menu
 		;;
 	esac
 }
 #########################
+tmoe_manager_env() {
+	check_release_version
+}
+#######
 check_arch() {
 	case $(uname -m) in
 	armv7* | armv8l)
@@ -109,7 +116,6 @@ check_arch() {
 	RESET=$(printf '\033[m')
 	cur=$(pwd)
 	ANDROID_VERSION=$(getprop ro.build.version.release 2>/dev/null | cut -d '.' -f 1) || ANDROID_VERSION=6
-	auto_check
 }
 ###############
 press_enter_to_return() {
@@ -545,8 +551,6 @@ gnu_linux() {
 			exit 0
 		fi
 	fi
-
-	tmoe_manager_main_menu
 }
 ########################################
 notes_of_tmoe_package_installation() {
@@ -555,6 +559,18 @@ notes_of_tmoe_package_installation() {
 	echo "如需${BOLD}${RED}卸载${RESET}${RESET}，请${YELLOW}手动${RESET}输${RED}${TMOE_REMOVAL_COMMAND}${RESET}${BLUE}${DEPENDENCIES}${RESET}"
 }
 #####################
+check_release_version() {
+	if [ "${LINUX_DISTRO}" = "Android" ]; then
+		OSRELEASE="Android"
+	elif grep -q 'NAME=' /etc/os-release; then
+		OSRELEASE=$(cat /etc/os-release | grep -v 'PRETTY' | grep 'NAME=' | head -n 1 | cut -d '=' -f 2 | cut -d '"' -f 2)
+	elif grep -q 'ID=' /etc/os-release; then
+		OSRELEASE=$(cat /etc/os-release | grep -v 'VERSION' | grep 'ID=' | head -n 1 | cut -d '=' -f 2)
+	else
+		OSRELEASE='GNU/Linux'
+	fi
+}
+###################
 android_termux() {
 	TMOE_INSTALLATON_COMMAND='apt install -y'
 	TMOE_REMOVAL_COMMAND='apt purge -y'
@@ -656,15 +672,13 @@ android_termux() {
 		echo "apt install -y debianutils"
 		apt install -y debianutils
 	fi
-	tmoe_manager_main_menu
 }
-
 ########################################################################
 #-- 主菜单 main menu
 #\n更新日志：0509升级备份与还原功能,0510修复sudo,\n0514支持最新的ubuntu20.10,0720优化跨架构运行
 tmoe_manager_main_menu() {
 	TMOE_OPTION=$(
-		whiptail --title "GNU/Linux Tmoe manager(20200816-20)" --backtitle "$(
+		whiptail --title "Tmoe ${OSRELEASE} manager(2020-08)" --backtitle "$(
 			base64 -d <<-'DoYouWantToSeeWhatIsInside'
 				6L6TZGViaWFuLWnlkK/liqjmnKznqIvluo8sVHlwZSBkZWJpYW4taSB0byBzdGFydCB0aGUgdG9v
 				bCzokIzns7vnlJ/niannoJTnqbblkZgK
@@ -1278,8 +1292,11 @@ enable_root_mode() {
 		if ! grep -q 'sudo touch' startvnc; then
 			sed -i 's/^touch ~/sudo &/' startvnc
 			sed -i 's:/data/data/com.termux/files/usr/bin/debian:sudo &:' startvnc
+			sed -i 's:/usr/local/bin/debian:sudo &:' startvnc
 		fi
 		###############
+		sed -i 's@FAKE_PROOT_PROC=true@FAKE_PROOT_PROC=false@g' debian
+		############
 		if ! grep -q 'sudo touch' startxsdl; then
 			sed -i 's/^touch ~/sudo &/' startxsdl
 			sed -i 's:/data/data/com.termux/files/usr/bin/debian:sudo &:' startxsdl

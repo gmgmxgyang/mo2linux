@@ -292,7 +292,13 @@ if [ ! -f ${DebianTarXz} ]; then
 	fi
 fi
 cur=$(pwd)
+if [ ! -e "${CONFIG_FOLDER}/proc.tar.xz" ]; then
+	aria2c -d ${CONFIG_FOLDER} -o proc.tar.xz --allow-overwrite=true 'https://gitee.com/ak2/proot_proc/raw/master/proc.tar.xz'
+fi
 cd ${DEBIAN_CHROOT}
+if [ -e "${CONFIG_FOLDER}/proc.tar.xz" ]; then
+	tar -Jxf ${CONFIG_FOLDER}/proc.tar.xz 2>/dev/null
+fi
 printf "$BLUE"
 cat <<-'EndOFneko'
 	       DL.                           
@@ -522,6 +528,20 @@ check_tmoe_proot_container_proc() {
 		creat_tmoe_proot_stat_file
 		sed -i "s@#test02@@" ${PREFIX}/bin/debian
 	fi
+	#######
+	FILE_03='/proc/bus/pci/devices'
+	TMOE_PROC_FILE=$(cat ${FILE_03} 2>/dev/null)
+	if [ -z "${TMOE_PROC_FILE}" ]; then
+		sed -i "s@#test04@@" ${PREFIX}/bin/debian
+	fi
+	######
+	for i in buddyinfo cgroups consoles crypto devices diskstats execdomains fb filesystems interrupts iomem ioports kallsyms keys key-users kmsg kpageflags loadavg locks misc modules pagetypeinfo partitions sched_debug softirqs timer_list uptime vmallocinfo vmstat zoneinfo; do
+		TMOE_PROC_FILE=$(cat /proc/${i} 2>/dev/null)
+		if [ -z "${TMOE_PROC_FILE}" ]; then
+			sed -i "s@##${i}#@@" ${PREFIX}/bin/debian
+		fi
+	done
+	unset i
 }
 ###########
 check_proot_qemu() {
@@ -539,131 +559,164 @@ creat_proot_startup_script() {
 	#需要注释掉
 	echo "Creating proot startup script"
 	echo "正在创建proot容器启动脚本${PREFIX}/bin/debian "
-	TMOE_PROC_PATH="${DEBIAN_CHROOT}/usr/local/etc/tmoe-linux/proc"
+	TMOE_PROC_PATH="${DEBIAN_CHROOT}/usr/local/etc/tmoe-linux/proot_proc"
 	TMOE_PROC_PREFIX="${TMOE_PROC_PATH}/.tmoe-container"
 	#此处ENDOFPROOT不要加单引号
 	cat >${PREFIX}/bin/debian <<-ENDOFPROOT
-		  #!/data/data/com.termux/files/usr/bin/env bash
-		  get_tmoe_linux_help_info() {
+		#!/data/data/com.termux/files/usr/bin/env bash
+		get_tmoe_linux_help_info() {
 		    cat <<-'ENDOFHELP'
-						-i     --启动tmoe-linux manager
-						-m     --更换为tuna镜像源(仅debian,ubuntu,kali,alpine和arch)
-						-vnc   --启动VNC
-						-h     --get help info
-					ENDOFHELP
-		  }
-		  ############
-		  main() {
+										-i     --启动tmoe-linux manager
+										-m     --更换为tuna镜像源(仅debian,ubuntu,kali,alpine和arch)
+										-vnc   --启动VNC
+										-h     --get help info
+									ENDOFHELP
+		}
+		############
+		main() {
 		    case "\$1" in
 		    i* | -i* | -I*)
-		      debian-i
-		      exit 0
-		      ;;
+		        debian-i
+		        exit 0
+		        ;;
 		    -h* | --h*)
-		      get_tmoe_linux_help_info
-		      ;;
+		        get_tmoe_linux_help_info
+		        ;;
 		    -m* | m*)
-		      debian-i -m
-		      ;;
+		        debian-i -m
+		        ;;
 		    -vnc* | vnc*)
-		      startvnc
-		      ;;
+		        startvnc
+		        ;;
 		    *) start_tmoe_gnu_linux_container ;;
 		    esac
-		  }
-		  ##############
-		  start_tmoe_gnu_linux_container() {
+		}
+		##############
+		start_tmoe_gnu_linux_container() {
 		    cd ${HOME}
 		    #pulseaudio --kill 2>/dev/null &
 		    #为加快启动速度，此处不重启音频服务
 		    pulseaudio --start 2>/dev/null &
 		    unset LD_PRELOAD
 		    ############
-			FAKE_PROOT_PROC='true'
+		    FAKE_PROOT_PROC=true
 		    TMOE_LOCALE_FILE="${HOME}/.config/tmoe-linux/locale.txt"
 		    PROC_FD_PATH="/proc/self/fd"
 		    if [ -f "${DEBIAN_CHROOT}/bin/zsh" ]; then
-		      TMOE_SHELL="/bin/zsh"
+		        TMOE_SHELL="/bin/zsh"
 		    elif [ -f "${DEBIAN_CHROOT}/bin/bash" ]; then
-		      TMOE_SHELL="/bin/bash"
+		        TMOE_SHELL="/bin/bash"
 		    elif [ -f "${DEBIAN_CHROOT}/bin/ash" ]; then
-		      TMOE_SHELL="/bin/ash"
+		        TMOE_SHELL="/bin/ash"
 		    else
-		      TMOE_SHELL="/bin/su"
+		        TMOE_SHELL="/bin/su"
 		    fi
-			#考虑到alpine兼容性，此处应为-l,而非--login
+		    #考虑到alpine兼容性，此处应为-l,而非--login
 		    set -- "\${TMOE_SHELL}" "-l" "\$@"
 		    if [ -e "/data/data/com.termux" ]; then
-		      set -- "PREFIX=/data/data/com.termux/files/usr" "\$@"
+		        set -- "PREFIX=/data/data/com.termux/files/usr" "\$@"
 		    fi
 		    if [ -e "\${TMOE_LOCALE_FILE}" ]; then
-		      set -- "LANG=\$(cat \${TMOE_LOCALE_FILE} | head -n 1)" "\$@"
+		        set -- "LANG=\$(cat \${TMOE_LOCALE_FILE} | head -n 1)" "\$@"
 		    else
-		      set -- "LANG=zh_CN.UTF-8" "\$@"
+		        set -- "LANG=zh_CN.UTF-8" "\$@"
 		    fi
 		    set -- "/usr/bin/env" "-i" "HOME=/root" "PATH=/usr/local/sbin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/games:/usr/local/games" "TMPDIR=/tmp" "TMOE_PROOT=true" "TERM=xterm-256color" "\$@"
 		    set -- "--mount=/sys" "\$@"
 		    set -- "--mount=/dev" "\$@"
-		    #/dev/shm为tmpfs临时文件系统
 		    set -- "--mount=${DEBIAN_CHROOT}/tmp:/dev/shm" "\$@"
 		    set -- "--mount=\${PROC_FD_PATH}:/dev/fd" "\$@"
 		    set -- "--mount=\${PROC_FD_PATH}/0:/dev/stdin" "\$@"
 		    set -- "--mount=\${PROC_FD_PATH}/1:/dev/stdout" "\$@"
 		    set -- "--mount=\${PROC_FD_PATH}/2:/dev/stderr" "\$@"
 		    #勿删test注释
-			#test03set -- "--qemu=qemu-x86_64-staic" "\$@"
+		    #test03set -- "--qemu=qemu-x86_64-staic" "\$@"
 		    set -- "--mount=/dev/urandom:/dev/random" "\$@"
 		    set -- "--mount=/proc" "\$@"
 		    if [ -e "/storage/self/primary" ]; then
-		      set -- "--mount=/storage/self/primary:/root/sd" "\$@"
+		        set -- "--mount=/storage/self/primary:/root/sd" "\$@"
 		    elif [ -e "/sdcard" ] || [ -h "/sdcard" ]; then
-		      set -- "--mount=/sdcard:/root/sd" "\$@"
+		        set -- "--mount=/sdcard:/root/sd" "\$@"
 		    elif [ -e "/storage/emulated/0" ]; then
-		      set -- "--mount=/storage/emulated/0:/root/sd" "\$@"
+		        set -- "--mount=/storage/emulated/0:/root/sd" "\$@"
 		    fi
 		    #######################
 		    set_android_mount_dir() {
-		      if [ -e "/vendor" ]; then
-		        set -- "--mount=/vendor" "\$@"
-		      fi
-		      if [ -e "/apex" ]; then
-		        #Android 10特性：APEX模块化
-		        set -- "--mount=/apex" "\$@"
-		      fi
-		      if [ -e "/plat_property_contexts" ]; then
-		        set -- "--mount=/plat_property_contexts" "\$@"
-		      fi
-		      if [ -e "/property_contexts" ]; then
-		        set -- "--mount=/property_contexts" "\$@"
-		      fi
+		        if [ -e "/vendor" ]; then
+		            set -- "--mount=/vendor" "\$@"
+		        fi
+		        if [ -e "/apex" ]; then
+		            #Android 10特性：APEX模块化
+		            set -- "--mount=/apex" "\$@"
+		        fi
+		        if [ -e "/plat_property_contexts" ]; then
+		            set -- "--mount=/plat_property_contexts" "\$@"
+		        fi
+		        if [ -e "/property_contexts" ]; then
+		            set -- "--mount=/property_contexts" "\$@"
+		        fi
 		    }
 		    #################
-			if [ "\${FAKE_PROOT_PROC}" = 'true' ];then 
-		      #test01set -- "--mount=${TMOE_PROC_PREFIX}.stat:/proc/stat" "\$@"
-		      #test02set -- "--mount=${TMOE_PROC_PREFIX}.version:/proc/version" "\$@"
-			fi
+			#不同系统对文件权限的限制可能有所区别，以下文件在安装时会自动检测，仅当宿主机无权读取时,才会去除注释符号。
+		    if [ "\${FAKE_PROOT_PROC}" = 'true' ]; then
+		        #test01set -- "--mount=${TMOE_PROC_PREFIX}.stat:/proc/stat" "\$@"
+		        #test02set -- "--mount=${TMOE_PROC_PREFIX}.version:/proc/version" "\$@"
+		        if [ -e "${TMOE_PROC_PATH}/uptime" ]; then
+		            #test04set -- "--mount=${TMOE_PROC_PATH}/bus:/proc/bus"  "\$@"
+		            ##buddyinfo#set -- "--mount=${TMOE_PROC_PATH}/buddyinfo:/proc/buddyinfo"  "\$@"
+		            ##cgroups#set -- "--mount=${TMOE_PROC_PATH}/cgroups:/proc/cgroups"  "\$@"
+		            ##consoles#set -- "--mount=${TMOE_PROC_PATH}/consoles:/proc/consoles"  "\$@"
+		            ##crypto#set -- "--mount=${TMOE_PROC_PATH}/crypto:/proc/crypto"  "\$@"
+		            ##devices#set -- "--mount=${TMOE_PROC_PATH}/devices:/proc/devices"  "\$@"
+		            ##diskstats#set -- "--mount=${TMOE_PROC_PATH}/diskstats:/proc/diskstats"  "\$@"
+		            ##execdomains#set -- "--mount=${TMOE_PROC_PATH}/execdomains:/proc/execdomains"  "\$@"
+		            ##fb#set -- "--mount=${TMOE_PROC_PATH}/fb:/proc/fb"  "\$@"
+		            ##filesystems#set -- "--mount=${TMOE_PROC_PATH}/filesystems:/proc/filesystems"  "\$@"
+		            ##interrupts#set -- "--mount=${TMOE_PROC_PATH}/interrupts:/proc/interrupts"  "\$@"
+		            ##iomem#set -- "--mount=${TMOE_PROC_PATH}/iomem:/proc/iomem"  "\$@"
+		            ##ioports#set -- "--mount=${TMOE_PROC_PATH}/ioports:/proc/ioports"  "\$@"
+		            ##kallsyms#set -- "--mount=${TMOE_PROC_PATH}/kallsyms:/proc/kallsyms"  "\$@"
+		            ##keys#set -- "--mount=${TMOE_PROC_PATH}/keys:/proc/keys"  "\$@"
+		            ##key-users#set -- "--mount=${TMOE_PROC_PATH}/key-users:/proc/key-users"  "\$@"
+		            ##kmsg#set -- "--mount=${TMOE_PROC_PATH}/kmsg:/proc/kmsg"  "\$@"
+		            ##kpageflags#set -- "--mount=${TMOE_PROC_PATH}/kpageflags:/proc/kpageflags"  "\$@"
+		            ##loadavg#set -- "--mount=${TMOE_PROC_PATH}/loadavg:/proc/loadavg"  "\$@"
+		            ##locks#set -- "--mount=${TMOE_PROC_PATH}/locks:/proc/locks"  "\$@"
+		            ##misc#set -- "--mount=${TMOE_PROC_PATH}/misc:/proc/misc"  "\$@"
+		            ##modules#set -- "--mount=${TMOE_PROC_PATH}/modules:/proc/modules"  "\$@"
+		            ##pagetypeinfo#set -- "--mount=${TMOE_PROC_PATH}/pagetypeinfo:/proc/pagetypeinfo"  "\$@"
+		            ##partitions#set -- "--mount=${TMOE_PROC_PATH}/partitions:/proc/partitions"  "\$@"
+		            ##sched_debug#set -- "--mount=${TMOE_PROC_PATH}/sched_debug:/proc/sched_debug"  "\$@"
+		            ##softirqs#set -- "--mount=${TMOE_PROC_PATH}/softirqs:/proc/softirqs"  "\$@"
+		            ##timer_list#set -- "--mount=${TMOE_PROC_PATH}/timer_list:/proc/timer_list"  "\$@"
+		            ##uptime#set -- "--mount=${TMOE_PROC_PATH}/uptime:/proc/uptime"  "\$@"
+		            ##vmallocinfo#set -- "--mount=${TMOE_PROC_PATH}/vmallocinfo:/proc/vmallocinfo"  "\$@"
+		            ##vmstat#set -- "--mount=${TMOE_PROC_PATH}/vmstat:/proc/vmstat"  "\$@"
+		            ##zoneinfo#set -- "--mount=${TMOE_PROC_PATH}/zoneinfo:/proc/zoneinfo"  "\$@"
+		        fi
+		    fi
 		    set -- "--pwd=/root" "\$@"
 		    set -- "--rootfs=${DEBIAN_CHROOT}" "\$@"
 		    if [ "$(uname -o)" = 'Android' ]; then
-		      #set_android_mount_dir
-			  set -- "--kill-on-exit" "\$@"
-		      if [ -e "/system" ]; then
-		        set -- "--mount=/system" "\$@"
-		      fi
-		      if [ -h "${HOME}/storage/external-1" ]; then
-		        set -- "--mount=${HOME}/storage/external-1:/root/tf" "\$@"
-		      fi
-		      if [ -e "/data/data/com.termux/files/home" ]; then
-		        set -- "--mount=/data/data/com.termux" "\$@"
-				set -- "--mount=/data/data/com.termux/files/home:/root/termux" "\$@"
-		      fi
-		      set -- "--link2symlink" "\$@"
+		        #set_android_mount_dir
+		        set -- "--kill-on-exit" "\$@"
+		        if [ -e "/system" ]; then
+		            set -- "--mount=/system" "\$@"
+		        fi
+		        if [ -h "${HOME}/storage/external-1" ]; then
+		            set -- "--mount=${HOME}/storage/external-1:/root/tf" "\$@"
+		        fi
+		        if [ -e "/data/data/com.termux/files/home" ]; then
+		            set -- "--mount=/data/data/com.termux" "\$@"
+		            set -- "--mount=/data/data/com.termux/files/home:/root/termux" "\$@"
+		        fi
+		        set -- "--link2symlink" "\$@"
 		    fi
 		    set -- "--root-id" "\$@"
 		    set -- "proot" "\$@"
 		    exec "\$@"
-		  }
-		  main "\$@"
+		}
+		main "\$@"
 	ENDOFPROOT
 }
 #########

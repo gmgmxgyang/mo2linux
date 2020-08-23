@@ -359,7 +359,7 @@ check_dependencies() {
 		esac
 	fi
 	#####################
-	if [ ! $(command -v catimg) ]; then
+	if [ ! $(command -v catimg) ] && [ ! -e "${TMOE_LINUX_DIR}/not_install_catimg" ]; then
 		case "${LINUX_DISTRO}" in
 		debian)
 			if grep -q 'VERSION_ID' "/etc/os-release"; then
@@ -504,7 +504,8 @@ check_dependencies() {
 		esac
 	fi
 	################
-	if [ ! $(command -v catimg) ]; then
+	if [ ! $(command -v catimg) ] && [ ! -e "${TMOE_LINUX_DIR}/not_install_catimg" ]; then
+		touch ${TMOE_LINUX_DIR}/not_install_catimg
 		case "${LINUX_DISTRO}" in
 		debian)
 			CATIMGlatestVersion="$(curl -LfsS 'https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/c/catimg/' | grep ${ARCH_TYPE} | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2 | cut -d '_' -f 2)"

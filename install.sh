@@ -579,6 +579,7 @@ creat_proot_startup_script() {
 		    pulseaudio --start 2>/dev/null &
 		    unset LD_PRELOAD
 		    ############
+			FAKE_PROOT_PROC='true'
 		    TMOE_LOCALE_FILE="${HOME}/.config/tmoe-linux/locale.txt"
 		    PROC_FD_PATH="/proc/self/fd"
 		    if [ -f "${DEBIAN_CHROOT}/bin/zsh" ]; then
@@ -590,7 +591,7 @@ creat_proot_startup_script() {
 		    else
 		      TMOE_SHELL="/bin/su"
 		    fi
-			#考虑到兼容性，此处应为-l,而非--login
+			#考虑到alpine兼容性，此处应为-l,而非--login
 		    set -- "\${TMOE_SHELL}" "-l" "\$@"
 		    if [ -e "/data/data/com.termux" ]; then
 		      set -- "PREFIX=/data/data/com.termux/files/usr" "\$@"
@@ -637,8 +638,12 @@ creat_proot_startup_script() {
 		      fi
 		    }
 		    #################
+			case ${FAKE_PROOT_PROC} in
+			true) 
 		    #test01set -- "--mount=${TMOE_PROC_PREFIX}.stat:/proc/stat" "\$@"
 		    #test02set -- "--mount=${TMOE_PROC_PREFIX}.version:/proc/version" "\$@"
+			;;
+			esac
 		    set -- "--pwd=/root" "\$@"
 		    set -- "--rootfs=${DEBIAN_CHROOT}" "\$@"
 		    if [ "$(uname -o)" = 'Android' ]; then
@@ -1406,12 +1411,12 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	    chattr -i /etc/apt/sources.list 2>/dev/null
 	fi
 	####################
-	apt update
-	apt list --upgradable
+	apt update 2>/dev/null
+	apt list --upgradable 2>/dev/null
 	echo "正在升级所有软件包..."
-	apt dist-upgrade -y
+	apt dist-upgrade -y 2>/dev/null
 	apt install -y procps 2>/dev/null
-	apt clean
+	apt clean 2>/dev/null
 
 	#############################
 	#grep -q 'export DISPLAY' /etc/profile || echo "export DISPLAY=":1"" >>/etc/profile

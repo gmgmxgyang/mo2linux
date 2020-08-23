@@ -152,7 +152,7 @@ if [ "$?" != '0' ]; then
     TERMUX_BIN_PATH='/data/data/com.termux/files/usr/bin/'
     if [ -e "${TERMUX_BIN_PATH}/ps" ]; then
         ln -s ${TERMUX_BIN_PATH}/ps /usr/local/bin/ps 2>/dev/null
-        ln -s ${TERMUX_BIN_PATH}/pstree /usr/local/bin/pstree 2>/dev/null        
+        ln -s ${TERMUX_BIN_PATH}/pstree /usr/local/bin/pstree 2>/dev/null
     fi
 fi
 chsh -s /usr/bin/zsh || chsh -s /bin/zsh
@@ -374,7 +374,7 @@ if [ "${LINUX_DISTRO}" = "debian" ] || [ "${LINUX_DISTRO}" = "alpine" ] || [ "${
     configure_fzf_tab_plugin
 fi
 #######################
-if grep -Eq 'Bionic|buster|Xenial' /etc/os-release; then
+if grep -Eq 'Bionic|buster|stretch|jessie|Xenial' /etc/os-release; then
     sed -i 's/plugins=(git)/plugins=(git extract)/g' ~/.zshrc
 fi
 

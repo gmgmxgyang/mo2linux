@@ -2810,6 +2810,7 @@ install_debian_buster_via_tuna() {
 		sed "s:-sid:-${DISTRO_CODE}:g" |
 		sed "s@debian/ stable@debian/ ${DISTRO_CODE}@g" |
 		sed "s@stable/updates@${DISTRO_CODE}/updates@g" |
+		sed "s@buster-backports@${DISTRO_CODE}-backports@g" |
 		sed 's@#deb http@deb http@g' |
 		sed 's/.*sid main/#&/')"
 }
@@ -2820,6 +2821,7 @@ install_debian_testing_via_tuna() {
 		sed "s:-sid:-${DISTRO_CODE}:g" |
 		sed "s@debian/ stable@debian/ ${DISTRO_CODE}@g" |
 		sed "s@stable/updates@${DISTRO_CODE}-security@g" |
+		sed "s@buster-backports@${DISTRO_CODE}-backports@g" |
 		sed 's@#deb http@deb http@g' |
 		sed 's/.*sid main/#&/')"
 }
@@ -4162,17 +4164,21 @@ which_version_do_you_want_to_install() {
 install_fedora_gnu_linux_distro() {
 	touch ~/.REDHATDetectionFILE
 	DISTRO_NAME='fedora'
-	if [ "${ARCH_TYPE}" = 'armhf' ]; then
-		echo "检测到您使用的是armhf架构，将为您降级至Fedora 29"
-		DISTRO_CODE='29'
-		linux_distro_common_model_01
-	elif [ "${ARCH_TYPE}" = 'i386' ]; then
-		echo "Fedora不支持您的架构"
-	else
+	case "${ARCH_TYPE}" in
+	armhf | armel | i386)
+		#echo "检测到您使用的是armhf架构，将为您降级至Fedora 29"
+		#DISTRO_CODE='29'
+		#linux_distro_common_model_01
+		echo "检测到您使用的是${ARCH_TYPE}架构，请换用其他发行版"
+		press_enter_to_return
+		choose_which_gnu_linux_distro
+		;;
+	*)
 		#OLD_STABLE_VERSION='31'
 		OLD_STABLE_VERSION=$(curl -L https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/fedora/ | grep date | tail -n 2 | head -n 1 | cut -d '=' -f 4 | cut -d '"' -f 2)
 		check_the_latest_distro_version
-	fi
+		;;
+	esac
 }
 ################
 install_funtoo_linux_distro() {

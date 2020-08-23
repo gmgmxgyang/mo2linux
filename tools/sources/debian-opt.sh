@@ -689,6 +689,7 @@ debian_opt_music_app() {
         "7" "chord(支持虾米、云音乐、qq音乐多平台)" \
         "8" "#vocal(强大美观的播客app)" \
         "9" "#flacon(支持从专辑中提取音频文件)" \
+        "10" "#netease-cloud-music-gtk(云音乐)" \
         "0" "🌚 Return to previous menu 返回上级菜单" \
         3>&1 1>&2 2>&3)
     ##############
@@ -709,6 +710,7 @@ debian_opt_music_app() {
         non_debian_function
         install_opt_flacon
         ;;
+    10) install_netease_cloud_music_gtk ;;
     esac
     ##########################
     #"7" "feeluown(x64,支持网易云、虾米)" \
@@ -719,7 +721,6 @@ debian_opt_music_app() {
     esac
     #此处00菜单不要跳转到beta_features_quick_install
     ########################
-    #"5" "#netease-cloud-music-gtk(云音乐)" \ 5) install_netease_cloud_music_gtk ;;
     press_enter_to_return
     debian_opt_music_app
 }
@@ -840,7 +841,7 @@ install_debian_netease_cloud_music() {
 install_netease_cloud_music_gtk() {
     DEPENDENCY_01='netease-cloud-music-gtk'
     echo "github url：${YELLOW}https://github.com/gmg137/netease-cloud-music-gtk${RESET}"
-    echo "本版本仅兼容deb系发行版,arm64版可能存在网络异常,并且无法使用手机号登录等问题,您可以换用邮箱进行登录"
+    echo "本版本仅兼容deb系发行版,arm64版可能存在网络异常问题。若您无法使用手机号进行登录,则请换用邮箱号。"
     non_debian_function
     case ${ARCH_TYPE} in
     arm64)

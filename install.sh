@@ -638,7 +638,7 @@ creat_proot_startup_script() {
 		      fi
 		    }
 		    #################
-			if [ "${FAKE_PROOT_PROC}" = 'true' ];then 
+			if [ "\${FAKE_PROOT_PROC}" = 'true' ];then 
 		      #test01set -- "--mount=${TMOE_PROC_PREFIX}.stat:/proc/stat" "\$@"
 		      #test02set -- "--mount=${TMOE_PROC_PREFIX}.version:/proc/version" "\$@"
 			fi

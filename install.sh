@@ -638,12 +638,10 @@ creat_proot_startup_script() {
 		      fi
 		    }
 		    #################
-			case ${FAKE_PROOT_PROC} in
-			true) 
-		    #test01set -- "--mount=${TMOE_PROC_PREFIX}.stat:/proc/stat" "\$@"
-		    #test02set -- "--mount=${TMOE_PROC_PREFIX}.version:/proc/version" "\$@"
-			;;
-			esac
+			if [ "${FAKE_PROOT_PROC}" = 'true' ];then 
+		      #test01set -- "--mount=${TMOE_PROC_PREFIX}.stat:/proc/stat" "\$@"
+		      #test02set -- "--mount=${TMOE_PROC_PREFIX}.version:/proc/version" "\$@"
+			fi
 		    set -- "--pwd=/root" "\$@"
 		    set -- "--rootfs=${DEBIAN_CHROOT}" "\$@"
 		    if [ "$(uname -o)" = 'Android' ]; then

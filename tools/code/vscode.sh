@@ -22,7 +22,7 @@ which_vscode_edition() {
     esac
     #########################
     press_enter_to_return
-    tmoe_linux_tool_menu
+    which_vscode_edition
 }
 #################################
 check_vscode_server_arch() {
@@ -203,11 +203,6 @@ vscode_server_password() {
     else
         sed -i "s@^password:.*@password: ${TARGET_USERPASSWD}@" ~/.config/code-server/config.yaml
     fi
-    #sed -i '/export PASSWORD=/d' ~/.profile
-    #sed -i '/export PASSWORD=/d' ~/.zshrc
-    #sed -i "$ a\export PASSWORD=${TARGET_USERPASSWD}" ~/.profile
-    #sed -i "$ a\export PASSWORD=${TARGET_USERPASSWD}" ~/.zshrc
-    #export PASSWORD=${TARGET_USERPASSWD}
 }
 #################
 vscode_server_remove() {
@@ -244,53 +239,49 @@ install_vscodium() {
 
     if [ -e "/usr/bin/codium" ]; then
         echo '检测到您已安装VSCodium,请手动输以下命令启动'
-        #echo 'codium --user-data-dir=${HOME}/.config/VSCodium'
-        echo "codium --user-data-dir=${HOME}"
+        echo "codium --user-data-dir=${HOME}/.codium"
         echo "如需卸载，请手动输${TMOE_REMOVAL_COMMAND} codium"
-    elif [ -e "/usr/local/bin/vscodium-data/codium" ]; then
-        echo "检测到您已安装VSCodium,请输codium --no-sandbox启动"
-        echo "如需卸载，请手动输rm -rvf /usr/local/bin/vscodium-data/ /usr/local/bin/vscodium"
+    elif [ -e "/opt/vscodium-data/codium" ]; then
+        echo "检测到您已安装VSCodium,请输codium启动"
+        echo "如需卸载，请手动输rm -rv /opt/vscodium-data /usr/local/bin/codium ${APPS_LNK_DIR}/codium.desktop"
     fi
 
     if [ $(command -v codium) ]; then
-        echo "${YELLOW}按回车键返回。${RESET}"
-        echo "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
-        read
+        press_enter_to_return
         which_vscode_edition
     fi
 
     if [ "${LINUX_DISTRO}" = 'debian' ]; then
         LatestVSCodiumLink="$(curl -L https://mirrors.tuna.tsinghua.edu.cn/github-release/VSCodium/vscodium/LatestRelease/ | grep ${ARCH_TYPE} | grep -v '.sha256' | grep '.deb' | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
-        aria2c --allow-overwrite=true -s 5 -x 5 -k 1M -o 'VSCodium.deb' "https://mirrors.tuna.tsinghua.edu.cn/github-release/VSCodium/vscodium/LatestRelease/${LatestVSCodiumLink}"
+        CODIUM_FILE_URL="https://mirrors.tuna.tsinghua.edu.cn/github-release/VSCodium/vscodium/LatestRelease/${LatestVSCodiumLink}"
+        echo "${YELLOW}${CODIUM_FILE_URL}${RESET}"
+        aria2c --allow-overwrite=true -s 5 -x 5 -k 1M -o 'VSCodium.deb' ${CODIUM_FILE_URL}
         apt show ./VSCodium.deb
         apt install -y ./VSCodium.deb
         rm -vf VSCodium.deb
-        #echo '安装完成,请输codium --user-data-dir=${HOME}/.config/VSCodium启动'
-        echo "安装完成,请输codium --user-data-dir=${HOME}启动"
+        echo "安装完成,您可以输codium --user-data-dir=${HOME}/.codium启动"
     else
         LatestVSCodiumLink="$(curl -L https://mirrors.tuna.tsinghua.edu.cn/github-release/VSCodium/vscodium/LatestRelease/ | grep ${CodiumARCH} | grep -v '.sha256' | grep '.tar' | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
-        aria2c --allow-overwrite=true -s 5 -x 5 -k 1M -o 'VSCodium.tar.gz' "https://mirrors.tuna.tsinghua.edu.cn/github-release/VSCodium/vscodium/LatestRelease/${LatestVSCodiumLink}"
-        mkdir -p /usr/local/bin/vscodium-data
-        tar -zxvf VSCodium.tar.gz -C /usr/local/bin/vscodium-data
+        CODIUM_FILE_URL="https://mirrors.tuna.tsinghua.edu.cn/github-release/VSCodium/vscodium/LatestRelease/${LatestVSCodiumLink}"
+        echo "${YELLOW}${CODIUM_FILE_URL}${RESET}"
+        aria2c --allow-overwrite=true -s 5 -x 5 -k 1M -o 'VSCodium.tar.gz' ${CODIUM_FILE_URL}
+        mkdir -p /opt/vscodium-data
+        tar -zxvf VSCodium.tar.gz -C /opt/vscodium-data
         rm -vf VSCodium.tar.gz
-        ln -sf /usr/local/bin/vscodium-data/codium /usr/local/bin/codium
-        echo "安装完成，输codium --no-sandbox启动"
+        cp -f ${TMOE_TOOL_DIR}/code/bin/codium /usr/local/bin
+        cp -f ${TMOE_TOOL_DIR}/code/lnk/codium.desktop ${APPS_LNK_DIR}
+        #ln -sf /opt/vscodium-data/codium /usr/local/bin/codium
+        echo "安装完成，您可以输codium启动"
     fi
-    echo "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
-    echo "按${GREEN}回车键${RESET}${BLUE}返回${RESET}"
-    read
-    which_vscode_edition
 }
 ########################
 install_vscode_oss() {
     if [ -e "/usr/bin/code-oss" ]; then
         echo "检测到您已安装VSCode OSS,请手动输以下命令启动"
         #echo 'code-oss --user-data-dir=${HOME}/.config/Code\ -\ OSS\ \(headmelted\)'
-        echo "code-oss --user-data-dir=${HOME}"
+        echo "code-oss --user-data-dir=${HOME}/.codeoss"
         echo "如需卸载，请手动输${TMOE_REMOVAL_COMMAND} code-oss"
-        echo "${YELLOW}按回车键返回。${RESET}"
-        echo "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
-        read
+        press_enter_to_return
         which_vscode_edition
     fi
 
@@ -302,18 +293,12 @@ install_vscode_oss() {
         . <(wget -O- https://code.headmelted.com/installers/yum.sh)
     else
         echo "检测到您当前使用的可能不是deb系或红帽系发行版，跳过安装"
-        echo "${YELLOW}按回车键返回。${RESET}"
-        echo "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
-        read
+        press_enter_to_return
         which_vscode_edition
     fi
     echo "安装完成,请手动输以下命令启动"
-    echo "code-oss --user-data-dir=${HOME}"
+    echo "code-oss --user-data-dir=${HOME}/.codeoss"
     echo "如需卸载，请手动输${TMOE_REMOVAL_COMMAND} code-oss"
-    echo "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
-    echo "按${GREEN}回车键${RESET}${BLUE}返回${RESET}"
-    read
-    which_vscode_edition
 }
 #######################
 download_vscode_x64_deb() {
@@ -334,7 +319,7 @@ install_vscode_official() {
     if [ -e "/usr/bin/code" ]; then
         echo '检测到您已安装VSCode,请手动输以下命令启动'
         #echo 'code --user-data-dir=${HOME}/.vscode'
-        echo 'code --user-data-dir=${HOME}'
+        echo 'code --user-data-dir=${HOME}/.vsode'
         echo "如需卸载，请手动输${TMOE_REMOVAL_COMMAND} code"
         #echo "${YELLOW}按回车键返回。${RESET}"
         #echo "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
@@ -356,13 +341,13 @@ install_vscode_official() {
 
     if [ "${LINUX_DISTRO}" = 'debian' ]; then
         download_vscode_x64_deb
-        echo "安装完成,请输code --user-data-dir=${HOME}启动"
+        echo "安装完成,请输code --user-data-dir=${HOME}/.vscode启动"
 
     elif [ "${LINUX_DISTRO}" = 'redhat' ]; then
         aria2c --allow-overwrite=true -s 5 -x 5 -k 1M -o 'VSCODE.rpm' "https://go.microsoft.com/fwlink/?LinkID=760867"
         rpm -ivh ./VSCODE.rpm
         rm -vf VSCODE.rpm
-        echo "安装完成,请输code --user-data-dir=${HOME}启动"
+        echo "安装完成,请输code --user-data-dir=${HOME}/.vscode启动"
     else
         aria2c --allow-overwrite=true -s 5 -x 5 -k 1M -o 'VSCODE.tar.gz' "https://go.microsoft.com/fwlink/?LinkID=620884"
         #mkdir -p /usr/local/bin/vscode-data
@@ -372,10 +357,6 @@ install_vscode_official() {
         ln -sf /usr/local/bin/VSCode-linux-x64/code /usr/local/bin/code
         echo "安装完成，输code --no-sandbox启动"
     fi
-    echo "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
-    echo "按${GREEN}回车键${RESET}${BLUE}返回${RESET}"
-    read
-    which_vscode_edition
 }
 ###############################
 which_vscode_edition

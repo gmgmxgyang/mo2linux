@@ -1288,6 +1288,12 @@ enable_root_mode() {
 		#sed -i '/pulseaudio/d' ${PREFIX}/bin/debian
 		#	sed -i '4 c\pulseaudio --system --start' ${PREFIX}/bin/debian
 		#fi
+		ROOT_PERMISSION=$(sudo ls / 2>/dev/null)
+		if [ -z "${ROOT_PERMISSION}" ]; then
+			echo "${RED}ERROR!${RESET}未检测到root权限！"
+			press_enter_to_return
+			tmoe_manager_main_menu
+		fi
 		cd ${PREFIX}/bin/
 		if ! grep -q 'sudo touch' startvnc; then
 			sed -i 's/^touch ~/sudo &/' startvnc

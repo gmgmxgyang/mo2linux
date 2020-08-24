@@ -86,7 +86,7 @@ if [ "$(uname -o)" = "Android" ]; then
 	TF_CARD_PATH="${HOME}/storage/external-1"
 	if [ -h "${TF_CARD_PATH}" ]; then
 		if [ ! -e "${TF_CARD_PATH}/path.txt" ]; then
-			echo $(readlink ${TF_CARD_PATH}) >${TF_CARD_PATH}/path.txt
+			echo "$(readlink ${TF_CARD_PATH})" >${TF_CARD_PATH}/path.txt
 		fi
 	fi
 

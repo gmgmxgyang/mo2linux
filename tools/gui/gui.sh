@@ -88,16 +88,18 @@ check_tightvnc_port() {
 modify_tightvnc_display_port() {
     check_tightvnc_port
     TARGET=$(whiptail --inputbox "默认显示编号为1，默认VNC服务端口为5901，当前为${CURRENT_VNC_PORT} \nVNC服务以5900端口为起始，若显示编号为1,则端口为5901，请输入显示编号.Please enter the display number." 13 50 --title "MODIFY DISPLAY PORT " 3>&1 1>&2 2>&3)
-    exitstatus=$?
-    if [ $exitstatus = 0 ]; then
+    if [ "$?" != "0" ]; then
+        modify_other_vnc_conf
+    elif [ -z "${TARGET}" ]; then
+        echo "请输入有效的数值"
+        echo "Please enter a valid value"
+    else
         sed -i "s@tmoe-linux.*:.*@tmoe-linux :$TARGET@" "$(command -v startvnc)"
         echo 'Your current VNC port has been modified.'
         check_tightvnc_port
         echo '您当前的VNC端口已修改为'
         echo ${CURRENT_VNC_PORT}
-        press_enter_to_return
     fi
-    modify_other_vnc_conf
 }
 ######################
 modify_xfce_window_scaling_factor() {
@@ -108,8 +110,14 @@ modify_xfce_window_scaling_factor() {
         CURRENT_VALUE='1'
     fi
     TARGET=$(whiptail --inputbox "请输入您需要缩放的比例大小(纯数字)，当前仅支持整数倍，例如1和2，不支持1.5,当前为${CURRENT_VALUE}" 10 50 --title "Window Scaling Factor" 3>&1 1>&2 2>&3)
-    exitstatus=$?
-    if [ $exitstatus = 0 ]; then
+    if [ "$?" != "0" ]; then
+        modify_other_vnc_conf
+    elif [ -z "${TARGET}" ]; then
+        echo "请输入有效的数值"
+        echo "Please enter a valid value"
+        echo '检测到您取消了操作'
+        cat ${XFCE_CONFIG_FILE} | grep 'WindowScalingFactor' | grep 'value='
+    else
         dbus-launch xfconf-query -c xsettings -p /Gdk/WindowScalingFactor -s ${TARGET} || dbus-launch xfconf-query -t int -c xsettings -np /Gdk/WindowScalingFactor -s ${TARGET}
         if ((${TARGET} > 1)); then
             if grep -q 'Focal Fossa' "/etc/os-release"; then
@@ -119,9 +127,6 @@ modify_xfce_window_scaling_factor() {
             fi
         fi
         echo "修改完成，请输${GREEN}startvnc${RESET}重启进程"
-    else
-        echo '检测到您取消了操作'
-        cat ${XFCE_CONFIG_FILE} | grep 'WindowScalingFactor' | grep 'value='
     fi
 }
 ##################
@@ -2934,8 +2939,12 @@ remove_X11vnc() {
 x11vnc_pulse_server() {
     cd /usr/local/bin/
     TARGET=$(whiptail --inputbox "若您需要转发音频到其它设备,那么您可在此处修改。当前为$(grep 'PULSE_SERVER' startx11vnc | grep -v '^#' | cut -d '=' -f 2 | head -n 1) \n若您曾在音频服务端（接收音频的设备）上运行过Tmoe-linux(仅限Android和win10),并配置允许局域网连接,则只需输入该设备ip,无需加端口号。注：win10需手动打开'C:\Users\Public\Downloads\pulseaudio\pulseaudio.bat'" 15 50 --title "MODIFY PULSE SERVER ADDRESS" 3>&1 1>&2 2>&3)
-    exitstatus=$?
-    if [ $exitstatus = 0 ]; then
+    if [ "$?" != "0" ]; then
+        configure_x11vnc
+    elif [ -z "${TARGET}" ]; then
+        echo "请输入有效的数值"
+        echo "Please enter a valid value"
+    else
         if grep -q '^export.*PULSE_SERVER' startx11vnc; then
             sed -i "s@export.*PULSE_SERVER=.*@export PULSE_SERVER=$TARGET@" startx11vnc
         else
@@ -2944,15 +2953,18 @@ x11vnc_pulse_server() {
         echo 'Your current PULSEAUDIO SERVER address has been modified.'
         echo '您当前的音频地址已修改为'
         echo $(grep 'PULSE_SERVER' startx11vnc | grep -v '^#' | cut -d '=' -f 2 | head -n 1)
-    else
-        configure_x11vnc
     fi
 }
 ##################
 x11vnc_resolution() {
     TARGET=$(whiptail --inputbox "Please enter a resolution,请输入分辨率,例如2880x1440,2400x1200,1920x1080,1920x960,720x1140,1280x1024,1280x960,1280x720,1024x768,800x680等等,默认为1440x720,当前为$(cat $(command -v startx11vnc) | grep '/usr/bin/Xvfb' | head -n 1 | cut -d ':' -f 2 | cut -d '+' -f 1 | cut -d '-' -f 2 | cut -d 'x' -f -2 | awk -F ' ' '$0=$NF')。分辨率可自定义，但建议您根据屏幕比例来调整，输入完成后按回车键确认，修改完成后将自动停止VNC服务。注意：x为英文小写，不是乘号。Press Enter after the input is completed." 16 50 --title "请在方框内输入 水平像素x垂直像素 (数字x数字) " 3>&1 1>&2 2>&3)
-    exitstatus=$?
-    if [ $exitstatus = 0 ]; then
+    if [ "$?" != "0" ]; then
+        configure_x11vnc
+    elif [ -z "${TARGET}" ]; then
+        echo "请输入有效的数值"
+        echo "Please enter a valid value"
+        echo "您当前的分辨率为$(cat $(command -v startx11vnc) | grep '/usr/bin/Xvfb' | head -n 1 | cut -d ':' -f 2 | cut -d '+' -f 1 | cut -d '-' -f 2 | cut -d 'x' -f -2 | awk -F ' ' '$0=$NF')"
+    else
         #/usr/bin/Xvfb :1 -screen 0 1440x720x24 -ac +extension GLX +render -noreset &
         sed -i "s@^/usr/bin/Xvfb.*@/usr/bin/Xvfb :233 -screen 0 ${TARGET}x24 -ac +extension GLX +render -noreset \&@" "$(command -v startx11vnc)"
         echo 'Your current resolution has been modified.'
@@ -2961,8 +2973,6 @@ x11vnc_resolution() {
         #echo $(sed -n \$p "$(command -v startx11vnc)" | cut -d 'y' -f 2 | cut -d '-' -f 1)
         #$p表示最后一行，必须用反斜杠转义。
         stopx11vnc
-    else
-        echo "您当前的分辨率为$(cat $(command -v startx11vnc) | grep '/usr/bin/Xvfb' | head -n 1 | cut -d ':' -f 2 | cut -d '+' -f 1 | cut -d '-' -f 2 | cut -d 'x' -f -2 | awk -F ' ' '$0=$NF')"
     fi
 }
 ############################
@@ -2981,8 +2991,12 @@ modify_vnc_conf() {
     check_vnc_resolution
     if (whiptail --title "modify vnc configuration" --yes-button '分辨率resolution' --no-button '其它other' --yesno "您想要修改哪项配置信息？Which configuration do you want to modify?" 9 50); then
         TARGET=$(whiptail --inputbox "Please enter a resolution,请输入分辨率,例如2880x1440,2400x1200,1920x1080,1920x960,720x1140,1280x1024,1280x960,1280x720,1024x768,800x680等等,默认为1440x720,当前为${CURRENT_VNC_RESOLUTION}。分辨率可自定义，但建议您根据屏幕比例来调整，输入完成后按回车键确认，修改完成后将自动停止VNC服务。注意：x为英文小写，不是乘号。Press Enter after the input is completed." 16 50 --title "请在方框内输入 水平像素x垂直像素 (数字x数字) " 3>&1 1>&2 2>&3)
-        exitstatus=$?
-        if [ $exitstatus = 0 ]; then
+        if [ "$?" != "0" ]; then
+            modify_other_vnc_conf
+        elif [ -z "${TARGET}" ]; then
+            echo "请输入有效的数值"
+            echo "Please enter a valid value"
+        else
             sed -i '/vncserver -geometry/d' "$(command -v startvnc)"
             sed -i "$ a\vncserver -geometry $TARGET -depth 24 -name tmoe-linux :1" "$(command -v startvnc)"
             echo 'Your current resolution has been modified.'
@@ -2993,12 +3007,11 @@ modify_vnc_conf() {
             stopvnc 2>/dev/null
             press_enter_to_return
             modify_remote_desktop_config
-        else
-            echo "您当前的分辨率为${CURRENT_VNC_RESOLUTION}"
         fi
     else
         modify_other_vnc_conf
     fi
+    #echo "您当前的分辨率为${CURRENT_VNC_RESOLUTION}"
 }
 ############################
 modify_xsdl_conf() {
@@ -3241,8 +3254,12 @@ remove_xwayland() {
 xwayland_pulse_server() {
     cd /usr/local/bin/
     TARGET=$(whiptail --inputbox "若您需要转发音频到其它设备,那么您可以在此处修改。当前为$(grep 'PULSE_SERVER' startw | grep -v '^#' | cut -d '=' -f 2 | head -n 1) \n若您曾在音频服务端（接收音频的设备）上运行过Tmoe-linux(仅限Android和win10),并配置允许局域网连接,则只需输入该设备ip,无需加端口号。注：win10需手动打开'C:\Users\Public\Downloads\pulseaudio\pulseaudio.bat'" 15 50 --title "MODIFY PULSE SERVER ADDRESS" 3>&1 1>&2 2>&3)
-    exitstatus=$?
-    if [ $exitstatus = 0 ]; then
+    if [ "$?" != "0" ]; then
+        configure_xwayland
+    elif [ -z "${TARGET}" ]; then
+        echo "请输入有效的数值"
+        echo "Please enter a valid value"
+    else
         if grep '^export.*PULSE_SERVER' startw; then
             sed -i "s@export.*PULSE_SERVER=.*@export PULSE_SERVER=$TARGET@" startw
         else
@@ -3252,8 +3269,6 @@ xwayland_pulse_server() {
         echo '您当前的音频地址已修改为'
         echo $(grep 'PULSE_SERVER' startw | grep -v '^#' | cut -d '=' -f 2 | head -n 1)
         press_enter_to_return_configure_xwayland
-    else
-        configure_xwayland
     fi
 }
 ##############
@@ -3614,9 +3629,12 @@ configure_remote_desktop_session() {
 xrdp_pulse_server() {
     cd /etc/xrdp
     TARGET=$(whiptail --inputbox "若您需要转发音频到其它设备,那么您可在此处修改。linux默认为127.0.0.1,WSL2默认为宿主机ip,当前为$(grep 'PULSE_SERVER' startwm.sh | grep -v '^#' | cut -d '=' -f 2 | head -n 1) \n若您曾在音频服务端（接收音频的设备）上运行过Tmoe-linux(仅限Android和win10),并配置允许局域网连接,则只需输入该设备ip,无需加端口号。注：win10需手动打开'C:\Users\Public\Downloads\pulseaudio\pulseaudio.bat'" 15 50 --title "MODIFY PULSE SERVER ADDRESS" 3>&1 1>&2 2>&3)
-    exitstatus=$?
-    if [ $exitstatus = 0 ]; then
-
+    if [ "$?" != "0" ]; then
+        configure_xrdp
+    elif [ -z "${TARGET}" ]; then
+        echo "请输入有效的数值"
+        echo "Please enter a valid value"
+    else
         if grep ! '^export.*PULSE_SERVER' startwm.sh; then
             sed -i "s@export.*PULSE_SERVER=.*@export PULSE_SERVER=$TARGET@" startwm.sh
             #sed -i "4 a\export PULSE_SERVER=$TARGET" startwm.sh
@@ -3626,8 +3644,6 @@ xrdp_pulse_server() {
         echo '您当前的音频地址已修改为'
         echo $(grep 'PULSE_SERVER' startwm.sh | grep -v '^#' | cut -d '=' -f 2 | head -n 1)
         press_enter_to_return_configure_xrdp
-    else
-        configure_xrdp
     fi
 }
 ##############

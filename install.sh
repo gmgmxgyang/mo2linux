@@ -84,8 +84,10 @@ if [ "$(uname -o)" = "Android" ]; then
 		termux-setup-storage
 	fi
 	TF_CARD_PATH="${HOME}/storage/external-1"
-	if [ ! -e "${TF_CARD_PATH}/path.txt" ]; then
-		echo $(readlink ${TF_CARD_PATH}) >${TF_CARD_PATH}/path.txt
+	if [ -h "${TF_CARD_PATH}" ]; then
+		if [ ! -e "${TF_CARD_PATH}/path.txt" ]; then
+			echo $(readlink ${TF_CARD_PATH}) >${TF_CARD_PATH}/path.txt
+		fi
 	fi
 
 	if [ ! -e ${PREFIX}/bin/proot ]; then

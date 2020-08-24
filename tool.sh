@@ -90,9 +90,6 @@ gnu_linux_env() {
 		TMPDIR=/tmp
 		mkdir -p ${TMPDIR}
 	fi
-	if [ -z "${TMOE_PROOT}" ]; then
-		check_proot_ps_command
-	fi
 	check_release_version
 	TMOE_LINUX_DIR='/usr/local/etc/tmoe-linux'
 	TMOE_GIT_DIR="${TMOE_LINUX_DIR}/git"
@@ -100,17 +97,6 @@ gnu_linux_env() {
 	TMOE_OPT_BIN_DIR="${TMOE_TOOL_DIR}/sources/opt-bin"
 	TMOE_GIT_URL='gitee.com/mo2/linux'
 	APPS_LNK_DIR='/usr/share/applications'
-}
-################
-check_proot_ps_command() {
-	ps -e &>/dev/null
-	if [ "$?" != '0' ]; then
-		TMOE_PROOT='no'
-		TERMUX_PS_FILE='/data/data/com.termux/files/usr/bin/ps'
-		if [ -e "${TERMUX_PS_FILE}" ]; then
-			ln -s ${TERMUX_PS_FILE} /usr/local/bin/ps 2>/dev/null
-		fi
-	fi
 }
 ############
 set_terminal_color() {

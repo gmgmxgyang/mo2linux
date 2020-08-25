@@ -80,11 +80,22 @@ main() {
 	esac
 }
 ################
+check_ps_command() {
+	ps &>/dev/null
+	if [ "$?" != '0' ]; then
+		TMOE_PROOT='no'
+	fi
+}
+################
 gnu_linux_env() {
-	if [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
-		TMOE_PROOT='true'
-	elif [ -e "/tmp/.Chroot-Container-Detection-File" ]; then
-		TMOE_PROOT='false'
+	if [ -z "${TMOE_PROOT}" ]; then
+		if [ -e "/tmp/.Tmoe-Proot-Container-Detection-File" ]; then
+			TMOE_PROOT='true'
+		elif [ -e "/tmp/.Chroot-Container-Detection-File" ]; then
+			TMOE_PROOT='false'
+		else
+			check_ps_command
+		fi
 	fi
 	if [ -z ${TMPDIR} ]; then
 		TMPDIR=/tmp

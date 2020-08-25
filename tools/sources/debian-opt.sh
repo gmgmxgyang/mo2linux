@@ -841,7 +841,7 @@ install_debian_netease_cloud_music() {
 install_netease_cloud_music_gtk() {
     DEPENDENCY_01='netease-cloud-music-gtk'
     echo "github url：${YELLOW}https://github.com/gmg137/netease-cloud-music-gtk${RESET}"
-    echo "本版本仅兼容deb系发行版,arm64版可能存在网络异常问题。若您无法使用手机号进行登录,则请换用邮箱号。"
+    echo "本版本仅兼容deb系发行版。"
     non_debian_function
     case ${ARCH_TYPE} in
     arm64)

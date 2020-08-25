@@ -227,7 +227,7 @@ tmoe_documents_menu() {
     0 | "") software_center ;;
     1) install_libre_office ;;
     2) install_emacs ;;
-    2) install_chinese_manpages ;;
+    3) install_chinese_manpages ;;
     esac
     ##########################
     press_enter_to_return

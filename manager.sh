@@ -2823,8 +2823,9 @@ install_debian_sid_gnu_linux_container() {
 		;;
 	esac
 	######################
-	press_enter_to_return
-	tmoe_manager_main_menu
+	exit 0
+	#press_enter_to_return
+	#tmoe_manager_main_menu
 }
 ###########
 install_debian_buster_via_tuna() {
@@ -2869,8 +2870,9 @@ install_debian_buster_gnu_linux_container() {
 		;;
 	esac
 	######################
-	press_enter_to_return
-	tmoe_manager_main_menu
+	exit 0
+	#press_enter_to_return
+	#tmoe_manager_main_menu
 }
 ########################
 creat_container_edition_txt() {
@@ -2928,8 +2930,10 @@ install_debian_gnu_linux_distro() {
 	squeeze | wheezy | jessie | stretch | buster) install_debian_buster_via_tuna ;;
 	*) install_debian_testing_via_tuna ;;
 	esac
-	press_enter_to_return
-	tmoe_manager_main_menu
+	###############
+	exit 0
+	#press_enter_to_return
+	#tmoe_manager_main_menu
 }
 #########################
 #"9" "🐧7-wheezy(2013~2016,吱吱,带着领结的玩具企鹅)" \
@@ -3919,8 +3923,9 @@ choose_which_gnu_linux_distro() {
 		;;
 	esac
 	####################
-	press_enter_to_return
-	tmoe_manager_main_menu
+	exit 0
+	#press_enter_to_return
+	#tmoe_manager_main_menu
 }
 ##############################
 install_alpha_containers() {
@@ -4040,8 +4045,9 @@ install_beta_containers() {
 		;;
 	esac
 	######################
-	press_enter_to_return
-	tmoe_manager_main_menu
+	exit 0
+	#press_enter_to_return
+	#tmoe_manager_main_menu
 	####################
 }
 #####################
@@ -4084,12 +4090,14 @@ install_ubuntu_gnu_linux_distro() {
 	echo "即将为您安装Ubuntu ${DISTRO_CODE} GNU/Linux container"
 	do_you_want_to_continue
 	install_different_ubuntu_gnu_linux_distros
-	press_enter_to_return
-	tmoe_manager_main_menu
+	####################
+	exit 0
+	#press_enter_to_return
+	#tmoe_manager_main_menu
 }
 #########################
 custom_ubuntu_version() {
-	TARGET=$(whiptail --inputbox "请输入ubuntu版本代号，例如focal(英文小写)\n Please enter the ubuntu version code." 12 50 --title "UBUNTU CODE" 3>&1 1>&2 2>&3)
+	TARGET=$(whiptail --inputbox "请输入ubuntu版本代号，例如focal(英文小写)\nPlease enter the ubuntu version code." 12 50 --title "UBUNTU CODE" 3>&1 1>&2 2>&3)
 	DISTRO_CODE="$(echo ${TARGET} | head -n 1 | cut -d ' ' -f 1)"
 	if [ -z "${DISTRO_CODE}" ]; then
 		echo "检测到您取消了操作"

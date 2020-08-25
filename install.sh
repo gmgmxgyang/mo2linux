@@ -493,7 +493,6 @@ creat_chroot_startup_script() {
 		  chroot \${DEBIAN_CHROOT} /bin/bash --login
 
 	EndOfChrootFile
-	#上面那行不要有空格
 }
 ###################
 creat_tmoe_proot_stat_file() {
@@ -552,8 +551,6 @@ check_tmoe_proot_container_proc() {
 ###########
 check_proot_qemu() {
 	if [ ! -z "${QEMU_ARCH}" ]; then
-		#sed -i 's@#command+=" -q qemu-x86_64-staic"@command+=" -q qemu-x86_64-staic"@' ${PREFIX}/bin/debian
-		#sed -i "s@qemu-x86_64-staic@qemu-${QEMU_ARCH}-static@" ${PREFIX}/bin/debian
 		sed -i 's@#test03@@' ${PREFIX}/bin/debian
 		sed -i "s@qemu-x86_64-staic@qemu-${QEMU_ARCH}-static@" ${PREFIX}/bin/debian
 	fi
@@ -1422,7 +1419,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	    #dispatch-conf
 	    emerge -uvDN --with-bdeps=y @world
 	    emerge eix 2>/dev/null
-	    echo '检测到您当前的系统为Funtoo GNU/Linux,将不会为您继续配置任何优化步骤！'
+	    echo '检测到您当前的系统为Gentoo GNU/Linux,将不会为您继续配置任何优化步骤！'
 	    #rm -f vnc* zsh* .profile
 	    mv -f .profile.bak .profile 2>/dev/null
 	    #wget -qcO /usr/local/bin/neofetch 'https://gitee.com/mirrors/neofetch/raw/master/neofetch'

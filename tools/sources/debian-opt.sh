@@ -689,7 +689,6 @@ debian_opt_music_app() {
         "7" "chord(支持虾米、云音乐、qq音乐多平台)" \
         "8" "#vocal(强大美观的播客app)" \
         "9" "#flacon(支持从专辑中提取音频文件)" \
-        "10" "#netease-cloud-music-gtk(云音乐)" \
         "0" "🌚 Return to previous menu 返回上级菜单" \
         3>&1 1>&2 2>&3)
     ##############
@@ -712,6 +711,7 @@ debian_opt_music_app() {
         ;;
     10) install_netease_cloud_music_gtk ;;
     esac
+    #"10" "#netease-cloud-music-gtk(云音乐)" \
     ##########################
     #"7" "feeluown(x64,支持网易云、虾米)" \
     case ${DEBIAN_INSTALLATION_MENU} in

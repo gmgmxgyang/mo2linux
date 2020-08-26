@@ -106,7 +106,7 @@ gnu_linux_env() {
 	if [ ! -e "${TMOE_LINUX_DIR}" ]; then
 		mkdir -p ${TMOE_LINUX_DIR}
 	fi
-	if [ -e "/usr/local/bin" ]; then
+	if [ ! -e "/usr/local/bin" ]; then
 		mkdir -p /usr/local/bin
 	fi
 	TMOE_GIT_DIR="${TMOE_LINUX_DIR}/git"

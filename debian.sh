@@ -30,8 +30,7 @@ tuna_mirror() {
 		sed -i "s@archive.ubuntu.com@${CHINA_MIRROR}@g" ${SOURCE_LIST} 2>/dev/null
 		#sed -i "S@dl-cdn.alpinelinux.org@${CHINA_MIRROR}@g" ${ALPINE_SOURCE_LIST} 2>/dev/null
 		sed -i 's@^@#&@g' ${SOURCE_LIST}.bak 2>/dev/null
-		echo ${SOURCE_LIST}.bak >>${SOURCE_LIST} 2>/dev/null
-		#echo ${ALPINE_SOURCE_LIST}.bak >>${ALPINE_SOURCE_LIST} 2>/dev/null
+		cat ${SOURCE_LIST}.bak >>${SOURCE_LIST} 2>/dev/null
 	fi
 }
 #########

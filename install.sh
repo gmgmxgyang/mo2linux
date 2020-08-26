@@ -272,7 +272,7 @@ cat <<-EOF
 			03:所有容器的启动命令都是一样的哦！o( =•ω•= )m
 			但是呢！输那条启动命令仅支持启动${BLUE}${DEBIAN_FOLDER}容器${RESET}，不会自动启动远程桌面服务。
 			-------------------
-			You can type ${GREEN}debian${RESET} to start and enter the ${BLUE}${DEBIAN_FOLDER} container${RESET}.
+			The start command of the container supports starting and attaching the ${DEBIAN_FOLDER} container.
 			-------------------
 			04:并非所有${YELLOW}字体${RESET}都支持${BLUE}powerlevel 10k${RESET}的特殊字符哦！🍥
 			-------------------

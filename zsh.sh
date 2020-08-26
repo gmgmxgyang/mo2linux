@@ -322,25 +322,6 @@ fi
 ps -e 2>/dev/null | grep -Ev 'bash|zsh' | tail -n 20
 EndOfFile
 #########################
-configure_command_not_found() {
-    if [ -e "/usr/lib/command-not-found" ]; then
-        grep -q 'command-not-found/command-not-found.plugin.zsh' ${HOME}/.zshrc 2>/dev/null || sed -i "$ a\source ${HOME}/.oh-my-zsh/plugins/command-not-found/command-not-found.plugin.zsh" ${HOME}/.zshrc
-        if [ "${DEBIAN_DISTRO}" != "ubuntu" ]; then
-            echo "正在配置command-not-found插件..."
-            apt-file update 2>/dev/null
-            update-command-not-found 2>/dev/null
-        fi
-    fi
-}
-######################
-if [ "${LINUX_DISTRO}" != "redhat" ]; then
-    sed -i "1 c\cat /etc/issue" .zlogin
-fi
-#######################
-if [ "${LINUX_DISTRO}" = "debian" ]; then
-    configure_command_not_found
-fi
-############################
 cat <<-EOF
 	少女祈禱中...
         現在可公開的情報:
@@ -351,8 +332,27 @@ cat <<-EOF
 		-------------------
         You can use the ${BLUE}touch screen${RESET} on ${YELLOW}Android-termux${RESET} to slide the menu options of the tmoe-linux tool.
 		-------------------
+        07:${DEBIAN_FOLDER}容器的启动命令是${GREEN}debian${RESET}！o( =•ω•= )m
+		-------------------
+		You can type ${GREEN}debian${RESET} to start and attach the ${BLUE}${DEBIAN_FOLDER} container${RESET}.
+        ------------------
 EOF
 ##################
+configure_command_not_found() {
+    if [ -e "/usr/lib/command-not-found" ]; then
+        grep -q 'command-not-found/command-not-found.plugin.zsh' ${HOME}/.zshrc 2>/dev/null || sed -i "$ a\source ${HOME}/.oh-my-zsh/plugins/command-not-found/command-not-found.plugin.zsh" ${HOME}/.zshrc
+        if [ "${DEBIAN_DISTRO}" != "ubuntu" ]; then
+            echo "正在配置command-not-found插件..."
+            apt-file update 2>/dev/null
+            update-command-not-found 2>/dev/null
+        fi
+    fi
+}
+#######################
+if [ "${LINUX_DISTRO}" = "debian" ]; then
+    configure_command_not_found
+fi
+############################
 echo "正在克隆zsh-syntax-highlighting语法高亮插件..."
 echo "github.com/zsh-users/zsh-syntax-highlighting"
 rm -rf ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting 2>/dev/null

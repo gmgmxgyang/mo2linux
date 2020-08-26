@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 ##########################
-run_special_tag_docker_container() {
+tmoe_docker_init() {
     service docker start 2>/dev/null || systemctl start docker
     docker stop ${CONTAINER_NAME} 2>/dev/null
     MOUNT_DOCKER_FOLDER=/media/docker
@@ -15,8 +15,31 @@ run_special_tag_docker_container() {
         sed -i 's@###tmoe_locale_gen@tmoe_locale_gen@g' ${TMOE_LINUX_DOCKER_SHELL_FILE}
         sed -i 's@###tuna_mirror@tuna_mirror@g' ${TMOE_LINUX_DOCKER_SHELL_FILE}
     fi
+}
+################
+run_docker_container_with_same_architecture() {
     echo "${BLUE}docker run -itd --name ${CONTAINER_NAME} --env LANG=${TMOE_LANG} --restart on-failure -v ${MOUNT_DOCKER_FOLDER}:${MOUNT_DOCKER_FOLDER} ${DOCKER_NAME}:${DOCKER_TAG}${RESET}"
     docker run -itd --name ${CONTAINER_NAME} --env LANG=${TMOE_LANG} --restart on-failure -v ${MOUNT_DOCKER_FOLDER}:${MOUNT_DOCKER_FOLDER} ${DOCKER_NAME}:${DOCKER_TAG}
+}
+##########
+run_special_tag_docker_container() {
+    tmoe_docker_init
+    case "${TMOE_QEMU_ARCH}" in
+    "") run_docker_container_with_same_architecture ;;
+    *)
+        QEMU_USER_STATIC_PATH_01='/usr/local/bin'
+        QEMU_USER_STATIC_PATH_02='/usr/bin'
+        if [ -e "${QEMU_USER_STATIC_PATH_01}/qemu-aarch64-static" ]; then
+            QEMU_USER_PATH="${QEMU_USER_STATIC_PATH_01}"
+        else
+            QEMU_USER_PATH="${QEMU_USER_STATIC_PATH_02}"
+        fi
+
+        echo "${BLUE}docker run -itd --name ${CONTAINER_NAME} --env LANG=${TMOE_LANG} --restart on-failure -v ${QEMU_USER_PATH}/qemu-${TMOE_QEMU_ARCH}-static:${QEMU_USER_STATIC_PATH_02}/qemu-${TMOE_QEMU_ARCH}-static -v ${MOUNT_DOCKER_FOLDER}:${MOUNT_DOCKER_FOLDER} ${DOCKER_NAME}:${DOCKER_TAG}${RESET}"
+        docker run -itd --name ${CONTAINER_NAME} --env LANG=${TMOE_LANG} --restart on-failure -v ${QEMU_USER_PATH}/qemu-${TMOE_QEMU_ARCH}-static:${QEMU_USER_STATIC_PATH_02}/qemu-${TMOE_QEMU_ARCH}-static -v ${MOUNT_DOCKER_FOLDER}:${MOUNT_DOCKER_FOLDER} ${DOCKER_NAME}:${DOCKER_TAG}
+        ;;
+    esac
+
     echo "已将宿主机的${YELLOW}${MOUNT_DOCKER_FOLDER}${RESET}目录${RED}挂载至${RESET}容器内的${BLUE}${MOUNT_DOCKER_FOLDER}${RESET}"
     echo "You can type ${GREEN}sudo docker exec -it ${CONTAINER_NAME} sh${RESET} to connect ${CONTAINER_NAME} container."
     echo "您可以输${GREEN}docker attach ${CONTAINER_NAME}${RESET}来连接${CONTAINER_NAME}容器"
@@ -29,7 +52,6 @@ run_special_tag_docker_container() {
 ##############
 only_delete_docker_container() {
     service docker start 2>/dev/null || systemctl start docker
-
     cat <<-EOF
 		${RED}docker stop ${CONTAINER_NAME}
 		docker rm ${CONTAINER_NAME}${RESET}
@@ -40,11 +62,11 @@ only_delete_docker_container() {
 }
 ##########
 delete_docker_container_and_image() {
-    only_delete_docker_container
     cat <<-EOF
 		${RED}docker rmi ${DOCKER_NAME}:${DOCKER_TAG}
 		docker rmi ${DOCKER_NAME}:${DOCKER_TAG_02}${RESET}
 	EOF
+    only_delete_docker_container
     #docker rm ${CONTAINER_NAME} 2>/dev/null
     docker rmi ${DOCKER_NAME}:${DOCKER_TAG} 2>/dev/null
     if [ ! -z "${DOCKER_TAG_02}" ]; then
@@ -159,9 +181,12 @@ tmoe_docker_management_menu_02() {
     #############
     case ${VIRTUAL_TECH} in
     0 | "") choose_gnu_linux_docker_images ;;
-    1) run_special_tag_docker_container ;;
+    1)
+        DOCKER_NAME="${DOCKER_NAME}"
+        run_special_tag_docker_container
+        ;;
     2)
-        DOCKER_NAME=${DOCKER_NAME_02}
+        DOCKER_NAME="${DOCKER_NAME_02}"
         run_special_tag_docker_container
         ;;
     3) custom_docker_container_tag ;;
@@ -201,6 +226,92 @@ tmoe_docker_management_menu_03() {
     tmoe_docker_management_menu_03
 }
 ###########
+not_adapted_across_architecture() {
+    if [ ! -z "${TMOE_QEMU_ARCH}" ]; then
+        #TMOE_QEMU_ARCH=''
+        #此处不要清除变量
+        echo "${RED}WARNING！${RESET}本脚本未适配${CONTAINER_NAME}容器的跨架构运行。"
+        press_enter_to_continue
+    fi
+}
+###############
+only_support_amd64_container() {
+    case ${TMOE_QEMU_ARCH} in
+    x86_64) ;;
+    "")
+        case ${TRUE_ARCH_TYPE} in
+        amd64) ;;
+        *) arch_does_not_support ;;
+        esac
+        ;;
+    *) arch_does_not_support ;;
+    esac
+}
+#############
+only_support_amd64_and_arm64v8_container() {
+    case ${TMOE_QEMU_ARCH} in
+    x86_64 | aarch64) ;;
+    "")
+        case ${TRUE_ARCH_TYPE} in
+        amd64 | arm64) ;;
+        *) arch_does_not_support ;;
+        esac
+        ;;
+    *) arch_does_not_support ;;
+    esac
+}
+#############
+gentoo_stage3_amd64() {
+    DOCKER_NAME='gentoo/stage3-amd64'
+    DOCKER_NAME_02='gentoo/stage3-amd64-hardened-nomultilib'
+}
+########
+gentoo_stage3_i386() {
+    DOCKER_NAME='gentoo/stage3-x86'
+    DOCKER_NAME_02='gentoo/stage3-x86-hardened'
+}
+########
+gentoo_stage3_armhf() {
+    DOCKER_NAME='paralin/gentoo-stage3-armv7a'
+    DOCKER_NAME_02='applehq/gentoo-stage4'
+}
+########
+arch_docker_amd64() {
+    DOCKER_NAME='archlinux'
+    DOCKER_MANAGEMENT_MENU='03'
+}
+##########
+arch_docker_arm64() {
+    DOCKER_NAME='lopsided/archlinux'
+    DOCKER_NAME_02='agners/archlinuxarm'
+    DOCKER_MANAGEMENT_MENU='02'
+}
+##########
+openwrt_docker_amd64() {
+    DOCKER_NAME='openwrtorg/rootfs'
+    DOCKER_NAME_02='katta/openwrt-rootfs'
+    DOCKER_MANAGEMENT_MENU='02'
+}
+###########
+openwrt_docker_arm64() {
+    DOCKER_NAME='buddyfly/openwrt-aarch64'
+    DOCKER_NAME_02='unifreq/openwrt-aarch64'
+    DOCKER_MANAGEMENT_MENU='02'
+}
+############
+kali_docker_amd64() {
+    DOCKER_NAME='kalilinux/kali-rolling'
+    DOCKER_NAME_02='kalilinux/kali'
+}
+kali_docker_armhf() {
+    DOCKER_NAME='rbartoli/kali-linux-arm'
+    DOCKER_NAME_02='williamlegourd/kali-gui'
+}
+kali_docker_arm64() {
+    DOCKER_NAME='donaldrich/kali-linux'
+    DOCKER_NAME_02='heywoodlh/kali-linux'
+}
+###############
 choose_gnu_linux_docker_images() {
     check_docker_installation
     RETURN_TO_WHERE='choose_gnu_linux_docker_images'
@@ -244,15 +355,37 @@ choose_gnu_linux_docker_images() {
         DOCKER_NAME='ubuntu'
         ;;
     04)
-        DOCKER_NAME='kalilinux/kali-rolling'
-        DOCKER_NAME_02='kalilinux/kali'
         CONTAINER_NAME='kali'
+        case ${TMOE_QEMU_ARCH} in
+        x86_64) kali_docker_amd64 ;;
+        arm) kali_docker_armhf ;;
+        aarch64 | i386) kali_docker_arm64 ;;
+        "")
+            case ${TRUE_ARCH_TYPE} in
+            amd64) kali_docker_amd64 ;;
+            armhf) kali_docker_armhf ;;
+            arm64 | i386) kali_docker_arm64 ;;
+            *) arch_does_not_support ;;
+            esac
+            ;;
+        *) arch_does_not_support ;;
+        esac
         DOCKER_MANAGEMENT_MENU='02'
         ;;
     05)
-        DOCKER_NAME='archlinux'
         CONTAINER_NAME='arch'
-        DOCKER_MANAGEMENT_MENU='03'
+        case ${TMOE_QEMU_ARCH} in
+        x86_64) arch_docker_amd64 ;;
+        arm | aarch64) arch_docker_arm64 ;;
+        "")
+            case ${TRUE_ARCH_TYPE} in
+            amd64) arch_docker_amd64 ;;
+            arm*) arch_docker_arm64 ;;
+            *) arch_does_not_support ;;
+            esac
+            ;;
+        *) arch_does_not_support ;;
+        esac
         ;;
     06)
         DOCKER_TAG_02='rawhide'
@@ -265,22 +398,36 @@ choose_gnu_linux_docker_images() {
         CONTAINER_NAME='cent'
         ;;
     08)
+        CONTAINER_NAME='suse'
+        not_adapted_across_architecture
         DOCKER_NAME='opensuse/tumbleweed'
         DOCKER_NAME_02='opensuse/leap'
-        CONTAINER_NAME='suse'
         DOCKER_MANAGEMENT_MENU='02'
         ;;
     09)
-        DOCKER_NAME='gentoo/stage3-amd64'
-        DOCKER_NAME_02='gentoo/stage3-amd64-hardened-nomultilib'
         CONTAINER_NAME='gentoo'
+        case ${TMOE_QEMU_ARCH} in
+        x86_64) gentoo_stage3_amd64 ;;
+        i386) gentoo_stage3_i386 ;;
+        arm | aarch64) gentoo_stage3_armhf ;;
+        "")
+            case ${TRUE_ARCH_TYPE} in
+            amd64) gentoo_stage3_amd64 ;;
+            i386) gentoo_stage3_i386 ;;
+            arm*) gentoo_stage3_armhf ;;
+            *) arch_does_not_support ;;
+            esac
+            ;;
+        *) arch_does_not_support ;;
+        esac
         DOCKER_MANAGEMENT_MENU='02'
         ;;
     10)
+        only_support_amd64_container
+        CONTAINER_NAME='clear'
         DOCKER_TAG_01='latest'
         DOCKER_TAG_02='base'
         DOCKER_NAME='clearlinux'
-        CONTAINER_NAME='clear'
         ;;
     11)
         DOCKER_NAME='voidlinux/voidlinux'
@@ -289,29 +436,44 @@ choose_gnu_linux_docker_images() {
         DOCKER_MANAGEMENT_MENU='02'
         ;;
     12)
+        only_support_amd64_container
         DOCKER_TAG_02='7'
         DOCKER_NAME='oraclelinux'
         CONTAINER_NAME='oracle'
         ;;
     13)
+        only_support_amd64_and_arm64v8_container
         DOCKER_TAG_02='with-sources'
         DOCKER_NAME='amazonlinux'
         CONTAINER_NAME='amazon'
         ;;
     14)
+        only_support_amd64_and_arm64v8_container
         DOCKER_TAG_02='3.4'
         DOCKER_NAME='crux'
         ;;
     15)
-        DOCKER_NAME='openwrtorg/rootfs'
         CONTAINER_NAME='openwrt'
-        DOCKER_MANAGEMENT_MENU='03'
+        ########
+        case ${TMOE_QEMU_ARCH} in
+        x86_64) openwrt_docker_amd64 ;;
+        aarch64) openwrt_docker_arm64 ;;
+        "")
+            case ${TRUE_ARCH_TYPE} in
+            amd64) openwrt_docker_amd64 ;;
+            arm64) openwrt_docker_arm64 ;;
+            *) arch_does_not_support ;;
+            esac
+            ;;
+        *) arch_does_not_support ;;
+        esac
         ;;
     16)
         DOCKER_TAG_02='sisyphus'
         DOCKER_NAME='alt'
         ;;
     17)
+        only_support_amd64_and_arm64v8_container
         DOCKER_TAG_02='2.0'
         DOCKER_NAME='photon'
         ;;
@@ -320,6 +482,21 @@ choose_gnu_linux_docker_images() {
     if [ -z "${CONTAINER_NAME}" ]; then
         CONTAINER_NAME=${DOCKER_NAME}
     fi
+    case "${TMOE_QEMU_ARCH}" in
+    "") ;;
+    *)
+        case ${DOCKER_MANAGEMENT_MENU} in
+        01 | 03)
+            DOCKER_NAME="${NEW_TMOE_ARCH}/${DOCKER_NAME}"
+            CONTAINER_NAME="${CONTAINER_NAME}_${CONTAINER_EXT_NAME}"
+            ;;
+        02)
+            CONTAINER_NAME="${CONTAINER_NAME}_${CONTAINER_EXT_NAME}"
+            ;;
+        esac
+        ;;
+    esac
+    #########
     case ${DOCKER_MANAGEMENT_MENU} in
     01) tmoe_docker_management_menu_01 ;;
     02) tmoe_docker_management_menu_02 ;;
@@ -418,13 +595,15 @@ docker_mirror_source() {
 ##########
 tmoe_docker_menu() {
     RETURN_TO_WHERE='tmoe_docker_menu'
+    TMOE_QEMU_ARCH=""
     VIRTUAL_TECH=$(
         whiptail --title "DOCKER容器" --menu "您想要对docker小可爱做什么?" 0 0 0 \
             "1" "🐋 install docker-ce(安装docker社区版引擎)" \
-            "2" "🍭 pull distro images(拉取alpine,debian和ubuntu镜像)" \
-            "3" "🌉 portainer(web端图形化docker容器管理)" \
-            "4" "🍥 mirror source镜像源" \
-            "5" "add ${CURRENT_USER_NAME} to docker group(添加当前用户至docker用户组)" \
+            "2" "🌁 across architectures(跨CPU架构运行docker容器)" \
+            "3" "🍭 pull distro images(拉取alpine,debian和ubuntu镜像)" \
+            "4" "🌉 portainer(web端图形化docker容器管理)" \
+            "5" "🍥 mirror source镜像源" \
+            "6" "add ${CURRENT_USER_NAME} to docker group(添加当前用户至docker用户组)" \
             "0" "🌚 Return to previous menu 返回上级菜单" \
             3>&1 1>&2 2>&3
     )
@@ -432,16 +611,241 @@ tmoe_docker_menu() {
     case ${VIRTUAL_TECH} in
     0 | "") install_container_and_virtual_machine ;;
     1) install_docker_ce_or_io ;;
-    2) choose_gnu_linux_docker_images ;;
-    3) install_docker_portainer ;;
-    4) docker_mirror_source ;;
-    5) add_current_user_to_docker_group ;;
+    2) run_docker_across_architectures ;;
+    3) choose_gnu_linux_docker_images ;;
+    4) install_docker_portainer ;;
+    5) docker_mirror_source ;;
+    6) add_current_user_to_docker_group ;;
     esac
     ###############
     press_enter_to_return
     tmoe_docker_menu
 }
 ############
+apt_install_qemu_user_static() {
+    DEPENDENCY_01='qemu-user-static'
+    DEPENDENCY_02=''
+    beta_features_quick_install
+    if [ ! -e "/usr/bin/qemu-aarch64-static" ]; then
+        cat <<-'EOF'
+        安装失败，请手动执行以下命令，或通过安装包来安装。
+        docker pull multiarch/qemu-user-static:register
+        docker run --rm --privileged multiarch/qemu-user-static:register
+EOF
+    fi
+
+}
+############
+tmoe_qemu_user_static() {
+    NON_DEBIAN='false'
+    RETURN_TO_WHERE='tmoe_qemu_user_static'
+    BETA_SYSTEM=$(
+        whiptail --title "qemu_user_static" --menu "You can use qemu-user-static to run docker containers across architectures." 0 50 0 \
+            "1" "chart架构支持表格" \
+            "2" "install via software source(通过软件源安装)" \
+            "3" "install/upgrade(通过安装包来安装/更新)" \
+            "4" "remove(移除/卸载)" \
+            "0" "🌚 Return to previous menu 返回上级菜单" \
+            3>&1 1>&2 2>&3
+    )
+    ##############################
+    case "${BETA_SYSTEM}" in
+    0 | "") run_docker_across_architectures ;;
+    1) tmoe_qemu_user_chart ;;
+    2) apt_install_qemu_user_static ;;
+    3) install_qemu_user_static ;;
+    4) remove_qemu_user_static ;;
+    esac
+    ######################
+    press_enter_to_return
+    tmoe_qemu_user_static
+}
+#####################
+tmoe_qemu_user_chart() {
+    cat <<-'ENDofTable'
+		下表中的所有系统均支持x64(amd64)和arm64
+		*表示仅旧版支持
+			╔═══╦════════════╦════════╦════════╦═════════╦
+			║   ║Architecture║        ║        ║         ║
+			║   ║----------- ║ x86    ║armhf   ║ppc64el  ║
+			║   ║System      ║        ║        ║         ║
+			║---║------------║--------║--------║---------║
+			║ 1 ║  Debian    ║  ✓     ║    ✓   ║   ✓     ║
+			║   ║            ║        ║        ║         ║
+			║---║------------║--------║--------║---------║
+			║   ║            ║        ║        ║         ║
+			║ 2 ║  Ubuntu    ║*<=19.10║  ✓     ║   ✓     ║
+			║---║------------║--------║--------║---------║
+			║   ║            ║        ║        ║         ║
+			║ 3 ║ Kali       ║  ✓     ║   ✓    ║    X    ║
+			║---║------------║--------║--------║---------║
+			║   ║            ║        ║        ║         ║
+			║ 4 ║ Arch       ║  X     ║   ✓    ║   X     ║
+			║---║------------║--------║--------║---------║
+			║   ║            ║        ║        ║         ║
+			║ 5 ║ Fedora     ║ *<=29  ║ *<=29  ║  ✓      ║
+			║---║------------║--------║--------║---------║
+			║   ║            ║        ║        ║         ║
+			║ 6 ║  Alpine    ║  ✓     ║    ✓   ║   ✓     ║
+			║---║------------║--------║--------║---------║
+			║   ║            ║        ║        ║         ║
+			║ 7 ║ Centos     ║ *<=7   ║ *<=7   ║   ✓     ║
+	ENDofTable
+}
+###############
+install_qemu_user_static() {
+    echo "正在检测版本信息..."
+    LOCAL_QEMU_USER_FILE=''
+    if [ -e "/usr/local/bin/qemu-aarch64-static" ]; then
+        LOCAL_QEMU_USER_FILE='/usr/local/bin/qemu-aarch64-static'
+    elif [ -e "/usr/bin/qemu-aarch64-static" ]; then
+        LOCAL_QEMU_USER_FILE='/usr/bin/qemu-aarch64-static'
+    fi
+    case ${LOCAL_QEMU_USER_FILE} in
+    "") LOCAL_QEMU_USER_VERSION='您尚未安装QEMU-USER-STATIC' ;;
+    *) LOCAL_QEMU_USER_VERSION=$(${LOCAL_QEMU_USER_FILE} --version | head -n 1 | awk '{print $5}' | cut -d ':' -f 2 | cut -d ')' -f 1) ;;
+    esac
+
+    cat <<-'EOF'
+		---------------------------
+		一般来说，新版的qemu-user会引入新的功能，并带来性能上的提升。
+		尽管有可能会引入一些新bug，但是也有可能修复了旧版的bug。
+		We recommend that you to use the new version.
+		---------------------------
+	EOF
+    check_qemu_user_version
+    cat <<-ENDofTable
+		╔═══╦══════════╦═══════════════════╦════════════════════
+		║   ║          ║                   ║                    
+		║   ║ software ║    ✨最新版本     ║   本地版本 🎪
+		║   ║          ║  Latest version   ║  Local version     
+		║---║----------║-------------------║--------------------
+		║ 1 ║qemu-user ║                    ${LOCAL_QEMU_USER_VERSION} 
+		║   ║ static   ║$(echo ${THE_LATEST_DEB_VERSION_CODE} | sed 's@%2B@+@')
+
+	ENDofTable
+    do_you_want_to_continue
+    THE_LATEST_DEB_LINK="${REPO_URL}${THE_LATEST_DEB_VERSION}"
+    echo ${THE_LATEST_DEB_LINK}
+    #echo "${THE_LATEST_DEB_VERSION_CODE}" >${QEMU_USER_LOCAL_VERSION_FILE}
+    download_qemu_user
+    unxz_deb_file
+}
+##############
+check_qemu_user_version() {
+    REPO_URL='https://mirrors.tuna.tsinghua.edu.cn/debian/pool/main/q/qemu/'
+    THE_LATEST_DEB_VERSION="$(curl -L ${REPO_URL} | grep '.deb' | grep 'qemu-user-static' | grep "${TRUE_ARCH_TYPE}" | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
+    THE_LATEST_DEB_VERSION_CODE=$(echo ${THE_LATEST_DEB_VERSION} | cut -d '_' -f 2)
+}
+###############
+unxz_deb_file() {
+    if [ ! $(command -v ar) ]; then
+        DEPENDENCY_01='binutils'
+        DEPENDENCY_02=''
+        beta_features_quick_install
+    fi
+    ar xv ${THE_LATEST_DEB_VERSION}
+    #tar -Jxvf data.tar.xz ./usr/bin -C $PREFIX/..
+    tar -Jxvf data.tar.xz
+    cp -rf ./usr/bin /usr/local/bin
+    cd ..
+    rm -rv ${TEMP_FOLDER}
+}
+########################
+download_qemu_user() {
+    cd ${TMPDIR}
+    TEMP_FOLDER='.QEMU_USER_BIN'
+    mkdir -p ${TEMP_FOLDER}
+    cd ${TEMP_FOLDER}
+    aria2c --allow-overwrite=true -s 5 -x 5 -k 1M -o "${THE_LATEST_DEB_VERSION}" "${THE_LATEST_DEB_LINK}"
+}
+##############
+remove_qemu_user_static() {
+    ls -lah /usr/bin/qemu-*-static /usr/local/bin/qemu-*-static 2>/dev/null
+    echo "${RED}rm -rv${RESET} ${BLUE}/usr/bin/qemu-*-static /usr/local/bin/qemu-*-static${RESET}"
+    echo "${RED}${TMOE_REMOVAL_COMMAND}${RESET} ${BLUE}qemu-user-static${RESET}"
+    do_you_want_to_continue
+    rm -rv /usr/bin/qemu-*-static /usr/local/bin/qemu-*-static
+    ${TMOE_REMOVAL_COMMAND} qemu-user-static
+}
+##############
+run_docker_across_architectures() {
+    check_docker_installation
+    TMOE_QEMU_ARCH=""
+    BETA_SYSTEM=$(
+        whiptail --title "跨架构运行容器" --menu "您想要(模拟)运行哪个架构？\nWhich architecture do you want to simulate?" 0 50 0 \
+            "0" "🌚 Return to previous menu 返回上级菜单" \
+            "00" "qemu-user-static管理(跨架构模拟所需的基础依赖)" \
+            "01" "i386(常见于32位cpu的旧式传统pc)" \
+            "02" "x64/amd64(2020年最主流的64位架构,应用于pc和服务器）" \
+            "03" "arm64v8/aarch64(2020年移动平台主流cpu架构）" \
+            "04" "arm32v7/armhf(32位arm架构,支持硬浮点运算)" \
+            "05" "ppc64le(PowerPC,常用于通信、工控、航天国防等领域)" \
+            "06" "s390x(常见于IBM大型机)" \
+            3>&1 1>&2 2>&3
+    )
+    ##############################
+    case "${BETA_SYSTEM}" in
+    0 | "") tmoe_docker_menu ;;
+    00) tmoe_qemu_user_static ;;
+    01)
+        NEW_TMOE_ARCH='i386'
+        CONTAINER_EXT_NAME='x86'
+        case ${TRUE_ARCH_TYPE} in
+        i386) ;;
+        *) TMOE_QEMU_ARCH="${NEW_TMOE_ARCH}" ;;
+        esac
+        ;;
+    02)
+        NEW_TMOE_ARCH='amd64'
+        CONTAINER_EXT_NAME='x64'
+        case ${TRUE_ARCH_TYPE} in
+        amd64) ;;
+        *) TMOE_QEMU_ARCH="x86_64" ;;
+        esac
+        ;;
+    03)
+        NEW_TMOE_ARCH='arm64v8'
+        CONTAINER_EXT_NAME='arm64'
+        case ${TRUE_ARCH_TYPE} in
+        arm64) ;;
+        *) TMOE_QEMU_ARCH="aarch64" ;;
+        esac
+        ;;
+    04)
+        NEW_TMOE_ARCH='arm32v7'
+        CONTAINER_EXT_NAME='arm'
+        case ${TRUE_ARCH_TYPE} in
+        armhf) ;;
+        *) TMOE_QEMU_ARCH="arm" ;;
+        esac
+        ;;
+    05)
+        NEW_TMOE_ARCH='ppc64le'
+        CONTAINER_EXT_NAME='ppc'
+        case ${TRUE_ARCH_TYPE} in
+        ppc64el) ;;
+        *) TMOE_QEMU_ARCH="ppc64le" ;;
+        esac
+        ;;
+    06)
+        NEW_TMOE_ARCH='s390x'
+        CONTAINER_EXT_NAME='s390'
+        case ${TRUE_ARCH_TYPE} in
+        s390x) ;;
+        *) TMOE_QEMU_ARCH="s390x" ;;
+        esac
+        ;;
+    esac
+    ######################
+    if [ ! -e "/usr/local/bin/qemu-x86_64-static" ] && [ ! -e "/usr/bin/qemu-x86_64-static" ]; then
+        install_qemu_user_static
+    fi
+    choose_gnu_linux_docker_images
+    press_enter_to_return
+    run_docker_across_architectures
+}
+#####################
 debian_add_docker_gpg() {
     if [ "${DEBIAN_DISTRO}" = 'ubuntu' ]; then
         DOCKER_RELEASE='ubuntu'

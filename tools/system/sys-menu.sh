@@ -12,7 +12,6 @@ tmoe_uefi_boot_manager() {
 	#RETURN变量不要放在本函数开头
 	RETURN_TO_WHERE='tmoe_uefi_boot_manager'
 	CURRENT_UEFI_BOOT_ORDER=$(efibootmgr | grep 'BootOrder:' | cut -d ':' -f 2 | awk '{print $1}')
-	CONFIG_FOLDER="${HOME}/.config/tmoe-linux/"
 	TMOE_BOOT_MGR=$(
 		whiptail --title "开机启动项管理" --menu "Note: efibootmgr requires that the kernel module efivars be loaded prior to use. 'modprobe efivars' should do the trick if it does not automatically load." 16 50 5 \
 			"1" "first boot item修改第一启动项" \
@@ -47,7 +46,7 @@ tmoe_backup_efi() {
 		do_you_want_to_continue
 	fi
 
-	echo "正在将${CURRENT_EFI_DISK}备份至${CONFIG_FOLDER}${EFI_BACKUP_NAME}"
+	echo "正在将${CURRENT_EFI_DISK}备份至${CONFIG_FOLDER}/${EFI_BACKUP_NAME}"
 	dd <${CURRENT_EFI_DISK} >${EFI_BACKUP_NAME}
 	echo "备份完成"
 	stat ${EFI_BACKUP_NAME}
@@ -64,7 +63,7 @@ tmoe_restore_efi() {
 	echo "您真的要将${EFI_BACKUP_NAME}烧录至${CURRENT_EFI_DISK}？这将重置${CURRENT_EFI_DISK}的所有数据"
 	echo "请谨慎操作"
 	do_you_want_to_continue
-	echo "正在将${CONFIG_FOLDER}${EFI_BACKUP_NAME}烧录至${CURRENT_EFI_DISK}"
+	echo "正在将${CONFIG_FOLDER}/${EFI_BACKUP_NAME}烧录至${CURRENT_EFI_DISK}"
 	dd <${EFI_BACKUP_NAME} >${CURRENT_EFI_DISK}
 	echo "恢复完成"
 	stat ${EFI_BACKUP_NAME}

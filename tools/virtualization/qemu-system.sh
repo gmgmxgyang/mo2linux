@@ -100,7 +100,6 @@ check_qemu_aarch64_install() {
 }
 ###########
 creat_qemu_aarch64_startup_script() {
-	CONFIG_FOLDER="${HOME}/.config/tmoe-linux/"
 	mkdir -p ${CONFIG_FOLDER}
 	cd ${CONFIG_FOLDER}
 	cat >startqemu_aarch64_2020060314 <<-'EndOFqemu'
@@ -647,7 +646,6 @@ check_qemu_install() {
 }
 #############
 creat_qemu_startup_script() {
-	CONFIG_FOLDER="${HOME}/.config/tmoe-linux/"
 	mkdir -p ${CONFIG_FOLDER}
 	cd ${CONFIG_FOLDER}
 	cat >startqemu_amd64_2020060314 <<-'EndOFqemu'

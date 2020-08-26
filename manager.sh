@@ -2543,11 +2543,17 @@ tmoe_qemu_user_chart() {
 ###############
 install_qemu_user_static() {
 	echo "正在检测版本信息..."
-	if [ -e "${QEMU_USER_LOCAL_VERSION_FILE}" ]; then
-		LOCAL_QEMU_USER_VERSION=$(cat ${QEMU_USER_LOCAL_VERSION_FILE} | head -n 1)
-	else
-		LOCAL_QEMU_USER_VERSION='您尚未安装QEMU-USER-STATIC'
+	LOCAL_QEMU_USER_FILE=''
+	if [ -e "${PREFIX}/bin/qemu-aarch64-static" ]; then
+		LOCAL_QEMU_USER_FILE="${PREFIX}/bin/qemu-aarch64-static"
+	elif [ -e "/usr/bin/qemu-aarch64-static" ]; then
+		LOCAL_QEMU_USER_FILE='/usr/bin/qemu-aarch64-static'
 	fi
+	case ${LOCAL_QEMU_USER_FILE} in
+	"") LOCAL_QEMU_USER_VERSION='您尚未安装QEMU-USER-STATIC' ;;
+	*) LOCAL_QEMU_USER_VERSION=$(${LOCAL_QEMU_USER_FILE} --version | head -n 1 | awk '{print $5}' | cut -d ':' -f 2 | cut -d ')' -f 1) ;;
+	esac
+
 	cat <<-'EOF'
 		---------------------------
 		一般来说，新版的qemu-user会引入新的功能，并带来性能上的提升。
@@ -2563,14 +2569,13 @@ install_qemu_user_static() {
 		║   ║          ║  Latest version   ║  Local version     
 		║---║----------║-------------------║--------------------
 		║ 1 ║qemu-user ║                    ${LOCAL_QEMU_USER_VERSION} 
-		║   ║ static   ║${THE_LATEST_DEB_VERSION_CODE}
+		║   ║ static   ║$(echo ${THE_LATEST_DEB_VERSION_CODE} | sed 's@%2B@+@')
 
 	ENDofTable
 	do_you_want_to_continue
-	#check_qemu_user_version
 	THE_LATEST_DEB_LINK="${REPO_URL}${THE_LATEST_DEB_VERSION}"
 	echo ${THE_LATEST_DEB_LINK}
-	echo "${THE_LATEST_DEB_VERSION_CODE}" >${QEMU_USER_LOCAL_VERSION_FILE}
+	#echo "${THE_LATEST_DEB_VERSION_CODE}" >${QEMU_USER_LOCAL_VERSION_FILE}
 	if [ "${LINUX_DISTRO}" = "debian" ]; then
 		apt update
 		echo 'apt install -y qemu-user-static'
@@ -2616,7 +2621,11 @@ download_qemu_user() {
 }
 ##############
 remove_qemu_user_static() {
-	rm -rv $PREFIX/bin/qemu-*-static "$PREFIX/bin/qemu-*-static" ${QEMU_USER_LOCAL_VERSION_FILE}
+	ls -lah /usr/bin/qemu-*-static ${PREFIX}/bin/qemu-*-static 2>/dev/null
+	echo "${RED}rm -rv${RESET} ${BLUE}${PREFIX}/bin/qemu-*-static${RESET}"
+	echo "${RED}${TMOE_REMOVAL_COMMAND}${RESET} ${BLUE}qemu-user-static${RESET}"
+	do_you_want_to_continue
+	rm -rv $PREFIX/bin/qemu-*-static "$PREFIX/bin/qemu-*-static"
 	apt remove ^qemu-user
 }
 ##############
@@ -2628,7 +2637,6 @@ creat_tmoe_arch_file() {
 }
 #############
 tmoe_qemu_user_manager() {
-	QEMU_USER_LOCAL_VERSION_FILE="${CONFIG_FOLDER}/qemu-user-static_version.txt"
 	cd ${CONFIG_FOLDER}
 	NEW_TMOE_ARCH=''
 	RETURN_TO_WHERE='tmoe_qemu_user_manager'
@@ -2640,7 +2648,7 @@ tmoe_qemu_user_manager() {
 			"02" "x64/amd64(2020年最主流的64位架构,应用于pc和服务器）" \
 			"03" "arm64（2020年移动平台主流cpu架构）" \
 			"04" "armhf(32位arm架构,支持硬浮点运算)" \
-			"05" "armel（支持软浮点运算,常见于旧设备）" \
+			"05" "armel(支持软浮点运算,常见于旧设备）" \
 			"06" "ppc64el(PowerPC,应用于通信、工控、航天国防等领域)" \
 			"07" "s390x(常见于IBM大型机)" \
 			"08" "mipsel(暂仅适配debian stable,常见于龙芯cpu或和嵌入式设备)" \
@@ -4142,12 +4150,11 @@ linux_distro_common_model_02() {
 }
 #########################
 install_different_ubuntu_gnu_linux_distros() {
-	if [ "${ARCH_TYPE}" = 'amd64' ] || [ "${ARCH_TYPE}" = 'i386' ]; then
-		ubuntu_distro_x64_model
-	else
-		#ubuntu-ports
-		ubuntu_distro_arm_model
-	fi
+	case "${ARCH_TYPE}" in
+	amd64 | i386) ubuntu_distro_x64_model ;;
+	*) ubuntu_distro_arm_model ;;
+	esac
+	#UBUNTU ppc64el/s390x/arm架构需使用ports源
 }
 ############
 check_the_latest_ubuntu_version() {

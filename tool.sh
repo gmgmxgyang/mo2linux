@@ -108,6 +108,7 @@ gnu_linux_env() {
 	TMOE_OPT_BIN_DIR="${TMOE_TOOL_DIR}/sources/opt-bin"
 	TMOE_GIT_URL='gitee.com/mo2/linux'
 	APPS_LNK_DIR='/usr/share/applications'
+	CONFIG_FOLDER="${HOME}/.config/tmoe-linux"
 }
 ############
 set_terminal_color() {
@@ -210,6 +211,7 @@ check_architecture() {
 		ARCH_TYPE="riscv"
 		;;
 	esac
+	TRUE_ARCH_TYPE=${ARCH_TYPE}
 }
 #####################
 tmoe_locale_settings() {

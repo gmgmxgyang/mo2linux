@@ -101,14 +101,14 @@ wsl --set-default-version 2
 #### 4.RedHat/Fedora/CentOS
 
 ```shell
-    dnf install -y curl || yum install -y curl
+    sudo dnf install -y curl || yum install -y curl
     bash -c "$(curl -L https://gitee.com/mo2/linux/raw/2/2)"
 ```
 
 #### 5.Arch/Manjaro
 
 ```shell
-    pacman -Syu --noconfirm curl
+    sudo pacman -Syu curl
     bash -c "$(curl -L https://gitee.com/mo2/linux/raw/2/2)"
 ```
 
@@ -897,3 +897,4 @@ nano $(command -v startvnc)
 - 2.08-14:更新 termux 的换源功能，支持配置多个镜像站。
 - 3.08-16:重构 proot 脚本，修复 deb 系发行版无法使用`ps`命令的问题。
 - 4.08-21:对 archlinux 等非 deb 系发行版适配音乐 app
+- 5.08-26:支持跨CPU架构运行docker容器

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 ##########################
 tmoe_docker_init() {
-    if [ ! $(pgrep docker) ]; then
+    if [ ! "$(pgrep docker)" ]; then
         service docker start 2>/dev/null || systemctl start docker
     else
         docker stop ${CONTAINER_NAME} 2>/dev/null

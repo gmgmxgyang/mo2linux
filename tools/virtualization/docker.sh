@@ -12,12 +12,12 @@ tmoe_docker_init() {
         chown -R ${CURRENT_USER_NAME}:${CURRENT_USER_GROUP} ${MOUNT_DOCKER_FOLDER}
     fi
     TMOE_LINUX_DOCKER_SHELL_FILE="${MOUNT_DOCKER_FOLDER}/.tmoe-linux-docker.sh"
-    if [ ! -e "${TMOE_LINUX_DOCKER_SHELL_FILE}" ]; then
-        aria2c --allow-overwrite=true -d ${MOUNT_DOCKER_FOLDER} -o ".tmoe-linux-docker.sh" https://gitee.com/mo2/linux/raw/master/debian.sh
-        #aria2c --allow-overwrite=true -d ${MOUNT_DOCKER_FOLDER} -o ".tmoe-linux-tool.sh" https://gitee.com/mo2/linux/raw/master/tool.sh
-        sed -i 's@###tmoe_locale_gen@tmoe_locale_gen@g' ${TMOE_LINUX_DOCKER_SHELL_FILE}
-        sed -i 's@###tuna_mirror@tuna_mirror@g' ${TMOE_LINUX_DOCKER_SHELL_FILE}
-    fi
+    #if [ ! -e "${TMOE_LINUX_DOCKER_SHELL_FILE}" ]; then
+    #aria2c --allow-overwrite=true -d ${MOUNT_DOCKER_FOLDER} -o ".tmoe-linux-docker.sh" https://gitee.com/mo2/linux/raw/master/debian.sh
+    cp ${TMOE_GIT_DIR}/debian.sh ${TMOE_LINUX_DOCKER_SHELL_FILE}
+    sed -i 's@###tmoe_locale_gen@tmoe_locale_gen@g' ${TMOE_LINUX_DOCKER_SHELL_FILE}
+    sed -i 's@###tuna_mirror@tuna_mirror@g' ${TMOE_LINUX_DOCKER_SHELL_FILE}
+    #fi
 }
 ################
 run_docker_container_with_same_architecture() {

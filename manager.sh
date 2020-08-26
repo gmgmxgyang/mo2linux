@@ -984,7 +984,7 @@ tmoe_locale_settings() {
 	set_debian_default_locale
 	#cd ${TMOE_SCRIPT_PATH}/etc
 	if [ "${LINUX_DISTRO}" != "Android" ]; then
-		if [ ! -z "${TMOE_SCRIPT_PATH}"]; then
+		if [ ! -z "${TMOE_SCRIPT_PATH}" ]; then
 			TMOE_SCRIPT_PATH=''
 			set_debian_default_locale
 			source /etc/default/locale

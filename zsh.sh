@@ -332,10 +332,10 @@ cat <<-EOF
 		-------------------
         You can use the ${BLUE}touch screen${RESET} on ${YELLOW}Android-termux${RESET} to slide the menu options of the tmoe-linux tool.
 		-------------------
-        07:${DEBIAN_FOLDER}容器的启动命令是${GREEN}debian${RESET}！o( =•ω•= )m
+        07:容器的启动命令是${GREEN}debian${RESET}！o( =•ω•= )m
 		-------------------
-		You can type ${GREEN}debian${RESET} to start and attach the ${BLUE}${DEBIAN_FOLDER} container${RESET}.
-        ------------------
+		You can type ${GREEN}debian${RESET} to start and attach the ${BLUE}container${RESET}.
+        -------------------
 EOF
 ##################
 configure_command_not_found() {

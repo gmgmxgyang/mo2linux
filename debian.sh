@@ -21,17 +21,19 @@ install_dependency() {
 #########
 tuna_mirror() {
 	if [ "${LANG}" = "$(echo 'emhfQ04uVVRGLTgK' | base64 -d)" ]; then
+		#ALPINE_SOURCE_LIST=/etc/apk/repositories
+		#cp ${ALPINE_SOURCE_LIST} ${ALPINE_SOURCE_LIST}.bak 2>/dev/null
+		#sed -i "S@dl-cdn.alpinelinux.org@${CHINA_MIRROR}@g" ${ALPINE_SOURCE_LIST} 2>/dev/null
 		CHINA_MIRROR='mirrors.huaweicloud.com'
 		SOURCE_LIST=/etc/apt/sources.list
-		#ALPINE_SOURCE_LIST=/etc/apk/repositories
-		cp ${SOURCE_LIST} ${SOURCE_LIST}.bak 2>/dev/null
-		#cp ${ALPINE_SOURCE_LIST} ${ALPINE_SOURCE_LIST}.bak 2>/dev/null
-		sed -i "s@deb.debian.org@${CHINA_MIRROR}@g" ${SOURCE_LIST} 2>/dev/null
-		sed -i "s@archive.ubuntu.com@${CHINA_MIRROR}@g" ${SOURCE_LIST} 2>/dev/null
-		sed -i "s@ports.ubuntu.com@${CHINA_MIRROR}@g" ${SOURCE_LIST} 2>/dev/null
-		#sed -i "S@dl-cdn.alpinelinux.org@${CHINA_MIRROR}@g" ${ALPINE_SOURCE_LIST} 2>/dev/null
-		sed -i 's@^@#&@g' ${SOURCE_LIST}.bak 2>/dev/null
-		cat ${SOURCE_LIST}.bak >>${SOURCE_LIST} 2>/dev/null
+		if ! grep -q 'deb mirrors' ${SOURCE_LIST} 2>/dev/null; then
+			cp ${SOURCE_LIST} ${SOURCE_LIST}.bak 2>/dev/null
+			sed -i "s@deb.debian.org@${CHINA_MIRROR}@g" ${SOURCE_LIST} 2>/dev/null
+			sed -i "s@archive.ubuntu.com@${CHINA_MIRROR}@g" ${SOURCE_LIST} 2>/dev/null
+			sed -i "s@ports.ubuntu.com@${CHINA_MIRROR}@g" ${SOURCE_LIST} 2>/dev/null
+			sed -i 's@^@#&@g' ${SOURCE_LIST}.bak 2>/dev/null
+			cat ${SOURCE_LIST}.bak >>${SOURCE_LIST} 2>/dev/null
+		fi
 	fi
 }
 #########

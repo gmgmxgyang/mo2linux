@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 ##########################
 tmoe_docker_init() {
-    service docker start 2>/dev/null || systemctl start docker
-    docker stop ${CONTAINER_NAME} 2>/dev/null
+    if [ ! $(pgrep docker) ]; then
+        service docker start 2>/dev/null || systemctl start docker
+    else
+        docker stop ${CONTAINER_NAME} 2>/dev/null
+    fi
     MOUNT_DOCKER_FOLDER=/media/docker
     if [ ! -d "${MOUNT_DOCKER_FOLDER}" ]; then
         mkdir -p ${MOUNT_DOCKER_FOLDER}

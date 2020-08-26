@@ -42,6 +42,12 @@ main() {
 #########################
 tmoe_manager_env() {
 	check_release_version
+	TMOE_LINUX_DIR='/usr/local/etc/tmoe-linux'
+	TMOE_GIT_DIR="${TMOE_LINUX_DIR}/git"
+	TMOE_TOOL_DIR="${TMOE_GIT_DIR}/tools"
+	TMOE_OPT_BIN_DIR="${TMOE_TOOL_DIR}/sources/opt-bin"
+	TMOE_GIT_URL='gitee.com/mo2/linux'
+	APPS_LNK_DIR='/usr/share/applications'
 }
 #######
 check_arch() {
@@ -89,7 +95,6 @@ check_arch() {
 	esac
 	TRUE_ARCH_TYPE=${ARCH_TYPE}
 	CONFIG_FOLDER="${HOME}/.config/tmoe-linux"
-	TMOE_GIT_URL='gitee.com/mo2/linux'
 	if [ ! -e "${CONFIG_FOLDER}" ]; then
 		mkdir -p ${CONFIG_FOLDER}
 	fi
@@ -542,10 +547,14 @@ gnu_linux() {
 
 		if (whiptail --title "您想要对这个小可爱做什么 " --yes-button "Tool" --no-button "Manager" --yesno "检测到您使用的是${OSRELEASE} ${WSL}\n您是想要启动software安装工具，\n还是system管理工具？\nDo you want to start the software installation tool \nor the system manager? ♪(^∇^*) " 0 50); then
 			#bash <(curl -LfsS 'https://gitee.com/mo2/linux/raw/master/tool.sh')
-			if [ "${LINUX_DISTRO}" = "alpine" ] || [ ! $(command -v curl) ]; then
-				wget -O /tmp/.tmoe-linux-tool.sh 'https://gitee.com/mo2/linux/raw/master/tool.sh'
+			if [ -e "${TMOE_GIT_DIR}/tool.sh" ]; then
+				sudo -E bash ${TMOE_GIT_DIR}/tool.sh || su -c "bash ${TMOE_GIT_DIR}/tool.sh"
 			else
-				curl -Lv -o /tmp/.tmoe-linux-tool.sh 'https://gitee.com/mo2/linux/raw/master/tool.sh'
+				if [ "${LINUX_DISTRO}" = "alpine" ] || [ ! $(command -v curl) ]; then
+					wget -O /tmp/.tmoe-linux-tool.sh 'https://gitee.com/mo2/linux/raw/master/tool.sh'
+				else
+					curl -Lv -o /tmp/.tmoe-linux-tool.sh 'https://gitee.com/mo2/linux/raw/master/tool.sh'
+				fi
 			fi
 			bash /tmp/.tmoe-linux-tool.sh
 			exit 0

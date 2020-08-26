@@ -771,7 +771,7 @@ unxz_deb_file() {
     ar xv ${THE_LATEST_DEB_VERSION}
     #tar -Jxvf data.tar.xz ./usr/bin -C $PREFIX/..
     tar -Jxvf data.tar.xz
-    cp -rf ./usr/bin /usr/local/bin
+    cp -rf ./usr/bin /usr/local
     cd ..
     rm -rv ${TEMP_FOLDER}
 }

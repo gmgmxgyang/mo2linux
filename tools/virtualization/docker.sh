@@ -121,6 +121,21 @@ custom_docker_container_tag() {
     fi
 }
 ##########
+docker_attch_container() {
+    service docker start 2>/dev/null || systemctl start docker
+    if [ "$(docker ps -a | grep ${CONTAINER_NAME})" ]; then
+        docker start ${CONTAINER_NAME}
+        docker exec -it ${CONTAINER_NAME} /bin/bash || docker attach ${CONTAINER_NAME}
+    else
+        echo "The ${CONTAINER_NAME} container was not found."
+        echo "Do you want to pull ${DOCKER_NAME}?"
+        echo "因未找到${CONTAINER_NAME}容器，故容器连接失败，请问您是否需要拉取${DOCKER_NAME}镜像并新建容器？"
+        do_you_want_to_continue
+        run_special_tag_docker_container
+    fi
+
+}
+############
 tmoe_docker_management_menu_01() {
     RETURN_TO_WHERE='tmoe_docker_management_menu_01'
     DOCKER_TAG=${DOCKER_TAG_01}
@@ -129,9 +144,10 @@ tmoe_docker_management_menu_01() {
             "1" "${DOCKER_TAG_01}" \
             "2" "${DOCKER_TAG_02}" \
             "3" "custom tag(运行自定义标签的容器)" \
-            "4" "readme of ${CONTAINER_NAME} 说明" \
-            "5" "reset(重置容器数据并重拉${DOCKER_TAG}镜像)" \
-            "6" "delete(删除${CONTAINER_NAME}容器)" \
+            "4" "docker attach ${CONTAINER_NAME}(连接容器)" \
+            "5" "readme of ${CONTAINER_NAME} 说明" \
+            "6" "reset(重置容器数据并重拉${DOCKER_TAG}镜像)" \
+            "7" "delete(删除${CONTAINER_NAME}容器)" \
             "0" "🌚 Return to previous menu 返回上级菜单" \
             3>&1 1>&2 2>&3
     )
@@ -147,9 +163,10 @@ tmoe_docker_management_menu_01() {
         run_special_tag_docker_container
         ;;
     3) custom_docker_container_tag ;;
-    4) tmoe_docker_readme ;;
-    5) reset_docker_container ;;
-    6) delete_docker_container ;;
+    4) docker_attch_container ;;
+    5) tmoe_docker_readme ;;
+    6) reset_docker_container ;;
+    7) delete_docker_container ;;
     esac
     ###############
     press_enter_to_return
@@ -172,9 +189,10 @@ tmoe_docker_management_menu_02() {
             "1" "${DOCKER_NAME}" \
             "2" "${DOCKER_NAME_02}" \
             "3" "custom tag(运行自定义标签的容器)" \
-            "4" "readme of ${CONTAINER_NAME} 说明" \
-            "5" "reset(重置容器数据并重拉${DOCKER_NAME}:${DOCKER_TAG_01}镜像)" \
-            "6" "delete(删除${CONTAINER_NAME}容器)" \
+            "4" "docker attach ${CONTAINER_NAME}(连接容器)" \
+            "5" "readme of ${CONTAINER_NAME} 说明" \
+            "6" "reset(重置容器数据并重拉${DOCKER_NAME}:${DOCKER_TAG_01}镜像)" \
+            "7" "delete(删除${CONTAINER_NAME}容器)" \
             "0" "🌚 Return to previous menu 返回上级菜单" \
             3>&1 1>&2 2>&3
     )
@@ -190,9 +208,10 @@ tmoe_docker_management_menu_02() {
         run_special_tag_docker_container
         ;;
     3) custom_docker_container_tag ;;
-    4) tmoe_docker_readme ;;
-    5) reset_docker_container ;;
-    6) delete_docker_container ;;
+    4) docker_attch_container ;;
+    5) tmoe_docker_readme ;;
+    6) reset_docker_container ;;
+    7) delete_docker_container ;;
     esac
     ###############
     press_enter_to_return
@@ -207,8 +226,9 @@ tmoe_docker_management_menu_03() {
             "1" "${DOCKER_TAG_01}" \
             "2" "custom tag(运行自定义标签的容器)" \
             "3" "readme of ${CONTAINER_NAME} 说明" \
-            "4" "reset(重置容器数据并重拉${DOCKER_TAG_01}镜像)" \
-            "5" "delete(删除${CONTAINER_NAME}容器)" \
+            "4" "docker attach ${CONTAINER_NAME}(连接容器)" \
+            "5" "reset(重置容器数据并重拉${DOCKER_TAG_01}镜像)" \
+            "6" "delete(删除${CONTAINER_NAME}容器)" \
             "0" "🌚 Return to previous menu 返回上级菜单" \
             3>&1 1>&2 2>&3
     )
@@ -218,8 +238,9 @@ tmoe_docker_management_menu_03() {
     1) run_special_tag_docker_container ;;
     2) custom_docker_container_tag ;;
     3) tmoe_docker_readme ;;
-    4) reset_docker_container ;;
-    5) delete_docker_container ;;
+    4) docker_attch_container ;;
+    5) reset_docker_container ;;
+    6) delete_docker_container ;;
     esac
     ###############
     press_enter_to_return

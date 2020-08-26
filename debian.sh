@@ -23,9 +23,15 @@ tuna_mirror() {
 	if [ "${LANG}" = "$(echo 'emhfQ04uVVRGLTgK' | base64 -d)" ]; then
 		CHINA_MIRROR='mirrors.huaweicloud.com'
 		SOURCE_LIST=/etc/apt/sources.list
-		cp ${SOURCE_LIST} ${SOURCE_LIST}.bak
-		sed -i "s@deb.debian.org@${CHINA_MIRROR}@g" ${SOURCE_LIST}
-		sed -i "s@archive.ubuntu.com@${CHINA_MIRROR}@g" ${SOURCE_LIST}
+		ALPINE_SOURCE_LIST=/etc/apk/repositories
+		cp ${SOURCE_LIST} ${SOURCE_LIST}.bak 2>/dev/null
+		cp ${ALPINE_SOURCE_LIST} ${ALPINE_SOURCE_LIST}.bak 2>/dev/null
+		sed -i "s@deb.debian.org@${CHINA_MIRROR}@g" ${SOURCE_LIST} 2>/dev/null
+		sed -i "s@archive.ubuntu.com@${CHINA_MIRROR}@g" ${SOURCE_LIST} 2>/dev/null
+		sed -i "S@dl-cdn.alpinelinux.org@${CHINA_MIRROR}@g" ${ALPINE_SOURCE_LIST} 2>/dev/null
+		sed -i 's@^@#&@g' ${SOURCE_LIST} ${ALPINE_SOURCE_LIST} 2>/dev/null
+		echo ${SOURCE_LIST}.bak >>${SOURCE_LIST} 2>/dev/null
+		echo ${ALPINE_SOURCE_LIST}.bak >>${ALPINE_SOURCE_LIST} 2>/dev/null
 	fi
 }
 #########

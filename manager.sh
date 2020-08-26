@@ -780,12 +780,14 @@ tmoe_locale_settings() {
 	TMOE_LOCALE_FILE=${HOME}/.config/tmoe-linux/locale.txt
 	if [ -e "${TMOE_LOCALE_FILE}" ]; then
 		TMOE_LANG=$(cat ${TMOE_LOCALE_FILE} | head -n 1)
+		TMOE_LOCALE_STATUS="Your current locale is ${TMOE_LANG}"
 	elif [ ${LINUX_DISTRO} != 'Android' ]; then
 		TMOE_LANG=$(locale | grep 'LANG=' | cut -d '=' -f 2 | cut -d '"' -f 2)
+		TMOE_LOCALE_STATUS="Your current locale is ${TMOE_LANG}"
 	else
-		TMOE_LANG='default'
+		TMOE_LOCALE_STATUS="Your current locale is default."
 	fi
-	TMOE_LOCALE_STATUS="Your current locale is ${TMOE_LANG}"
+
 	#######################
 	CONTAINER_LOCALE=$(
 		whiptail --title "LOCALE SETTINGS" \
@@ -928,6 +930,10 @@ tmoe_locale_settings() {
 	64) TMOE_LANG='vi_VN.UTF-8' ;;
 	esac
 	###############
+	case ${TMOE_LANG} in
+	"") tmoe_manager_main_menu ;;
+	esac
+	##############
 	TMOE_LANG_HALF=$(echo ${TMOE_LANG} | cut -d '.' -f 1)
 	TMOE_LANG_QUATER=$(echo ${TMOE_LANG} | cut -d '.' -f 1 | cut -d '_' -f 1)
 
@@ -969,7 +975,7 @@ tmoe_locale_settings() {
 	#if [ ! -z "${DEBIAN_LOCALE_GEN}" ]; then
 	#	sed -i "s@${DEBIAN_LOCALE_GEN}@${TMOE_LANG_HALF}@" debian-i
 	#fi
-	if [ -e "${DEBIAN_CHROOT}"]; then
+	if [ -e "${DEBIAN_CHROOT}" ]; then
 		mkdir -p ${DEBIAN_CHROOT}/usr/local/etc/tmoe-linux
 		cd ${DEBIAN_CHROOT}/usr/local/etc/tmoe-linux
 		cp -f ${HOME}/.config/tmoe-linux/locale.txt ./

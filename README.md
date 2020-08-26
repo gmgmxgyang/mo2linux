@@ -90,7 +90,7 @@ wsl --set-default-version 2
 > 3.如需使用 gui,可能还需要安装 VNC apk,您可以前往 Google play 或使用 Tmoe-linux 的 debian-i 来下载。  
 > 注：web 端的 novnc 无需安装 apk,但触控操作体验不佳。
 
-#### 3.Debian/Ubuntu/Mint/Kali/Deepin/Devuan/MX 等 deb 系发行版
+#### 3.Debian/Ubuntu/Mint/Kali 等 deb 系发行版
 
 ```shell
     sudo apt update

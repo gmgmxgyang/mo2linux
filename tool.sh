@@ -103,9 +103,6 @@ gnu_linux_env() {
 	fi
 	check_release_version
 	TMOE_LINUX_DIR='/usr/local/etc/tmoe-linux'
-	if [ ! -e "${TMOE_LINUX_DIR}" ]; then
-		mkdir -p ${TMOE_LINUX_DIR}
-	fi
 	if [ ! -e "/usr/local/bin" ]; then
 		mkdir -p /usr/local/bin
 	fi
@@ -558,7 +555,7 @@ git_clone_tmoe_linux_repo() {
 	if [ ! -e "${TMOE_LINUX_DIR}" ]; then
 		mkdir -p ${TMOE_LINUX_DIR}
 	fi
-	git clone -b master --depth=1 https://gitee.com/mo2/linux ${TMOE_GIT_DIR}
+	git clone -b master --depth=1 https://gitee.com/mo2/linux.git ${TMOE_GIT_DIR}
 }
 #################
 do_you_want_to_git_clone_tmoe_linux_repo() {

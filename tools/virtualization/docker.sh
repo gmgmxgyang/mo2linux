@@ -30,13 +30,14 @@ run_special_tag_docker_container() {
     case "${TMOE_QEMU_ARCH}" in
     "") run_docker_container_with_same_architecture ;;
     *)
-        QEMU_USER_STATIC_PATH_01='/usr/local/bin'
+        #QEMU_USER_STATIC_PATH_01='/usr/local/bin'
         QEMU_USER_STATIC_PATH_02='/usr/bin'
-        if [ -e "${QEMU_USER_STATIC_PATH_01}/qemu-aarch64-static" ]; then
-            QEMU_USER_PATH="${QEMU_USER_STATIC_PATH_01}"
-        else
-            QEMU_USER_PATH="${QEMU_USER_STATIC_PATH_02}"
-        fi
+        QEMU_USER_PATH="${QEMU_USER_STATIC_PATH_02}"
+        #if [ -e "${QEMU_USER_STATIC_PATH_01}/qemu-aarch64-static" ]; then
+        #    QEMU_USER_PATH="${QEMU_USER_STATIC_PATH_01}"
+        #else
+        #    QEMU_USER_PATH="${QEMU_USER_STATIC_PATH_02}"
+        #fi
 
         echo "${BLUE}docker run -itd --name ${CONTAINER_NAME} --env LANG=${TMOE_LANG} --restart on-failure -v ${QEMU_USER_PATH}/qemu-${TMOE_QEMU_ARCH}-static:${QEMU_USER_STATIC_PATH_02}/qemu-${TMOE_QEMU_ARCH}-static -v ${MOUNT_DOCKER_FOLDER}:${MOUNT_DOCKER_FOLDER} ${DOCKER_NAME}:${DOCKER_TAG}${RESET}"
         docker run -itd --name ${CONTAINER_NAME} --env LANG=${TMOE_LANG} --restart on-failure -v ${QEMU_USER_PATH}/qemu-${TMOE_QEMU_ARCH}-static:${QEMU_USER_STATIC_PATH_02}/qemu-${TMOE_QEMU_ARCH}-static -v ${MOUNT_DOCKER_FOLDER}:${MOUNT_DOCKER_FOLDER} ${DOCKER_NAME}:${DOCKER_TAG}
@@ -720,9 +721,9 @@ tmoe_qemu_user_chart() {
 install_qemu_user_static() {
     echo "正在检测版本信息..."
     LOCAL_QEMU_USER_FILE=''
-    if [ -e "/usr/local/bin/qemu-aarch64-static" ]; then
-        LOCAL_QEMU_USER_FILE='/usr/local/bin/qemu-aarch64-static'
-    elif [ -e "/usr/bin/qemu-aarch64-static" ]; then
+    #if [ -e "/usr/local/bin/qemu-aarch64-static" ]; then
+    #   LOCAL_QEMU_USER_FILE='/usr/local/bin/qemu-aarch64-static'
+    if [ -e "/usr/bin/qemu-aarch64-static" ]; then
         LOCAL_QEMU_USER_FILE='/usr/bin/qemu-aarch64-static'
     fi
     case ${LOCAL_QEMU_USER_FILE} in
@@ -770,10 +771,13 @@ unxz_deb_file() {
     fi
     ar xv ${THE_LATEST_DEB_VERSION}
     #tar -Jxvf data.tar.xz ./usr/bin -C $PREFIX/..
-    tar -Jxvf data.tar.xz
-    cp -rf ./usr/bin /usr/local
-    cd ..
-    rm -rv ${TEMP_FOLDER}
+    #tar -Jxvf data.tar.xz
+    cd /
+    tar -Jxvf ${TMPDIR}/${TEMP_FOLDER}/data.tar.xz ./usr/bin
+    #cp -rf ./usr/bin /usr
+    #cd ..
+    rm -rv ${TMPDIR}/${TEMP_FOLDER}
+    docker run --rm --privileged multiarch/qemu-user-static:register
 }
 ########################
 download_qemu_user() {
@@ -785,11 +789,11 @@ download_qemu_user() {
 }
 ##############
 remove_qemu_user_static() {
-    ls -lah /usr/bin/qemu-*-static /usr/local/bin/qemu-*-static 2>/dev/null
-    echo "${RED}rm -rv${RESET} ${BLUE}/usr/bin/qemu-*-static /usr/local/bin/qemu-*-static${RESET}"
+    ls -lah /usr/bin/qemu-*-static 2>/dev/null
+    echo "${RED}rm -rv${RESET} ${BLUE}/usr/bin/qemu-*-static${RESET}"
     echo "${RED}${TMOE_REMOVAL_COMMAND}${RESET} ${BLUE}qemu-user-static${RESET}"
     do_you_want_to_continue
-    rm -rv /usr/bin/qemu-*-static /usr/local/bin/qemu-*-static
+    rm -rv /usr/bin/qemu-*-static
     ${TMOE_REMOVAL_COMMAND} qemu-user-static
 }
 ##############
@@ -862,7 +866,7 @@ run_docker_across_architectures() {
         ;;
     esac
     ######################
-    if [ ! -e "/usr/local/bin/qemu-x86_64-static" ] && [ ! -e "/usr/bin/qemu-x86_64-static" ]; then
+    if [ ! -e "/usr/bin/qemu-x86_64-static" ]; then
         install_qemu_user_static
     fi
     choose_gnu_linux_docker_images

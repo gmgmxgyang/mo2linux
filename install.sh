@@ -442,6 +442,7 @@ creat_chroot_startup_script() {
 	cat >${PREFIX}/bin/debian <<-EndOfChrootFile
 		  #!/data/data/com.termux/files/usr/bin/env bash
 		  DEBIAN_CHROOT=${HOME}/${DEBIAN_FOLDER}
+		  cat ${DEBIAN_CHROOT}/etc/os-release 2>/dev/null | grep PRETTY_NAME | cut -d '"' -f 2
 		  if [ ! -e "${DEBIAN_CHROOT}/tmp/.Chroot-Container-Detection-File" ]; then
 		    echo "本文件为chroot容器检测文件 Please do not delete this file!" >>${DEBIAN_CHROOT}/tmp/.Chroot-Container-Detection-File 2>/dev/null
 		  fi
@@ -597,6 +598,7 @@ creat_proot_startup_script() {
 		##############
 		start_tmoe_gnu_linux_container() {
 		    cd ${HOME}
+			cat ${DEBIAN_CHROOT}/etc/os-release 2>/dev/null | grep PRETTY_NAME | cut -d '"' -f 2
 		    #pulseaudio --kill 2>/dev/null &
 		    #为加快启动速度，此处不重启音频服务
 		    pulseaudio --start 2>/dev/null &
@@ -839,39 +841,45 @@ creat_linux_container_remove_script() {
 	EndOfFile
 }
 ########################
-cat >${PREFIX}/bin/startvnc <<-EndOfFile
+cat >${PREFIX}/bin/startvnc <<-ENDOFVNC
 	#!/data/data/com.termux/files/usr/bin/env bash
 	am start -n com.realvnc.viewer.android/com.realvnc.viewer.android.app.ConnectionChooserActivity 2>/dev/null
 	pulseaudio --start 2>/dev/null &
 	touch ~/${DEBIAN_FOLDER}/root/.vnc/startvnc
 	${PREFIX}/bin/debian
-EndOfFile
-ln -sf ${PREFIX}/bin/startvnc ${PREFIX}/bin/startx11vnc
+ENDOFVNC
+#ln -sf ${PREFIX}/bin/startvnc ${PREFIX}/bin/startx11vnc
+cat >${PREFIX}/bin/startx11vnc <<-ENDOFX11VNC
+	#!/data/data/com.termux/files/usr/bin/env bash
+	am start -n com.realvnc.viewer.android/com.realvnc.viewer.android.app.ConnectionChooserActivity 2>/dev/null
+	pulseaudio --start 2>/dev/null &
+	touch ~/${DEBIAN_FOLDER}/root/.vnc/startx11vnc
+	${PREFIX}/bin/debian
+ENDOFX11VNC
 ln -s ${PREFIX}/bin/startvnc ${HOME}/vnc 2>/dev/null
 ###############
 #此處僅適配Android,故shebang爲termux目錄
-cat >${PREFIX}/bin/stopvnc <<-'EndOfFile'
+cat >${PREFIX}/bin/stopvnc <<-'ENDOFSTOPVNC'
 	#!/data/data/com.termux/files/usr/bin/env bash
-	#pkill -u $(whoami)
 	pulseaudio --kill 2>/dev/null &
 	sh -c "$(ps -e | grep -Ev "sshd|pkill|systemd" | awk '{print $4}' | sed '/(/d' | sed 's/^/pkill &/g')"
-EndOfFile
+ENDOFSTOPVNC
 #################
 #不要单引号
-cat >${PREFIX}/bin/startxsdl <<-EndOfFile
+cat >${PREFIX}/bin/startxsdl <<-ENDOFXSDL
 	#!/data/data/com.termux/files/usr/bin/env bash
 	am start -n x.org.server/x.org.server.MainActivity 2>/dev/null
 	touch ~/${DEBIAN_FOLDER}/root/.vnc/startxsdl
 	${PREFIX}/bin/debian
-EndOfFile
+ENDOFXSDL
 creat_linux_container_remove_script
 ################
 #wget -qO ${PREFIX}/bin/debian-i 'https://gitee.com/mo2/linux/raw/master/debian.sh'
 aria2c --allow-overwrite=true -d ${PREFIX}/bin -o debian-i 'https://gitee.com/mo2/linux/raw/master/manager.sh'
 #############
 if [ ! -L '/data/data/com.termux/files/home/storage/external-1' ]; then
-	sed -i 's@^command+=" --mount=/data/data/com.termux/files/home/storage/external-1@#&@g' ${PREFIX}/bin/debian 2>/dev/null
-	sed -i 's@^mount -o bind /mnt/media_rw/@#&@g' ${PREFIX}/bin/debian 2>/dev/null
+ sed -i 's@^command+=" --mount=/data/data/com.termux/files/home/storage/external-1@#&@g' ${PREFIX}/bin/debian 2>/dev/null
+ sed -i 's@^mount -o bind /mnt/media_rw/@#&@g' ${PREFIX}/bin/debian 2>/dev/null
 fi
 echo 'Giving startup script execution permission'
 echo "正在赋予启动脚本(${PREFIX}/bin/debian)执行权限"
@@ -888,12 +896,12 @@ echo "您可以输${RED}rm ~/${DebianTarXz}${RESET}来删除容器镜像文件"
 ls -lh ~/${DebianTarXz}
 ########################
 if [ ! -d "${DEBIAN_CHROOT}/usr/local/bin" ]; then
-	mkdir -p ${DEBIAN_CHROOT}/usr/local/bin
+ mkdir -p ${DEBIAN_CHROOT}/usr/local/bin
 fi
 
 if [ -f "${HOME}/.Chroot-Container-Detection-File" ]; then
-	mv -f "${HOME}/.Chroot-Container-Detection-File" ${DEBIAN_CHROOT}/tmp
-	echo "本文件为Chroot容器检测文件 Please do not delete this file!" >>${DEBIAN_CHROOT}/tmp/.Chroot-Container-Detection-File 2>/dev/null
+ mv -f "${HOME}/.Chroot-Container-Detection-File" ${DEBIAN_CHROOT}/tmp
+ echo "本文件为Chroot容器检测文件 Please do not delete this file!" >>${DEBIAN_CHROOT}/tmp/.Chroot-Container-Detection-File 2>/dev/null
 fi
 cd ${DEBIAN_CHROOT}/usr/local/bin
 
@@ -908,33 +916,33 @@ sed -i 's:#!/data/data/com.termux/files/usr/bin/env bash:#!/usr/bin/env bash:' z
 chmod +x zsh-i.sh
 ###########
 debian_stable_sources_list_and_gpg_key() {
-	curl -Lo "raspbian-sources-gpg.tar.xz" 'https://gitee.com/mo2/patch/raw/raspbian/raspbian-sources-gpg.tar.xz'
-	tar -Jxvf "raspbian-sources-gpg.tar.xz" -C ~/${DEBIAN_FOLDER}/etc/apt/
-	rm -f "raspbian-sources-gpg.tar.xz"
+ curl -Lo "raspbian-sources-gpg.tar.xz" 'https://gitee.com/mo2/patch/raw/raspbian/raspbian-sources-gpg.tar.xz'
+ tar -Jxvf "raspbian-sources-gpg.tar.xz" -C ~/${DEBIAN_FOLDER}/etc/apt/
+ rm -f "raspbian-sources-gpg.tar.xz"
 }
 ############
 if [ -f "${HOME}/.RASPBIANARMHFDetectionFILE" ]; then
-	mv -f "${HOME}/.RASPBIANARMHFDetectionFILE" "${DEBIAN_CHROOT}/tmp/"
-	#树莓派换源
-	debian_stable_sources_list_and_gpg_key
+ mv -f "${HOME}/.RASPBIANARMHFDetectionFILE" "${DEBIAN_CHROOT}/tmp/"
+ #树莓派换源
+ debian_stable_sources_list_and_gpg_key
 elif [ -f "${HOME}/.REDHATDetectionFILE" ]; then
-	rm -f "${HOME}/.REDHATDetectionFILE"
-	chmod u+w "${DEBIAN_CHROOT}/root"
+ rm -f "${HOME}/.REDHATDetectionFILE"
+ chmod u+w "${DEBIAN_CHROOT}/root"
 elif [ -f "${HOME}/.ALPINELINUXDetectionFILE" ]; then
-	mv -f "${HOME}/.ALPINELINUXDetectionFILE" ${DEBIAN_CHROOT}/tmp
+ mv -f "${HOME}/.ALPINELINUXDetectionFILE" ${DEBIAN_CHROOT}/tmp
 elif [ -f "${HOME}/.MANJARO_ARM_DETECTION_FILE" ]; then
-	rm -f ${HOME}/.MANJARO_ARM_DETECTION_FILE
-	sed -i 's@^#SigLevel.*@SigLevel = Never@' "${DEBIAN_CHROOT}/etc/pacman.conf"
+ rm -f ${HOME}/.MANJARO_ARM_DETECTION_FILE
+ sed -i 's@^#SigLevel.*@SigLevel = Never@' "${DEBIAN_CHROOT}/etc/pacman.conf"
 fi
 ########
 TMOE_LOCALE_FILE="${HOME}/.config/tmoe-linux/locale.txt"
 if [ -e "${TMOE_LOCALE_FILE}" ]; then
-	TMOE_LOCALE_NEW_PATH="${DEBIAN_CHROOT}/usr/local/etc/tmoe-linux"
-	mkdir -p ${TMOE_LOCALE_NEW_PATH}
-	cp -f ${TMOE_LOCALE_FILE} ${TMOE_LOCALE_NEW_PATH}
-	TMOE_LANG=$(cat ${TMOE_LOCALE_FILE} | head -n 1)
-	PROOT_LANG=$(cat $(command -v debian) | grep LANG= | cut -d '"' -f 2 | cut -d '=' -f 2 | tail -n 1)
-	sed -i "s@${PROOT_LANG}@${TMOE_LANG}@" $(command -v debian)
+ TMOE_LOCALE_NEW_PATH="${DEBIAN_CHROOT}/usr/local/etc/tmoe-linux"
+ mkdir -p ${TMOE_LOCALE_NEW_PATH}
+ cp -f ${TMOE_LOCALE_FILE} ${TMOE_LOCALE_NEW_PATH}
+ TMOE_LANG=$(cat ${TMOE_LOCALE_FILE} | head -n 1)
+ PROOT_LANG=$(cat $(command -v debian) | grep LANG= | cut -d '"' -f 2 | cut -d '=' -f 2 | tail -n 1)
+ sed -i "s@${PROOT_LANG}@${TMOE_LANG}@" $(command -v debian)
 fi
 ########################
 #配置zsh
@@ -942,14 +950,13 @@ curl -Lo zsh.sh 'https://gitee.com/mo2/linux/raw/master/zsh.sh'
 chmod u+x ./*
 #vnc自动启动
 cat >vnc-autostartup <<-'EndOfFile'
-	cat /etc/issue
 	locale_gen_tmoe_language() {
 		if ! grep -qi "^${TMOE_LANG_HALF}" "/etc/locale.gen"; then
 			cd /etc
 			sed -i "s/^#.*${TMOE_LANG} UTF-8/${TMOE_LANG} UTF-8/" locale.gen
 			if grep -q ubuntu '/etc/os-release'; then
-				    apt update
-					apt install -y ^language-pack-${TMOE_LANG_QUATER} 2>/dev/null
+				apt update
+				apt install -y ^language-pack-${TMOE_LANG_QUATER} 2>/dev/null
 			fi
 			if ! grep -qi "^${TMOE_LANG_HALF}" "locale.gen"; then
 				echo '' >>locale.gen
@@ -960,6 +967,7 @@ cat >vnc-autostartup <<-'EndOfFile'
 			locale-gen ${TMOE_LANG}
 		fi
 	}
+	############
 	check_tmoe_locale_file() {
 		TMOE_LOCALE_FILE=/usr/local/etc/tmoe-linux/locale.txt
 		if [ -e "${TMOE_LOCALE_FILE}" ]; then
@@ -969,50 +977,64 @@ cat >vnc-autostartup <<-'EndOfFile'
 			locale_gen_tmoe_language
 		fi
 	}
-
+	#############
+	vnc_warning() {
+		echo "Sorry,VNC server启动失败，请输debian-i重新安装并配置桌面环境。"
+		echo "Please type debian-i to start tmoe-linux tool and reconfigure desktop environment."
+	}
+	###########
 	if [ -e "${HOME}/.vnc/xstartup" ] && [ ! -e "${HOME}/.vnc/passwd" ]; then
 		check_tmoe_locale_file
+		cd /usr/local/etc/tmoe-linux/git
+		git fetch --depth=1
+		git reset --hard origin/master
+		git pull origin master --allow-unrelated-histories
 		curl -Lv -o /usr/local/bin/debian-i 'https://gitee.com/mo2/linux/raw/master/tool.sh'
 		chmod +x /usr/local/bin/debian-i
 		/usr/local/bin/debian-i passwd
 	fi
-	grep 'cat /etc/issue' ~/.bashrc >/dev/null 2>&1 || sed -i '1 a\cat /etc/issue' ~/.bashrc
-	if [ -f "/root/.vnc/startvnc" ]; then
-	    if [ -f /usr/local/bin/startvnc ];then
-	        /usr/local/bin/startvnc
-	        echo "已为您启动vnc服务 Vnc server has been started, enjoy it!"
-	    else
-	        echo "Sorry,VNC server启动失败，请输debian-i重新安装并配置桌面环境。"
-	        echo "Please type debian-i to start tmoe-linux tool and reconfigure desktop environment."
-	    fi
-	    rm -f /root/.vnc/startvnc
-	fi
 
-	if [ -f "/root/.vnc/startxsdl" ]; then
+	if [ -f "/root/.vnc/startvnc" ]; then
+		rm -f /root/.vnc/startvnc
+		if [ -f /usr/local/bin/startvnc ]; then
+			/usr/local/bin/startvnc
+			echo "已为您启动vnc服务 Vnc server has been started, enjoy it!"
+		else
+			vnc_warning
+		fi
+	elif [ -f "/root/.vnc/startx11vnc" ]; then
+		rm -f /root/.vnc/startx11vnc
+		if [ -f /usr/local/bin/startx11vnc ]; then
+			/usr/local/bin/startx11vnc
+			echo "已为您启动vnc服务 Vnc server has been started, enjoy it!"
+		else
+			vnc_warning
+		fi
+	elif [ -f "/root/.vnc/startxsdl" ]; then
 		echo '检测到您在termux原系统中输入了startxsdl，已为您打开xsdl安卓app'
-		echo 'Detected that you entered "startxsdl" from the termux original system, and the xsdl Android  application has been opened.'
+		echo 'Detected that you entered "startxsdl" from the termux original system, and the xsdl Android application has been opened.'
 		rm -f /root/.vnc/startxsdl
 		echo '9s后将为您启动xsdl'
 		echo 'xsdl will start in 9 seconds'
 		sleep 9
 		/usr/local/bin/startxsdl
 	fi
-	ps -e 2>/dev/null | grep -Ev 'bash|zsh' |tail -n 20
+	ps -e 2>/dev/null | grep -Ev 'bash|zsh' | tail -n 20
 EndOfFile
 ############
 if [ ! -f ".bashrc" ]; then
-	echo '' >>.bashrc || touch .bashrc
+ echo '' >>.bashrc || touch .bashrc
 fi
 sed -i '1 r vnc-autostartup' ./.bashrc
 #cp -f .bashrc .bashrc.bak
 if [ -f ".bash_profile" ] || [ -f ".bash_login" ]; then
-	mv -f .bash_profile .bash_profile.bak 2>/dev/null
-	mv -f .bash_login .basfh_login.bak 2>/dev/null
+ mv -f .bash_profile .bash_profile.bak 2>/dev/null
+ mv -f .bash_login .basfh_login.bak 2>/dev/null
 fi
 if [ ! -f ".profile" ]; then
-	echo '' >>.profile || touch .profle
+ echo '' >>.profile || touch .profle
 else
-	mv -f .profile .profile.bak
+ mv -f .profile .profile.bak
 fi
 #############
 #curl -Lo '.profile' 'https://gitee.com/mo2/linux/raw/master/profile.sh'
@@ -1615,8 +1637,8 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 ENDOFbashPROFILE
 #####################
 if [ "${LINUX_DISTRO}" != 'Android' ]; then
-	sed -i 's:#!/data/data/com.termux/files/usr/bin/env bash:#!/usr/bin/env bash:g' $(grep -rl 'com.termux' "${PREFIX}/bin")
-	#sed -i 's:#!/data/data/com.termux/files/usr/bin/env bash:#!/usr/bin/env bash:' ${DEBIAN_CHROOT}/remove-debian.sh
+ sed -i 's:#!/data/data/com.termux/files/usr/bin/env bash:#!/usr/bin/env bash:g' $(grep -rl 'com.termux' "${PREFIX}/bin")
+ #sed -i 's:#!/data/data/com.termux/files/usr/bin/env bash:#!/usr/bin/env bash:' ${DEBIAN_CHROOT}/remove-debian.sh
 fi
 
 bash ${PREFIX}/bin/debian

@@ -103,6 +103,12 @@ gnu_linux_env() {
 	fi
 	check_release_version
 	TMOE_LINUX_DIR='/usr/local/etc/tmoe-linux'
+	if [ ! -e "${TMOE_LINUX_DIR}" ]; then
+		mkdir -p ${TMOE_LINUX_DIR}
+	fi
+	if [ -e "/usr/local/bin" ]; then
+		mkdir -p /usr/local/bin
+	fi
 	TMOE_GIT_DIR="${TMOE_LINUX_DIR}/git"
 	TMOE_TOOL_DIR="${TMOE_GIT_DIR}/tools"
 	TMOE_OPT_BIN_DIR="${TMOE_TOOL_DIR}/sources/opt-bin"

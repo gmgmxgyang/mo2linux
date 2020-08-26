@@ -165,8 +165,6 @@ check_root() {
 		export PATH=${PATH}:/usr/sbin:/sbin
 		if [ -e "${TMOE_GIT_DIR}/tool.sh" ]; then
 			sudo -E bash ${TMOE_GIT_DIR}/tool.sh || su -c "bash ${TMOE_GIT_DIR}/tool.sh"
-		elif [ -e "/usr/local/bin/debian-i" ]; then
-			sudo -E bash /usr/local/bin/debian-i || su -c "bash /usr/local/bin/debian-i"
 		else
 			if [ $(command -v curl) ]; then
 				sudo -E bash -c "$(curl -LfsS https://gitee.com/mo2/linux/raw/master/debian.sh)" || su -c "$(curl -LfsS https://gitee.com/mo2/linux/raw/master/debian.sh)"

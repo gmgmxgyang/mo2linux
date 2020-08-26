@@ -255,7 +255,7 @@ tmoe_locale_settings() {
 #####################
 check_linux_distro() {
 	set_terminal_color
-	if grep -Eq 'debian|ubuntu' "/etc/os-release"; then
+	if grep -Eq 'debian|ubuntu|deepin' "/etc/os-release"; then
 		LINUX_DISTRO='debian'
 		TMOE_INSTALLATON_COMMAND='apt install -y'
 		TMOE_REMOVAL_COMMAND='apt purge -y'

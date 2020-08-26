@@ -2285,8 +2285,9 @@ enable_tmoe_qemu_cpu_multi_threading() {
 #################
 tmoe_qemu_x64_cpu_manager() {
 	RETURN_TO_WHERE='tmoe_qemu_x64_cpu_manager'
+	#15 50 6
 	VIRTUAL_TECH=$(
-		whiptail --title "CPU & RAM" --menu "Which configuration do you want to modify?" 15 50 6 \
+		whiptail --title "CPU & RAM" --menu "Which configuration do you want to modify?" 0 0 0 \
 			"1" "CPU cores处理器核心数" \
 			"2" "cpu model/type(型号/类型)" \
 			"3" "RAM运行内存" \

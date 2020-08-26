@@ -182,6 +182,8 @@ gnu_linux() {
 			DEBIAN_DISTRO='ubuntu'
 		elif [ "$(cat /etc/issue | cut -c 1-4)" = "Kali" ]; then
 			DEBIAN_DISTRO='kali'
+		elif grep -q 'deepin' /etc/os-release; then
+			DEBIAN_DISTRO='deepin'
 		fi
 
 	elif grep -Eq "opkg|entware" '/opt/etc/opkg.conf' 2>/dev/null || grep -q 'openwrt' "/etc/os-release"; then
@@ -364,9 +366,14 @@ gnu_linux() {
 	if [ ! -z "${DEPENDENCIES}" ]; then
 		MIRROR_LIST='true'
 		if [ "${LINUX_DISTRO}" = "debian" ]; then
-			if ! grep -q '^deb.*mirrors' "/etc/apt/sources.list"; then
-				MIRROR_LIST='false'
-			fi
+			case ${DEBIAN_DISTRO} in
+			deepin) ;;
+			*)
+				if ! grep -q '^deb.*mirrors' "/etc/apt/sources.list"; then
+					MIRROR_LIST='false'
+				fi
+				;;
+			esac
 		elif [ "${LINUX_DISTRO}" = "arch" ]; then
 			if ! grep -q '^Server.*mirrors' "/etc/pacman.d/mirrorlist"; then
 				MIRROR_LIST='false'

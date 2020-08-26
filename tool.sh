@@ -267,6 +267,8 @@ check_linux_distro() {
 			DEBIAN_DISTRO='ubuntu'
 		elif [ "$(cat /etc/issue | cut -c 1-4)" = "Kali" ]; then
 			DEBIAN_DISTRO='kali'
+		elif grep -q 'deepin' /etc/os-release; then
+			DEBIAN_DISTRO='deepin'
 		fi
 		###################
 	elif grep -Eq "opkg|entware" '/opt/etc/opkg.conf' 2>/dev/null || grep -q 'openwrt' "/etc/os-release"; then
@@ -696,6 +698,7 @@ tmoe_linux_tool_upgrade() {
 		curl -Lv -o /usr/local/bin/debian-i 'https://gitee.com/mo2/linux/raw/master/tool.sh'
 	fi
 	chmod +x /usr/local/bin/debian-i
+	check_tmoe_git_folder
 	cd ${TMOE_GIT_DIR}
 	git reset --hard origin/master
 	git pull origin master --allow-unrelated-histories

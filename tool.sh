@@ -248,11 +248,11 @@ tmoe_locale_settings() {
 		sed -i "s/^#.*${TMOE_LANG} UTF-8/${TMOE_LANG} UTF-8/" locale.gen
 		if ! grep -qi "^${TMOE_LANG_HALF}" "locale.gen"; then
 			echo '' >>locale.gen
-			sed -i 's@^@#@g' locale.gen 2>/dev/null
-			sed -i 's@##@#@g' locale.gen 2>/dev/null
+			#sed -i 's@^@#@g' locale.gen 2>/dev/null
+			#sed -i 's@##@#@g' locale.gen 2>/dev/null
 			sed -i "$ a ${TMOE_LANG} UTF-8" locale.gen
 		fi
-		locale-gen ${TMOE_LANG}
+		locale-gen ${TMOE_LANG} 2>/dev/null
 	fi
 }
 #####################

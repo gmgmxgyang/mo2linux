@@ -2271,7 +2271,8 @@ enable_tmoe_qemu_cpu_multi_threading() {
 		TMOE_SPICE_STATUS='检测到您已禁用多线程加速功能'
 	fi
 	###########
-	if (whiptail --title "您想要对这个小可爱做什么?" --yes-button 'enable启用' --no-button 'disable禁用' --yesno "Do you want to enable it?(っ °Д °)\n您是想要启用还是禁用呢？${TMOE_SPICE_STATUS}" 11 45); then
+	#11 45
+	if (whiptail --title "您想要对这个小可爱做什么?" --yes-button 'enable启用' --no-button 'disable禁用' --yesno "Do you want to enable it?(っ °Д °)\n您是想要启用还是禁用呢？${TMOE_SPICE_STATUS},qemu5.0以上版本建议禁用" 0 0); then
 		#CURRENT_VALUE=$(cat startqemu | grep '\-machine accel' | head -n 1 | awk '{print $2}' | cut -d ',' -f 1 | cut -d '=' -f 2)
 		CURRENT_VALUE=$(cat startqemu | grep '\--accel ' | head -n 1 | awk '{print $2}' | cut -d ',' -f 1)
 		sed -i "s@--accel .*@--accel ${CURRENT_VALUE},thread=multi \\\@" startqemu

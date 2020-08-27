@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 ####################
 #10 50
-if (whiptail --title "TUI or GUI" --yes-button "TUI" --no-button "GUI" --yesno "您是想用TUI,还是图形界面呢？Do you want to use TUI or GUI?\n若您处于桌面环境下,则建议选择GUI,否则请选择TUI♪(^∇^*) " 0 0); then
+if (whiptail --title "GUI or TUI" --yes-button "GUI" --no-button "TUI" --yesno "您是想用图形用户界面,还是文本用户界面呢？Do you want to use GUI or GUI?\n若您处于桌面环境下,则建议选择GUI,否则请选择TUI♪(^∇^*) " 0 0); then
     tui_image_compression_tool
 else
     gui_image_compression_tool

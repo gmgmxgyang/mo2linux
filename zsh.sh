@@ -216,7 +216,8 @@ configure_power_level_10k() {
     sed -i '/^ZSH_THEME/d' "${HOME}/.zshrc"
     sed -i "1 i\ZSH_THEME='powerlevel10k/powerlevel10k'" "${HOME}/.zshrc"
     # sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="agnosterzak"/g' ~/.zshrc
-    echo '您可以输p10k configure来配置powerlevel10k'
+    echo "您可以输${GREEN}p10k configure${RESET}来配置${BLUE}powerlevel10k${RESET}"
+    echo "You can type ${GREEN}p10k configure${RESET} to configure ${BLUE}powerlevel 10k${RESET}."
     if ! grep -q '.p10k.zsh' "${HOME}/.zshrc"; then
         if [ -e "/usr/bin/curl" ]; then
             curl -sLo /root/.p10k.zsh 'https://gitee.com/mo2/Termux-zsh/raw/p10k/.p10k.zsh'

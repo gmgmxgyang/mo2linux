@@ -111,8 +111,7 @@ tmoe_software_package_menu() {
 }
 #############
 tmoe_deb_file_installer() {
-    echo "本功能正在开发中..."
-    #source ${TMOE_TOOL_DIR}/sources/deb-installer
+    source ${TMOE_TOOL_DIR}/sources/deb-installer
 }
 ############
 tmoe_social_network_service() {

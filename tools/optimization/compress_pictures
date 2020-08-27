@@ -47,7 +47,7 @@ tui_image_compression_tool() {
     else
         START_DIR="${HOME}"
     fi
-    IMPORTANT_TIPS='任意选择一张图片,该文件夹的所有图片都将被压缩'
+    IMPORTANT_TIPS='任意选择一张图片,该文件夹内的所有图片都将被压缩'
     tmoe_file_manager
     if [ -z ${SELECTION} ]; then
         echo "没有指定${YELLOW}有效${RESET}的${BLUE}文件${GREEN}，请${GREEN}重新${RESET}选择"
@@ -110,7 +110,7 @@ gui_image_compression_tool() {
     *) ${RETURN_TO_WHERE} ;;
     esac
     ########
-    zenity --question --title="tmoe-pic-compressor的提示o(*￣▽￣*)o" --text="${PIC_DIR}里的所有图片文件将被压缩！" --ok-label="好哒" --cancel-label="我知道啦"
+    zenity --question --title="tmoe-pic-compressor的提示o(*￣▽￣*)o" --text="${PIC_DIR} 内的所有图片文件将被压缩！" --ok-label="好哒" --cancel-label="我知道啦"
     TARGET=$(zenity --scale --title="Picture quality图片质量" --text "1为最低,99为最高" --min-value=1 --max-value=99 --value=2 --step 2)
     case "$?" in
     0)

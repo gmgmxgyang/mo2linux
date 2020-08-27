@@ -1550,14 +1550,17 @@ backup_gnu_linux_container() {
 	#press_enter_to_continue
 	termux_backup_pre
 	TMPtime="${TARGET_BACKUP_FILE_NAME}-$(cat backuptime.tmp)-rootfs_bak"
-	BACKUP_FOLDER="${DEBIAN_CHROOT} ${PREFIX}/bin/debian ${PREFIX}/bin/debian-rm ${PREFIX}/bin/startxsdl ${PREFIX}/bin/startvnc"
+	BACKUP_FOLDER="${DEBIAN_CHROOT} ${PREFIX}/bin/debian-rm ${PREFIX}/bin/startxsdl ${PREFIX}/bin/startvnc"
+	BACKUP_FILE="${PREFIX}/bin/debian"
+	check_backup_file
 	BACKUP_FILE="${PREFIX}/bin/stopvnc"
+	check_backup_file
+	BACKUP_FILE="${PREFIX}/bin/startx11vnc"
 	check_backup_file
 	BACKUP_FILE="${ACROSS_ARCH_FILE}"
 	check_backup_file
 	BACKUP_FILE="${LINUX_CONTAINER_DISTRO_FILE}"
 	check_backup_file
-
 	if (whiptail --title "Select compression type 选择压缩类型 " --yes-button "tar.xz" --no-button "tar.gz" --yesno "Which do yo like better? \n tar.xz压缩率高，但速度慢。tar.xz has a higher compression ration, but is slower.\n tar.gz速度快,但压缩率低。tar.gz compresses faster, but with a lower compression ratio.\n 压缩过程中，进度条倒着跑是正常现象。" 12 50); then
 
 		echo "您选择了tar.xz,即将为您备份至/sdcard/Download/backup/${TMPtime}.tar.xz"

@@ -832,7 +832,6 @@ install_debian_netease_cloud_music() {
     DEBIAN_INSTALLATION_MENU='00'
     OPT_APP_NAME='netease-cloud-music-gtk'
     OPT_APP_GIT_REPO="https://gitee.com/ak2/${OPT_APP_NAME}.git"
-    OPT_BRANCH_NAME='arm64'
     OPT_DEB_NAME="${OPT_APP_NAME}_arm64.deb"
     DOWNLOAD_PATH='/tmp'
     git_clone_opt_deb_01
@@ -870,7 +869,8 @@ install_debian_buster_or_sid_netease_cloud_music() {
 install_netease_cloud_music_gtk() {
     DEPENDENCY_01='netease-cloud-music-gtk'
     echo "github url：${YELLOW}https://github.com/gmg137/netease-cloud-music-gtk${RESET}"
-    echo "本版本仅兼容deb系发行版，您必须选择相应的版本，否则将出现播放格式错误的问题。"
+    echo "本版本仅兼容deb系发行版,20200827已经修复了播放格式错误的问题。"
+    echo ${DEBIAN_DISTRO}
     non_debian_function
     if [ $(command -v ${DEPENDENCY_01}) ]; then
         beta_features_install_completed

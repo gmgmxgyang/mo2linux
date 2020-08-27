@@ -841,6 +841,7 @@ install_debian_netease_cloud_music() {
 ##############
 please_choose_netease_cloud_music_version() {
     if (whiptail --title "sid or buster" --yes-button "sid" --no-button "buster" --yesno "请选择版本！旧版系统(例如ubuntu18.04)请选择buster,\n新版系统(如kali rolling和ubuntu20.10)请选择sid。\n不符合当前系统的版本将导致播放格式错误哦！♪(^∇^*) " 0 0); then
+        echo ${DEBIAN_DISTRO}
         case "${DEBIAN_DISTRO}" in
         ubuntu) OPT_BRANCH_NAME='ubuntu_arm64' ;;
         *) OPT_BRANCH_NAME='sid_arm64' ;;

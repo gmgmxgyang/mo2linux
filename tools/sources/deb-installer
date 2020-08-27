@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 ####################
+deb_file_installer_tui_or_gui() {
+    check_imagemagick
+    if (whiptail --title "GUI or TUI" --yes-button "GUI" --no-button "TUI" --yesno "您是想用图形用户界面,还是文本用户界面呢？\nDo you want to use GUI or GUI?\n若您处于桌面环境下,则建议选择GUI,否则请选择TUI♪(^∇^*) " 0 0); then
+        gui_image_compression_tool
+    else
+        tui_image_compression_tool
+    fi
+}
+#################
 deb_file_installer() {
     #进入deb文件目录
     cd ${CURRENT_DIR}

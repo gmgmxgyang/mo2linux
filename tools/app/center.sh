@@ -244,6 +244,11 @@ install_clementine() {
     beta_features_quick_install
 }
 ##########
+batch_compression_of_pictures() {
+    echo "正在开发中..."
+    #source ${TMOE_TOOL_DIR}/optimization/compress_pictures
+}
+############
 tmoe_multimedia_menu() {
     RETURN_TO_WHERE='tmoe_multimedia_menu'
     NON_DEBIAN='false'
@@ -255,7 +260,8 @@ tmoe_multimedia_menu() {
         "3" "🖼 GIMP(GNU 图像处理程序)" \
         "4" "🍊 Clementine(小柑橘音乐播放器)" \
         "5" "🎞️ Parole(xfce默认媒体播放器,风格简洁)" \
-        "6" "🎧 网易云音乐(x86_64,专注于发现与分享的音乐产品)" \
+        "6" "Batch compression of pics批量压缩图片" \
+        "7" "🎧 网易云音乐(x86_64,专注于发现与分享的音乐产品)" \
         "0" "🌚 Return to previous menu 返回上级菜单" \
         3>&1 1>&2 2>&3)
     ##########################
@@ -266,7 +272,8 @@ tmoe_multimedia_menu() {
     3) install_gimp ;;
     4) install_clementine ;;
     5) install_parole ;;
-    6) install_netease_163_cloud_music ;;
+    6) batch_compression_of_pictures ;;
+    7) install_netease_163_cloud_music ;;
     esac
     ##########################
     press_enter_to_return

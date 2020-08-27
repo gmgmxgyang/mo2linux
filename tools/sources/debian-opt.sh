@@ -839,6 +839,24 @@ install_debian_netease_cloud_music() {
     install_opt_deb_file
 }
 ##############
+please_choose_netease_cloud_music_version() {
+    if (whiptail --title "sid or buster" --yes-button "sid" --no-button "buster" --yesno "请选择版本！旧版系统(例如ubuntu18.04)请选择buster,\n新版系统(如kali rolling)请选择sid。\n不符合当前系统的版本将导致播放格式错误哦！♪(^∇^*) " 0 0); then
+        OPT_BRANCH_NAME='sid_arm64'
+    else
+        OPT_BRANCH_NAME='arm64'
+    fi
+}
+############
+install_debian_buster_or_sid_netease_cloud_music() {
+    if grep -q 'sid' /etc/os-release; then
+        OPT_BRANCH_NAME='sid_arm64'
+    elif grep -q 'buster' /etc/os-release; then
+        OPT_BRANCH_NAME='arm64'
+    else
+        please_choose_netease_cloud_music_version
+    fi
+}
+################
 install_netease_cloud_music_gtk() {
     DEPENDENCY_01='netease-cloud-music-gtk'
     echo "github url：${YELLOW}https://github.com/gmg137/netease-cloud-music-gtk${RESET}"
@@ -846,6 +864,7 @@ install_netease_cloud_music_gtk() {
     non_debian_function
     case ${ARCH_TYPE} in
     arm64)
+        install_debian_buster_or_sid_netease_cloud_music
         install_debian_netease_cloud_music
         ;;
     armhf) arch_does_not_support ;;

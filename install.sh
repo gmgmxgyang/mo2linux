@@ -844,7 +844,9 @@ creat_linux_container_remove_script() {
 cat >${PREFIX}/bin/startvnc <<-ENDOFVNC
 	#!/data/data/com.termux/files/usr/bin/env bash
 	am start -n com.realvnc.viewer.android/com.realvnc.viewer.android.app.ConnectionChooserActivity 2>/dev/null
-	pulseaudio --start 2>/dev/null &
+	if [ ! "$(pgrep pulseaudio)" ];then
+		pulseaudio --start 2>/dev/null &
+	fi
 	touch ~/${DEBIAN_FOLDER}/root/.vnc/startvnc
 	${PREFIX}/bin/debian
 ENDOFVNC
@@ -852,7 +854,9 @@ ENDOFVNC
 cat >${PREFIX}/bin/startx11vnc <<-ENDOFX11VNC
 	#!/data/data/com.termux/files/usr/bin/env bash
 	am start -n com.realvnc.viewer.android/com.realvnc.viewer.android.app.ConnectionChooserActivity 2>/dev/null
-	pulseaudio --start 2>/dev/null &
+	if [ ! "$(pgrep pulseaudio)" ];then
+		pulseaudio --start 2>/dev/null &
+	fi
 	touch ~/${DEBIAN_FOLDER}/root/.vnc/startx11vnc
 	${PREFIX}/bin/debian
 ENDOFX11VNC

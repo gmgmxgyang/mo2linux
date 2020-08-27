@@ -3220,20 +3220,25 @@ how_to_creat_a_new_tmoe_qemu_vm() {
 	cat <<-'EOF'
 		   1.下载iso镜像文件 Download a iso file.
 		   若虚拟磁盘内已经安装了系统，则可跳过此步。
+		   If the qcow2 disk has a built-in system,then you can skip this step.
 		        
 			2.新建一个虚拟磁盘
-			Creat a vitual disk
+			Creat a new vitual disk (qcow2 format).
 
-			3.选择启动的iso
-			Choose iso
+			3.选择启动光盘iso
+			Choose a iso file(CD-ROM)
 
 			4.选择启动磁盘
-			Choose disk
+			Choose a qcow2 disk
 
 			5.修改相关参数
+			Modify the parameters of qemu.
 
 			6.输startqemu
 			Type startqemu and press enter
+			-------------------
+			注：若您使用的是x86虚拟机镜像，则需要在额外选项中，将架构切换为i386。
+			If you are using x86 image, please switch to i386 architecture in the extra options.
 	EOF
 }
 tmoe_qemu_faq() {

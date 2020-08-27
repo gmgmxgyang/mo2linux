@@ -1051,4 +1051,13 @@ install_java() {
     fi
 }
 #######
+check_zenity() {
+    if [ ! $(command -v zenity) ]; then
+        NON_DEBIAN='false'
+        DEPENDENCY_01='zenity'
+        DEPENDENCY_02=''
+        beta_features_quick_install
+    fi
+}
+###########
 gnu_linux_env_02

@@ -245,8 +245,7 @@ install_clementine() {
 }
 ##########
 batch_compression_of_pictures() {
-    echo "正在开发中..."
-    #source ${TMOE_TOOL_DIR}/optimization/compress_pictures
+    source ${TMOE_TOOL_DIR}/optimization/compress_pictures
 }
 ############
 tmoe_multimedia_menu() {

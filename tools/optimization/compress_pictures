@@ -1,8 +1,53 @@
 #!/usr/bin/env bash
 ####################
 #10 50
-if (whiptail --title "GUI or TUI" --yes-button "GUI" --no-button "TUI" --yesno "您是想用图形用户界面,还是文本用户界面呢？Do you want to use GUI or GUI?\n若您处于桌面环境下,则建议选择GUI,否则请选择TUI♪(^∇^*) " 0 0); then
-    tui_image_compression_tool
-else
+image_compression_tool_gui_or_tui() {
+    if (whiptail --title "GUI or TUI" --yes-button "GUI" --no-button "TUI" --yesno "您是想用图形用户界面,还是文本用户界面呢？Do you want to use GUI or GUI?\n若您处于桌面环境下,则建议选择GUI,否则请选择TUI♪(^∇^*) " 0 0); then
+        gui_image_compression_tool
+    else
+        tui_image_compression_tool
+    fi
+}
+################
+tui_image_compression_tool() {
+    echo "本功能正在开发中..."
+    echo "请换用GUI"
+    do_you_want_to_continue
     gui_image_compression_tool
-fi
+}
+#############
+gui_image_compression_tool() {
+    check_zenity
+    PIC_DIR=$(zenity --title "请选择图片文件夹，并按确认键" --file-selection --directory)
+    case "$?" in
+    0) cd ${PIC_DIR} ;;
+    *) ${RETURN_TO_WHERE} ;;
+    esac
+    ########
+    zenity --question --title="tmoe-pic-compressor的提示o(*￣▽￣*)o" --text="${PIC_DIR}里的所有图片文件将被压缩！" --ok-label="好哒" --cancel-label="我知道啦"
+    TARGET=$(zenity --scale --title="Picture quality图片质量" --text "1为最低,99为最高" --min-value=1 --max-value=99 --value=2 --step 2)
+    case "$?" in
+    0)
+        TMOE_COMPRESSION_FOLDER="tmoe_compression_quality_${TARGET}"
+        if [ ! -e "${TMOE_COMPRESSION_FOLDER}" ]; then
+            mkdir -p ${TMOE_COMPRESSION_FOLDER}
+        fi
+        xdg-open ${TMOE_COMPRESSION_FOLDER}
+        (
+            echo "10"
+            echo "40"
+            sleep 1
+            for TMOE_PICS in *; do
+                convert +profile "*" -strip -quality ${TARGET} ${TMOE_PICS} ${TMOE_COMPRESSION_FOLDER}/${TMOE_PICS%%.*}.jpg
+            done
+            echo "100"
+            sleep 1
+        ) |
+            # percentage是进度条的起始点，auto-close是进度条达到100则自动关闭
+            zenity --progress --title="正在压缩图片..." --text="正在保存至${TMOE_COMPRESSION_FOLDER}" --percentage=0 --auto-close
+        ;;
+    *) ${RETURN_TO_WHERE} ;;
+    esac
+}
+###########
+image_compression_tool_gui_or_tui

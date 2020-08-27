@@ -100,7 +100,7 @@ tmoe_software_package_menu() {
     ##########################
     case "${TMOE_APP}" in
     0 | "") software_center ;;
-    1) tmoe_deb_file_installer ;;
+    1) tmoe_deb_batch_installer ;;
     2) install_package_manager_gui ;;
     3) install_android_debug_bridge ;;
     4) install_bleachbit_cleaner ;;
@@ -110,7 +110,7 @@ tmoe_software_package_menu() {
     tmoe_software_package_menu
 }
 #############
-tmoe_deb_file_installer() {
+tmoe_deb_batch_installer() {
     source ${TMOE_TOOL_DIR}/sources/deb-installer
 }
 ############

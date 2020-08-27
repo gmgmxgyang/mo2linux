@@ -1208,6 +1208,8 @@ install_chroot_container() {
 	echo "本功能目前仅对GNU/Linux系统测试开放。"
 	echo "If you find that some directories cannot be unmounted forcibly before removing the container,then please restart your device before uninstalling the chroot container to prevent the mounted directory from being deleted by mistake."
 	echo "本功能目前仍处于测试阶段，移除容器前若发现部分已挂载目录无法强制卸载，请重启设备再卸载chroot容器，防止已挂载目录被误删！"
+	echo "由于在测试chroot容器的过程中出现了部分已挂载的目录无法强制卸载的情况，故建议您换用docker容器。"
+	echo "We recommend that you run ${BLUE}docker${RESET} containers on GNU/Linux system instead of ${RED}chroot${RESET} containers."
 	if [ "$(uname -o)" = "Android" ]; then
 		echo Android :${ANDROID_VERSION}
 		echo "$(getprop ro.product.model)"
@@ -1220,7 +1222,6 @@ install_chroot_container() {
 			#echo "您在安装chroot容器前必须知悉已挂载目录无法强制卸载的严重性！"
 			echo "Android系统请换用proot容器。"
 		fi
-		echo "由于在测试过程中出现部分已挂载的目录无法强制卸载的情况，故建议您换用proot容器。"
 		press_enter_to_return
 		tmoe_manager_main_menu
 	else

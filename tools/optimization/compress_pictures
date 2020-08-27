@@ -2,6 +2,7 @@
 ####################
 #10 50
 image_compression_tool_gui_or_tui() {
+    check_imagemagick
     if (whiptail --title "GUI or TUI" --yes-button "GUI" --no-button "TUI" --yesno "您是想用图形用户界面,还是文本用户界面呢？Do you want to use GUI or GUI?\n若您处于桌面环境下,则建议选择GUI,否则请选择TUI♪(^∇^*) " 0 0); then
         gui_image_compression_tool
     else
@@ -9,6 +10,15 @@ image_compression_tool_gui_or_tui() {
     fi
 }
 ################
+check_imagemagick() {
+    if [ ! $(command -v convert) ]; then
+        NON_DEBIAN='false'
+        DEPENDENCY_01='imagemagick'
+        DEPENDENCY_02=''
+        beta_features_quick_install
+    fi
+}
+#################
 tui_image_compression_tool() {
     echo "本功能正在开发中..."
     echo "请换用GUI"

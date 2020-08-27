@@ -562,8 +562,8 @@ gnu_linux() {
 				else
 					curl -Lv -o /tmp/.tmoe-linux-tool.sh 'https://gitee.com/mo2/linux/raw/master/tool.sh'
 				fi
+				bash /tmp/.tmoe-linux-tool.sh
 			fi
-			bash /tmp/.tmoe-linux-tool.sh
 			exit 0
 		fi
 	fi

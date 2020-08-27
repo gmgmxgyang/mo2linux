@@ -416,8 +416,8 @@ echo 'You can also enter debian-i manually to start it.'
 TMOE_LINUX_DIR='/usr/local/etc/tmoe-linux'
 mkdir -p ${TMOE_LINUX_DIR}
 TMOE_GIT_DIR="${TMOE_LINUX_DIR}/git"
-TMOE_GIT_URL='https://gitee.com/mo2/linux'
-echo "${TMOE_GIT_URL}"
+TMOE_GIT_URL='https://gitee.com/mo2/linux.git'
+echo "gitee.com/mo2/linux"
 git clone --depth=1 ${TMOE_GIT_URL} ${TMOE_GIT_DIR}
 cp ${TMOE_GIT_DIR}/tools/app/lnk/tmoe-linux.desktop /usr/share/applications
 bash /usr/local/bin/debian-i

@@ -860,8 +860,13 @@ install_debian_buster_or_sid_netease_cloud_music() {
 install_netease_cloud_music_gtk() {
     DEPENDENCY_01='netease-cloud-music-gtk'
     echo "github url：${YELLOW}https://github.com/gmg137/netease-cloud-music-gtk${RESET}"
-    echo "本版本仅兼容deb系发行版。"
+    echo "本版本仅兼容deb系发行版，您必须选择相应的版本，否则将出现播放格式错误的问题。"
     non_debian_function
+    if [ $(command -v ${DEPENDENCY_01}) ]; then
+        beta_features_install_completed
+        echo "是否需要重装？"
+        do_you_want_to_continue
+    fi
     case ${ARCH_TYPE} in
     arm64)
         install_debian_buster_or_sid_netease_cloud_music

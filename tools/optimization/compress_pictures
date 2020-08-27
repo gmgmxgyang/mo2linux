@@ -86,7 +86,7 @@ choose_the_pic_quality() {
 ##################
 image_compression_tool_gui_or_tui() {
     check_imagemagick
-    if (whiptail --title "GUI or TUI" --yes-button "GUI" --no-button "TUI" --yesno "您是想用图形用户界面,还是文本用户界面呢？Do you want to use GUI or GUI?\n若您处于桌面环境下,则建议选择GUI,否则请选择TUI♪(^∇^*) " 0 0); then
+    if (whiptail --title "GUI or TUI" --yes-button "GUI" --no-button "TUI" --yesno "您是想用图形用户界面,还是文本用户界面呢？\nDo you want to use GUI or GUI?\n若您处于桌面环境下,则建议选择GUI,否则请选择TUI♪(^∇^*) " 0 0); then
         gui_image_compression_tool
     else
         tui_image_compression_tool

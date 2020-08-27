@@ -90,7 +90,7 @@ tmoe_software_package_menu() {
     TMOE_APP=$(
         whiptail --title "PACKAGES MANAGER" --menu \
             "How do you want to manage software package?" 0 50 0 \
-            "1" "Tmoe-deb-installer:软件包安装器" \
+            "1" "deb-batch-installer:软件包批量安装器" \
             "2" "Synaptic(新立得软件包管理器)" \
             "3" "ADB(Android Debug Bridge,用于调试安卓)" \
             "4" "BleachBit(垃圾清理)" \
@@ -110,6 +110,11 @@ tmoe_software_package_menu() {
     tmoe_software_package_menu
 }
 #############
+tmoe_deb_file_installer() {
+    echo "本功能正在开发中..."
+    #source ${TMOE_TOOL_DIR}/sources/deb-installer
+}
+############
 tmoe_social_network_service() {
     RETURN_TO_WHERE='tmoe_social_network_service'
     NON_DEBIAN='false'
@@ -452,92 +457,6 @@ install_supertuxkart_game() {
     beta_features_quick_install
 }
 ###################
-remove_deb_package() {
-    if (whiptail --title "您想要对这个小可爱做什么呢 " --yes-button "Back返回" --no-button "Remove移除" --yesno "${PACKAGE_NAME}\n您是想要返回还是卸载这个软件包？Do you want to return,or remove this package?♪(^∇^*) " 10 50); then
-        software_center
-    else
-        apt purge ${PACKAGE_NAME}
-        delete_tmoe_deb_file
-        software_center
-    fi
-}
-#############
-deb_file_installer() {
-    #进入deb文件目录
-    cd ${CURRENT_DIR}
-    #./${SELECTION}
-    if [ "${LINUX_DISTRO}" = "debian" ]; then
-        file ./${SELECTION} 2>/dev/null
-        apt show ./${SELECTION}
-        PACKAGE_NAME=$(apt show ./${SELECTION} 2>&1 | grep Package | head -n 1 | awk -F ' ' '$0=$NF')
-        echo "您是否需要安装此软件包？"
-        echo "Do you want to install it?"
-        RETURN_TO_WHERE='remove_deb_package'
-        do_you_want_to_continue
-        RETURN_TO_WHERE='software_center'
-        apt install -y ./${SELECTION}
-        DEPENDENCY_01=${PACKAGE_NAME}
-        DEPENDENCY_02=""
-        beta_features_install_completed
-    else
-        if [ ! $(command -v dpkg) ]; then
-            DEPENDENCY_01='dpkg'
-            DEPENDENCY_02=''
-            echo ${TMOE_INSTALLATON_COMMAND} ${DEPENDENCY_01}
-            ${TMOE_INSTALLATON_COMMAND} ${DEPENDENCY_01}
-            beta_features_install_completed
-        fi
-        if [ $(command -v dpkg) ]; then
-            dpkg -i ./${SELECTION}
-        else
-            uncompress_deb_file
-        fi
-    fi
-    delete_tmoe_deb_file
-}
-######################
-uncompress_deb_file() {
-    mkdir -p .DEB_TEMP_FOLDER
-    mv ${SELECTION} .DEB_TEMP_FOLDER
-    cd ./.DEB_TEMP_FOLDER
-    if [ "${BUSYBOX_AR}" = 'true' ]; then
-        busybox ar xv ${SELECTION}
-    else
-        ar xv ${SELECTION}
-    fi
-    mv ${SELECTION} ../
-    if [ -e "data.tar.xz" ]; then
-        cd /
-        tar -Jxvf ${CURRENT_DIR}/.DEB_TEMP_FOLDER/data.tar.xz ./usr
-    elif [ -e "data.tar.gz" ]; then
-        cd /
-        tar -zxvf ${CURRENT_DIR}/.DEB_TEMP_FOLDER/data.tar.gz ./usr
-    fi
-    rm -rf ${CURRENT_DIR}/.DEB_TEMP_FOLDER
-}
-########################
-delete_tmoe_deb_file() {
-    echo "请问是否需要${RED}删除${RESET}安装包文件"
-    ls -lah ${TMOE_FILE_ABSOLUTE_PATH}
-    echo "Do you want to ${RED}delete${RESET} it?"
-    do_you_want_to_continue
-    rm -fv ${TMOE_FILE_ABSOLUTE_PATH}
-}
-#################
-tmoe_deb_file_installer() {
-    FILE_EXT_01='deb'
-    FILE_EXT_02='DEB'
-    START_DIR="${HOME}"
-    tmoe_file_manager
-    if [ -z ${SELECTION} ]; then
-        echo "没有指定${YELLOW}有效${RESET}的${BLUE}文件${GREEN}，请${GREEN}重新${RESET}选择"
-    else
-        echo "您选择的deb文件为${TMOE_FILE_ABSOLUTE_PATH}"
-        ls -lah ${TMOE_FILE_ABSOLUTE_PATH}
-        deb_file_installer
-    fi
-}
-##################
 install_wesnoth_game() {
     DEPENDENCY_01="wesnoth"
     DEPENDENCY_02=""

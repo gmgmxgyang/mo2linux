@@ -840,14 +840,8 @@ install_debian_netease_cloud_music() {
 }
 ##############
 please_choose_netease_cloud_music_version() {
-    if (whiptail --title "sid or buster" --yes-button "sid" --no-button "buster" --yesno "请选择版本！旧版系统(例如ubuntu18.04)请选择buster,\n新版系统(如kali rolling和ubuntu20.10)请选择sid。\n不符合当前系统的版本将导致播放格式错误哦！♪(^∇^*) " 0 0); then
-        echo ${DEBIAN_DISTRO}
-        #此处无法使用case
-        if [ "${DEBIAN_DISTRO}" = 'ubuntu' ]; then
-            OPT_BRANCH_NAME='ubuntu_arm64'
-        else
-            OPT_BRANCH_NAME='sid_arm64'
-        fi
+    if (whiptail --title "sid or buster" --yes-button "sid" --no-button "buster" --yesno "请选择版本！旧版系统(例如ubuntu18.04)请选择buster,\n新版系统(如kali rolling)请选择sid。\n不符合当前系统的版本将导致播放格式错误哦！♪(^∇^*) " 0 0); then
+        OPT_BRANCH_NAME='sid_arm64'
     else
         OPT_BRANCH_NAME='arm64'
     fi
@@ -859,7 +853,17 @@ install_debian_buster_or_sid_netease_cloud_music() {
     elif grep -q 'buster' /etc/os-release; then
         OPT_BRANCH_NAME='arm64'
     else
-        please_choose_netease_cloud_music_version
+        case "${DEBIAN_DISTRO}" in
+        ubuntu)
+            if ! grep -Eq 'Bionic Beaver|Eoan Ermine|Xenial' "/etc/os-release"; then
+                OPT_BRANCH_NAME='ubuntu_arm64'
+            else
+                OPT_BRANCH_NAME='arm64'
+            fi
+            ;;
+        kali) OPT_BRANCH_NAME='sid_arm64' ;;
+        *) please_choose_netease_cloud_music_version ;;
+        esac
     fi
 }
 ################

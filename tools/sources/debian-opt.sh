@@ -56,17 +56,18 @@ debian_opt_menu() {
     #16 50 7
     INSTALL_APP=$(whiptail --title "DEBIAN OPT REPO" --menu \
         "您想要安装哪个软件？\n Which software do you want to install? " 0 0 0 \
-        "1" "🎶 Music:洛雪,listen1,coco音乐" \
+        "1" "🎶 music:洛雪,listen1,coco音乐" \
         "2" "📝 notes笔记:记录灵感,撰写文档,整理材料,回顾日记" \
         "3" "📺 videos视频:全网影视搜索,无损切割视频" \
         "4" "🖼️ pictures图像:bing壁纸,流程图绘制" \
         "5" "📖 reader:悦享生活,品味阅读" \
         "6" "🎮 games游戏:Minecraft启动器" \
-        "7" "development程序开发:神经网络,深度学习,GUI设计" \
-        "8" "other:其他软件(electron及软件列表)" \
-        "9" "Fix sandbox(修复已安装应用的沙盒模式)" \
-        "10" "switch source repo:切换软件源仓库" \
-        "11" "remove(移除本仓库)" \
+        "7" "🍎 virtual machine虚拟机:win95,macos8" \
+        "8" "development程序开发:神经网络,深度学习,GUI设计" \
+        "9" "other:其他软件(electron及软件列表)" \
+        "10" "fix sandbox(修复已安装应用的沙盒模式)" \
+        "11" "switch source repo:切换软件源仓库" \
+        "12" "remove(移除本仓库)" \
         "0" "🌚 Return to previous menu 返回上级菜单" \
         3>&1 1>&2 2>&3)
     ##############
@@ -78,11 +79,12 @@ debian_opt_menu() {
     4) debian_opt_picture_app ;;
     5) debian_opt_reader_app ;;
     6) debian_opt_game_app ;;
-    7) debian_opt_development_app ;;
-    8) debian_opt_other_apps ;;
-    9) fix_debian_opt_app_sandbox_mode ;;
-    10) switch_debian_opt_repo_sources ;;
-    11) remove_debian_opt_repo ;;
+    7) debian_opt_virtual_machine_app ;;
+    8) debian_opt_development_app ;;
+    9) debian_opt_other_apps ;;
+    10) fix_debian_opt_app_sandbox_mode ;;
+    11) switch_debian_opt_repo_sources ;;
+    12) remove_debian_opt_repo ;;
     esac
     ##########################
     press_enter_to_return
@@ -131,7 +133,7 @@ debian_opt_install_or_remove_02() {
     case "${INSTALL_APP}" in
     0 | "") ${RETURN_TO_MENU} ;;
     1) install_opt_app_02 ;;
-    2) remove_opt_app_01 ;;
+    2) remove_opt_app_02 ;;
     esac
     ##########################
     press_enter_to_return
@@ -181,7 +183,7 @@ copy_debian_opt_usr_bin_file() {
     case ${DEPENDENCY_01} in
     draw.io) cp -pf ${TMOE_OPT_BIN_DIR}/opt/draw.io/drawio /opt/draw.io ;;
     gridea) cp -pf ${TMOE_OPT_BIN_DIR}/opt/Gridea/gridea /opt/Gridea ;;
-    *) cp -pf ${TMOE_OPT_BIN_DIR}/usr/bin/${DEPENDENCY_01} /usr/bin ;;
+    *) cp -pf ${TMOE_OPT_BIN_DIR}/usr/bin/${DEPENDENCY_01} /usr/bin 2>/dev/null ;;
     esac
     case ${NOTICE_OF_REPAIR} in
     true) echo "修复完成" ;;
@@ -221,6 +223,21 @@ remove_opt_app_01() {
     esac
 }
 ################
+remove_opt_app_02() {
+    echo "${RED}${TMOE_REMOVAL_COMMAND}${RESET} ${BLUE}${DEPENDENCY_01}${RESET}"
+    case ${DEPENDENCY_01} in
+    cocomusic) DEBIAN_OPT_APP_DIR='/opt/CocoMusic' ;;
+    gridea) DEBIAN_OPT_APP_DIR='/opt/Gridea' ;;
+    listen1) DEBIAN_OPT_APP_DIR='/opt/Listen1' ;;
+    hmcl) DEBIAN_OPT_APP_DIR='/opt/HMCL' ;;
+    *) DEBIAN_OPT_APP_DIR="/opt/${DEPENDENCY_01}" ;;
+    esac
+    echo "${RED}rm -rv${RESET} ${BLUE}${DEBIAN_OPT_APP_DIR} ${OPT_APP_VERSION_TXT} ${APPS_LNK_DIR}/${DEPENDENCY_01}.desktop${RESET}"
+    do_you_want_to_continue
+    ${TMOE_REMOVAL_COMMAND} ${DEPENDENCY_01}
+    rm -rv ${DEBIAN_OPT_APP_DIR} ${OPT_APP_VERSION_TXT} ${APPS_LNK_DIR}/${DEPENDENCY_01}.desktop
+}
+################
 install_opt_app_01() {
     case "${LINUX_DISTRO}" in
     debian) beta_features_quick_install ;;
@@ -255,11 +272,44 @@ patch_opt_music_app() {
     rm -rv ${GIT_TEMP_FOLDER}
 }
 ##############
+git_clone_electron_virtual_machine() {
+    cd /tmp
+    TEMP_FOLDER=".${DEPENDENCY_01}_TEMP_FOLDER"
+    rm -rv ${TEMP_FOLDER} 2>/dev/null
+    git clone --depth=1 ${GIT_REPO_URL} ${TEMP_FOLDER}
+    cd ${TEMP_FOLDER}
+    cat .vm_* >vm.tar.xz
+    tar -PpJxvf vm.tar.xz
+    cd ..
+    rm -rv ${TEMP_FOLDER}
+}
+#############
+install_electron_macintosh_8() {
+    echo "下载大小约131.09MiB,解压后约占658M"
+    do_you_want_to_continue
+    GIT_REPO_URL='https://gitee.com/ak2/electron_macos8.git'
+    git_clone_electron_virtual_machine
+}
+#############
+install_electron_windows_95() {
+    echo "下载大小约166.19MiB,解压后约占1.2G"
+    do_you_want_to_continue
+    GIT_REPO_URL='https://gitee.com/ak2/electron_win95.git'
+    git_clone_electron_virtual_machine
+}
+##############
 install_opt_app_02() {
-    case "${LINUX_DISTRO}" in
-    debian) beta_features_quick_install ;;
-    *) ;;
+    case ${DEPENDENCY_01} in
+    macintosh.js) ;;
+    windows95) ;;
+    *)
+        case "${LINUX_DISTRO}" in
+        debian) beta_features_quick_install ;;
+        *) ;;
+        esac
+        ;;
     esac
+
     case ${DEPENDENCY_01} in
     cocomusic)
         GIT_PATCH_URL='https://gitee.com/ak2/cocomusic-patch.git'
@@ -271,6 +321,8 @@ install_opt_app_02() {
         GIT_PATCH_URL='https://gitee.com/ak2/iease-music-patch.git'
         patch_opt_music_app
         ;;
+    macintosh.js) install_electron_macintosh_8 ;;
+    windows95) install_electron_windows_95 ;;
     esac
     copy_debian_opt_usr_bin_file
 }
@@ -459,6 +511,39 @@ debian_opt_development_app() {
     ${RETURN_TO_WHERE}
 }
 ###############
+debian_opt_virtual_machine_app() {
+    DEPENDENCY_02=''
+    RETURN_TO_WHERE='debian_opt_virtual_machine_app'
+    RETURN_TO_MENU='debian_opt_virtual_machine_app'
+    DEBIAN_INSTALLATION_MENU='02'
+    INSTALL_APP=$(whiptail --title "VIRTUAL MACHINE APP" --menu \
+        "您想要安装哪个软件?\nWhich software do you want to install? " 0 0 0 \
+        "1" "MacOS8:上古时期苹果Macintosh系统" \
+        "2" "Win95:微软windows操作系统" \
+        "0" "🌚 Return to previous menu 返回上级菜单" \
+        3>&1 1>&2 2>&3)
+    ##############
+    case "${INSTALL_APP}" in
+    0 | "") debian_opt_menu ;;
+    1)
+        DEPENDENCY_01='macintosh.js'
+        ORIGINAL_URL='https://github.com/felixrieseberg/macintosh.js'
+        ;;
+    2)
+        DEPENDENCY_01='windows95'
+        ORIGINAL_URL='https://github.com/felixrieseberg/windows95'
+        ;;
+    esac
+    ##########################
+    echo "${YELLOW}${ORIGINAL_URL}${RESET}"
+    case ${DEBIAN_INSTALLATION_MENU} in
+    02) debian_opt_install_or_remove_02 ;;
+    esac
+    ########################
+    press_enter_to_return
+    ${RETURN_TO_WHERE}
+}
+##################
 debian_opt_video_app() {
     DEPENDENCY_02=''
     RETURN_TO_WHERE='debian_opt_video_app'
@@ -681,24 +766,24 @@ debian_opt_music_app() {
     DEBIAN_INSTALLATION_MENU='01'
     INSTALL_APP=$(whiptail --title "MUSIC APP" --menu \
         "您想要安装哪个软件?\n Which software do you want to install? " 0 0 0 \
-        "1" "listen1(免费音乐聚合)" \
+        "1" "lx-music-desktop(洛雪音乐助手)" \
         "2" "electron-netease-cloud-music(云音乐)" \
-        "3" "lx-music-desktop(洛雪音乐助手)" \
+        "3" "#netease-cloud-music-gtk(云音乐)" \
         "4" "cocomusic(第三方QQ音乐+白屏修复补丁)" \
         "5" "iease-music(界面华丽的云音乐客户端)" \
         "6" "petal(第三方豆瓣FM客户端)" \
         "7" "chord(支持虾米、云音乐、qq音乐多平台)" \
         "8" "#vocal(强大美观的播客app)" \
         "9" "#flacon(支持从专辑中提取音频文件)" \
-        "10" "#netease-cloud-music-gtk(云音乐)" \
+        "10" "listen1(免费音乐聚合)" \
         "0" "🌚 Return to previous menu 返回上级菜单" \
         3>&1 1>&2 2>&3)
     ##############
     case "${INSTALL_APP}" in
     0 | "") debian_opt_menu ;;
-    1) install_listen1 ;;
+    1) install_lx_music_desktop ;;
     2) install_electron_netease_cloud_music ;;
-    3) install_lx_music_desktop ;;
+    3) install_netease_cloud_music_gtk ;;
     4) install_coco_music ;;
     5) install_iease_music ;;
     6) install_electron_petal ;;
@@ -711,7 +796,7 @@ debian_opt_music_app() {
         non_debian_function
         install_opt_flacon
         ;;
-    10) install_netease_cloud_music_gtk ;;
+    10) install_listen1 ;;
     esac
     ##########################
     #"7" "feeluown(x64,支持网易云、虾米)" \

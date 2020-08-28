@@ -1536,7 +1536,7 @@ backup_system() {
 clean_up_container_garbage() {
 	cd ${DEBIAN_CHROOT}
 	CONTAINER_GARBAGE_FILES='tmp/.* tmp/* root/.local root/.ICEauthority root/.Xauthority root/.bash_history root/.cache root/.chord root/.cocomusic.json root/.dbus root/.gnupg root/.gridea root/.l2s..ICEauthority* root/.l2s..Xauthority* root/.local root/.mozilla root/.petal.db root/.vnc/passwd root/.vnc/x11passwd root/.vnc/localhost* root/.xfce4-session.verbose-log root/.xfce4-session.verbose-log.last root/.zcompdump-localhost* root/.zsh_history'
-	if [ -e ".vnc/passwd" ]; then
+	if [ -e "root/.vnc/passwd" ]; then
 		tree ${CONTAINER_GARBAGE_FILES} 2>/dev/null
 	fi
 	echo "${BOLD}${YELLOW}~/${DEBIAN_FOLDER}${RESET}${RESET}"

@@ -860,7 +860,7 @@ cat >${PREFIX}/bin/startx11vnc <<-ENDOFX11VNC
 	touch ~/${DEBIAN_FOLDER}/root/.vnc/startx11vnc
 	${PREFIX}/bin/debian
 ENDOFX11VNC
-ln -s ${PREFIX}/bin/startvnc ${HOME}/vnc 2>/dev/null
+ln -s ${PREFIX}/bin/startx11vnc ${HOME}/vnc 2>/dev/null
 ###############
 #此處僅適配Android,故shebang爲termux目錄
 cat >${PREFIX}/bin/stopvnc <<-'ENDOFSTOPVNC'

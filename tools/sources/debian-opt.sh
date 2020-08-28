@@ -960,7 +960,7 @@ install_debian_buster_or_sid_netease_cloud_music() {
 install_netease_cloud_music_gtk() {
     DEPENDENCY_01='netease-cloud-music-gtk'
     echo "github url：${YELLOW}https://github.com/gmg137/netease-cloud-music-gtk${RESET}"
-    echo "本版本仅兼容deb系发行版,20200827已经修复了播放格式错误的问题。"
+    echo "本版本仅兼容debian sid,ubuntu 20.04/20.10及kali rooling,20200827已经修复了播放格式错误的问题。"
     echo ${DEBIAN_DISTRO}
     non_debian_function
     if [ $(command -v ${DEPENDENCY_01}) ]; then

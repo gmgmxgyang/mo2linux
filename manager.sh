@@ -1573,7 +1573,7 @@ backup_gnu_linux_container() {
 	#echo "${YELLOW}按回车键选择压缩类型 Press enter to select compression type${RESET} "
 	#press_enter_to_continue
 	termux_backup_pre
-	TMPtime="${TARGET_BACKUP_FILE_NAME}-$(cat backuptime.tmp)-rootfs_bak"
+	TMPtime="${TARGET_BACKUP_FILE_NAME}_$(cat backuptime.tmp)-rootfs_bak"
 	BACKUP_FOLDER="${DEBIAN_CHROOT} ${PREFIX}/bin/debian-rm ${PREFIX}/bin/startxsdl ${PREFIX}/bin/startvnc"
 	BACKUP_FILE="${PREFIX}/bin/debian"
 	check_backup_file
@@ -1684,7 +1684,7 @@ backup_termux() {
 	##########################
 	if [ "${TERMUX_BACKUP}" = "home" ]; then
 		termux_backup_pre
-		TMPtime="${TARGET_BACKUP_FILE_NAME}-$(cat backuptime.tmp)-termux_home_bak"
+		TMPtime="${TARGET_BACKUP_FILE_NAME}_$(cat backuptime.tmp)-termux_home_bak"
 		##tar -czf - ~/${DEBIAN_FOLDER} | (pv -p --timer --rate --bytes > ${TMPtime}.tar.gz)
 		#ls -lth ./termux-home*.tar.* 2>/dev/null && echo '您之前所备份的(部分)文件如上所示'
 		#echo 'This operation will only backup the home directory of termux, not the container. If you need to backup debian, please select both options or backup debian separately.'
@@ -1733,14 +1733,14 @@ backup_termux() {
 	if [ "${TERMUX_BACKUP}" == 'usr' ]; then
 
 		termux_backup_pre
-		TMPtime="${TARGET_BACKUP_FILE_NAME}-$(cat backuptime.tmp)-termux_usr_bak"
+		TMPtime="${TARGET_BACKUP_FILE_NAME}_$(cat backuptime.tmp)-termux_usr_bak"
 		#ls -lth ./termux-usr*.tar.* 2>/dev/null && echo '您之前所备份的(部分)文件如上所示'
 
 		#echo "${YELLOW}按回车键选择压缩类型 Press enter to select compression type${RESET} "
 		#read
 		#TMPtime=termux-usr_$(cat backuptime.tmp)
 
-		if (whiptail --title "Select compression type 选择压��类型 " --yes-button "tar.xz" --no-button "tar.gz" --yesno "Which do yo like better? \n tar.xz压缩率高，但速度慢。tar.xz has a higher compression ration, but is slower.\n tar.gz速度快,但压缩率低。tar.gz compresses faster, but with a lower compression ratio.\n 压缩过程中，进度条倒着跑是正常现象。" 10 60); then
+		if (whiptail --title "Select compression type 选择压缩类型 " --yes-button "tar.xz" --no-button "tar.gz" --yesno "Which do yo like better? \n tar.xz压缩率高，但速度慢。tar.xz has a higher compression ration, but is slower.\n tar.gz速度快,但压缩率低。tar.gz compresses faster, but with a lower compression ratio.\n 压缩过程中，进度条倒着跑是正常现象。" 10 60); then
 
 			echo "您选择了tar.xz,即将为您备份至/sdcard/Download/backup/${TMPtime}.tar.xz"
 			echo "${YELLOW}按回车键开始备份,按Ctrl+C取消。Press Enter to start the backup.${RESET} "
@@ -1799,7 +1799,7 @@ backup_termux() {
 
 		#ls -lth ./termux-home+usr*.tar.* 2>/dev/null && echo '您之前所备份的(部分)文件如上所示'
 		termux_backup_pre
-		TMPtime="${TARGET_BACKUP_FILE_NAME}-$(cat backuptime.tmp)-termux_home+usr_bak"
+		TMPtime="${TARGET_BACKUP_FILE_NAME}_$(cat backuptime.tmp)-termux_home+usr_bak"
 		#TMPtime=termux-home+usr_$(cat backuptime.tmp)
 
 		if (whiptail --title "Select compression type 选择压缩类型 " --yes-button "tar.xz" --no-button "tar.gz" --yesno "Which do yo like better? \n tar.xz压缩率高，但速度慢。tar.xz has a higher compression ratio, but is slower.\n tar.gz速度快,但压缩率低。tar.gz compresses faster, but with a lower compression ratio.\n 压缩过程中，进度条倒着跑是正常现象。" 10 60); then

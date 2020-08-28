@@ -1541,12 +1541,14 @@ clean_up_container_garbage() {
 	cat <<-EOF
 		${RED}rm -rv${RESET} ${BLUE}${CONTAINER_GARBAGE_FILES}${RESET}
 	EOF
-	echo "若您需要将容器分享给他人，则可以清除以上文件，否则请勿执行清理操作。"
+	echo "若您需要将容器分享给他人，则可以删除以上文件，否则请勿执行清理操作。"
 	echo "若您使用的是deb系列发行版，则在清理前，可以在容器内以sudo或root权限执行${GREEN}apt clean;apt autoclean;apt autopurge || apt autoremove${RESET}"
 	echo "开发者不对误删除的文件负责，请在清理前确保以上列表中无重要文件，否则请输n"
 	echo "If you want to share the container with others, you can delete the above files, otherwise, please type n to return."
 	do_you_want_to_continue
 	rm -rv ${CONTAINER_GARBAGE_FILES}
+	press_enter_to_return
+	backup_system
 }
 #############
 check_backup_file() {

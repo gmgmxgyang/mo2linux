@@ -1510,28 +1510,22 @@ backup_filename() {
 ######################
 backup_system() {
 	unmount_proc_dev
+	RETURN_TO_WHERE='backup_system'
 	OPTION=$(whiptail --title "Backup System" --menu "Choose your option" 0 50 0 \
 		"0" "🌚 Back to the main menu 返回主菜单" \
-		"1" "备份GNU/Linux容器" \
-		"2" "备份Termux" \
-		"3" "使用Timeshift备份宿主机系统" \
+		"1" "Clean up container garbage备份容器前清理垃圾" \
+		"2" "backup container备份GNU/Linux容器" \
+		"3" "备份Termux" \
+		"4" "使用Timeshift备份宿主机系统" \
 		3>&1 1>&2 2>&3)
 	#########################################
-	if [ "${OPTION}" == '0' ]; then
-		tmoe_manager_main_menu
-	fi
-	######################
-	if [ "${OPTION}" == '1' ]; then
-		backup_gnu_linux_container
-	fi
-	###################
-	if [ "${OPTION}" == '2' ]; then
-		backup_termux
-	fi
-	###################
-	if [ "${OPTION}" == '3' ]; then
-		install_timeshift
-	fi
+	case "${OPTION}" in
+	0 | "") tmoe_manager_main_menu ;;
+	1) clean_up_container_garbage ;;
+	2) backup_gnu_linux_container ;;
+	3) backup_termux ;;
+	4) install_timeshift ;;
+	esac
 	####################
 	#echo "按${GREEN}回车键${RESET}${BLUE}返回${RESET}"
 	#echo "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
@@ -1539,6 +1533,22 @@ backup_system() {
 	tmoe_manager_main_menu
 }
 ###########################
+clean_up_container_garbage() {
+	cd ${DEBIAN_CHROOT}
+	CONTAINER_GARBAGE_FILES='tmp/.* tmp/* root/.local root/.ICEauthority root/.Xauthority root/.bash_history root/.cache root/.chord root/.cocomusic.json root/.dbus root/.gnupg root/.gridea root/.l2s..ICEauthority* root/.l2s..Xauthority* root/.local root/.mozilla root/.petal.db root/.vnc/passwd root/.vnc/x11passwd root/.vnc/localhost* root/.xfce4-session.verbose-log root/.xfce4-session.verbose-log.last root/.zcompdump-localhost* root/.zsh_history'
+	tree ${CONTAINER_GARBAGE_FILES}
+	echo ~/${DEBIAN_FOLDER}
+	cat <<-EOF
+		${RED}rm -rv${RESET} ${BLUE}${CONTAINER_GARBAGE_FILES}${RESET}
+	EOF
+	echo "若您需要将容器分享给他人，则可以清除以上文件，否则请勿执行清理操作。"
+	echo "若您使用的是deb系列发行版，则在清理前，可以在容器内以sudo或root权限执行${GREEN}apt clean;apt autoclean;apt autopurge || apt autoremove${RESET}"
+	echo "开发者不对误删除的文件负责，请在清理前确保以上列表中无重要文件，否则请输n"
+	echo "If you want to share the container with others, you can delete the above files, otherwise, please type n to return."
+	do_you_want_to_continue
+	rm -rv ${CONTAINER_GARBAGE_FILES}
+}
+#############
 check_backup_file() {
 	if [ -e "${BACKUP_FILE}" ]; then
 		BACKUP_FOLDER="${BACKUP_FOLDER} ${BACKUP_FILE}"
@@ -1546,7 +1556,6 @@ check_backup_file() {
 }
 ############
 backup_gnu_linux_container() {
-
 	#ls -lth ./debian*.tar.* 2>/dev/null | head -n 5
 	#echo '您之前所备份的(部分)文件如上所示'
 

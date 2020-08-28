@@ -4128,7 +4128,7 @@ first_configure_startvnc() {
         /mnt/c/WINDOWS/system32/cmd.exe /c "start ."
         startxsdl &
     fi
-    echo "${GREEN}tightvnc/tigervnc & xserver${RESET}配置${BLUE}完成${RESET},将为您配置${GREEN}x11vnc${RESET}"
+    echo "${GREEN}tightvnc/tigervnc & x window${RESET}配置${BLUE}完成${RESET},将为您配置${GREEN}x11vnc${RESET}"
     echo "按${YELLOW}回车键${RESET}查看x11vnc的${BLUE}启动说明${RESET}"
     press_enter_to_continue
     echo '------------------------'

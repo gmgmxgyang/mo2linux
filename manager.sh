@@ -1535,7 +1535,7 @@ backup_system() {
 ###########################
 clean_up_container_garbage() {
 	cd ${DEBIAN_CHROOT}
-	CONTAINER_GARBAGE_FILES='tmp/.* tmp/* root/.local root/.ICEauthority root/.Xauthority root/.bash_history root/.pki root/.cache root/.chord root/.cocomusic.json root/.dbus root/.gnupg root/.gridea root/.l2s..ICEauthority* root/.l2s..Xauthority* root/.local root/.mozilla root/.petal.db root/.vnc/passwd root/.vnc/x11passwd root/.vnc/localhost* root/.xfce4-session.verbose-log root/.xfce4-session.verbose-log.last root/.zcompdump-localhost* root/.zsh_history'
+	CONTAINER_GARBAGE_FILES='tmp/.* tmp/* root/.local root/.ICEauthority root/.Xauthority root/.bash_history root/.pki root/.cache root/.chord root/.cocomusic.json root/.dbus root/.gnupg root/.gridea root/.l2s..ICEauthority* root/.l2s..Xauthority* root/.local root/.mozilla root/.petal.db root/.vnc/passwd root/.vnc/x11passwd root/.vnc/localhost* root/.config/Electron root/.config/Netron root/.config/chord root/.config/electron-netease-cloud-music root/.config/go-for-it root/.config/gridea root/.config/listen1 root/.config/lx-music-desktop root/.config/neofetch root/.config/netease-cloud-music-gtk root/.config/pulse root/.config/tenvideo_universal root/.xfce4-session.verbose-log root/.xfce4-session.verbose-log.last root/.zcompdump-localhost* root/.z root/.zsh_history'
 	if [ -e "root/.vnc/passwd" ]; then
 		tree ${CONTAINER_GARBAGE_FILES} 2>/dev/null
 	fi

@@ -1535,7 +1535,7 @@ backup_system() {
 ###########################
 clean_up_container_garbage() {
 	cd ${DEBIAN_CHROOT}
-	CONTAINER_GARBAGE_FILES='tmp/.* tmp/* root/.local root/.ICEauthority root/.Xauthority root/.bash_history root/.cache root/.chord root/.cocomusic.json root/.dbus root/.gnupg root/.gridea root/.l2s..ICEauthority* root/.l2s..Xauthority* root/.local root/.mozilla root/.petal.db root/.vnc/passwd root/.vnc/x11passwd root/.vnc/localhost* root/.xfce4-session.verbose-log root/.xfce4-session.verbose-log.last root/.zcompdump-localhost* root/.zsh_history'
+	CONTAINER_GARBAGE_FILES='tmp/.* tmp/* root/.local root/.ICEauthority root/.Xauthority root/.bash_history root/.pki root/.cache root/.chord root/.cocomusic.json root/.dbus root/.gnupg root/.gridea root/.l2s..ICEauthority* root/.l2s..Xauthority* root/.local root/.mozilla root/.petal.db root/.vnc/passwd root/.vnc/x11passwd root/.vnc/localhost* root/.xfce4-session.verbose-log root/.xfce4-session.verbose-log.last root/.zcompdump-localhost* root/.zsh_history'
 	if [ -e "root/.vnc/passwd" ]; then
 		tree ${CONTAINER_GARBAGE_FILES} 2>/dev/null
 	fi
@@ -1549,6 +1549,7 @@ clean_up_container_garbage() {
 	echo "If you want to share the container with others, you can delete the above files, otherwise, please type n to return."
 	do_you_want_to_continue
 	rm -rv ${CONTAINER_GARBAGE_FILES}
+	sed -i 's@^#.*DISABLE_AUTO_UPDATE=@DISABLE_AUTO_UPDATE=@g' root/.zshrc
 	press_enter_to_return
 	backup_system
 }

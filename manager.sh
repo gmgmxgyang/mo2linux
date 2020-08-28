@@ -1513,7 +1513,7 @@ backup_system() {
 	RETURN_TO_WHERE='backup_system'
 	OPTION=$(whiptail --title "Backup System" --menu "Choose your option" 0 50 0 \
 		"0" "🌚 Back to the main menu 返回主菜单" \
-		"1" "Clean up container garbage备份容器前清理垃圾" \
+		"1" "Clean up container garbage清理容器垃圾" \
 		"2" "backup container备份GNU/Linux容器" \
 		"3" "备份Termux" \
 		"4" "使用Timeshift备份宿主机系统" \
@@ -1536,8 +1536,8 @@ backup_system() {
 clean_up_container_garbage() {
 	cd ${DEBIAN_CHROOT}
 	CONTAINER_GARBAGE_FILES='tmp/.* tmp/* root/.local root/.ICEauthority root/.Xauthority root/.bash_history root/.cache root/.chord root/.cocomusic.json root/.dbus root/.gnupg root/.gridea root/.l2s..ICEauthority* root/.l2s..Xauthority* root/.local root/.mozilla root/.petal.db root/.vnc/passwd root/.vnc/x11passwd root/.vnc/localhost* root/.xfce4-session.verbose-log root/.xfce4-session.verbose-log.last root/.zcompdump-localhost* root/.zsh_history'
-	tree ${CONTAINER_GARBAGE_FILES}
-	echo ~/${DEBIAN_FOLDER}
+	tree ${CONTAINER_GARBAGE_FILES} 2>/dev/null
+	echo "${BOLD}${YELLOW}~/${DEBIAN_FOLDER}${RESET}${RESET}"
 	cat <<-EOF
 		${RED}rm -rv${RESET} ${BLUE}${CONTAINER_GARBAGE_FILES}${RESET}
 	EOF

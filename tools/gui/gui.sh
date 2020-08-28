@@ -935,10 +935,21 @@ debian_xfce4_extras() {
             kali_xfce4_extras
         fi
         if [ ! $(command -v xfce4-panel-profiles) ]; then
-            REPO_URL='https://mirrors.tuna.tsinghua.edu.cn/ubuntu/pool/universe/x/xfce4-panel-profiles/'
-            GREP_NAME="xfce4-panel-profiles"
-            THE_LATEST_DEB_VERSION="$(curl -L ${REPO_URL} | grep '.deb' | grep "${GREP_NAME}" | grep -v '1.0.9' | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
-            download_deb_comman_model_02
+            case ${DEBIAN_DISTRO} in
+            ubuntu)
+                if ! grep -q 'Bionic' /etc/os-release; then
+                    GREP_NAME="xfce4-panel-profiles"
+                else
+                    GREP_NAME="xfpanel-switch"
+                fi
+                ;;
+            *)
+                REPO_URL='https://mirrors.tuna.tsinghua.edu.cn/ubuntu/pool/universe/x/xfce4-panel-profiles/'
+                GREP_NAME="xfce4-panel-profiles"
+                THE_LATEST_DEB_VERSION="$(curl -L ${REPO_URL} | grep '.deb' | grep "${GREP_NAME}" | grep -v '1.0.9' | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
+                download_deb_comman_model_02
+                ;;
+            esac
         fi
     fi
     apt_purge_libfprint

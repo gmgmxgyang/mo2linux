@@ -942,6 +942,7 @@ debian_xfce4_extras() {
                 else
                     GREP_NAME="xfpanel-switch"
                 fi
+                apt install -y ${GREP_NAME}
                 ;;
             *)
                 REPO_URL='https://mirrors.tuna.tsinghua.edu.cn/ubuntu/pool/universe/x/xfce4-panel-profiles/'

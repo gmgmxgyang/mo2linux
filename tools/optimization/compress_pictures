@@ -6,7 +6,7 @@ image_compression_menu() {
         whiptail --title "image_compression" --menu \
             "TMOE批量压缩图片小工具" 0 0 0 \
             "1" "start 启动" \
-            "2" "install depencies安装依赖" \
+            "2" "install dependencies安装依赖" \
             "3" "remove 卸载" \
             "0" "🌚 Back to the main menu 返回主菜单" \
             3>&1 1>&2 2>&3

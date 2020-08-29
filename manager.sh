@@ -2809,6 +2809,7 @@ git_clone_tmoe_linux_container_file() {
 		mv .container_linux_* ..
 		cd ..
 	fi
+	echo "Debian恢复包内的数百张壁纸来自于影之音酱"
 	cat .container_linux_* >${DOWNLOAD_FILE_NAME}
 	mv -f ${DOWNLOAD_FILE_NAME} ../
 	cd ../

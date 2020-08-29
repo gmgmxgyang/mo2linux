@@ -101,7 +101,7 @@ wsl --set-default-version 2
 #### 4.RedHat/Fedora/CentOS
 
 ```shell
-    sudo dnf install -y curl || yum install -y curl
+    sudo dnf install -y curl || sudo yum install -y curl
     bash -c "$(curl -L https://gitee.com/mo2/linux/raw/2/2)"
 ```
 

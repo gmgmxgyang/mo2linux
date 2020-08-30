@@ -1237,22 +1237,19 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	########################
 	opensuse_linux_repo() {
 	    LINUX_DISTRO='suse'
-		case "$(uname -m)" in
-		aarch64|armv8*) 
+		#此处勿用case
+		if [ "$(uname -m)" = 'aarch64' ];then
 			zypper mr -da
 	        zypper addrepo -fcg  https://mirrors.tuna.tsinghua.edu.cn/opensuse/ports/aarch64/tumbleweed/repo/oss tuna-mirrors-oss
 	        zypper --gpg-auto-import-keys refresh
-		;;
-		armv7*);;
-		*) 
+		elif [ "$(uname -m)" != 'armv7l' ] ;then
 	        zypper mr -da
 	        zypper addrepo -fcg https://mirrors.tuna.tsinghua.edu.cn/opensuse/tumbleweed/repo/oss/ tuna-mirrors-oss
 	        zypper addrepo -fcg https://mirrors.tuna.tsinghua.edu.cn/opensuse/tumbleweed/repo/non-oss/ tuna-mirrors-non-oss
 	        zypper addrepo -fcg https://mirrors.tuna.tsinghua.edu.cn/packman/suse/openSUSE_Tumbleweed/ tuna-mirrors_Tumbleweed
 	        zypper --gpg-auto-import-keys refresh
 	        #zypper dup --no-allow-vendor-change -y
-		;;
-		esac
+		fi
 	    zypper install -y wget curl
 	    sed -i 's@RC_LANG=.*@RC_LANG=zh_CN.UTF8@' /etc/sysconfig/language
 	    sed -i 's@RC_LC_ALL=.*@RC_LC_ALL=zh_CN.UTF8@' /etc/sysconfig/language

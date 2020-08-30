@@ -534,7 +534,8 @@ check_tmoe_proot_container_proc() {
 		sed -i "s@#test04@@" ${PREFIX}/bin/debian
 	fi
 	######
-	for i in buddyinfo cgroups consoles crypto devices diskstats execdomains fb filesystems interrupts iomem ioports kallsyms keys key-users kmsg kpageflags loadavg locks misc modules pagetypeinfo partitions sched_debug softirqs timer_list uptime vmallocinfo vmstat zoneinfo; do
+	#不要读取kmsg
+	for i in buddyinfo cgroups consoles crypto devices diskstats execdomains fb filesystems interrupts iomem ioports kallsyms keys key-users kpageflags loadavg locks misc modules pagetypeinfo partitions sched_debug softirqs timer_list uptime vmallocinfo vmstat zoneinfo; do
 		TMOE_PROC_FILE=$(cat /proc/${i} 2>/dev/null)
 		if [ -z "${TMOE_PROC_FILE}" ]; then
 			echo "检测到您无权读取${BLUE}/proc/${i}${RESET},修复中..."

@@ -893,9 +893,19 @@ creat_proot_startup_script() {
 	#echo "" 空行不是多余的
 }
 #########
+arch_mount_self() {
+	CONTAINER_DISTRO=$(cat ${LINUX_CONTAINER_DISTRO_FILE} | head -n 1)
+	case ${CONTAINER_DISTRO} in
+	arch | manajro)
+		sed -i 's@##arch-chroot#@@g' ${PREFIX}/bin
+		;;
+	esac
+}
+##########
 if [ -e "${HOME}/.config/tmoe-linux/chroot_container" ]; then
 	TMOE_CHROOT='true'
 	creat_chroot_startup_script
+	arch_mount_self
 else
 	creat_proot_startup_script
 	check_proot_qemu

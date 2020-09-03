@@ -483,9 +483,8 @@ creat_chroot_startup_script() {
 		}
 		##############
 		start_tmoe_gnu_linux_chroot_container() {
-		    cat ${DEBIAN_CHROOT}/etc/os-release 2>/dev/null | grep PRETTY_NAME | cut -d '"' -f 2
 		    case \$(uname -o) in
-		    Android) LINUX_DISTRO='Android' ;;
+		    Android);;
 		    *)
 		        case \$(id -u) in
 		        0) ;;
@@ -501,6 +500,7 @@ creat_chroot_startup_script() {
 		        ;;
 		    esac
 		    ########
+			cat ${DEBIAN_CHROOT}/etc/os-release 2>/dev/null | grep PRETTY_NAME | cut -d '"' -f 2
 		    TMOE_LOCALE_FILE="${HOME}/.config/tmoe-linux/locale.txt"
 		    PROC_FD_PATH="/proc/self/fd"
 		    #########

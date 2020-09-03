@@ -513,6 +513,11 @@ creat_chroot_startup_script() {
 		        fi
 		    }
 		    ##########
+			#arch-linux挂载自身
+			if ! detect_mount "${DEBIAN_CHROOT}/"; then
+		       ##arch-chroot#su -c "mount --rbind ${DEBIAN_CHROOT} ${DEBIAN_CHROOT}/ &>/dev/null"
+			 fi
+			 #########
 		    if [ -f "${DEBIAN_CHROOT}/bin/zsh" ]; then
 		        TMOE_SHELL="/bin/zsh"
 		    elif [ -f "${DEBIAN_CHROOT}/bin/bash" ]; then
@@ -634,8 +639,6 @@ creat_chroot_startup_script() {
 		    done
 		    unset i
 		     ##########
-		     #arch-linux挂载自身
-		     ##arch-chroot#su -c "mount --rbind ${DEBIAN_CHROOT} ${DEBIAN_CHROOT}/ &>/dev/null"
 		     set -- "${DEBIAN_CHROOT}" "\$@"
 		     set -- "chroot" "\$@"
 		     unset LD_PRELOAD

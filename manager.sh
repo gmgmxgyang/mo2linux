@@ -57,6 +57,10 @@ check_tmoe_container_chroot() {
 	elif grep -q 'TMOE_CHROOT=' ${PREFIX}/bin/debian; then
 		TMOE_CHROOT='true'
 	fi
+	case ${TMOE_CHROOT} in
+	true) TMOE_PREFIX='sudo' ;;
+	*) TMOE_PREFIX='sudo' ;;
+	esac
 }
 ######
 check_arch() {
@@ -1480,7 +1484,7 @@ remove_gnu_linux_container() {
 	read opt
 	case $opt in
 	y* | Y* | "")
-		chmod 777 -R ${DEBIAN_FOLDER}
+		chmod 777 -R ${DEBIAN_FOLDER} || sudo chmod 777 -R ${DEBIAN_FOLDER}
 		rm -rfv "${DEBIAN_FOLDER}" ${PREFIX}/bin/debian ${PREFIX}/bin/startvnc ${PREFIX}/bin/startx11vnc ${PREFIX}/bin/stopvnc ${PREFIX}/bin/startxsdl ${PREFIX}/bin/debian-rm ${PREFIX}/bin/code ~/.config/tmoe-linux/across_architecture_container.txt ${PREFIX}/bin/startx11vnc 2>/dev/null || sudo rm -rfv "${DEBIAN_FOLDER}" ${PREFIX}/bin/debian ${PREFIX}/bin/startvnc ${PREFIX}/bin/startx11vnc ${PREFIX}/bin/stopvnc ${PREFIX}/bin/startxsdl ${PREFIX}/bin/debian-rm ${PREFIX}/bin/code ~/.config/tmoe-linux/across_architecture_container.txt ${PREFIX}/bin/startx11vnc 2>/dev/null
 		if [ -d "${HOME}/debian_arm64" ]; then
 			echo "检测到残留文件夹，正在移除..."
@@ -1627,7 +1631,7 @@ backup_gnu_linux_container() {
 		echo "${YELLOW}按回车键开始备份,按Ctrl+C取消。Press Enter to start the backup.${RESET} "
 		press_enter_to_continue
 		#stopvnc（pkill all）在linux不会自动生成
-		tar -PJpcvf ${TMPtime}.tar.xz --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ${BACKUP_FOLDER}
+		${TMOE_PREFIX} tar -PJpcvf ${TMPtime}.tar.xz --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ${BACKUP_FOLDER}
 
 		#whiptail进度条已弃用
 		#tar -PJpcf - --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ~/${DEBIAN_FOLDER} ${PREFIX}/bin/debian | (pv -n >${TMPtime}.tar.xz) 2>&1 | whiptail --gauge "Packaging into tar.xz" 10 70
@@ -1648,15 +1652,15 @@ backup_gnu_linux_container() {
 			echo "${YELLOW}按回车键开始备份,按Ctrl+C取消。${RESET} "
 			press_enter_to_continue
 			if [ "$(command -v pv)" ]; then
-				tar -Ppczf - --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ${BACKUP_FOLDER} | (pv -p --timer --rate --bytes >${TMPtime}.tar.gz)
+				${TMOE_PREFIX} tar -Ppczf - --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ${BACKUP_FOLDER} | (pv -p --timer --rate --bytes >${TMPtime}.tar.gz)
 			else
-				tar -Ppczvf ${TMPtime}.tar.gz --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ${BACKUP_FOLDER}
+				${TMOE_PREFIX} tar -Ppczvf ${TMPtime}.tar.gz --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ${BACKUP_FOLDER}
 			fi
 		else
 			echo "您选择了tar,只进行打包,不进行压缩，即将为您备份至/sdcard/Download/backup/${TMPtime}.tar"
 			echo "${YELLOW}按回车键开始备份,按Ctrl+C取消。${RESET} "
 			press_enter_to_continue
-			tar -Ppcvf ${TMPtime}.tar --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ${BACKUP_FOLDER}
+			${TMOE_PREFIX} tar -Ppcvf ${TMPtime}.tar --exclude=~/${DEBIAN_FOLDER}/root/sd --exclude=~/${DEBIAN_FOLDER}/root/tf --exclude=~/${DEBIAN_FOLDER}/root/termux ${BACKUP_FOLDER}
 		fi
 
 		#最新版弃用了whiptail的进度条！！！
@@ -1900,10 +1904,10 @@ uncompress_other_format_file() {
 	echo "即将为您解压..."
 	if [ ! "$(command -v pv)" ] || [ "${COMPATIBILITY_MODE}" = 'true' ]; then
 		echo "${GREEN} tar -Ppxvf ${RESTORE} ${RESET}"
-		tar -Ppxvf ${RESTORE}
+		${TMOE_PREFIX} tar -Ppxvf ${RESTORE}
 	else
 		echo "${GREEN} pv ${RESTORE} | tar -Ppx ${RESET}"
-		pv ${RESTORE} | tar -Ppx
+		pv ${RESTORE} | ${TMOE_PREFIX} tar -Ppx
 	fi
 }
 ##############
@@ -1913,10 +1917,10 @@ uncompress_tar_xz_file() {
 	echo "即将为您解压..."
 	if [ ! "$(command -v pv)" ] || [ "${COMPATIBILITY_MODE}" = 'true' ]; then
 		echo "${GREEN} tar -PpJxvf ${RESTORE} ${RESET}"
-		tar -PpJxvf ${RESTORE}
+		${TMOE_PREFIX} tar -PpJxvf ${RESTORE}
 	else
 		echo "${GREEN} pv ${RESTORE} | tar -PpJx ${RESET}"
-		pv ${RESTORE} | tar -PpJx
+		pv ${RESTORE} | ${TMOE_PREFIX} tar -PpJx
 	fi
 }
 ######################
@@ -1926,10 +1930,10 @@ uncompress_tar_gz_file() {
 	echo "即将为您解压..."
 	if [ ! "$(command -v pv)" ] || [ "${COMPATIBILITY_MODE}" = 'true' ]; then
 		echo "${GREEN} tar -Ppzxvf ${RESTORE} ${RESET}"
-		tar -Ppzxvf ${RESTORE}
+		${TMOE_PREFIX} tar -Ppzxvf ${RESTORE}
 	else
 		echo "${GREEN} pv ${RESTORE} | tar -Ppzx ${RESET}"
-		pv ${RESTORE} | tar -Ppzx
+		pv ${RESTORE} | ${TMOE_PREFIX} tar -Ppzx
 	fi
 }
 #####################

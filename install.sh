@@ -894,6 +894,7 @@ creat_proot_startup_script() {
 }
 #########
 if [ -e "${HOME}/.config/tmoe-linux/chroot_container" ]; then
+	TMOE_CHROOT='true'
 	creat_chroot_startup_script
 else
 	creat_proot_startup_script
@@ -1231,7 +1232,7 @@ cat >vnc-autostartup <<-'EndOfFile'
 	ps -e 2>/dev/null | grep -Ev 'bash|zsh' | tail -n 20
 	systemctl(){
 	    case $2 in
-	        "") ;;
+	        "") systemctl $1 ;;
 	        *) /sbin/service $2 $1 ;;
 	    esac
 	}
@@ -1857,5 +1858,7 @@ if [ "${LINUX_DISTRO}" != 'Android' ]; then
 	sed -i 's:#!/data/data/com.termux/files/usr/bin/env bash:#!/usr/bin/env bash:g' $(grep -rl 'com.termux' "${PREFIX}/bin")
 	#sed -i 's:#!/data/data/com.termux/files/usr/bin/env bash:#!/usr/bin/env bash:' ${DEBIAN_CHROOT}/remove-debian.sh
 fi
-
+case ${TMOE_CHROOT} in
+true) su -c "chown -Rv root:root ${DEBIAN_CHROOT}" ;;
+esac
 bash ${PREFIX}/bin/debian

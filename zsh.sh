@@ -334,7 +334,7 @@ cat >~/.zlogin <<-'EndOfFile'
 	ps -e 2>/dev/null | grep -Ev 'bash|zsh' | tail -n 20
 	systemctl(){
 	    case $2 in
-	        "") ;;
+	        "") systemctl $1 ;;
 	        *) /sbin/service $2 $1 ;;
 	    esac
 	}

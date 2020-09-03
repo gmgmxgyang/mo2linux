@@ -897,7 +897,7 @@ arch_mount_self() {
 	CONTAINER_DISTRO=$(cat ${LINUX_CONTAINER_DISTRO_FILE} | head -n 1)
 	case ${CONTAINER_DISTRO} in
 	arch | manajro)
-		sed -i 's@##arch-chroot#@@g' ${PREFIX}/bin
+		sed -i 's@##arch-chroot#@@g' ${PREFIX}/bin/debian
 		;;
 	esac
 }

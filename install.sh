@@ -1522,12 +1522,12 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	fi
 	##############################
 	apt update 2>/dev/null
+	 apt reinstall -y perl-base
 	if [ ! $(command -v locale-gen) ]; then
 	    apt install -y locales 2>/dev/null
 	fi
 
 	if grep -q 'ubuntu' /etc/os-release; then
-	   apt reinstall perl-base
 	   apt install -y ^language-pack-${TMOE_LANG_QUATER} 2>/dev/null
 	fi
 

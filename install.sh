@@ -1578,7 +1578,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	    pacman -Sy --noconfirm archlinuxcn-keyring
 	    pacman -S --noconfirm yay
 	    yay --aururl "https://aur.tuna.tsinghua.edu.cn" --save
-	    pacman -S --noconfirm diffutils iproute
+	    pacman -S --noconfirm diffutils iproute gawk
 	}
 	#################
 	#################

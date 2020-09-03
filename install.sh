@@ -485,7 +485,7 @@ creat_chroot_startup_script() {
 		start_tmoe_gnu_linux_chroot_container() {
 		    cat ${DEBIAN_CHROOT}/etc/os-release 2>/dev/null | grep PRETTY_NAME | cut -d '"' -f 2
 		    case \$(uname -o) in
-		    Android) ;;
+		    Android) LINUX_DISTRO='Android' ;;
 		    *)
 		        case \$(id -u) in
 		        0) ;;
@@ -642,7 +642,7 @@ creat_chroot_startup_script() {
 		     set -- "${DEBIAN_CHROOT}" "\$@"
 		     set -- "chroot" "\$@"
 		     unset LD_PRELOAD
-		     su -c "exec \$@"
+			 su -c "exec \$@"
 		    }
 		    main "\$@"
 	ENDOFTMOECHROOT
@@ -905,10 +905,20 @@ arch_mount_self() {
 	esac
 }
 ##########
+fix_gnu_linux_chroot_exec() {
+	case ${LINUX_DISTRO} in
+	Android) ;;
+	*)
+		sed -i 's:su -c "exec $@":exec $@:' ${PREFIX}/bin/debian
+		;;
+	esac
+}
+###########
 if [ -e "${HOME}/.config/tmoe-linux/chroot_container" ]; then
 	TMOE_CHROOT='true'
 	creat_chroot_startup_script
 	arch_mount_self
+	fix_gnu_linux_chroot_exec
 else
 	creat_proot_startup_script
 	check_proot_qemu

@@ -515,6 +515,7 @@ creat_chroot_startup_script() {
 		    ##########
 			#arch-linux挂载自身
 			if ! detect_mount "${DEBIAN_CHROOT}/"; then
+			   echo ''
 		       ##arch-chroot#su -c "mount --rbind ${DEBIAN_CHROOT} ${DEBIAN_CHROOT}/ &>/dev/null"
 			 fi
 			 #########

@@ -433,12 +433,12 @@ creat_chroot_startup_script() {
 		fi
 	fi
 	##################
-	for i in dev proc sys root/sd tmp root/termux root/tf; do
-		if [ -e "${DEBIAN_CHROOT}/${i}" ]; then
-			su -c "chattr +i ${i}"
-		fi
-	done
-	unset i
+	#for i in dev proc sys root/sd tmp root/termux root/tf; do
+	#	if [ -e "${DEBIAN_CHROOT}/${i}" ]; then
+	#		su -c "chattr +i ${i}"
+	#	fi
+	#done
+	#unset i
 	###############
 	#此处若不创建，将有可能导致chromium无法启动。
 	mkdir -p ${DEBIAN_CHROOT}/run/shm
@@ -913,12 +913,12 @@ creat_linux_container_remove_script() {
 						su -c "umount -lvf ${DEBIAN_CHROOT}/*/*  2>/dev/null"
 						su -c "umount -lvf ${DEBIAN_CHROOT}  2>/dev/null"
 						su -c "ls -lAh  ${DEBIAN_CHROOT}/root/sd"
-						for i in dev proc sys root/sd tmp root/termux root/tf; do
-							if [ -e "${DEBIAN_CHROOT}/\${i}" ]; then
-								su -c "chattr -i \${i}"
-							fi
-						done
-						unset i
+						#for i in dev proc sys root/sd tmp root/termux root/tf; do
+						# if [ -e "${DEBIAN_CHROOT}/\${i}" ]; then
+						#  su -c "chattr -i \${i}"
+						# fi
+						#done
+						#unset i
 					fi
 					for i in dev dev/shm dev/pts proc sys root/termux root/tf root/sd storage; do
 						if [ -e "${DEBIAN_CHROOT}/\${i}" ]; then

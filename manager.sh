@@ -1218,10 +1218,10 @@ install_proot_container() {
 	#sed -i 's@^command+=" --link2sy@#&@' $(command -v debian)
 }
 ##########################
-install_chroot_container() {
+notes_of_chroot() {
 	#echo "This feature currently only supports GNU/Linux systems and is still in beta."
 	#echo "本功能目前仅对GNU/Linux系统测试开放。"
-	echo "If you find that some directories cannot be unmounted forcibly before removing the container,then please restart your device before uninstalling the chroot container to prevent the mounted directory from being deleted by mistake."
+	echo "If you find that some directories cannot be unmounted forcibly before removing the container,then please restart your device."
 	echo "移除容器前若发现部分已挂载目录无法强制卸载，请重启设备再卸载chroot容器，防止已挂载目录被误删！"
 	case ${LINUX_DISTRO} in
 	Android)
@@ -1253,6 +1253,10 @@ install_chroot_container() {
 	esac
 	#else
 	#fi
+}
+#############
+install_chroot_container() {
+	notes_of_chroot
 	chroot_install_debian
 }
 ########################
@@ -1434,16 +1438,16 @@ remove_gnu_linux_container() {
 		It is recommended that you backup the entire system before removal. 
 		If the data is lost due to improper operation, the developer is not responsible! 
 	EOF
-	case ${TMOE_CHROOT} in
-	true)
-		for i in dev proc sys root/sd tmp root/termux root/tf; do
-			if [ -e "${DEBIAN_CHROOT}/${i}" ]; then
-				su -c "chattr -i ${i}"
-			fi
-		done
-		unset i
-		;;
-	esac
+	#case ${TMOE_CHROOT} in
+	#true)
+	#	for i in dev proc sys root/sd tmp root/termux root/tf; do
+	#		if [ -e "${DEBIAN_CHROOT}/${i}" ]; then
+	#			su -c "chattr -i ${i}"
+	#		fi
+	#	done
+	#	unset i
+	#	;;
+	#esac
 	cat /proc/mounts | grep ${DEBIAN_FOLDER}
 	ps -e | grep proot
 	ps -e | grep startvnc

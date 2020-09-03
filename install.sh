@@ -630,7 +630,13 @@ creat_chroot_startup_script() {
 		su -c "/system/bin/wm size" | awk '{print $3}' | head -n 1 >${TMOE_CHROOT_ETC}/wm_size.txt
 	fi
 	if [ $(command -v getprop) ]; then
-		echo $(getprop ro.product.model) >${DEBIAN_CHROOT}/etc/hostname
+		ANDROID_HOST_NAME=$(getprop ro.product.model)
+		echo ${ANDROID_HOST_NAME} >${DEBIAN_CHROOT}/etc/hostname
+		case $(hostname) in
+		localhost | "")
+			sudo hostname ${ANDROID_HOST_NAME}
+			;;
+		esac
 	fi
 	echo "Creating chroot startup script"
 	echo "正在创建chroot容器启动脚本${PREFIX}/bin/debian "

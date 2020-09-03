@@ -1527,6 +1527,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	fi
 
 	if grep -q 'ubuntu' /etc/os-release; then
+	   apt reinstall perl-base
 	   apt install -y ^language-pack-${TMOE_LANG_QUATER} 2>/dev/null
 	fi
 

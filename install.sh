@@ -233,8 +233,9 @@ echo "   7BJ .7: i2. ........:..  sJ7Lvr7s    "
 echo "    jBBdD. :. ........:r... YB  Bi      "
 echo "       :7j1.                 :  :       "
 if [ -f "${HOME}/.RASPBIANARMHFDetectionFILE" ]; then
-	echo "检测到您选择的是raspbian树莓派系统，将通过debian buster来间接安装raspbian buster"
+	echo "检测到您选择的是raspbian树莓派系统"
 	echo "已将您的架构临时识别为armhf"
+	#将通过debian buster来间接安装raspbian buster
 fi
 cd ${HOME}
 

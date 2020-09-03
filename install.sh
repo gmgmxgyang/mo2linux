@@ -923,6 +923,7 @@ creat_linux_container_remove_script() {
 		      cd ${HOME}
 				   if grep -q 'TMOE_CHROOT=' ${PREFIX}/bin/debian || [ -e "${CONFIG_FOLDER}/chroot_container" ]; then
 						TMOE_CHROOT='true'
+						TMOE_PREFIX='sudo'
 						su -c "umount -lvf ${DEBIAN_CHROOT}/* 2>/dev/null"
 						su -c "umount -lvf ${DEBIAN_CHROOT}/*/*  2>/dev/null"
 						su -c "umount -lvf ${DEBIAN_CHROOT}  2>/dev/null"
@@ -933,6 +934,8 @@ creat_linux_container_remove_script() {
 						# fi
 						#done
 						#unset i
+					else
+						TMOE_PREFIX=''
 					fi
 					for i in dev dev/shm dev/pts proc sys root/termux root/tf root/sd storage/emulated/0; do
 						if [ -e "${DEBIAN_CHROOT}/\${i}" ]; then
@@ -980,14 +983,14 @@ creat_linux_container_remove_script() {
 		    #echo '检测到chroot容器正在运行，您可以输pkill -u $(whoami) 来终止所有进程'    
 		    #echo "若容器未停止运行，则建议你先手动在termux原系统中执行stopvnc，再进行移除操作。"
 			echo 'Detecting debian system size... 正在检测debian system占用空间大小'
-		    du -sh ./${DEBIAN_FOLDER} --exclude=./${DEBIAN_FOLDER}/root/tf --exclude=./${DEBIAN_FOLDER}/root/sd --exclude=./${DEBIAN_FOLDER}/root/termux
+		    ${TMOE_PREFIX} du -sh ./${DEBIAN_FOLDER} --exclude=./${DEBIAN_FOLDER}/root/tf --exclude=./${DEBIAN_FOLDER}/root/sd --exclude=./${DEBIAN_FOLDER}/root/termux
 			echo "Do you want to remove it?[Y/n]"
 			echo "\${YELLOW}按回车键确认移除 Press enter to remove.\${RESET} "
 		    pkill proot 2>/dev/null
 			read opt
 			case \$opt in
 				y*|Y*|"") 
-		    chmod 777 -R ${DEBIAN_FOLDER}
+		    chmod 777 -R ${DEBIAN_FOLDER} || sudo chmod 777 -R ${DEBIAN_FOLDER}
 			rm -rfv "${DEBIAN_FOLDER}" ${PREFIX}/bin/debian ${PREFIX}/bin/startvnc ${PREFIX}/bin/startx11vnc ${PREFIX}/bin/stopvnc ${PREFIX}/bin/startxsdl ${PREFIX}/bin/debian-rm ${PREFIX}/bin/code ~/.config/tmoe-linux/across_architecture_container.txt 2>/dev/null || sudo rm -rfv "${DEBIAN_FOLDER}" ${PREFIX}/bin/debian ${PREFIX}/bin/startvnc ${PREFIX}/bin/startx11vnc ${PREFIX}/bin/stopvnc ${PREFIX}/bin/startxsdl ${PREFIX}/bin/debian-rm ${PREFIX}/bin/code ~/.config/tmoe-linux/across_architecture_container.txt 2>/dev/null
 		    sed -i '/alias debian=/d' ${PREFIX}/etc/profile
 			sed -i '/alias debian-rm=/d' ${PREFIX}/etc/profile

@@ -1425,7 +1425,7 @@ enable_root_mode() {
 remove_gnu_linux_container() {
 	cd ${HOME}
 	unmount_proc_dev
-	for i in dev dev/shm dev/pts proc sys root/termux root/tf root/sd storage; do
+	for i in dev dev/shm dev/pts proc sys root/termux root/tf root/sd storage/emulated/0; do
 		if [ -e "${DEBIAN_CHROOT}/${i}" ]; then
 			ls -lAh "${DEBIAN_CHROOT}/${i}" 2>/dev/null
 		fi

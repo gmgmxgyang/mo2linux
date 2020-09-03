@@ -920,7 +920,7 @@ creat_linux_container_remove_script() {
 						#done
 						#unset i
 					fi
-					for i in dev dev/shm dev/pts proc sys root/termux root/tf root/sd storage; do
+					for i in dev dev/shm dev/pts proc sys root/termux root/tf root/sd storage/emulated/0; do
 						if [ -e "${DEBIAN_CHROOT}/\${i}" ]; then
 							ls -lAh "${DEBIAN_CHROOT}\/${i}" 2>/dev/null
 						fi
@@ -1263,7 +1263,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	if [ -e "/etc/hostname" ]; then
 		NEW_HOST_NAME=$(cat /etc/hostname | head -n 1)
 		hostname ${NEW_HOST_NAME} 2>/dev/null
-		sed "1s@LXC_NAME@${NEW_HOST_NAME}@" /etc/hosts 2>/dev/null
+		sed -i "1s@LXC_NAME@${NEW_HOST_NAME}@" /etc/hosts 2>/dev/null
 	fi
 	groupadd -g 3001 aid_bt
 	groupadd -g 3002 aid_bt_net

@@ -401,49 +401,7 @@ cat <<-'EndOFneko'
 EndOFneko
 printf "$RESET"
 ####################
-creat_chroot_startup_script() {
-	case ${LINUX_DISTRO} in
-	Android)
-		ANDROID_EMULATED_DIR='/storage/emulated'
-		if [ ! -e "${DEBIAN_CHROOT}${ANDROID_EMULATED_DIR}" ]; then
-			mkdir -p "${DEBIAN_CHROOT}${ANDROID_EMULATED_DIR}"
-			cd "${DEBIAN_CHROOT}${ANDROID_EMULATED_DIR}"
-			ln -s ../../root/sd ./0
-		fi
-		cd "${DEBIAN_CHROOT}"
-		;;
-	esac
-	if [ -e "/system/bin/wm" ]; then
-		TMOE_CHROOT_ETC="${DEBIAN_CHROOT}/usr/local/etc/tmoe-linux"
-		mkdir -p ${TMOE_CHROOT_ETC}
-		su -c "/system/bin/wm size" | awk '{print $3}' | head -n 1 >${TMOE_CHROOT_ETC}/wm_size.txt
-	fi
-	if [ $(command -v getprop) ]; then
-		echo $(getprop ro.product.model) >${DEBIAN_CHROOT}/etc/hostname
-	fi
-	echo "Creating chroot startup script"
-	echo "正在创建chroot启动脚本${PREFIX}/bin/debian "
-	#if [ -e "/storage/self/primary" ] || [ -e "/sdcard" ]; then
-	mkdir -p /sdcard/Download ${DEBIAN_CHROOT}/root/sd
-	#fi
-	if [ -d "/data/data/com.termux/files/home" ]; then
-		mkdir -p ${DEBIAN_CHROOT}/root/termux
-		if [ -h "${HOME}/storage/external-1" ]; then
-			mkdir -p ${DEBIAN_CHROOT}/root/tf
-		fi
-	fi
-	##################
-	#for i in dev proc sys root/sd tmp root/termux root/tf; do
-	#	if [ -e "${DEBIAN_CHROOT}/${i}" ]; then
-	#		su -c "chattr +i ${i}"
-	#	fi
-	#done
-	#unset i
-	###############
-	#此处若不创建，将有可能导致chromium无法启动。
-	mkdir -p ${DEBIAN_CHROOT}/run/shm
-	#chmod 1777 ${DEBIAN_CHROOT}/dev/shm 2>/dev/null
-	##########
+cat_tmoe_chroot_script() {
 	cat >${PREFIX}/bin/debian <<-ENDOFTMOECHROOT
 		#!/data/data/com.termux/files/usr/bin/env bash
 		get_tmoe_linux_help_info() {
@@ -573,6 +531,7 @@ creat_chroot_startup_script() {
 		    unset i
 		    #dev/random) su -c "mount -o bind /dev/urandom ${DEBIAN_CHROOT}/\${i}" ;;
 		    ########
+			check_android_dev_stdout(){
 		    for i in /dev/fd /dev/stdin /dev/stout /dev/sterr /dev/tty0; do
 		        if [ ! -e \${i} ] && [ ! -h \${i} ]; then
 		            case \${i} in
@@ -591,6 +550,7 @@ creat_chroot_startup_script() {
 		        fi
 		    done
 		    unset i
+			}
 		    ###############
 		    mount_read_only_sd() {
 		        ANDROID_EMULATED_0_DIR='/storage/emulated/0'
@@ -640,6 +600,10 @@ creat_chroot_startup_script() {
 		    done
 		    unset i
 		     ##########
+			case \$(uname -o) in
+		    Android) check_android_dev_stdout;;
+			esac
+			 ###########
 		     set -- "${DEBIAN_CHROOT}" "\$@"
 		     set -- "chroot" "\$@"
 		     unset LD_PRELOAD
@@ -647,6 +611,51 @@ creat_chroot_startup_script() {
 		    }
 		    main "\$@"
 	ENDOFTMOECHROOT
+}
+##############
+creat_chroot_startup_script() {
+	case ${LINUX_DISTRO} in
+	Android)
+		ANDROID_EMULATED_DIR='/storage/emulated'
+		if [ ! -e "${DEBIAN_CHROOT}${ANDROID_EMULATED_DIR}" ]; then
+			mkdir -p "${DEBIAN_CHROOT}${ANDROID_EMULATED_DIR}"
+			cd "${DEBIAN_CHROOT}${ANDROID_EMULATED_DIR}"
+			ln -s ../../root/sd ./0
+		fi
+		cd "${DEBIAN_CHROOT}"
+		;;
+	esac
+	if [ -e "/system/bin/wm" ]; then
+		TMOE_CHROOT_ETC="${DEBIAN_CHROOT}/usr/local/etc/tmoe-linux"
+		mkdir -p ${TMOE_CHROOT_ETC}
+		su -c "/system/bin/wm size" | awk '{print $3}' | head -n 1 >${TMOE_CHROOT_ETC}/wm_size.txt
+	fi
+	if [ $(command -v getprop) ]; then
+		echo $(getprop ro.product.model) >${DEBIAN_CHROOT}/etc/hostname
+	fi
+	echo "Creating chroot startup script"
+	echo "正在创建chroot容器启动脚本${PREFIX}/bin/debian "
+	#if [ -e "/storage/self/primary" ] || [ -e "/sdcard" ]; then
+	mkdir -p /sdcard/Download ${DEBIAN_CHROOT}/root/sd
+	#fi
+	if [ -d "/data/data/com.termux/files/home" ]; then
+		mkdir -p ${DEBIAN_CHROOT}/root/termux
+		if [ -h "${HOME}/storage/external-1" ]; then
+			mkdir -p ${DEBIAN_CHROOT}/root/tf
+		fi
+	fi
+	##################
+	#for i in dev proc sys root/sd tmp root/termux root/tf; do
+	#	if [ -e "${DEBIAN_CHROOT}/${i}" ]; then
+	#		su -c "chattr +i ${i}"
+	#	fi
+	#done
+	#unset i
+	###############
+	#此处若不创建，将有可能导致chromium无法启动。
+	mkdir -p ${DEBIAN_CHROOT}/run/shm
+	#chmod 1777 ${DEBIAN_CHROOT}/dev/shm 2>/dev/null
+	cat_tmoe_chroot_script
 }
 ###################
 creat_tmoe_proot_stat_file() {

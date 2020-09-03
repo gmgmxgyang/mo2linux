@@ -1068,14 +1068,17 @@ cat >${PREFIX}/bin/startvnc <<-ENDOFVNC
 		echo "Sorry,VNC server启动失败，请输debian-i重新配置GUI。"
 		echo "Please type debian-i to start tmoe-linux tool and reconfigure GUI environment."
 	}
-
-	if [ -d "${DEBIAN_CHROOT}/root/.vnc" ];then
+	if [ -e "${CONFIG_FOLDER}/chroot_container" ]; then
+		sudo touch ${DEBIAN_CHROOT}/root/.vnc/startvnc
+		${PREFIX}/bin/debian
+	elif [ -d "${DEBIAN_CHROOT}/root/.vnc" ];then
 		touch ~/${DEBIAN_FOLDER}/root/.vnc/startvnc
 		${PREFIX}/bin/debian
 	else
 		vnc_warning
 	fi 
 ENDOFVNC
+
 #ln -sf ${PREFIX}/bin/startvnc ${PREFIX}/bin/startx11vnc
 cat >${PREFIX}/bin/startx11vnc <<-ENDOFX11VNC
 	#!/data/data/com.termux/files/usr/bin/env bash
@@ -1088,8 +1091,10 @@ cat >${PREFIX}/bin/startx11vnc <<-ENDOFX11VNC
 		echo "Sorry,x11vnc server启动失败，请输debian-i重新配置GUI。"
 		echo "Please type debian-i to start tmoe-linux tool and reconfigure GUI environment."
 	}
-
-	if [ -d "${DEBIAN_CHROOT}/root/.vnc" ];then
+	if [ -e "${CONFIG_FOLDER}/chroot_container" ]; then
+		sudo touch ${DEBIAN_CHROOT}/root/.vnc/startx11vnc
+		${PREFIX}/bin/debian
+	elif [ -d "${DEBIAN_CHROOT}/root/.vnc" ];then
 		touch ~/${DEBIAN_FOLDER}/root/.vnc/startx11vnc
 		${PREFIX}/bin/debian
 	else
@@ -1114,8 +1119,10 @@ cat >${PREFIX}/bin/startxsdl <<-ENDOFXSDL
 		echo "Sorry,x11启动失败，请输debian-i重新配置GUI。"
 		echo "Please type debian-i to start tmoe-linux tool and reconfigure GUI environment."
 	}
-
-	if [ -d "${DEBIAN_CHROOT}/root/.vnc" ];then
+	if [ -e "${CONFIG_FOLDER}/chroot_container" ]; then
+		sudo touch ${DEBIAN_CHROOT}/root/.vnc/startxsdl
+		${PREFIX}/bin/debian
+	elif [ -d "${DEBIAN_CHROOT}/root/.vnc" ];then
 		touch ~/${DEBIAN_FOLDER}/root/.vnc/startxsdl
 		${PREFIX}/bin/debian
 	else

@@ -4724,8 +4724,10 @@ install_armbian_linux_distro() {
 	arm64 | armhf) ;;
 	*) distro_does_not_support ;;
 	esac
+
 	ARMBIAN_ROOTFS="armbian-bullseye_${ARCH_TYPE}-rootfs.tar"
 	DEBIAN_CHROOT="${HOME}/armbian_${ARCH_TYPE}"
+
 	if [ ! -e "${ARMBIAN_ROOTFS}.lz4" ]; then
 		LatestARMbian="$(curl -L https://mirrors.tuna.tsinghua.edu.cn/armbian-releases/_rootfs/ | grep -E 'bullseye-desktop' | grep -v '.tar.lz4.asc' | grep ${ARCH_TYPE} | head -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
 		aria2c -x 5 -s 5 -k 1M -o "${ARMBIAN_ROOTFS}.lz4" "https://mirrors.tuna.tsinghua.edu.cn/armbian-releases/_rootfs/${LatestARMbian}"
@@ -4759,6 +4761,10 @@ install_armbian_linux_distro() {
 		sed 's:debian-sid:armbian-bullseye:g' |
 		sed 's:debian/sid:armbian/bullseye:g' |
 		sed 's:rootfs.tar.xz:rootfs.tar.lz4:g' |
+		sed 's@#deb http@deb http@g' |
+		sed 's/.*sid main/#&/' |
+		sed 's@debian/ stable@debian/ testing@g' |
+		sed 's@buster-backports@bullseye-backports@g' |
 		sed 's:Debian GNU/Linux:Armbian GNU/Linux:g')"
 }
 #######################

@@ -2048,6 +2048,7 @@ true) su -c "chown -Rv root:root ${DEBIAN_CHROOT}" ;;
 		/root) ;;
 		*)
 			chown -Rv ${CURRENT_USER_NAME}:${CURRENT_USER_GROUP} ${DEBIAN_CHROOT}
+			su - ${CURRENT_USER_NAME} -c "bash ${PREFIX}/bin/debian"
 			;;
 		esac
 		;;

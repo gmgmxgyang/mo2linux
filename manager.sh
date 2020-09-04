@@ -1294,13 +1294,13 @@ startvnc_or_enter_the_container() {
 install_gnu_linux_container() {
 	#此处不能用变量debian_chroot
 	if [ -d ~/${DEBIAN_FOLDER} ]; then
-		if (whiptail --title "检测到您已安装${ROOTFS_NAME}容器,请选择您需要执行的操作！" --yes-button 'Start启动o(*￣▽￣*)o' --no-button 'Reinstall重装(っ °Д °)' --yesno "Container has been installed, please choose what you need to do" 0 0); then
+		if (whiptail --title "检测到您已安装${ROOTFS_NAME}容器,请选择您需要执行的操作！" --yes-button 'Start启动o(*￣▽￣*)o' --no-button 'Reinstall重装(っ °Д °)' --yesno "${ROOTFS_NAME} has been installed, please choose what you need to do" 0 0); then
 			#debian
 			startvnc_or_enter_the_container
 		else
 			echo "${YELLOW}检测到您已安装${ROOTFS_NAME}容器,是否重新安装？[Y/n]${RESET} "
 			echo "${YELLOW}您可以无需输"y"，直接按回车键确认。${RESET} "
-			echo "Detected that you have GNU/Linux container installed, do you want to reinstall it?[Y/n]"
+			echo "Detected that you have ${ROOTFS_NAME} container installed, do you want to reinstall it?[Y/n]"
 			read opt
 			case $opt in
 			y* | Y* | "")

@@ -4731,13 +4731,11 @@ install_armbian_linux_distro() {
 		aria2c -x 5 -s 5 -k 1M -o "${ARMBIAN_ROOTFS}.lz4" "https://mirrors.tuna.tsinghua.edu.cn/armbian-releases/_rootfs/${LatestARMbian}"
 	fi
 
-	if [ ! -e "/usr/bin/lz4" ]; then
+	if [ ! $(command -v lz4) ]; then
 		apt update 2>/dev/null
-		apt install -y lz4 2>/dev/null
-		pacman -Syu --noconfirm lz4 2>/dev/null
-		dnf install -y lz4 2>/dev/null
-		zypper in -y lz4 2>/dev/null
+		apt install -y lz4 2>/dev/null || pacman -Syu --noconfirm lz4 2>/dev/null || zypper in -y lz4 2>/dev/null
 	fi
+
 	mkdir -p ${DEBIAN_CHROOT}
 	rm -vf ~/${ARMBIAN_ROOTFS}
 	lz4 -d ~/${ARMBIAN_ROOTFS}.lz4

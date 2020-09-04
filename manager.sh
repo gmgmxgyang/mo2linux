@@ -4119,8 +4119,9 @@ choose_which_gnu_linux_distro() {
 ##############################
 install_chroot_exclusive_containers() {
 	RETURN_TO_WHERE='install_chroot_exclusive_containers'
+	#\nThe developer only maintains the chroot container in the following list.
 	ALPHA_SYSTEM=$(
-		whiptail --title "chroot专属containers" --menu "您仍然可以使用proot运行以下容器,但开发者仅维护了chroot容器。\nThe developer only maintains the chroot container in the following list." 0 55 0 \
+		whiptail --title "chroot exclusive containers" --menu "您仍然可以使用proot运行以下容器,但开发者仅维护了chroot容器。" 0 55 0 \
 			"1" "opensuse tumbleweed(小蜥蜴风滚草)" \
 			"2" "gentoo(追求极限配置和极高自由,armhf,x86,x64)" \
 			"3" "Funtoo:专注于改进Gentoo" \

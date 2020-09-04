@@ -1218,7 +1218,6 @@ questions_about_tmoe_automatic_configuration() {
 }
 ###########################
 install_proot_container() {
-	rm -f ~/.Chroot-Container-Detection-File ${CONFIG_FOLDER}/chroot_container 2>/dev/null
 	TMOE_CHROOT='false'
 	install_gnu_linux_container
 	#sed -i 's@^command+=" --link2sy@#&@' $(command -v debian)
@@ -2484,6 +2483,12 @@ chroot_install_debian() {
 }
 #################################
 check_and_view_the_eula() {
+	case ${TMOE_CHROOT} in
+	false)
+		rm -f ~/.Chroot-Container-Detection-File ${CONFIG_FOLDER}/chroot_container 2>/dev/null
+		;;
+	esac
+
 	if [ ! -e "${CONFIG_FOLDER}/eula" ]; then
 		tmoe_linux_container_eula
 	fi

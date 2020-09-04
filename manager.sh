@@ -1298,7 +1298,8 @@ install_gnu_linux_container() {
 			read opt
 			case $opt in
 			y* | Y* | "")
-				bash ${PREFIX}/bin/debian-rm 2>/dev/null
+				#bash ${PREFIX}/bin/debian-rm 2>/dev/null
+				remove_gnu_linux_container
 				if [ "$?" != '0' ]; then
 					echo "容器没有被移除"
 					press_enter_to_return
@@ -1532,7 +1533,7 @@ remove_gnu_linux_container() {
 	n* | N*) echo "${YELLOW}Skipped,已跳过，按回车键返回。${RESET} " ;;
 	*) echo "${YELLOW}Invalid choice，skipped.已跳过，按回车键返回。${RESET} " ;;
 	esac
-	tmoe_manager_main_menu
+	#tmoe_manager_main_menu
 
 }
 #######################

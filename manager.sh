@@ -4456,6 +4456,12 @@ install_funtoo_linux_distro() {
 	DISTRO_NAME='funtoo'
 	OLD_STABLE_VERSION='1.3'
 	check_the_latest_distro_version
+	if [ "${ARCH_TYPE}" = 'arm64' ]; then
+		echo "检测到您当前使用的是arm64架构，将为您下载armhf版容器"
+		NEW_TMOE_ARCH='armhf'
+		TMOE_QEMU_ARCH=""
+		creat_tmoe_arch_file
+	fi
 }
 #######################
 ####################

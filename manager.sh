@@ -1682,7 +1682,7 @@ backup_gnu_linux_container() {
 		echo "Don't worry too much, it is normal for some directories to backup without permission."
 		echo "部分目录无权限备份是正常现象。"
 		rm -f backuptime.tmp
-		#  whiptail --gauge "正在备份,可能需要几分钟的时间请稍后.........." 6 60 0
+		#  whiptail --gauge "正在备份,可能需要几分钟的时间请�����后.........." 6 60 0
 		pwd
 		ls -lth ./*tar* | grep ^- | head -n 1
 		#echo 'gzip压缩至60%完成是正常现象。'
@@ -4076,10 +4076,11 @@ choose_which_gnu_linux_distro() {
 		"1" "🍥 Debian:最早的发行版之一" \
 		"2" "🍛 Ubuntu:我的存在是因為大家的存在" \
 		"3" "🐉 Kali Rolling:设计用于数字取证和渗透测试" \
-		"4" "🍱 beta公测版:manjaro,centos" \
-		"5" "🦎 alpha内测版:gentoo,opensuse" \
-		"6" "🌉 arch:系统设计以KISS为总体指导原则" \
-		"7" "👒 fedora:红帽社区版,新技术试验场" \
+		"4" "🍱 beta公测版:manjaro,centos,alpine" \
+		"5" "🌉 arch:系统设计以KISS为总体指导原则" \
+		"6" "👒 fedora:红帽社区版,新技术试验场" \
+		"7" "🦎 chroot专属:opensuse,gentoo" \
+		"8" "experimental(体验版,不再维护):raspbian" \
 		"0" "🌚 Back to the main menu 返回主菜单" \
 		3>&1 1>&2 2>&3)
 	##############################
@@ -4098,18 +4099,17 @@ choose_which_gnu_linux_distro() {
 		;;
 	4) install_beta_containers ;;
 	5)
-		install_alpha_containers
-		;;
-	6)
 		TMOE_LINUX_CONTAINER_DISTRO='arch'
 		creat_container_edition_txt
 		install_arch_linux_distro
 		;;
-	7)
+	6)
 		TMOE_LINUX_CONTAINER_DISTRO='fedora'
 		creat_container_edition_txt
 		install_fedora_gnu_linux_distro
 		;;
+	7) install_chroot_exclusive_containers ;;
+	8) install_alpha_containers ;;
 	esac
 	####################
 	exit 0
@@ -4117,20 +4117,53 @@ choose_which_gnu_linux_distro() {
 	#tmoe_manager_main_menu
 }
 ##############################
+install_chroot_exclusive_containers() {
+	RETURN_TO_WHERE='install_chroot_exclusive_containers'
+	ALPHA_SYSTEM=$(
+		whiptail --title "chroot专属containers" --menu "您仍然可以使用proot运行以下容器,但开发者仅维护了chroot容器。\nThe developer only maintains the chroot container in the following list." 0 55 0 \
+			"1" "opensuse tumbleweed(小蜥蜴风滚草)" \
+			"2" "gentoo(追求极限配置和极高自由,armhf,x86,x64)" \
+			"3" "Funtoo:专注于改进Gentoo" \
+			"0" "🌚 Return to previous menu 返回上级菜单" \
+			3>&1 1>&2 2>&3
+	)
+	##############################
+	case "${ALPHA_SYSTEM}" in
+	0 | "") choose_which_gnu_linux_distro ;;
+	1)
+		TMOE_LINUX_CONTAINER_DISTRO='opensuse'
+		creat_container_edition_txt
+		install_opensuse_linux_distro
+		;;
+	2)
+		TMOE_LINUX_CONTAINER_DISTRO='gentoo'
+		creat_container_edition_txt
+		install_gentoo_linux_distro
+		;;
+	3)
+		TMOE_LINUX_CONTAINER_DISTRO='funtoo'
+		creat_container_edition_txt
+		install_funtoo_linux_distro
+		;;
+	esac
+	###########################
+	exit 0
+	#press_enter_to_return
+	#tmoe_manager_main_menu
+	####################
+}
+###############
 install_alpha_containers() {
 	RETURN_TO_WHERE='install_alpha_containers'
 	ALPHA_SYSTEM=$(
-		whiptail --title "Alpha features" --menu "WARNING！本功能仍处于测试阶段,可能无法正常运行。\nAlpha features may not work properly." 0 55 0 \
+		whiptail --title "Maintenance has ceased" --menu "您仍可以安装基础容器,但Tmoe-linux开发者已不再对以下容器进行维护" 0 55 0 \
 			"1" "armbian bullseye(arm64,armhf)" \
-			"2" "opensuse tumbleweed(小蜥蜴风滚草)" \
-			"3" "raspbian樹莓派 buster(armhf)" \
-			"4" "gentoo(追求极限配置和极高自由,armhf,x86,x64)" \
-			"5" "devuan (不使用systemd,基于debian)" \
-			"6" "slackware(armhf,x64)" \
-			"7" "Funtoo:专注于改进Gentoo" \
-			"8" "openwrt(常见于路由器,arm64,x64)" \
-			"9" "apertis" \
-			"10" "alt" \
+			"2" "raspbian樹莓派 buster(armhf)" \
+			"3" "devuan (不使用systemd,基于debian)" \
+			"4" "slackware(armhf,x64)" \
+			"5" "openwrt(常见于路由器,arm64,x64)" \
+			"6" "apertis" \
+			"7" "alt" \
 			"0" "🌚 Return to previous menu 返回上级菜单" \
 			3>&1 1>&2 2>&3
 	)
@@ -4143,60 +4176,46 @@ install_alpha_containers() {
 		install_armbian_linux_distro
 		;;
 	2)
-		TMOE_LINUX_CONTAINER_DISTRO='opensuse'
-		creat_container_edition_txt
-		install_opensuse_linux_distro
-		;;
-	3)
 		TMOE_LINUX_CONTAINER_DISTRO='raspbian'
 		creat_container_edition_txt
 		install_raspbian_linux_distro
 		;;
-	4)
-		TMOE_LINUX_CONTAINER_DISTRO='gentoo'
-		creat_container_edition_txt
-		install_gentoo_linux_distro
-		;;
-	5)
+	3)
 		TMOE_LINUX_CONTAINER_DISTRO='devuan'
 		creat_container_edition_txt
 		install_devuan_linux_distro
 		;;
-	6)
+	4)
 		TMOE_LINUX_CONTAINER_DISTRO='slackware'
 		creat_container_edition_txt
 		install_slackware_linux_distro
 		;;
-	7)
-		TMOE_LINUX_CONTAINER_DISTRO='funtoo'
-		creat_container_edition_txt
-		install_funtoo_linux_distro
-		;;
-	8)
+	5)
 		TMOE_LINUX_CONTAINER_DISTRO='openwrt'
 		creat_container_edition_txt
 		install_openwrt_linux_distro
 		;;
-	9)
+	6)
 		TMOE_LINUX_CONTAINER_DISTRO='apertis'
 		creat_container_edition_txt
 		install_apertis_linux_distro
 		;;
-	10)
+	7)
 		TMOE_LINUX_CONTAINER_DISTRO='alt'
 		creat_container_edition_txt
 		install_alt_linux_distro
 		;;
 	esac
 	###########################
-	press_enter_to_return
-	tmoe_manager_main_menu
+	exit 0
+	#press_enter_to_return
+	#tmoe_manager_main_menu
 	####################
 }
 #########################
 install_beta_containers() {
 	BETA_SYSTEM=$(
-		whiptail --title "Beta features" --menu "WARNING！本功能仍处于公测阶段,可能存在一些bug。\nBeta features may not work properly." 0 55 0 \
+		whiptail --title "Beta features" --menu "公测版容器将带给您别样的惊喜\nBeta container, endless fun." 0 55 0 \
 			"1" "manjaro(让arch更方便用户使用,arm64)" \
 			"2" "centos (基于红帽的社区企业操作系统)" \
 			"3" "Void:基于xbps包管理器的独立发行版" \

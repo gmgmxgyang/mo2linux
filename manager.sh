@@ -4724,14 +4724,14 @@ install_armbian_linux_distro() {
 	arm64 | armhf) ;;
 	*) distro_does_not_support ;;
 	esac
-
-	if [ ! -e "armbian-bullseye-rootfs.tar.lz4" ]; then
+	ARMBIAN_ROOTFS="armbian-bullseye_${ARCH_TYPE}-rootfs.tar.lz4"
+	if [ ! -e "${ARMBIAN_ROOTFS}" ]; then
 		if [ "${ARCH_TYPE}" = 'armhf' ]; then
 			LatestARMbian="$(curl -L https://mirrors.tuna.tsinghua.edu.cn/armbian-releases/_rootfs/ | grep -E 'bullseye-desktop' | grep -v '.tar.lz4.asc' | grep 'armhf' | head -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
-			aria2c -x 5 -s 5 -k 1M -o "armbian-bullseye-rootfs.tar.lz4" "https://mirrors.tuna.tsinghua.edu.cn/armbian-releases/_rootfs/${LatestARMbian}"
+			aria2c -x 5 -s 5 -k 1M -o "${ARMBIAN_ROOTFS}" "https://mirrors.tuna.tsinghua.edu.cn/armbian-releases/_rootfs/${LatestARMbian}"
 		else
 			LatestARMbian="$(curl -L https://mirrors.tuna.tsinghua.edu.cn/armbian-releases/_rootfs/ | grep -E 'bullseye-desktop' | grep -v '.tar.lz4.asc' | grep 'arm64' | head -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
-			aria2c -x 5 -s 5 -k 1M -o "armbian-bullseye-rootfs.tar.lz4" "https://mirrors.tuna.tsinghua.edu.cn/armbian-releases/_rootfs/${LatestARMbian}"
+			aria2c -x 5 -s 5 -k 1M -o "${ARMBIAN_ROOTFS}" "https://mirrors.tuna.tsinghua.edu.cn/armbian-releases/_rootfs/${LatestARMbian}"
 		fi
 	fi
 
@@ -4745,7 +4745,7 @@ install_armbian_linux_distro() {
 	DEBIAN_CHROOT="${HOME}/armbian_${ARCH_TYPE}"
 	mkdir -p ${DEBIAN_CHROOT}
 	rm -vf ~/armbian-bullseye-rootfs.tar
-	lz4 -d ~/armbian-bullseye-rootfs.tar.lz4
+	lz4 -d ~/${ARMBIAN_ROOTFS}
 	cd ${DEBIAN_CHROOT}
 	if [ "${LINUX_DISTRO}" = "Android" ]; then
 		pv ~/armbian-bullseye-rootfs.tar | proot --link2symlink tar -px

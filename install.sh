@@ -2044,7 +2044,12 @@ true) su -c "chown -Rv root:root ${DEBIAN_CHROOT}" ;;
 	Android) ;;
 	*)
 		check_current_user_name_and_group
-		chown -Rv ${CURRENT_USER_NAME}:${CURRENT_USER_GROUP} ${DEBIAN_CHROOT}
+		case ${HOME} in
+		/root) ;;
+		*)
+			chown -Rv ${CURRENT_USER_NAME}:${CURRENT_USER_GROUP} ${DEBIAN_CHROOT}
+			;;
+		esac
 		;;
 	esac
 	;;

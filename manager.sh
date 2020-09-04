@@ -2477,7 +2477,6 @@ play_video_tutorial() {
 chroot_install_debian() {
 	press_enter_to_continue
 	#rm -f ~/.Tmoe-Proot-Container-Detection-File 2>/dev/null
-	touch ${CONFIG_FOLDER}/chroot_container
 	TMOE_CHROOT="true"
 	install_gnu_linux_container
 }
@@ -2486,6 +2485,9 @@ check_and_view_the_eula() {
 	case ${TMOE_CHROOT} in
 	false)
 		rm -f ~/.Chroot-Container-Detection-File ${CONFIG_FOLDER}/chroot_container 2>/dev/null
+		;;
+	true)
+		touch ${CONFIG_FOLDER}/chroot_container
 		;;
 	esac
 

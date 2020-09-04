@@ -1682,7 +1682,7 @@ backup_gnu_linux_container() {
 		echo "Don't worry too much, it is normal for some directories to backup without permission."
 		echo "部分目录无权限备份是正常现象。"
 		rm -f backuptime.tmp
-		#  whiptail --gauge "正在备份,可能需要几分钟的时间请�����后.........." 6 60 0
+		#  whiptail --gauge "正在备份,可能需要几分钟的时间请�������后.........." 6 60 0
 		pwd
 		ls -lth ./*tar* | grep ^- | head -n 1
 		#echo 'gzip压缩至60%完成是正常现象。'
@@ -2625,6 +2625,7 @@ disable_qemu_user_static() {
 }
 #############
 tmoe_qemu_user_static() {
+	qemu_user_env
 	RETURN_TO_WHERE='tmoe_qemu_user_static'
 	BETA_SYSTEM=$(
 		whiptail --title "qemu_user_static" --menu "QEMU的user模式跨架构运行的效率可能比system模式更高，但存在更多的局限性" 0 50 0 \
@@ -2678,17 +2679,33 @@ tmoe_qemu_user_chart() {
 	ENDofTable
 }
 ###############
-install_qemu_user_static() {
-	echo "正在检测版本信息..."
-	LOCAL_QEMU_USER_FILE=''
+check_gnu_linux_qemu_version() {
 	if [ -e "${PREFIX}/bin/qemu-aarch64-static" ]; then
 		LOCAL_QEMU_USER_FILE="${PREFIX}/bin/qemu-aarch64-static"
 	elif [ -e "/usr/bin/qemu-aarch64-static" ]; then
 		LOCAL_QEMU_USER_FILE='/usr/bin/qemu-aarch64-static'
 	fi
 	case ${LOCAL_QEMU_USER_FILE} in
-	"") LOCAL_QEMU_USER_VERSION='您尚未安装QEMU-USER-STATIC' ;;
+	"") ;;
 	*) LOCAL_QEMU_USER_VERSION=$(${LOCAL_QEMU_USER_FILE} --version | head -n 1 | awk '{print $5}' | cut -d ':' -f 2 | cut -d ')' -f 1) ;;
+	esac
+}
+###########
+install_qemu_user_static() {
+	echo "正在检测版本信息..."
+	LOCAL_QEMU_USER_FILE=''
+	case ${LINUX_DISTRO} in
+	Android)
+		if [ -e "${QEMU_USER_LOCAL_VERSION_FILE}" ]; then
+			LOCAL_QEMU_USER_VERSION=$(cat ${QEMU_USER_LOCAL_VERSION_FILE} | head -n 1)
+		fi
+		;;
+	*) check_gnu_linux_qemu_version ;;
+	esac
+
+	case ${LOCAL_QEMU_USER_FILE} in
+	"") LOCAL_QEMU_USER_VERSION='您尚未安装QEMU-USER-STATIC' ;;
+	*) ;;
 	esac
 
 	cat <<-'EOF'
@@ -2711,8 +2728,8 @@ install_qemu_user_static() {
 	ENDofTable
 	do_you_want_to_continue
 	THE_LATEST_DEB_LINK="${REPO_URL}${THE_LATEST_DEB_VERSION}"
-	echo ${THE_LATEST_DEB_LINK}
-	#echo "${THE_LATEST_DEB_VERSION_CODE}" >${QEMU_USER_LOCAL_VERSION_FILE}
+	echo "${YELLOW}${THE_LATEST_DEB_LINK}${RESET}"
+	echo ${THE_LATEST_DEB_VERSION_CODE} | sed 's@%2B@+@' >${QEMU_USER_LOCAL_VERSION_FILE}
 	if [ "${LINUX_DISTRO}" = "debian" ]; then
 		apt update
 		echo 'apt install -y qemu-user-static'
@@ -2738,11 +2755,14 @@ unxz_deb_file() {
 	ar xv ${THE_LATEST_DEB_VERSION}
 	#tar -Jxvf data.tar.xz ./usr/bin -C $PREFIX/..
 	tar -Jxvf data.tar.xz
-	cp -rf ./usr/bin $PREFIX
+}
+########################
+copy_qemu_user_bin_files() {
+	cp -rf ./usr/bin ${QEMU_BIN_PREFIX}
 	cd ..
 	rm -rv ${TEMP_FOLDER}
 }
-########################
+######################
 download_qemu_user() {
 	if [ -z ${TMPDIR} ]; then
 		TMPDIR=/tmp
@@ -2755,17 +2775,26 @@ download_qemu_user() {
 	cd ${TEMP_FOLDER}
 	aria2c --allow-overwrite=true -s 5 -x 5 -k 1M -o "${THE_LATEST_DEB_VERSION}" "${THE_LATEST_DEB_LINK}"
 	unxz_deb_file
+	copy_qemu_user_bin_files
 }
 ##############
 remove_qemu_user_static() {
-	ls -lah /usr/bin/qemu-*-static ${PREFIX}/bin/qemu-*-static 2>/dev/null
-	echo "${RED}rm -rv${RESET} ${BLUE}${PREFIX}/bin/qemu-*-static${RESET}"
+	ls -lah /usr/bin/qemu-*-static ${QEMU_BIN_PREFIX}/bin/qemu-*-static 2>/dev/null
+	echo "${RED}rm -rv${RESET} ${BLUE}${QEMU_BIN_PREFIX}/bin/qemu-*-static ${QEMU_USER_LOCAL_VERSION_FILE}${RESET}"
 	echo "${RED}${TMOE_REMOVAL_COMMAND}${RESET} ${BLUE}qemu-user-static${RESET}"
 	do_you_want_to_continue
-	rm -rv $PREFIX/bin/qemu-*-static "$PREFIX/bin/qemu-*-static"
-	apt remove ^qemu-user
+	rm -rv ${QEMU_BIN_PREFIX}/bin/qemu-*-static "${QEMU_BIN_PREFIX}/bin/qemu-*-static" ${QEMU_USER_LOCAL_VERSION_FILE}
+	${TMOE_REMOVAL_COMMAND} qemu-user-static
 }
-##############
+###############
+qemu_user_env() {
+	QEMU_USER_LOCAL_VERSION_FILE="${CONFIG_FOLDER}/qemu-user-static_version.txt"
+	case ${LINUX_DISTRO} in
+	Android) QEMU_BIN_PREFIX=${PREFIX} ;;
+	*) QEMU_BIN_PREFIX=/usr ;;
+	esac
+}
+##########
 creat_tmoe_arch_file() {
 	cat >${ACROSS_ARCH_FILE} <<-EOF
 		${NEW_TMOE_ARCH}
@@ -3215,7 +3244,7 @@ un_xz_debian_recovery_kit() {
 
 				若您的宿主机为${BOLD}Android${RESET}系统,则在termux原系统下输${GREEN}startvnc${RESET}将${RED}同时启动${RESET}安卓版Realvnc${YELLOW}客户端${RESET}和GNU/Linux的VNC${YELLOW}服务端${RESET}。
 				-------------------
-				输${GREEN}debian${RESET}仅启动${BLUE}GNU/Linux容器${RESET}，不会自动启动远程桌面服务。
+				输${GREEN}debian${RESET}仅启动${BLUE}GNU/Linux容器${RESET}，不会���动启动远程桌面服务。
 				-------------------
 				您可以在解压完成之后输${GREEN}startvnc${RESET}来启动${BLUE}tight或tigervnc服务${RESET}，输${RED}stopvnc${RESET}停止
 				-------------------

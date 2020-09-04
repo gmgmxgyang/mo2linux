@@ -54,7 +54,7 @@ tmoe_manager_env() {
 check_tmoe_container_chroot() {
 	if [ -e "${CONFIG_FOLDER}/chroot_container" ]; then
 		TMOE_CHROOT='true'
-	elif grep -q 'TMOE_CHROOT=' ${PREFIX}/bin/debian; then
+	elif grep -q 'TMOE_CHROOT=' ${PREFIX}/bin/debian 2>/dev/null; then
 		TMOE_CHROOT='true'
 	fi
 	case ${TMOE_CHROOT} in

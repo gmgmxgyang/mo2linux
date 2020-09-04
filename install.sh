@@ -1661,7 +1661,9 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	##############################
 	apt update 2>/dev/null
 	apt reinstall -y perl-base
-	if [ ! $(command -v locale-gen) ]; then
+	if [ ! -e /usr/lib/locale/zh_CN ];then
+		apt install -y locales-all 2>/dev/null
+	elif [ ! $(command -v locale-gen) ]; then
 	    apt install -y locales 2>/dev/null
 	fi
 

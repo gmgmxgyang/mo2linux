@@ -646,8 +646,8 @@ tmoe_linux_tool_menu() {
 }
 #########################
 press_enter_to_return() {
-	echo "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
-	echo "按${GREEN}回车键${RESET}${BLUE}返回${RESET}"
+	echo "Press ${GREEN}enter${RESET} to ${BLUE}return${RESET},press ${YELLOW}Ctrl+C${RESET} to ${RED}exit.${RESET}"
+	echo "按${GREEN}回车键${RESET}${BLUE}返回${RESET},按${YELLOW}Ctrl+C${RESET} ${RED}退出${RESET}。"
 	read
 }
 #############

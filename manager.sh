@@ -4692,11 +4692,11 @@ install_slackware_linux_distro() {
 		fi
 		;;
 	arm64 | armhf)
+		NEW_TMOE_ARCH='armhf'
+		TMOE_QEMU_ARCH=""
+		creat_tmoe_arch_file
 		if [ ! -e "slackware-current_armhf-rootfs.tar.xz" ]; then
 			echo "检测到您当前使用的是${ARCH_TYPE}架构，将为您下载armhf版容器"
-			NEW_TMOE_ARCH='armhf'
-			TMOE_QEMU_ARCH=""
-			creat_tmoe_arch_file
 			LatestSlack="$(curl -L https://mirrors.tuna.tsinghua.edu.cn/slackwarearm/slackwarearm-devtools/minirootfs/roots/ | grep 'tar.xz' | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
 			aria2c -x 5 -s 5 -k 1M -o "slackware-current_armhf-rootfs.tar.xz" "https://mirrors.tuna.tsinghua.edu.cn/slackwarearm/slackwarearm-devtools/minirootfs/roots/${LatestSlack}"
 		fi

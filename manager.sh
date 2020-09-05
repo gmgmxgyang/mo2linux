@@ -2208,6 +2208,7 @@ update_tmoe_linux_manager() {
 	fi
 	chmod +x ${PREFIX}/bin/debian-i
 	if [ -e "${TMOE_GIT_DIR}" ]; then
+		cd ${TMOE_GIT_DIR}
 		git reset --hard origin/master
 		git pull origin master --allow-unrelated-histories
 		if [ "$?" != '0' ]; then

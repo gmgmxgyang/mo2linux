@@ -782,7 +782,7 @@ remove_termux_linux_manager() {
 	echo "${RED}WARNING！${RESET}删除${HOME}/.config/tmoe-linux文件夹将导致chroot容器无法正常移除，建议您在移除完容器后再来删除配置文件目录。"
 	echo "${RED}${TMOE_REMOVAL_COMMAND} ${DEPENDENCIES}${RESET}"
 	do_you_want_to_continue
-	rm -rfv rm -rv ${HOME}/.config/tmoe-linux debian-i
+	rm -rfv rm -rv debian-i
 	${TMOE_REMOVAL_COMMAND} ${DEPENDENCIES}
 	exit 1
 }

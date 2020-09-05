@@ -709,7 +709,7 @@ android_termux() {
 	fi
 
 	if [ -e ${PREFIX}/bin/debian ]; then
-		grep -q "pulseaudio" ${PREFIX}/bin/debian || sed -i '3 a\pulseaudio --start' ${PREFIX}/bin/debian
+		grep -q "pulseaudio" ${PREFIX}/bin/debian 2>/dev/null || sed -i '3 a\pulseaudio --start' ${PREFIX}/bin/debian
 	fi
 
 	if [ ! -e ${PREFIX}/bin/which ]; then
@@ -2206,10 +2206,19 @@ update_tmoe_linux_manager() {
 	if [ "${LINUX_DISTRO}" != "Android" ]; then
 		sed -i '1 c\#!/usr/bin/env bash' ${PREFIX}/bin/debian-i
 	fi
+	chmod +x ${PREFIX}/bin/debian-i
+	if [ -e "${TMOE_GIT_DIR}" ]; then
+		git reset --hard origin/master
+		git pull origin master --allow-unrelated-histories
+		if [ "$?" != '0' ]; then
+			git fetch --all
+			git reset --hard origin/master
+			git pull origin master --allow-unrelated-histories
+		fi
+	fi
 	echo "${TMOE_GIT_URL}"
 	echo "${YELLOW}更新完成，按回车键返回。${RESET}"
 	echo "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
-	chmod +x ${PREFIX}/bin/debian-i
 	read
 	#bash ${PREFIX}/bin/debian-i
 	source ${PREFIX}/bin/debian-i
@@ -4766,7 +4775,7 @@ distro_does_not_support() {
 install_armbian_linux_distro() {
 	DISTRO_NAME='armbian'
 	BETA_SYSTEM=$(
-		whiptail --title "Which version do you want to install?" --menu "armbian是专为ARM开发板(例如nanopi,rock64,pine64等)打造的debian/ubuntu系统\n以下系统已预装桌面,每个镜像大小约为1G" 0 50 0 \
+		whiptail --title "Which version do you want to install?" --menu "armbian是专为ARM开发板(例如nanopi,rock64,pine64等)打造的debian/ubuntu系统。\n以下系统已预装桌面,每个镜像大小约为1G" 0 50 0 \
 			"1" "🐎 Bullseye(debian 11)" \
 			"2" "🐱 Focal Fossa 焦點馬島長尾狸貓(ubuntu 20.04)" \
 			"3" "Custom code手动输入版本代号" \

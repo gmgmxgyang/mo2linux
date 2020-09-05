@@ -235,7 +235,7 @@ echo "       :7j1.                 :  :       "
 if [ -f "${HOME}/.RASPBIANARMHFDetectionFILE" ]; then
 	echo "检测到您选择的是raspbian树莓派系统"
 	echo "已将您的架构临时识别为armhf"
-	echo "若您需要安装arm64版树莓派系统，则请将arm64版的rootfs文件重名名为${GREEN}raspios-buster_armhf_lite-rootfs.tar.xz${RESET},并将其移动到${BLUE}${HOME}${RESET}"
+	echo "若您需要安装arm64版树莓派系统，则请将arm64版的rootfs文件重命名为${GREEN}raspios-buster_armhf_lite-rootfs.tar.xz${RESET},并将其移动到${BLUE}${HOME}${RESET}"
 	#将通过debian buster来间接安装raspbian buster
 	rm -f "${HOME}/.RASPBIANARMHFDetectionFILE"
 fi

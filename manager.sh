@@ -1513,15 +1513,16 @@ remove_gnu_linux_container() {
 	echo 'If you want to reinstall, it is not recommended to remove the image file.'
 	echo "${YELLOW}若您需要重装容器，则不建议删除镜像文件。${RESET} "
 	cd ${HOME}
-	ls -lh *-rootfs.tar.xz
+	ls -lh ${ROOTFS_NAME}*-rootfs.tar.* 2>/dev/null
 	echo "${YELLOW}请问您是否需要删除容器镜像文件？[Y/n]${RESET} "
-	echo "${RED}rm -fv ~/${ROOTFS_NAME}*rootfs.tar.xz${RESET}"
-	echo "Do you need to delete the image file (${DEBIAN_FOLDER}*rootfs.tar.xz)?[Y/n]"
+	echo "${RED}rm -fv ~/${ROOTFS_NAME}*-rootfs.tar.*${RESET}"
+	echo "Do you need to delete the image file (${ROOTFS_NAME}*-rootfs.tar.*)?[Y/n]"
 	read opt
 	case $opt in
 	y* | Y* | "")
-		rm -fv ~/${DEBIAN_FOLDER}-rootfs.tar.xz
-		rm -fv ~/${ROOTFS_NAME}*rootfs.tar.xz
+		#rm -fv ~/${DEBIAN_FOLDER}*-rootfs.tar.*
+		#此处应删除ROOTFS_NAME而非DEBIAN_FOLDER开头的rootfs文件
+		rm -fv ~/${ROOTFS_NAME}*-rootfs.tar.*
 		echo "Deleted已删除"
 		;;
 	n* | N*) echo "${YELLOW}Skipped,已跳过，按回车键返回。${RESET} " ;;

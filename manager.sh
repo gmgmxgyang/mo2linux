@@ -4111,7 +4111,7 @@ choose_which_gnu_linux_distro() {
 		"6" "🌉 arch:系统设计以KISS为总体指导原则" \
 		"7" "👒 fedora:红帽社区版,新技术试验场" \
 		"8" "🦎 chroot专属:opensuse,gentoo" \
-		"9" "experimental(体验版,不再维护):raspbian" \
+		"9" "experimental(体验版,不再维护):RaspiOS" \
 		"0" "🌚 Back to the main menu 返回主菜单" \
 		3>&1 1>&2 2>&3)
 	##############################
@@ -4774,6 +4774,7 @@ distro_does_not_support() {
 }
 ##############
 install_armbian_linux_distro() {
+	RETURN_TO_WHERE='install_armbian_linux_distro'
 	DISTRO_NAME='armbian'
 	BETA_SYSTEM=$(
 		whiptail --title "Which version do you want to install?" --menu "armbian是专为ARM开发板(例如nanopi,rock64,pine64等)打造的debian/ubuntu系统。\n以下系统已预装桌面,每个镜像大小约为1G" 0 50 0 \

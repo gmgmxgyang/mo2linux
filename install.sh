@@ -1568,7 +1568,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 				# deb http://mirrors.huaweicloud.com/ubuntu-ports/ focal-proposed main restricted universe multiverse
 			EndOfFile
 	    touch ~/.hushlogin
-		touch /home/ubuntu/.hushlogin
+		touch /home/ubuntu/.hushlogin 2>/dev/null
 	    if grep -q 'Bionic Beaver' "/etc/os-release"; then
 	        sed -i 's/focal/bionic/g' /etc/apt/sources.list
 	    fi

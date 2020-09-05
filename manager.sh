@@ -2207,7 +2207,7 @@ update_tmoe_linux_manager() {
 		sed -i '1 c\#!/usr/bin/env bash' ${PREFIX}/bin/debian-i
 	fi
 	chmod +x ${PREFIX}/bin/debian-i
-	if [ -e "${TMOE_GIT_DIR}" ]; then
+	if [ -e "${TMOE_GIT_DIR}/.git" ]; then
 		cd ${TMOE_GIT_DIR}
 		git reset --hard origin/master
 		git pull origin master --allow-unrelated-histories

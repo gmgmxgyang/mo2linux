@@ -3705,7 +3705,7 @@ tmoe_sources_list_manager() {
 	SOURCES_LIST=$(
 		whiptail --title "software-sources tmoe-manager" --menu \
 			"Do you want to switch the mirror source?" 0 50 0 \
-			"1" "university:国内高校镜像站" \
+			"1" "清华,北外,中科大,腾讯云镜像站" \
 			"2" "worldwide mirror sites:全球镜像站" \
 			"3" "enable/disable repo(启用/禁用仓库)" \
 			"4" "edit list manually(手动编辑)" \

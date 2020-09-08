@@ -1634,6 +1634,25 @@ backup_gnu_linux_container() {
 	BACKUP_FILE="${CONFIG_FOLDER}/chroot_container"
 	check_backup_file
 
+	case ${TMOE_CHROOT} in
+	true) ;;
+	false | *)
+		if ! grep -q '#test03' $(command -v debian); then
+			QEMU_USER_BIN=$(cat $(command -v debian) | grep 'qemu=qemu' | cut -d '=' -f 2 | cut -d '"' -f 1)
+			case ${QEMU_USER_BIN} in
+			"") ;;
+			*)
+				if [ -e "${PREFIX}/bin/${QEMU_USER_BIN}" ]; then
+					BACKUP_FILE="${PREFIX}/bin/${QEMU_USER_BIN}"
+				else
+					BACKUP_FILE="/usr/bin/${QEMU_USER_BIN}"
+				fi
+				check_backup_file
+				;;
+			esac
+		fi
+		;;
+	esac
 	if (whiptail --title "Select compression type 选择压缩类型 " --yes-button "tar.xz" --no-button "tar.gz" --yesno "Which do yo like better? \n tar.xz压缩率高，但速度慢。tar.xz has a higher compression ration, but is slower.\n tar.gz速度快,但压缩率低。tar.gz compresses faster, but with a lower compression ratio.\n 压缩过程中，进度条倒着跑是正常现象。" 12 50); then
 
 		echo "您选择了tar.xz,即将为您备份至/sdcard/Download/backup/${TMPtime}.tar.xz"

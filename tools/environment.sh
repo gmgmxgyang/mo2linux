@@ -220,17 +220,28 @@ grep_arch_linux_pkg_03() {
 grep_arch_linux_pkg_04() {
     #JetBrains IDE
     ARCH_WALLPAPER_VERSION=$(cat index.html | grep '.pkg.tar.zst' | grep -Ev '.xz.sig|.zst.sig' | grep -v '\-jre\-' | grep "${GREP_NAME}" | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)
-    LOCAL_ARCH_PKG_VERSION=$(ls -t ${DOWNLOAD_PATH}/${GREP_NAME}*.pkg.tar.zst | head -n 1)
+    cd ${DOWNLOAD_PATH}
+    LOCAL_ARCH_PKG_VERSION=$(ls -t ${GREP_NAME}*.pkg.tar.zst 2>/dev/null | head -n 1)
     case ${LOCAL_ARCH_PKG_VERSION} in
-    "${ARCH_WALLPAPER_VERSION}") echo "检测到您已经下载最新版的${LOCAL_ARCH_PKG_VERSION},如需删除安装包，请输${RED}rm -v${RESET} ${BLUE}${DOWNLOAD_PATH}/${LOCAL_ARCH_PKG_VERSION}${RESET}" ;;
+    ${ARCH_WALLPAPER_VERSION}) echo "检测到您已经下载最新版的${LOCAL_ARCH_PKG_VERSION},如需删除安装包，请输${RED}rm -v${RESET} ${BLUE}${DOWNLOAD_PATH}/${LOCAL_ARCH_PKG_VERSION}${RESET}" ;;
     *)
         ARCH_WALLPAPER_URL="${THEME_URL}${ARCH_WALLPAPER_VERSION}"
         #echo "${YELLOW}${ARCH_WALLPAPER_URL}${RESET}"
         aria2c --allow-overwrite=true -d ${DOWNLOAD_PATH} -o ${ARCH_WALLPAPER_VERSION} -x 5 -s 5 -k 1M ${ARCH_WALLPAPER_URL}
         ;;
     esac
+    echo ${ARCH_WALLPAPER_VERSION} | sed "s@${GREP_NAME}-@@g" | sed 's@.pkg.tar.zst@@' >"${LOCAL_APP_VERSION_TXT}"
 }
 #################
+check_opt_app_version() {
+    LOCAL_APP_VERSION_TXT="${TMOE_LINUX_DIR}/${GREP_NAME}-version"
+    if [ -e "${LOCAL_APP_VERSION_TXT}" ]; then
+        LOCAL_OPT_APP_VERSION=$(cat ${LOCAL_APP_VERSION_TXT} | head -n 1)
+    else
+        LOCAL_OPT_APP_VERSION="NOT-INSTALLED未安装"
+    fi
+}
+##############
 check_archlinux_cn_html_date() {
     THEME_URL='https://mirrors.bfsu.edu.cn/archlinuxcn/x86_64/'
     ARCH_LINUX_CN_REPO_DIR='/tmp/.ARCH_LINUX_CN_REPO'
@@ -254,7 +265,7 @@ check_archlinux_cn_html_date() {
 check_opt_dir_01() {
     APP_OPT_DIR="/opt/${GREP_NAME}"
     if [ -e "${APP_OPT_DIR}" ]; then
-        echo "安装完成，如需卸载，请输${RED}rm -rv${RESET}${BLUE}${APP_OPT_DIR} ${APPS_LNK_DIR}/${GREP_NAME}.desktop${RESET}"
+        echo "安装完成，如需卸载，请输${RED}rm -rv${RESET}${BLUE}${APP_OPT_DIR} ${APPS_LNK_DIR}/${GREP_NAME}.desktop ${LOCAL_OPT_APP_VERSION}${RESET}"
         echo "是否需要强制更新？"
         echo "Do you want to mandatory upgrade ${GREP_NAME}?"
         do_you_want_to_continue
@@ -1104,16 +1115,32 @@ install_java() {
     if [ ! $(command -v java) ]; then
         DEPENDENCY_01=''
         case "${LINUX_DISTRO}" in
-        arch) DEPENDENCY_02='jre-openjdk' ;;
-        debian | "")
-            DEPENDENCY_01='default-jdk'
-            DEPENDENCY_02='default-jre'
+        arch)
+            DEPENDENCY_01='jre-openjdk'
+            DEPENDENCY_02='jdk-openjdk'
             ;;
-        alpine) DEPENDENCY_02='openjdk11-jre' ;;
+        debian | "")
+            DEPENDENCY_01='default-jre'
+            DEPENDENCY_02='default-jdk'
+            ;;
+        alpine)
+            DEPENDENCY_01='openjdk11-jre'
+            DEPENDENCY_02='openjdk11-jdk'
+            ;;
         redhat | *) DEPENDENCY_02='java' ;;
         esac
         beta_features_quick_install
     fi
+
+    case "${LINUX_DISTRO}" in
+    debian)
+        if [ ! -e "/usr/share/doc/default-jdk" ]; then
+            DEPENDENCY_01=''
+            DEPENDENCY_02='default-jdk'
+            beta_features_quick_install
+        fi
+        ;;
+    esac
 }
 #######
 check_zenity() {
@@ -1154,6 +1181,7 @@ tmoe_apt_update() {
 ############
 check_zstd() {
     if [ ! $(command -v unzstd) ]; then
+        echo "正在安装相关依赖..."
         echo "${GREEN}${TMOE_INSTALLATON_COMMAND}${RESET} ${BLUE}zstd${RESET}"
         tmoe_apt_update
         ${TMOE_INSTALLATON_COMMAND} zstd

@@ -2043,10 +2043,12 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	echo "2s后将自动开始配置zsh，您可以按Ctrl+C取消，这将不会继续配置其它步骤，同时也不会启动Tmoe-linux工具。"
 	#wget -qcO /usr/local/bin/neofetch 'https://gitee.com/mirrors/neofetch/raw/master/neofetch' || curl -sLo /usr/local/bin/neofetch 'https://gitee.com/mirrors/neofetch/raw/master/neofetch'
 	chmod +x /usr/local/bin/neofetch
-	if [ "$(command -v lolcat)" ];then
+	if [ -e /usr/games/lolcat ]; then
+		neofetch | /usr/games/lolcat
+	elif [ "$(command -v lolcat)" ]; then
 		neofetch | lolcat
 	else
-		neofetch 
+		neofetch
 	fi
 	################
 	################

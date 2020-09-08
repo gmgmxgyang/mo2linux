@@ -553,9 +553,9 @@ arch_does_not_support() {
 do_you_want_to_continue() {
     TMOE_TIPS_01="Do you want to continue?${YELLOW}[Y/n]${RESET}"
     if [ -e /usr/games/lolcat ]; then
-        echo ${TMOE_TIPS_01} | /usr/games/lolcat -a
+        echo ${TMOE_TIPS_01} | /usr/games/lolcat -a -d 8
     elif [ "$(command -v lolcat)" ]; then
-        echo ${TMOE_TIPS_01} | lolcat -a
+        echo ${TMOE_TIPS_01} | lolcat -a -d 8
     else
         echo ${TMOE_TIPS_01}
     fi

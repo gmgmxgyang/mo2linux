@@ -13,6 +13,8 @@ development_programming_tools() {
             "6" "🇨 🇱 CLion(C/C++集成开发环境)" \
             "7" "🇬 🇴 GoLand(JetBrains的Go开发工具)" \
             "8" "🇹 🇨 teamcity(持续集成Continue Integration工具)" \
+            "9" "♐ github-desktop(x64,github官方桌面客户端)" \
+            "10" "⚛️ atom(x64,类Sublime风格文本编辑器，github出品)" \
             "0" "🌚 Return to previous menu 返回上级菜单" \
             3>&1 1>&2 2>&3
     )
@@ -22,11 +24,48 @@ development_programming_tools() {
     2) install_android_studio ;;
     *) echo "新版即将集成本开发工具的安装，敬请期待" ;;
     esac
+       # 3) install_intellij_idea ;;
     ############################################
     press_enter_to_return
     development_programming_tools
 }
 ###########
+check_ide_version() {
+    cat <<-ENDofTable
+		╔═══╦══════════╦═══════════════════╦════════════════════
+		║   ║          ║                   ║                    
+		║   ║ software ║    ✨最新版本     ║   本地版本 🎪
+		║   ║          ║  Latest version   ║  Local version     
+		║---║----------║-------------------║--------------------
+		║ 1 ║${GREP_NAME}                      ${LOCAL_OPT_APP_VERSION} 
+		║   ║          ║${THE_LATEST_APP_VERSION_CODE}
+
+	ENDofTable
+}
+#########
+uncompress_arch_pkg_tar_zst() {
+    mkdir -p ${APP_OPT_DIR}
+    cd ${APP_OPT_DIR}
+    tar --zstd -xvf ${DOWNLOAD_PATH}/${ARCH_WALLPAPER_VERSION} &>/dev/null || zstdcat "${DOWNLOAD_PATH}/${ARCH_WALLPAPER_VERSION}" | tar xvf -
+    cp -pf ${TMOE_TOOL_DIR}/code/lnk/${GREP_NAME}.desktop ${APPS_LNK_DIR}
+}
+###########
+install_intellij_idea() {
+    GREP_NAME='intellij-idea-ultimate-edition'
+    check_opt_dir_01
+    echo "正在检测版本更新信息..."
+    echo "本版本为旗舰版，如需下载社区版，则请手动打开${YELLOW}https://www.jetbrains.com/idea/download/download-thanks.html?platform=linux&code=IIC${RESET}"
+    check_archlinux_cn_html_date
+    check_download_path
+    ############
+    THE_LATEST_APP_VERSION_CODE=$(cat index.html | grep '.pkg.tar.zst' | grep -Ev '.xz.sig|.zst.sig' | grep -v '\-jre\-' | grep "${GREP_NAME}" | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2 | sed "s@${GREP_NAME}-@@g" | sed 's@.pkg.tar.zst@@')
+    LOCAL_OPT_APP_VERSION=$(cat ${TMOE_GIT_DIR} | head -n 1)
+    grep_arch_linux_pkg_04
+    uncompress_arch_pkg_tar_zst
+    install_java
+    echo "安装完成，如需卸载，请输${RED}rm -rv${RESET}${BLUE}${APP_OPT_DIR} ${APPS_LNK_DIR}/${GREP_NAME}.desktop${RESET}"
+}
+##################
 creat_android_studio_application_link() {
     cd ${APPS_LNK_DIR}
     #Icon=android-studio
@@ -44,7 +83,7 @@ creat_android_studio_application_link() {
 		StartupNotify=true
 		StartupWMClass=Android-Studio
 	EOF
-    chmod +x android_studio.desktop
+    chmod a+r android_studio.desktop
 }
 #########################
 download_android_studio() {
@@ -68,7 +107,6 @@ check_android_studio() {
     if [ ! -e "android_studio_linux_64bit.tar.gz" ]; then
         download_android_studio
     fi
-    DEPENDENCY_01=''
     install_java
 }
 ##############

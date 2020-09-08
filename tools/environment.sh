@@ -65,7 +65,6 @@ check_theme_folder() {
     fi
 }
 ##############
-
 move_wallpaper_model_01() {
     if [ -e "data.tar.xz" ]; then
         tar -Jxvf data.tar.xz 2>/dev/null
@@ -218,6 +217,65 @@ grep_arch_linux_pkg_03() {
     aria2c --allow-overwrite=true -o data.tar.zst -x 5 -s 5 -k 1M ${ARCH_WALLPAPER_URL}
 }
 #################
+grep_arch_linux_pkg_04() {
+    #JetBrains IDE
+    ARCH_WALLPAPER_VERSION=$(cat index.html | grep '.pkg.tar.zst' | grep -Ev '.xz.sig|.zst.sig' | grep -v '\-jre\-' | grep "${GREP_NAME}" | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)
+    LOCAL_ARCH_PKG_VERSION=$(ls -t ${DOWNLOAD_PATH}/${GREP_NAME}*.pkg.tar.zst | head -n 1)
+    case ${LOCAL_ARCH_PKG_VERSION} in
+    "${ARCH_WALLPAPER_VERSION}") echo "检测到您已经下载最新版的${LOCAL_ARCH_PKG_VERSION},如需删除安装包，请输${RED}rm -v${RESET} ${BLUE}${DOWNLOAD_PATH}/${LOCAL_ARCH_PKG_VERSION}${RESET}" ;;
+    *)
+        ARCH_WALLPAPER_URL="${THEME_URL}${ARCH_WALLPAPER_VERSION}"
+        #echo "${YELLOW}${ARCH_WALLPAPER_URL}${RESET}"
+        aria2c --allow-overwrite=true -d ${DOWNLOAD_PATH} -o ${ARCH_WALLPAPER_VERSION} -x 5 -s 5 -k 1M ${ARCH_WALLPAPER_URL}
+        ;;
+    esac
+}
+#################
+check_archlinux_cn_html_date() {
+    THEME_URL='https://mirrors.bfsu.edu.cn/archlinuxcn/x86_64/'
+    ARCH_LINUX_CN_REPO_DIR='/tmp/.ARCH_LINUX_CN_REPO'
+    ARCH_LINUX_CN_REPO_HTML="${ARCH_LINUX_CN_REPO_DIR}/index.html"
+    if [ ! -e "${ARCH_LINUX_CN_REPO_DIR}" ]; then
+        mkdir -p ${ARCH_LINUX_CN_REPO_DIR}
+    fi
+    cd ${ARCH_LINUX_CN_REPO_DIR}
+
+    if [ -e "${ARCH_LINUX_CN_REPO_HTML}" ]; then
+        FILE_TIME=$(date -d "$(stat -c '%y' ${ARCH_LINUX_CN_REPO_HTML})" +"%Y%m%d")
+        case ${FILE_TIME} in
+        "$(date +%Y%m%d)") ;;
+        *) download_arch_linux_cn_repo_html ;;
+        esac
+    else
+        download_arch_linux_cn_repo_html
+    fi
+}
+##########
+check_opt_dir_01() {
+    APP_OPT_DIR="/opt/${GREP_NAME}"
+    if [ -e "${APP_OPT_DIR}" ]; then
+        echo "安装完成，如需卸载，请输${RED}rm -rv${RESET}${BLUE}${APP_OPT_DIR} ${APPS_LNK_DIR}/${GREP_NAME}.desktop${RESET}"
+        echo "是否需要强制更新？"
+        echo "Do you want to mandatory upgrade ${GREP_NAME}?"
+        do_you_want_to_continue
+    fi
+}
+###########
+check_download_path() {
+    if [ -e "${HOME}/sd" ]; then
+        DOWNLOAD_PATH=${HOME}/sd/Download
+    elif [ -e "/sdcard" ]; then
+        DOWNLOAD_PATH=/sdcard/Download
+    else
+        DOWNLOAD_PATH=${HOME}/sd/Download
+    fi
+    mkdir -p ${DOWNLOAD_PATH}
+}
+###########
+download_arch_linux_cn_repo_html() {
+    aria2c -o index.html --allow-overwrite=true ${THEME_URL}
+}
+############
 download_arch_community_repo_html() {
     THEME_NAME=${GREP_NAME}
     mkdir -p /tmp/.${THEME_NAME}
@@ -1044,9 +1102,13 @@ install_gpg() {
 #########
 install_java() {
     if [ ! $(command -v java) ]; then
+        DEPENDENCY_01=''
         case "${LINUX_DISTRO}" in
         arch) DEPENDENCY_02='jre-openjdk' ;;
-        debian | "") DEPENDENCY_02='default-jre' ;;
+        debian | "")
+            DEPENDENCY_01='default-jdk'
+            DEPENDENCY_02='default-jre'
+            ;;
         alpine) DEPENDENCY_02='openjdk11-jre' ;;
         redhat | *) DEPENDENCY_02='java' ;;
         esac
@@ -1083,4 +1145,20 @@ del_debian_old_source() {
     fi
 }
 ###############
+tmoe_apt_update() {
+    case ${LINUX_DISTRO} in
+    arch | fedora) ;;
+    *) ${TMOE_UPDATE_COMMAND} 2>/dev/null ;;
+    esac
+}
+############
+check_zstd() {
+    if [ ! $(command -v unzstd) ]; then
+        echo "${GREEN}${TMOE_INSTALLATON_COMMAND}${RESET} ${BLUE}zstd${RESET}"
+        tmoe_apt_update
+        ${TMOE_INSTALLATON_COMMAND} zstd
+        echo "如需卸载，请手动输${TMOE_REMOVAL_COMMAND} zstd"
+    fi
+}
+##############
 gnu_linux_env_02

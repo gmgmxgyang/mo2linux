@@ -2647,7 +2647,6 @@ disable_qemu_user_static() {
 }
 #############
 tmoe_qemu_user_static() {
-	qemu_user_env
 	RETURN_TO_WHERE='tmoe_qemu_user_static'
 	BETA_SYSTEM=$(
 		whiptail --title "qemu_user_static" --menu "QEMU的user模式跨架构运行的效率可能比system模式更高，但存在更多的局限性" 0 50 0 \
@@ -2727,7 +2726,7 @@ install_qemu_user_static() {
 	esac
 
 	case ${LOCAL_QEMU_USER_VERSION} in
-	"") LOCAL_QEMU_USER_VERSION='您尚未安装QEMU-USER-STATIC' ;;
+	"") LOCAL_QEMU_USER_VERSION='未安装Not Installed' ;;
 	*) ;;
 	esac
 
@@ -2828,6 +2827,7 @@ creat_tmoe_arch_file() {
 tmoe_qemu_user_manager() {
 	cd ${CONFIG_FOLDER}
 	NEW_TMOE_ARCH=''
+	qemu_user_env
 	RETURN_TO_WHERE='tmoe_qemu_user_manager'
 	BETA_SYSTEM=$(
 		whiptail --title "跨架构运行容器" --menu "您想要(模拟)运行哪个架构？\nWhich architecture do you want to simulate?" 0 50 0 \

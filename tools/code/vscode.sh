@@ -103,7 +103,15 @@ edit_code_server_config_manually() {
 }
 ####################
 vscode_server_upgrade() {
-    random_neko
+    if [ -e "/usr/share/pixmaps/${ICON_NAME}" ]; then
+        if [ $(command -v catimg) ]; then
+            catimg /usr/share/pixmaps/${ICON_NAME}
+        else
+            random_neko
+        fi
+    else
+        random_neko
+    fi
     echo "正在检测版本信息..."
     if [ -e "/usr/local/bin/code-server-data/bin/code-server" ]; then
         LOCAL_VSCODE_VERSION=$(code-server --version | grep -v info | head -n 1 | awk '{print $1}')

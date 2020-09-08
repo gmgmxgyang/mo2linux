@@ -739,8 +739,9 @@ install_baidu_netdisk() {
     THE_LATEST_DEB_URL=$(curl -L 'https://aur.tuna.tsinghua.edu.cn/packages/baidunetdisk-bin/?O=10&PP=10' | grep '.deb' | head -n 1 | cut -d '=' -f 2 | cut -d '"' -f 2)
     THE_LATEST_DEB_VERSION=$(echo $THE_LATEST_DEB_URL | awk -F '/' '{print $NF}' | sed 's@.deb@@')
     THE_LATEST_RPM_URL=$(echo ${THE_LATEST_DEB_URL} | awk -F '/' '{print $NF}' | sed 's@_amd64.deb@.x86_64.rpm@')
-    TMOE_TIPS_01="检测到最新版本为${THE_LATEST_DEB_VERSION},最新版链接为${THE_LATEST_DEB_URL}"
+    TMOE_TIPS_01="检测到最新版本为${THE_LATEST_DEB_VERSION}"
     lolcat_tmoe_tips_01
+    echo "最新版链接为${YELLOW}${THE_LATEST_DEB_URL}${RESET}"
     if [ -e "${TMOE_LINUX_DIR}/baidu_netdisk-version" ]; then
         echo "本地版本可能为$(cat ${TMOE_LINUX_DIR}/baidu_netdisk-version | head -n 1)"
     elif [ ! -e "${APPS_LNK_DIR}/baidunetdisk.desktop" ]; then

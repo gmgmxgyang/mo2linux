@@ -174,10 +174,12 @@ install_ide_01() {
     check_ide_version
     case ${GREP_NAME} in
     intellij-idea-ultimate-edition)
-        echo "本版本为旗舰版，如需下载社区版，则请手动前往官网下载安装${BLUE}https://www.jetbrains.com/idea/download/download-thanks.html?platform=linux&code=IIC${RESET}"
+        echo "本版本为旗舰版，如需下载社区版，则请手动前往官网下载安装。"
+        echo "${BLUE}https://www.jetbrains.com/idea/download/download-thanks.html?platform=linux&code=IIC${RESET}"
         ;;
     pycharm-professional)
-        echo "本版本为专业版，如需下载社区版，则请手动前往官网下载安装${BLUE}https://www.jetbrains.com/pycharm/download/#section=linux${RESET}"
+        echo "本版本为专业版，如需下载社区版，则请手动前往官网下载安装。"
+        echo "${BLUE}https://www.jetbrains.com/pycharm/download/#section=linux${RESET}"
         ;;
     github-desktop-bin)
         case ${ARCH_TYPE} in

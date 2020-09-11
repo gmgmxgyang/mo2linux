@@ -48,7 +48,7 @@ tmoe_manager_env() {
 	TMOE_OPT_BIN_DIR="${TMOE_TOOL_DIR}/sources/opt-bin"
 	TMOE_GIT_URL='gitee.com/mo2/linux'
 	APPS_LNK_DIR='/usr/share/applications'
-	TMOE_LINUX_ISSUE_URL='https://gitee.com/mo2/linux/issues/new'
+	TMOE_LINUX_ISSUE_URL='https://gitee.com/mo2/linux/issues'
 	check_tmoe_container_chroot
 }
 #######

@@ -1904,17 +1904,18 @@ dde_warning() {
     debian)
         echo "本工具调用的是${BLUE}Ubuntu DDE${RESET}的软件源,而非${YELLOW}UOS${RESET}。"
         echo "非新版的Ubuntu LTS系统可能存在依赖关系问题。"
-        echo "若您需要在容器环境中运行，则建议您换用arch或fedora。"
+        echo "若您需要在arm64容器环境中运行，则建议您换用fedora。"
+        echo "若您需要在x64容器环境中运行，则建议您换用arch。"
         ;;
     esac
 
     case "${TMOE_PROOT}" in
-    true) echo "${RED}WARNING！${RESET}检测到您当前可能处于${BLUE}PROOT容器${RESET}环境下！${YELLOW}DDE可能无法正常运行${RESET},您可以换用chroot容器进行安装，但更推荐您换用虚拟机。" ;;
+    true) echo "${RED}WARNING！${RESET}检测到您当前可能处于${BLUE}PROOT容器${RESET}环境下！${YELLOW}DDE可能无法正常运行${RESET},您可以换用fedora chroot容器进行安装。" ;;
     false)
         echo "检测到您当前可能处于${BLUE}chroot容器${RESET}环境"
         case ${LINUX_DISTRO} in
-        arch | redhat) echo "尽情享受dde带来的乐趣吧！" ;;
-        debian) echo "若无法运行，则请更换为arch或fedora容器" ;;
+        redhat) echo "尽情享受dde带来的乐趣吧！" ;;
+        debian | *) echo "若无法运行，则请更换为fedora容器" ;;
         esac
         ;;
     no) echo "检测到您无权读取${YELLOW}/proc${RESET}的部分数据，${RED}请勿安装${RESET}" ;;
@@ -1941,11 +1942,15 @@ install_deepin_desktop() {
         #pacman -S --noconfirm deepin-kwin
         #pacman -S --noconfirm file-roller evince
         #rm -v ~/.pam_environment 2>/dev/null
+        DEPENDENCY_01="deepin xorg deepin-extra lightdm lightdm-deepin-greeter"
         case ${ARCH_TYPE} in
-        amd64) DEPENDENCY_01="deepin xorg deepin-extra lightdm lightdm-deepin-greeter" ;;
+        amd64) ;;
         *)
-            DEPENDENCY_01="deepin xorg"
-            echo "如需安装额外组件，请手动输${GREEN}pacman -Syu${RESET} ${BLUE}deepin-extra lightdm lightdm-deepin-greeter${RESET}"
+            #DEPENDENCY_01="deepin xorg"
+            #echo "如需安装额外组件，请手动输${GREEN}pacman -Syu${RESET} ${BLUE}deepin-extra lightdm lightdm-deepin-greeter${RESET}"
+            echo "${RED}WARNING！${RESET}检测到您使用的是arch系发行版，${ARCH_TYPE}的仓库可能缺失了deepin-desktop-base，建议您换用x64架构的设备。"
+            echo "若您需要在arm64容器中安装dde,则您可以换用fedora_arm64 chroot容器。"
+            do_you_want_to_continue
             ;;
         esac
     fi

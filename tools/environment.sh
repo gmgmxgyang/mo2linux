@@ -1226,16 +1226,25 @@ install_java() {
             DEPENDENCY_01='openjdk11-jre'
             DEPENDENCY_02='openjdk11-jdk'
             ;;
-        redhat | *)
+        void)
+            DEPENDENCY_01='openjdk11'
+            DEPENDENCY_02='openjdk11-bin'
+            ;;
+        redhat)
             case ${REDHAT_DISTRO} in
             fedora)
                 DEPENDENCY_01='java-latest-openjdk'
                 DEPENDENCY_02='java-latest-openjdk-devel'
                 ;;
             *)
+                #java-11-openjdk-devel
                 DEPENDENCY_02=$(yum search openjdk-devel 2>&1 | grep Develop | head -n 1 | awk '{print $1}' | cut -d '.' -f 1)
                 ;;
             esac
+            ;;
+        *)
+            DEPENDENCY_01='openjdk'
+            DEPENDENCY_02='java'
             ;;
         esac
         beta_features_quick_install

@@ -869,6 +869,17 @@ configure_x11vnc_remote_desktop_session() {
 		else
 		    export LANG="zh_CN.UTF-8"
 		fi
+        case ${TMOE_CHROOT} in
+        true)
+        if [ ! -e "/run/dbus/pid" ]; then
+            if [ $(command -v sudo) ]; then
+                sudo dbus-daemon --system --fork 2>/dev/null
+            else
+                su -c "dbus-daemon --system --fork 2>/dev/null"
+            fi
+        fi
+        ;;
+        esac
 		/usr/bin/Xvfb :233 -screen 0 1440x720x24 -ac +extension GLX +render -noreset & 
 		if [ "$(uname -r | cut -d '-' -f 3 | head -n 1)" = "Microsoft" ] || [ "$(uname -r | cut -d '-' -f 2 | head -n 1)" = "microsoft" ]; then
 			echo '检测到您使用的是WSL,正在为您打开音频服务'
@@ -4070,6 +4081,7 @@ configure_startvnc() {
                 su -c "rm -f /run/dbus/pid /var/run/dbus/pid /run/dbus/messagebus.pid /run/messagebus.pid /var/run/dbus/messagebus.pid /var/run/messagebus.pid 2>/dev/null"
             fi
         ;;
+        esac
 		pkill Xtightvnc
 		stopx11vnc 2>/dev/null
 	EndOfFile

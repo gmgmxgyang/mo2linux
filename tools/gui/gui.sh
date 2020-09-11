@@ -869,10 +869,10 @@ configure_x11vnc_remote_desktop_session() {
 		else
 		    export LANG="zh_CN.UTF-8"
 		fi
-        case ${TMOE_CHROOT} in
+        case \${TMOE_CHROOT} in
         true)
         if [ ! -e "/run/dbus/pid" ]; then
-            if [ $(command -v sudo) ]; then
+            if [ \$(command -v sudo) ]; then
                 sudo dbus-daemon --system --fork 2>/dev/null
             else
                 su -c "dbus-daemon --system --fork 2>/dev/null"

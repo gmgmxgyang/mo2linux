@@ -59,7 +59,8 @@ modify_other_vnc_conf() {
 ##############
 switch_tight_or_tiger_vncserver() {
     DEPENDENCY_01=''
-    NON_DEBIAN='true'
+    #NON_DEBIAN='true'
+    non_debian_function
     if [ $(command -v Xtightvnc) ]; then
         VNC_SERVER_BIN_NOW="tightvncserver"
         VNC_SERVER_BIN="tigervnc"
@@ -277,7 +278,7 @@ preconfigure_gui_dependecies_02() {
 }
 ########################
 standand_desktop_installation() {
-    NON_DEBIAN='false'
+    
     NON_DBUS='false'
     REMOVE_UDISK2='false'
     RETURN_TO_WHERE='standand_desktop_installation'
@@ -358,7 +359,7 @@ tmoe_container_desktop() {
 }
 ####################
 tmoe_display_manager_install() {
-    NON_DEBIAN='false'
+    
     DEPENDENCY_01=''
     RETURN_TO_WHERE='tmoe_display_manager_install'
     INSTALLDESKTOP=$(whiptail --title "单项选择题" --menu \
@@ -1909,7 +1910,13 @@ dde_warning() {
 
     case "${TMOE_PROOT}" in
     true) echo "${RED}WARNING！${RESET}检测到您当前可能处于${BLUE}PROOT容器${RESET}环境下！${YELLOW}DDE可能无法正常运行${RESET},您可以换用chroot容器进行安装，但更推荐您换用虚拟机。" ;;
-    false) echo "检测到您当前可能处于${BLUE}chroot容器${RESET}环境" ;;
+    false)
+        echo "检测到您当前可能处于${BLUE}chroot容器${RESET}环境"
+        case ${LINUX_DISTRO} in
+        arch | redhat) echo "尽情享受dde带来的乐趣吧！";;
+        debian) echo "若无法运行，则请更换为arch或fedora容器" ;;
+        esac
+        ;;
     no) echo "检测到您无权读取${YELLOW}/proc${RESET}的部分数据，${RED}请勿安装${RESET}" ;;
     esac
     do_you_want_to_continue
@@ -1986,7 +1993,7 @@ check_update_icon_caches_sh() {
 }
 ##############
 tmoe_desktop_beautification() {
-    NON_DEBIAN='false'
+    
     DEPENDENCY_01=''
     RETURN_TO_WHERE='tmoe_desktop_beautification'
     BEAUTIFICATION=$(whiptail --title "beautification" --menu \
@@ -2738,7 +2745,7 @@ download_win10x_theme() {
 download_uos_icon_theme() {
     DEPENDENCY_01="deepin-icon-theme"
     DEPENDENCY_02=""
-    NON_DEBIAN='false'
+    
     beta_features_quick_install
 
     if [ -d "/usr/share/icons/Uos" ]; then
@@ -2790,7 +2797,7 @@ download_macos_mojave_theme() {
 download_ukui_theme() {
     DEPENDENCY_01="ukui-themes"
     DEPENDENCY_02="ukui-greeter"
-    NON_DEBIAN='false'
+    
     beta_features_quick_install
 
     if [ ! -e '/usr/share/icons/ukui-icon-theme-default' ] && [ ! -e '/usr/share/icons/ukui-icon-theme' ]; then
@@ -2837,7 +2844,7 @@ download_arch_breeze_adapta_cursor_theme() {
 install_breeze_theme() {
     DEPENDENCY_01="breeze-icon-theme"
     DEPENDENCY_02="breeze-cursor-theme breeze-gtk-theme xfwm4-theme-breeze"
-    NON_DEBIAN='false'
+    
     download_arch_breeze_adapta_cursor_theme
     if [ "${LINUX_DISTRO}" = "arch" ]; then
         DEPENDENCY_01="breeze-icons breeze-gtk"
@@ -2880,7 +2887,7 @@ install_kali_undercover() {
     fi
     DEPENDENCY_01="kali-undercover"
     DEPENDENCY_02=""
-    NON_DEBIAN='false'
+    
     if [ "${LINUX_DISTRO}" = "debian" ]; then
         beta_features_quick_install
     fi
@@ -3000,7 +3007,7 @@ x11vnc_warning() {
     RETURN_TO_WHERE='configure_x11vnc'
     do_you_want_to_continue
     #stopvnc 2>/dev/null
-    NON_DEBIAN='false'
+    
     DEPENDENCY_01=''
     DEPENDENCY_02=''
     if [ ! $(command -v x11vnc) ]; then
@@ -3356,7 +3363,7 @@ remove_xwayland() {
     do_you_want_to_continue
     DEPENDENCY_01='weston'
     DEPENDENCY_02='xwayland'
-    NON_DEBIAN='false'
+    
     if [ "${LINUX_DISTRO}" = "arch" ]; then
         DEPENDENCY_02='xorg-server-xwayland'
     elif [ "${LINUX_DISTRO}" = "redhat" ]; then
@@ -3395,7 +3402,7 @@ xwayland_onekey() {
 
     DEPENDENCY_01='weston'
     DEPENDENCY_02='xwayland'
-    NON_DEBIAN='false'
+    
     if [ "${LINUX_DISTRO}" = "debian" ]; then
         if [ $(command -v startplasma-x11) ]; then
             DEPENDENCY_02='xwayland plasma-workspace-wayland'
@@ -3770,7 +3777,7 @@ xrdp_onekey() {
 
     DEPENDENCY_01=''
     DEPENDENCY_02='xrdp'
-    NON_DEBIAN='false'
+    
     if [ "${LINUX_DISTRO}" = "gentoo" ]; then
         emerge -avk layman
         layman -a bleeding-edge

@@ -44,7 +44,7 @@ software_center() {
             "5" "📚 Documents:文档(libreoffice,wps)" \
             "6" "🔯 Packages&system:软件包与系统管理" \
             "7" "🎮 Games:游戏(steam,wesnoth)" \
-            "8" "🐧 SNS:社交类(qq)" \
+            "8" "🐧 SNS:社交类(qq,skype)" \
             "9" "🎁 Download:下载类(aria2,baidu)" \
             "10" "🥙 Start zsh tool:启动zsh管理工具" \
             "11" "🥗 File shared:文件共享与网盘(Webdav)" \
@@ -146,7 +146,10 @@ tmoe_social_network_service() {
     case "${TMOE_APP}" in
     0 | "") software_center ;;
     1) install_linux_qq ;;
-    2) DEPENDENCY_01="thunderbird" ;;
+    2)
+        DEPENDENCY_01="thunderbird"
+        DEPENDENCY_02="thunderbird-l10n-zh-cn"
+        ;;
     3) DEPENDENCY_01="kmail" ;;
     4) DEPENDENCY_01="evolution" ;;
     5) DEPENDENCY_01="empathy" ;;

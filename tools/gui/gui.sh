@@ -852,7 +852,7 @@ configure_vnc_xstartup() {
 }
 ####################
 congigure_xvnc() {
-    mkdir -p /etc/X11/xinit /etc/tigervnc 
+    mkdir -p /etc/X11/xinit /etc/tigervnc
     ln -sf ~/.vnc/xstartup /etc/X11/xinit/Xsession
     cp -f ${TMOE_TOOL_DIR}/gui/vncserver-config-defaults /etc/tigervnc
 }
@@ -4088,9 +4088,9 @@ configure_startvnc() {
         esac
 		if [ $(command -v vncsession) ]; then
             vncsession :${TMOE_VNC_DISPLAY_NUMBER}
-        else
-            vncserver -geometry 1440x720 -depth 24 -name tmoe-linux :1
+            exit 0
         fi
+        vncserver -geometry 1440x720 -depth 24 -name tmoe-linux :1
 	EndOfFile
     ##############
     cat >stopvnc <<-'EndOfFile'

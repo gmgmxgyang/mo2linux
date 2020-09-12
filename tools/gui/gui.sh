@@ -4087,7 +4087,7 @@ configure_startvnc() {
         ;;
         esac
 		if [ $(command -v vncsession) ]; then
-            vncsession :${TMOE_VNC_DISPLAY_NUMBER}
+            vncsession $(whoami) :${TMOE_VNC_DISPLAY_NUMBER}
             exit 0
         fi
         vncserver -geometry 1440x720 -depth 24 -name tmoe-linux :1

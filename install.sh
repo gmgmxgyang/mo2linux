@@ -1306,19 +1306,17 @@ debian_stable_sources_list_and_gpg_key() {
 #rm -f "${HOME}/.REDHATDetectionFILE"
 #chmod u+w "${DEBIAN_CHROOT}/root"
 if [ -f "${HOME}/.ALPINELINUXDetectionFILE" ]; then
-	${DEBIAN_CHROOT} mv -f "${HOME}/.ALPINELINUXDetectionFILE" ${DEBIAN_CHROOT}/tmp
+	${TMOE_CHROOT_PREFIX} mv -f "${HOME}/.ALPINELINUXDetectionFILE" ${DEBIAN_CHROOT}/tmp
 elif [ -f "${HOME}/.MANJARO_ARM_DETECTION_FILE" ]; then
 	rm -f ${HOME}/.MANJARO_ARM_DETECTION_FILE
-	${DEBIAN_CHROOT} sed -i 's@^#SigLevel.*@SigLevel = Never@' "${DEBIAN_CHROOT}/etc/pacman.conf"
+	${TMOE_CHROOT_PREFIX} sed -i 's@^#SigLevel.*@SigLevel = Never@' "${DEBIAN_CHROOT}/etc/pacman.conf"
 fi
 ########
 TMOE_LOCALE_FILE="${CONFIG_FOLDER}/locale.txt"
 if [ -f "${TMOE_LOCALE_FILE}" ]; then
 	TMOE_LOCALE_NEW_PATH="${DEBIAN_CHROOT}/usr/local/etc/tmoe-linux"
-	echo "${DEBIAN_CHROOT} mkdir -p ${TMOE_LOCALE_NEW_PATH}
-	${DEBIAN_CHROOT} cp -f ${TMOE_LOCALE_FILE} ${TMOE_LOCALE_NEW_PATH}"
-	${DEBIAN_CHROOT} mkdir -p ${TMOE_LOCALE_NEW_PATH}
-	${DEBIAN_CHROOT} cp -f ${TMOE_LOCALE_FILE} ${TMOE_LOCALE_NEW_PATH}
+	${TMOE_CHROOT_PREFIX} mkdir -p ${TMOE_LOCALE_NEW_PATH}
+	${TMOE_CHROOT_PREFIX} cp -f ${TMOE_LOCALE_FILE} ${TMOE_LOCALE_NEW_PATH}
 	TMOE_LANG=$(cat ${TMOE_LOCALE_FILE} | head -n 1)
 	PROOT_LANG=$(cat $(command -v debian) | grep LANG= | cut -d '"' -f 2 | cut -d '=' -f 2 | tail -n 1)
 	sed -i "s@${PROOT_LANG}@${TMOE_LANG}@" $(command -v debian)

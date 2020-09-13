@@ -826,8 +826,6 @@ check_tmoe_proot_container_proc() {
 			echo "检测到您无权读取${BLUE}/proc/${i}${RESET},修复中..."
 			echo "${GREEN}Fixing${RESET} ${YELLOW}/proc/${i}${RESET}..."
 			sed -i "s@##${i}#@@" ${PREFIX}/bin/debian
-		else
-			echo "Congratulations, you have permission to read files in /proc"
 		fi
 	done
 	unset i

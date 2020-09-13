@@ -1289,7 +1289,7 @@ curl -sLo zsh-i.sh 'https://gitee.com/mo2/zsh/raw/master/zsh.sh'
 sed -i 's:#!/data/data/com.termux/files/usr/bin/env bash:#!/usr/bin/env bash:' zsh-i.sh
 curl -Lo zsh.sh 'https://gitee.com/mo2/linux/raw/master/zsh.sh'
 chmod +x zsh.sh zsh-i.sh
-${TMOE_CHROOT_PREFIX} cp zsh-i zsh.sh ${DEBIAN_CHROOT}/root
+${TMOE_CHROOT_PREFIX} cp zsh-i.sh zsh.sh ${DEBIAN_CHROOT}/root
 #chmod u+x ./*
 ###########
 debian_stable_sources_list_and_gpg_key() {
@@ -2221,7 +2221,7 @@ ENDOFbashPROFILE
 case ${TMOE_CHROOT} in
 true)
 	${TMOE_CHROOT_PREFIX} mv ${DEBIAN_CHROOT}/root/.profile ${DEBIAN_CHROOT}/root/.profile.bak 2>/dev/null
-	${TMOE_CHROOT_PREFIX} cp vnc-autostartup .profle ${DEBIAN_CHROOT}/root
+	${TMOE_CHROOT_PREFIX} cp vnc-autostartup .profile ${DEBIAN_CHROOT}/root
 	;;
 *) sed -i '1 r vnc-autostartup' ./.bash_login ;;
 esac

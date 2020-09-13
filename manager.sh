@@ -2091,7 +2091,9 @@ unmount_proc_dev() {
 			echo "检测到~/${DEBIAN_FOLDER}/${i}目录不为空，为防止该目录被清空，无法继续执行操作！"
 			echo "Please restart the device to unmount the chroot directory."
 			press_enter_to_return
-			${RETURN_TO_WHERE}
+			#${RETURN_TO_WHERE}
+			#回到主菜单，而不是返回之前的菜单
+			tmoe_manager_main_menu
 		fi
 	done
 	unset i

@@ -1446,6 +1446,7 @@ cat >vnc-autostartup <<-'EndOfFile'
 	             ;;
 	    esac
 	}
+	[ -e ~/.profile ] && . ~/.profile
 EndOfFile
 #curl -Lo '.profile' 'https://gitee.com/mo2/linux/raw/master/profile.sh'
 #chmod u+x .profile
@@ -1779,7 +1780,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	        apk add bash
 	    fi
 	    rm -f "/tmp/.ALPINELINUXDetectionFILE"
-	    rm -f ~/.profile
+	    rm -f ~/.profile vnc-autostartup
 	    mv -f ~/.profile.bak ~/.profile 2>/dev/null
 	    if grep -q 'OpenWrt' "/etc/os-release"; then
 	        mkdir -p /var/lock/

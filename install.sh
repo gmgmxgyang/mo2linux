@@ -1336,9 +1336,9 @@ true)
 		mv -f .bash_profile .bash_profile.bak 2>/dev/null
 		mv -f .bash_login .basfh_login.bak 2>/dev/null
 	fi
-	touch .bash_login
+	echo '' >>.bash_login
 	if [ ! -f ".profile" ]; then
-		echo '' >>.profile || touch .profle
+		echo '' >>.profile
 	else
 		mv -f .profile .profile.bak
 	fi

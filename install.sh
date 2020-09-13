@@ -1313,7 +1313,7 @@ elif [ -f "${HOME}/.MANJARO_ARM_DETECTION_FILE" ]; then
 fi
 ########
 TMOE_LOCALE_FILE="${CONFIG_FOLDER}/locale.txt"
-if [ -e "${TMOE_LOCALE_FILE}" ]; then
+if [ -f "${TMOE_LOCALE_FILE}" ]; then
 	TMOE_LOCALE_NEW_PATH="${DEBIAN_CHROOT}/usr/local/etc/tmoe-linux"
 	${DEBIAN_CHROOT} mkdir -p ${TMOE_LOCALE_NEW_PATH}
 	${DEBIAN_CHROOT} cp -f ${TMOE_LOCALE_FILE} ${TMOE_LOCALE_NEW_PATH}

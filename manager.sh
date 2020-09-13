@@ -2077,19 +2077,20 @@ restore_the_latest_backup_file() {
 }
 #########################
 unmount_proc_dev() {
-	case ${TMOE_CHROOT} in
-	true)
+	#case ${TMOE_CHROOT} in
+	#true)
+	if [ $(command -v su) ]; then
 		su -c "umount -lvf ${DEBIAN_CHROOT}/* 2>/dev/null"
 		su -c "umount -lvf ${DEBIAN_CHROOT}/*/*  2>/dev/null"
 		su -c "umount -lvf ${DEBIAN_CHROOT}  2>/dev/null"
 		su -c "ls -lAh  ${DEBIAN_CHROOT}/root/sd"
-		;;
-	esac
+	fi
+	#	;;
+	#esac
 	#/dev内自带null
 	for i in root/sd root/tf proc sys; do
 		if [ "$(ls ${DEBIAN_CHROOT}/${i} 2>/dev/null)" ]; then
 			echo "检测到~/${DEBIAN_FOLDER}/${i}目录不为空，为防止该目录被清空，无法继续执行操作！"
-			echo "Please restart the device to unmount the chroot directory."
 			press_enter_to_return
 			#${RETURN_TO_WHERE}
 			#回到主菜单，而不是返回之前的菜单
@@ -2097,6 +2098,14 @@ unmount_proc_dev() {
 		fi
 	done
 	unset i
+
+	if [ "$(ls ${DEBIAN_CHROOT}/proc 2>/dev/null)" ]; then
+		echo "Please restart the device to unmount the ~/${DEBIAN_FOLDER}/${i} directory."
+		press_enter_to_return
+		#${RETURN_TO_WHERE}
+		#回到主菜单，而不是返回之前的菜单
+		tmoe_manager_main_menu
+	fi
 }
 ##########################
 do_you_want_to_continue() {

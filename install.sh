@@ -2205,7 +2205,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	    #bash -c "$(curl -LfsS 'https://gitee.com/mo2/zsh/raw/master/zsh.sh')" || bash -c "$(wget -qO- 'https://gitee.com/mo2/zsh/raw/master/zsh.sh')"
 	}
 	################
-	if ! grep -q 'debian|ubuntu' '/etc/os-release'; then
+	if ! grep -Eq 'debian|ubuntu' '/etc/os-release'; then
 	    note_of_non_debian
 	else
 		fix_gnu_libxcb_debian

@@ -1331,12 +1331,10 @@ true)
 *)
 	cd ${DEBIAN_CHROOT}/root
 	############
-	#cp -f .bash_login .bash_login.bak
 	if [ -f ".bash_profile" ] || [ -f ".bash_login" ]; then
 		mv -f .bash_profile .bash_profile.bak 2>/dev/null
-		mv -f .bash_login .basfh_login.bak 2>/dev/null
+		mv -f .bash_login .bash_login.bak 2>/dev/null
 	fi
-	echo '' >>.bash_login
 	if [ ! -f ".profile" ]; then
 		echo '' >>.profile
 	else
@@ -1347,7 +1345,7 @@ esac
 #############
 ##################
 #vnc自动启动
-cat >vnc-autostartup <<-'EndOfFile'
+cat >.bash_login <<-'EndOfFile'
 	locale_gen_tmoe_language() {
 		if ! grep -qi "^${TMOE_LANG_HALF}" "/etc/locale.gen"; then
 			cd /etc
@@ -1779,7 +1777,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	        apk add bash
 	    fi
 	    rm -f "/tmp/.ALPINELINUXDetectionFILE"
-	    rm -f ~/.profile vnc-autostartup
+	    rm -f ~/.profile
 	    mv -f ~/.profile.bak ~/.profile 2>/dev/null
 	    if grep -q 'OpenWrt' "/etc/os-release"; then
 	        mkdir -p /var/lock/
@@ -2062,15 +2060,13 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	echo "Welcome to Debian GNU/Linux."
 	cat /etc/issue 2>/dev/null || cat /etc/os-release
 	uname -a
-	rm -f vnc-autostartup .profile
+	#rm -f vnc-autostartup 
+	rm -f .profile
 	if [ -f ".profile.bak" ]; then
 	    mv -f .profile.bak .profile
 	fi
 	#################
-	if [ -f ".bash_profile.bak" ] || [ -f ".bash_login.bak" ]; then
-	    mv -f .bash_profile.bak .bash_profile.bak 2>/dev/null
-	    mv -f .bash_login.bak .basfh_login.bak 2>/dev/null
-	fi
+	#sed -i '1 r ~/vnc-autostartup' ~/.bash_login
 	####################
 	if [ ! "$(command -v lolcat)" ];then
 		apt install -y lolcat 2>/dev/null || pacman -S --noconfirm lolcat 2>/dev/null || dnf install -y lolcat 2>/dev/null || apk add lolcat 2>/dev/null
@@ -2220,11 +2216,12 @@ ENDOFbashPROFILE
 #####################
 case ${TMOE_CHROOT} in
 true)
+	${TMOE_CHROOT_PREFIX} rm -f ${DEBIAN_CHROOT}/root/.bash_profile ${DEBIAN_CHROOT}/root/.bash_login
 	${TMOE_CHROOT_PREFIX} mv ${DEBIAN_CHROOT}/root/.profile ${DEBIAN_CHROOT}/root/.profile.bak 2>/dev/null
-	${TMOE_CHROOT_PREFIX} cp vnc-autostartup .profile ${DEBIAN_CHROOT}/root
+	${TMOE_CHROOT_PREFIX} cp .bash_login .profile ${DEBIAN_CHROOT}/root
 	;;
-*) sed -i '1 r vnc-autostartup' ./.bash_login ;;
 esac
+#sed -i '1 r vnc-autostartup' ./.bash_login
 #####################
 check_current_user_name_and_group() {
 	CURRENT_USER_NAME=$(cat /etc/passwd | grep "${HOME}" | awk -F ':' '{print $1}')

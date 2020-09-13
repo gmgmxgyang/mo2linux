@@ -1345,7 +1345,7 @@ esac
 #############
 ##################
 #vnc自动启动
-cat >.bash_login <<-'EndOfFile'
+cat >vnc-autostartup <<-'EndOfFile'
 	locale_gen_tmoe_language() {
 		if ! grep -qi "^${TMOE_LANG_HALF}" "/etc/locale.gen"; then
 			cd /etc
@@ -1455,6 +1455,8 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	RESET=$(printf '\033[m')
 	cd ${HOME}
 	###############
+	# sed -i '1 r ~/vnc-autostartup' ~/.bash_login
+	cp -f vnc-autostartup .bash_login
 	if [ -e "/etc/hostname" ]; then
 		NEW_HOST_NAME=$(cat /etc/hostname | head -n 1)
 		hostname ${NEW_HOST_NAME} 2>/dev/null
@@ -2054,19 +2056,16 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	apt dist-upgrade -y 2>/dev/null
 	apt install -y procps 2>/dev/null
 	apt clean 2>/dev/null
-
 	#############################
 	#grep -q 'export DISPLAY' /etc/profile || echo "export DISPLAY=":1"" >>/etc/profile
 	echo "Welcome to Debian GNU/Linux."
 	cat /etc/issue 2>/dev/null || cat /etc/os-release
 	uname -a
-	#rm -f vnc-autostartup 
-	rm -f .profile
+	rm -f vnc-autostartup .profile
 	if [ -f ".profile.bak" ]; then
 	    mv -f .profile.bak .profile
 	fi
 	#################
-	#sed -i '1 r ~/vnc-autostartup' ~/.bash_login
 	####################
 	if [ ! "$(command -v lolcat)" ];then
 		apt install -y lolcat 2>/dev/null || pacman -S --noconfirm lolcat 2>/dev/null || dnf install -y lolcat 2>/dev/null || apk add lolcat 2>/dev/null
@@ -2218,7 +2217,7 @@ case ${TMOE_CHROOT} in
 true)
 	${TMOE_CHROOT_PREFIX} rm -f ${DEBIAN_CHROOT}/root/.bash_profile ${DEBIAN_CHROOT}/root/.bash_login
 	${TMOE_CHROOT_PREFIX} mv ${DEBIAN_CHROOT}/root/.profile ${DEBIAN_CHROOT}/root/.profile.bak 2>/dev/null
-	${TMOE_CHROOT_PREFIX} cp .bash_login .profile ${DEBIAN_CHROOT}/root
+	${TMOE_CHROOT_PREFIX} cp vnc-autostartup .profile ${DEBIAN_CHROOT}/root
 	;;
 esac
 #sed -i '1 r vnc-autostartup' ./.bash_login

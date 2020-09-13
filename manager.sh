@@ -4505,7 +4505,7 @@ which_version_do_you_want_to_install() {
 }
 ######################
 install_fedora_gnu_linux_distro() {
-	touch ~/.REDHATDetectionFILE
+	#touch ~/.REDHATDetectionFILE
 	DISTRO_NAME='fedora'
 	case "${ARCH_TYPE}" in
 	armhf | armel | i386)
@@ -4551,7 +4551,7 @@ install_void_linux_distro() {
 }
 ##########################
 install_centos_linux_distro() {
-	touch ~/.REDHATDetectionFILE
+	#touch ~/.REDHATDetectionFILE
 	DISTRO_NAME='centos'
 	if [ "${ARCH_TYPE}" = 'armhf' ] || [ "${ARCH_TYPE}" = 'i386' ]; then
 		echo "检测到CentOS 8不支持您当前的架构，将为您降级至CentOS 7"

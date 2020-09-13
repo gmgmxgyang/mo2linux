@@ -731,18 +731,20 @@ creat_chroot_startup_script() {
 			#ln -s ../../root/sd ./0
 			${TMOE_CHROOT_PREFIX} ln -s ../../root/sd ${DEBIAN_CHROOT}${ANDROID_EMULATED_DIR}/0
 		fi
-		cd "${DEBIAN_CHROOT}"
 		;;
 	esac
+	cd ${CONFIG_FOLDER}
 	if [ -e "/system/bin/wm" ]; then
 		TMOE_CHROOT_ETC="${DEBIAN_CHROOT}/usr/local/etc/tmoe-linux"
 		${TMOE_CHROOT_PREFIX} mkdir -p ${TMOE_CHROOT_ETC}
 		WM_SIZE=$(su -c "/system/bin/wm size" | awk '{print $3}' | head -n 1)
-		${TMOE_CHROOT_PREFIX} echo ${WM_SIZE} >${TMOE_CHROOT_ETC}/wm_size.txt
+		echo ${WM_SIZE} >wm_size.txt
+		${TMOE_CHROOT_PREFIX} mv wm_size.txt ${TMOE_CHROOT_ETC}
 	fi
 	if [ $(command -v getprop) ]; then
 		ANDROID_HOST_NAME=$(getprop ro.product.model)
-		${TMOE_CHROOT_PREFIX} echo ${ANDROID_HOST_NAME} >${DEBIAN_CHROOT}/etc/hostname
+		echo ${ANDROID_HOST_NAME} >hostname
+		${TMOE_CHROOT_PREFIX} mv hostname ${DEBIAN_CHROOT}/etc/
 		case $(hostname) in
 		localhost | "")
 			sudo hostname ${ANDROID_HOST_NAME}
@@ -752,12 +754,16 @@ creat_chroot_startup_script() {
 	echo "Creating chroot startup script"
 	echo "正在创建chroot容器启动脚本${PREFIX}/bin/debian "
 	#if [ -e "/storage/self/primary" ] || [ -e "/sdcard" ]; then
-	mkdir -p /sdcard/Download ${DEBIAN_CHROOT}/root/sd || ${TMOE_CHROOT_PREFIX} mkdir -p ${DEBIAN_CHROOT}/root/sd
+	#mkdir -p /sdcard/Download ${DEBIAN_CHROOT}/root/sd ||
+	mkdir -p /sdcard
+	${TMOE_CHROOT_PREFIX} mkdir -p ${DEBIAN_CHROOT}/root/sd
 	#fi
 	if [ -d "/data/data/com.termux/files/home" ]; then
-		mkdir -p ${DEBIAN_CHROOT}/root/termux || ${TMOE_CHROOT_PREFIX} mkdir -p ${DEBIAN_CHROOT}/root/termux
+		#mkdir -p ${DEBIAN_CHROOT}/root/termux ||
+		${TMOE_CHROOT_PREFIX} mkdir -p ${DEBIAN_CHROOT}/root/termux
 		if [ -h "${HOME}/storage/external-1" ]; then
-			mkdir -p ${DEBIAN_CHROOT}/root/tf || ${TMOE_CHROOT_PREFIX} mkdir -p ${DEBIAN_CHROOT}/root/tf
+			#mkdir -p ${DEBIAN_CHROOT}/root/tf ||
+			${TMOE_CHROOT_PREFIX} mkdir -p ${DEBIAN_CHROOT}/root/tf
 		fi
 	fi
 	##################
@@ -1283,7 +1289,7 @@ curl -sLo zsh-i.sh 'https://gitee.com/mo2/zsh/raw/master/zsh.sh'
 sed -i 's:#!/data/data/com.termux/files/usr/bin/env bash:#!/usr/bin/env bash:' zsh-i.sh
 curl -Lo zsh.sh 'https://gitee.com/mo2/linux/raw/master/zsh.sh'
 chmod +x zsh.sh zsh-i.sh
-${TMOE_CHROOT_PREFIX} mv zsh-i zsh.sh ${DEBIAN_CHROOT}/root
+${TMOE_CHROOT_PREFIX} cp zsh-i zsh.sh ${DEBIAN_CHROOT}/root
 #chmod u+x ./*
 ###########
 debian_stable_sources_list_and_gpg_key() {
@@ -1823,7 +1829,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	fi
 	##############################
 	apt update 2>/dev/null
-	apt reinstall -y perl-base
+	#apt reinstall -y perl-base
 	if [ ! -e /usr/lib/locale/zh_CN ];then
 		apt install -y locales-all 2>/dev/null
 	fi 
@@ -2214,8 +2220,8 @@ ENDOFbashPROFILE
 #####################
 case ${TMOE_CHROOT} in
 true)
-	${TMOE_CHROOT_PREFIX} ${DEBIAN_CHROOT}/root/.profile ${DEBIAN_CHROOT}/root/.profile.bak 2>/dev/null
-	${TMOE_CHROOT_PREFIX} mv vnc-autostartup .profle ${DEBIAN_CHROOT}/root
+	${TMOE_CHROOT_PREFIX} mv ${DEBIAN_CHROOT}/root/.profile ${DEBIAN_CHROOT}/root/.profile.bak 2>/dev/null
+	${TMOE_CHROOT_PREFIX} cp vnc-autostartup .profle ${DEBIAN_CHROOT}/root
 	;;
 *) sed -i '1 r vnc-autostartup' ./.bash_login ;;
 esac

@@ -67,8 +67,15 @@ if [ -e "${LINUX_CONTAINER_DISTRO_FILE}" ]; then
 fi
 DEBIAN_CHROOT=${HOME}/${DEBIAN_FOLDER}
 
-#创建必要文件夹，防止挂载失败
-mkdir -p ~/storage/external-1
+#mkdir -p ~/storage/external-1
+if [ -e "${CONFIG_FOLDER}/chroot_container" ]; then
+	TMOE_CHROOT='true'
+	if [ $(command -v sudo) ]; then
+		TMOE_CHROOT_PREFIX=sudo
+	elif [ $(command -v tsudo) ]; then
+		TMOE_CHROOT_PREFIX=tsudo
+	fi
+fi
 #DEBIAN_FOLDER=debian_arm64
 RED=$(printf '\033[31m')
 GREEN=$(printf '\033[32m')
@@ -362,7 +369,9 @@ cat <<-EOF
 EOF
 ################
 uncompress_other_format_file() {
-	if [ "${LINUX_DISTRO}" = "Android" ]; then
+	if [ "${TMOE_CHROOT}" = "true" ]; then
+		${TMOE_CHROOT_PREFIX} tar -pxvf ${CURRENT_TMOE_DIR}/${TMOE_ROOTFS_TAR_XZ}
+	elif [ "${LINUX_DISTRO}" = "Android" ]; then
 		pv ${CURRENT_TMOE_DIR}/${TMOE_ROOTFS_TAR_XZ} | proot --link2symlink tar -px
 	else
 		if [ $(command -v pv) ]; then
@@ -389,7 +398,9 @@ uncompress_tar_lz4_file() {
 }
 ###########
 uncompress_tar_gz_file() {
-	if [ "${LINUX_DISTRO}" = "Android" ]; then
+	if [ "${TMOE_CHROOT}" = "true" ]; then
+		${TMOE_CHROOT_PREFIX} tar -pzxvf ${CURRENT_TMOE_DIR}/${TMOE_ROOTFS_TAR_XZ}
+	elif [ "${LINUX_DISTRO}" = "Android" ]; then
 		pv ${CURRENT_TMOE_DIR}/${TMOE_ROOTFS_TAR_XZ} | proot --link2symlink tar -pzx
 	else
 		if [ $(command -v pv) ]; then
@@ -414,6 +425,8 @@ uncompress_tar_xz_file() {
 	if [ "${ARCH_TYPE}" = "mipsel" ]; then
 		pv ${CURRENT_TMOE_DIR}/${TMOE_ROOTFS_TAR_XZ} | tar -pJx
 		mv -b ${DEBIAN_CHROOT}/debian_mipsel/* ${DEBIAN_CHROOT}
+	elif [ "${TMOE_CHROOT}" = "true" ]; then
+		${TMOE_CHROOT_PREFIX} tar -pJxvf ${CURRENT_TMOE_DIR}/${TMOE_ROOTFS_TAR_XZ}
 	elif [ "${LINUX_DISTRO}" = "Android" ]; then
 		pv ${CURRENT_TMOE_DIR}/${TMOE_ROOTFS_TAR_XZ} | proot --link2symlink tar -pJx
 	elif [ "${LINUX_DISTRO}" = "iSH" ]; then
@@ -2194,7 +2207,8 @@ if [ "${LINUX_DISTRO}" != 'Android' ]; then
 	#sed -i 's:#!/data/data/com.termux/files/usr/bin/env bash:#!/usr/bin/env bash:' ${DEBIAN_CHROOT}/remove-debian.sh
 fi
 case ${TMOE_CHROOT} in
-true) su -c "chown -Rv root:root ${DEBIAN_CHROOT}" ;;
+true) ;;
+#su -c "chown -Rv root:root ${DEBIAN_CHROOT}"
 *)
 	case ${LINUX_DISTRO} in
 	Android) ;;

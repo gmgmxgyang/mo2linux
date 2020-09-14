@@ -852,7 +852,7 @@ configure_vnc_xstartup() {
 			dbus-launch --exit-with-session ${REMOTE_DESKTOP_SESSION_02}
 		fi
 	EndOfFile
-    chmod a+x ${XSESSION_FILE}
+    chmod 777 ${XSESSION_FILE}
     #xrdb \${HOME}/.Xresources
     #dbus-launch startxfce4 &
     #chmod +x ./xstartup

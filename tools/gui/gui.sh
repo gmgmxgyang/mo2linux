@@ -1554,7 +1554,10 @@ install_gnome3_desktop() {
         auto_select_keyboard_layout
         #aptitude install -y task-gnome-desktop || apt install -y task-gnome-desktop
         #apt install --no-install-recommends xorg gnome-session gnome-menus gnome-tweak-tool gnome-shell || aptitude install -y gnome-core
-        DEPENDENCY_01='--no-install-recommends xorg gnome-session gnome-menus gnome-tweak-tool gnome-core gnome-shell-extension-dashtodock gnome-shell'
+        case ${DEBIAN_DISTRO} in
+        ubuntu) DEPENDENCY_01='--no-install-recommends xorg gnome-session gnome-menus gnome-tweak-tool gnome-core gnome-shell' ;;
+        *) DEPENDENCY_01='--no-install-recommends xorg gnome-session gnome-menus gnome-tweak-tool gnome-core gnome-shell-extension-dashtodock gnome-shell' ;;
+        esac
         #若不包含gnome-core，则为最简化安装
     elif [ "${LINUX_DISTRO}" = "redhat" ]; then
         #yum groupinstall "GNOME Desktop Environment"

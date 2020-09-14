@@ -857,7 +857,7 @@ configure_vnc_xstartup() {
     #dbus-launch startxfce4 &
     #chmod +x ./xstartup
     rm ./xstartup
-    ln -sf ${XSESSION_FILE} ./xstartup
+    ln -svf ${XSESSION_FILE} ./xstartup
     congigure_xvnc
     first_configure_startvnc
 }

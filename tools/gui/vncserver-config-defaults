@@ -14,7 +14,6 @@ geometry=1440x720
 desktop=tmoe-linux
 verbose
 depth=24
-ac
 ZlibLevel=9
 ImprovedHextile
 CompareFB=1

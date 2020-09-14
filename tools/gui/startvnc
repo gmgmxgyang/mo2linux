@@ -75,7 +75,6 @@ start_tmoe_xvnc() {
     set -- "${@}" "-geometry" "${geometry}"
     set -- "${@}" "-desktop" "${desktop}"
     set -- "${@}" "-once"
-    set -- "${@}" "-ac"
     set -- "${@}" "-depth" "24"
     set -- "${@}" "-deferglyphs" "16"
     set -- "${@}" "-rfbauth" "${HOME}/.vnc/passwd"

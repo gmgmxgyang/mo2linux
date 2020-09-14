@@ -49,7 +49,7 @@ tmoe_vnc_preconfigure() {
     check_tmoe_locale
     if [ ! -e "${HOME}/.vnc/passwd" ]; then
         sudo -E cp -rvf "/root/.vnc" "${HOME}" || su -c "cp -rvf /root/.vnc ${HOME}"
-        if [ ! -e "${HOME}/.vnc/pwsswd" ]; then
+        if [ ! -e "${HOME}/.vnc/passwd" ]; then
             cd ${TMOE_TOOL_DIR}
             git reset --hard origin/master
             git pull origin master --allow-unrelated-histories

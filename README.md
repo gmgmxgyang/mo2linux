@@ -796,7 +796,7 @@ nano $(command -v startvnc)
 ##### 2020-05-11 更新日志
 
 - 1.支持配置 X11vnc 服务, 比 XSDL 强太多。
-- 输`startx11vnc`启动，输`stopx11vnc`停止。
+- 输`startx11vnc`启动，输`stopvnc`停止。
 - 2.支持安装窗口管理器
   ![Snipaste_2020-05-11_21-36-18.png](https://images.gitee.com/uploads/images/2020/0718/103736_846ae27a_5617340.png)
   在安装时会自动配置 vnc 服务，我没有为它们写单独的 rdp 配置步骤。

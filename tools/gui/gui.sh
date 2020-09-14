@@ -1546,7 +1546,7 @@ install_gnome3_desktop() {
     fi
     gnome3_warning
     REMOTE_DESKTOP_SESSION_01='gnome-session'
-    REMOTE_DESKTOP_SESSION_02='x-window-manager'
+    REMOTE_DESKTOP_SESSION_02='gnome-panel'
     DEPENDENCY_01="gnome"
     echo '即将为您安装思源黑体(中文字体)、gnome-session、gnome-menus、gnome-tweak-tool、gnome-shell和tightvncserver等软件包。'
     if [ "${LINUX_DISTRO}" = "debian" ]; then
@@ -3459,7 +3459,7 @@ configure_remote_desktop_enviroment() {
     ##############################
     if [ "${BETA_DESKTOP}" == '6' ]; then
         REMOTE_DESKTOP_SESSION_01='gnome-session'
-        REMOTE_DESKTOP_SESSION_02='x-window-manager'
+        REMOTE_DESKTOP_SESSION_02='gnome-panel'
         #configure_remote_gnome3_desktop
     fi
     ##############################
@@ -4206,7 +4206,7 @@ fix_vnc_dbus_launch() {
         elif grep 'gnome-session' ${XSESSION_FILE}; then
             echo "检测您当前的VNC配置为GNOME3，正在将dbus-launch加入至启动脚本中..."
             REMOTE_DESKTOP_SESSION_01='gnome-session'
-            REMOTE_DESKTOP_SESSION_02='x-windows-manager'
+            REMOTE_DESKTOP_SESSION_02='gnome-panel'
         elif grep 'cinnamon' ${XSESSION_FILE}; then
             echo "检测您当前的VNC配置为cinnamon，正在将dbus-launch加入至启动脚本中..."
             REMOTE_DESKTOP_SESSION_01='cinnamon-session'

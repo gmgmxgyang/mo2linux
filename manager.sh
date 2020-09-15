@@ -1465,7 +1465,7 @@ enable_root_mode() {
 remove_gnu_linux_container() {
 	cd ${HOME}
 	unmount_proc_dev
-	for i in dev dev/shm dev/pts proc sys root/termux root/tf root/sd storage/emulated/0/*; do
+	for i in dev dev/shm dev/pts proc sys root/termux root/tf root/sd storage/emulated/0/* mnt/sd mnt/tf; do
 		if [ -e "${DEBIAN_CHROOT}/${i}" ]; then
 			ls -lAh "${DEBIAN_CHROOT}/${i}" 2>/dev/null
 		fi
@@ -2084,12 +2084,12 @@ unmount_proc_dev() {
 		su -c "umount -lvf ${DEBIAN_CHROOT}/* 2>/dev/null"
 		su -c "umount -lvf ${DEBIAN_CHROOT}/*/*  2>/dev/null"
 		su -c "umount -lvf ${DEBIAN_CHROOT}  2>/dev/null"
-		su -c "ls -lAh  ${DEBIAN_CHROOT}/root/sd"
+		su -c "ls -lAh  ${DEBIAN_CHROOT}/mnt/sd 2>/dev/null"
 	fi
 	#	;;
 	#esac
 	#/dev内自带null
-	for i in root/sd root/tf proc sys; do
+	for i in root/sd root/tf mnt/sd mnt/tf proc sys; do
 		if [ "$(ls ${DEBIAN_CHROOT}/${i} 2>/dev/null)" ]; then
 			echo "检测到~/${DEBIAN_FOLDER}/${i}目录不为空，为防止该目录被清空，无法继续执行操作！"
 			press_enter_to_return

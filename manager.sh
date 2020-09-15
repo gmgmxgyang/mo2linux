@@ -1474,7 +1474,7 @@ remove_gnu_linux_container() {
 	cat <<-EOF
 		移除系统前，请先确保您已卸载容器挂载目录。
 		建议您在移除前进行备份，若因操作不当而导致数据丢失，开发者${RED}概不负责${RESET}！！！
-		Before removing the system, make sure you have unmounted ${BLUE}dev dev/shm dev/pts proc sys root/sd${RESET} and other directories.
+		Before removing the system, make sure you have unmounted ${BLUE}dev dev/shm dev/pts proc sys root/sd mnt/sd mnt/tf${RESET} and other directories.
 		It is recommended that you backup the entire system before removal. 
 		If the data is lost due to improper operation, the developer is not responsible! 
 	EOF

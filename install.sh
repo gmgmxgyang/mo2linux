@@ -1102,7 +1102,7 @@ creat_linux_container_remove_script() {
 							cat <<-'EOF'
 		              移除容器前，请先确保您已卸载容器挂载目录。
 		              建议您在移除前进行备份，若因操作不当而导致数据丢失，开发者概不负责！！！
-		              Before removing the system, make sure you have unmounted dev dev/shm dev/pts proc sys root/sd and other directories.
+		              Before removing the system, make sure you have unmounted dev dev/shm dev/pts proc sys root/sd mnt/sd mnt/tf and other directories.
 		              It is recommended that you backup the entire system before removal. 
 					  If the data is lost due to improper operation, the developer is not responsible! 
 							EOF

@@ -769,7 +769,7 @@ creat_chroot_startup_script() {
 			#mkdir -p ${DEBIAN_CHROOT}/root/tf ||
 			${TMOE_CHROOT_PREFIX} mkdir -p ${DEBIAN_CHROOT}/mnt/tf
 			${TMOE_CHROOT_PREFIX} ln -sf ../mnt/tf ${DEBIAN_CHROOT}/root/tf
-			${TMOE_CHROOT_PREFIX} ln -sf ./mnt/tf ${DEBIAN_CHROOT}/root/tf
+			${TMOE_CHROOT_PREFIX} ln -sf ./mnt/tf ${DEBIAN_CHROOT}/tf
 		fi
 	fi
 	##################

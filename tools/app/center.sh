@@ -40,7 +40,7 @@ software_center() {
             "您想要安装哪个软件？\n Which software do you want to install?" 0 50 0 \
             "1" "🦊 Browser:浏览器(firefox,chromium,vivaldi)" \
             "2" "🏤 debian-opt:qq音乐,云音乐(支持arch和fedora)" \
-            "3" "🎵 Multimedia:图像与影音(腾讯视频,gimp,mpv)" \
+            "3" "🎵 Multimedia:图像与影音(哔哩哔哩,gimp,mpv)" \
             "4" "📘 Dev:开发(VScode,Pycharm,Android-Studio,idea)" \
             "5" "📚 Documents:文档(libreoffice,wps)" \
             "6" "🔯 Packages&system:软件包与系统管理" \
@@ -367,17 +367,16 @@ batch_compression_of_pictures() {
 ############
 tmoe_multimedia_menu() {
     RETURN_TO_WHERE='tmoe_multimedia_menu'
-
     DEPENDENCY_01=""
     DEPENDENCY_02=""
     TMOE_APP=$(whiptail --title "Picture&Video&Music" --menu \
         "Which software do you want to install?" 0 50 0 \
         "1" "🗜️ Batch compression of pics批量压缩图片" \
-        "2" "📺 bilibili-web" \
+        "2" "📺 bilibili-web-electron(知名视频弹幕网站)" \
         "3" "📽️ MPV(开源、跨平台的音视频播放器)" \
         "4" "🎥 SMPlayer(MPlayer的前端)" \
         "5" "🇵 Peek(简单易用的Gif录制软件)" \
-        "6" "🎬 腾讯视频:国产Linux在线视频软件" \
+        "6" "🎬 腾讯视频(Linux在线视频软件)" \
         "7" "🖼 GIMP(GNU 图像处理程序)" \
         "8" "🍊 Clementine(小柑橘音乐播放器)" \
         "9" "🎞️ Parole(xfce默认媒体播放器,风格简洁)" \
@@ -385,7 +384,6 @@ tmoe_multimedia_menu() {
         "11" "🎼 Audacity(类似于cooledit的音频处理软件)" \
         "12" "🎶 Ardour(数字音频工作站,用于录制,编辑和混合多轨音频)" \
         "13" "Spotify(x64,声破天是一个正版流媒体音乐服务平台)" \
-        "0" "🌚 Return to previous menu 返回上级菜单" \
         3>&1 1>&2 2>&3)
     ##########################
     case "${TMOE_APP}" in

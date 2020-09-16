@@ -371,7 +371,6 @@ tmoe_multimedia_menu() {
     DEPENDENCY_02=""
     TMOE_APP=$(whiptail --title "Picture&Video&Music" --menu \
         "Which software do you want to install?" 0 50 0 \
-        "0" "🌚 Return to previous menu 返回上级菜单" \
         "1" "🗜️ Batch compression of pics批量压缩图片" \
         "2" "📺 bilibili-web-electron(知名视频弹幕网站)" \
         "3" "📽️ MPV(开源、跨平台的音视频播放器)" \
@@ -385,6 +384,7 @@ tmoe_multimedia_menu() {
         "11" "🎼 Audacity(类似于cooledit的音频处理软件)" \
         "12" "🎶 Ardour(数字音频工作站,用于录制,编辑和混合多轨音频)" \
         "13" "Spotify(x64,声破天是一个正版流媒体音乐服务平台)" \
+        "0" "🌚 Return to previous menu 返回上级菜单" \
         3>&1 1>&2 2>&3)
     ##########################
     case "${TMOE_APP}" in

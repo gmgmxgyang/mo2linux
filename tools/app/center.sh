@@ -475,6 +475,7 @@ install_bilibili_electron() {
     fi
     cd ${TMOE_BILI_DIR}
     cp -f bilibili-web.desktop ${APPS_LNK_DIR}
+    echo "更新完成，如需卸载，请手动输${RED}rm -rv${RESET} ${BLUE}${TMOE_BILI_DIR} ${APPS_LNK_DIR}/bilibili-web.desktop ${TENVIDEO_LNK}${RESET}"
 }
 ###########
 tmoe_games_menu() {

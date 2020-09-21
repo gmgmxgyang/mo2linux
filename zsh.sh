@@ -270,7 +270,7 @@ configure_power_level_10k() {
         git pull --depth=1 --allow-unrelated-histories 2>/dev/null
     else
         rm -rf powerlevel10k 2>/dev/null
-        git clone --depth=1 https://gitee.com/mo2/powerlevel10k.git "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k" || git clone --depth=1 git://github.com/romkatv/powerlevel10k "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k"
+        git clone --depth=1 https://gitee.com/romkatv/powerlevel10k.git "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k" || git clone --depth=1 git://github.com/romkatv/powerlevel10k "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k"
     fi
     sed -i '/^ZSH_THEME/d' "${HOME}/.zshrc"
     sed -i "1 i\ZSH_THEME='powerlevel10k/powerlevel10k'" "${HOME}/.zshrc"

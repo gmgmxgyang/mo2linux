@@ -1468,7 +1468,7 @@ backup_tmoe_container_zsh() {
 	mkdir -p ${CONFIG_FOLDER}/tmoe-container-zsh-bak/
 	if [ ! -e "zsh_bak.tar.gz" ]; then
 		cd ${DEBIAN_CHROOT}
-		${TMOE_PREFIX} tar -zpcvf ${CONFIG_FOLDER}/tmoe-container-zsh-bak/zsh_bak.tar.gz root/.oh_my_zsh root/.p10k.zsh root/.cache/gitstatus
+		${TMOE_PREFIX} tar -zpcvf ${CONFIG_FOLDER}/tmoe-container-zsh-bak/zsh_bak.tar.gz root/.oh-my-zsh root/.p10k.zsh root/.cache/gitstatus
 	else
 		FILE_SIZE=$(du -s zsh_bak.tar.gz | awk '{print $1}')
 		if ((${FILE_SIZE} < 512)); then

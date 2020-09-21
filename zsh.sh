@@ -157,27 +157,29 @@ fi
 chmod 777 /usr/local/bin/debian-i
 #########################
 mkdir -p /run/dbus
-ZSH_BAK_FILE='/tmp/zsh_bak.tar.gz'
-if [ -e "${ZSH_BAK_FILE}" ]; then
-    tar -zpxf ${ZSH_BAK_FILE} -C /
-    rm -f ${ZSH_BAK_FILE}
-fi
-
-OH_MY_ZSH_DIR="${HOME}/.oh-my-zsh"
-echo "github.com/ohmyzsh/ohmyzsh"
-if [ -e "${OH_MY_ZSH_DIR}/.git" ]; then
-    cd ${OH_MY_ZSH_DIR}
-    git reset --hard
-    git pull --depth=1 --allow-unrelated-histories
-else
-    rm -rf ${OH_MY_ZSH_DIR} 2>/dev/null
-    git clone --depth=1 https://gitee.com/mirrors/oh-my-zsh.git ${HOME}/.oh-my-zsh || git clone --depth=1 git://github.com/ohmyzsh/ohmyzsh.git ${HOME}/.oh-my-zsh
-fi
-#chmod 755 -R "${HOME}/.oh-my-zsh"
-if [ ! -f "${HOME}/.zshrc" ]; then
-    cp "${HOME}/.oh-my-zsh/templates/zshrc.zsh-template" "${HOME}/.zshrc" || curl -Lo "${HOME}/.zshrc" 'https://gitee.com/mirrors/oh-my-zsh/raw/master/templates/zshrc.zsh-template'
-    #https://github.com/ohmyzsh/ohmyzsh/raw/master/templates/zshrc.zsh-template
-fi
+##############
+git_clone_oh_my_zsh() {
+    ZSH_BAK_FILE='/tmp/zsh_bak.tar.gz'
+    if [ -e "${ZSH_BAK_FILE}" ]; then
+        tar -zpxf ${ZSH_BAK_FILE} -C /
+        rm -f ${ZSH_BAK_FILE}
+    fi
+    OH_MY_ZSH_DIR="${HOME}/.oh-my-zsh"
+    echo "github.com/ohmyzsh/ohmyzsh"
+    if [ -e "${OH_MY_ZSH_DIR}/.git" ]; then
+        cd ${OH_MY_ZSH_DIR}
+        git reset --hard
+        git pull --depth=1 --allow-unrelated-histories
+    else
+        rm -rf ${OH_MY_ZSH_DIR} 2>/dev/null
+        git clone --depth=1 https://gitee.com/mirrors/oh-my-zsh.git ${HOME}/.oh-my-zsh || git clone --depth=1 git://github.com/ohmyzsh/ohmyzsh.git ${HOME}/.oh-my-zsh
+    fi
+    #chmod 755 -R "${HOME}/.oh-my-zsh"
+    if [ ! -f "${HOME}/.zshrc" ]; then
+        cp "${HOME}/.oh-my-zsh/templates/zshrc.zsh-template" "${HOME}/.zshrc" || curl -Lo "${HOME}/.zshrc" 'https://gitee.com/mirrors/oh-my-zsh/raw/master/templates/zshrc.zsh-template'
+        #https://github.com/ohmyzsh/ohmyzsh/raw/master/templates/zshrc.zsh-template
+    fi
+}
 ######################
 ps -e &>/dev/null
 if [ "$?" != '0' ]; then
@@ -245,6 +247,8 @@ ${CATCAT} <<-'EndOFneko'
 		EndOFneko
 printf "$RESET"
 ###############
+git_clone_oh_my_zsh
+#############
 configure_power_level_10k() {
     echo "Configuring zsh theme 正在配置zsh主题(powerlevel 10k)..."
     echo "github.com/romkatv/powerlevel10k"

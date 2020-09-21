@@ -1466,6 +1466,7 @@ enable_root_mode() {
 ################################
 backup_tmoe_container_zsh() {
 	mkdir -p ${CONFIG_FOLDER}/tmoe-container-zsh-bak/
+	cd ${CONFIG_FOLDER}/tmoe-container-zsh-bak
 	if [ ! -e "zsh_bak.tar.gz" ]; then
 		cd ${DEBIAN_CHROOT}
 		${TMOE_PREFIX} tar -zpcvf ${CONFIG_FOLDER}/tmoe-container-zsh-bak/zsh_bak.tar.gz root/.oh-my-zsh root/.p10k.zsh root/.cache/gitstatus
@@ -1478,6 +1479,7 @@ backup_tmoe_container_zsh() {
 }
 #########################
 remove_gnu_linux_container() {
+	backup_tmoe_container_zsh
 	cd ${HOME}
 	unmount_proc_dev
 	for i in dev dev/shm dev/pts proc sys storage/emulated/0/* media/sd media/tf; do
@@ -1493,7 +1495,6 @@ remove_gnu_linux_container() {
 		It is recommended that you backup the entire system before removal. 
 		If the data is lost due to improper operation, the developer is not responsible! 
 	EOF
-	backup_tmoe_container_zsh
 	#case ${TMOE_CHROOT} in
 	#true)
 	#	for i in dev proc sys root/sd tmp root/termux root/tf; do

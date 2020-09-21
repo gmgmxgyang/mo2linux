@@ -501,7 +501,7 @@ configure_fzf_tab_plugin() {
 ##############
 case ${LINUX_DISTRO} in
 debian | arch | redhat | alpine) configure_fzf_tab_plugin ;;
-*) sed -i '/fzf-tab.zsh/d' ~/.zshrc ;;
+*) sed -i '/fzf-tab\/fzf-tab.zsh/d' ~/.zshrc ;;
 esac
 #######################
 sed_zsh_plugin_01() {

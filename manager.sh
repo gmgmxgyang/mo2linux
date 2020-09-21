@@ -1463,17 +1463,28 @@ enable_root_mode() {
 	fi
 	#不要忘记此处的fi
 }
-################################
+##########################
+tar_zcvf_zsh_dir() {
+	cd ${DEBIAN_CHROOT}
+	${TMOE_PREFIX} tar -zpcvf ${CONFIG_FOLDER}/tmoe-container-zsh-bak/zsh_bak.tar.gz root/.oh-my-zsh root/.p10k.zsh root/.cache/gitstatus
+}
+#####################
 backup_tmoe_container_zsh() {
 	mkdir -p ${CONFIG_FOLDER}/tmoe-container-zsh-bak/
 	cd ${CONFIG_FOLDER}/tmoe-container-zsh-bak
 	if [ ! -e "zsh_bak.tar.gz" ]; then
-		cd ${DEBIAN_CHROOT}
-		${TMOE_PREFIX} tar -zpcvf ${CONFIG_FOLDER}/tmoe-container-zsh-bak/zsh_bak.tar.gz root/.oh-my-zsh root/.p10k.zsh root/.cache/gitstatus
+		tar_zcvf_zsh_dir
 	else
 		FILE_SIZE=$(du -s zsh_bak.tar.gz | awk '{print $1}')
 		if ((${FILE_SIZE} < 512)); then
 			rm -f zsh_bak.tar.gz
+			tar_zcvf_zsh_dir
+		else
+			FILE_TIME=$(date -d "$(stat -c '%y' zsh_bak.tar.gz)" +"%Y%m")
+			case ${FILE_TIME} in
+			"$(date +%Y%m)") ;;
+			*) tar_zcvf_zsh_dir ;;
+			esac
 		fi
 	fi
 }

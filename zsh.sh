@@ -161,7 +161,7 @@ mkdir -p /run/dbus
 git_clone_oh_my_zsh() {
     ZSH_BAK_FILE='/tmp/zsh_bak.tar.gz'
     if [ -e "${ZSH_BAK_FILE}" ]; then
-        tar -zpxf ${ZSH_BAK_FILE} -C /
+        tar -zpxvf ${ZSH_BAK_FILE} -C /
         rm -f ${ZSH_BAK_FILE}
     fi
     OH_MY_ZSH_DIR="${HOME}/.oh-my-zsh"
@@ -189,8 +189,12 @@ if [ "$?" != '0' ]; then
         ln -s ${TERMUX_BIN_PATH}/pstree /usr/local/bin/pstree 2>/dev/null
     fi
 fi
-chsh -s /usr/bin/zsh || chsh -s /bin/zsh
-
+###########
+git_clone_oh_my_zsh
+###########
+if [ $(command -v chsh) ]; then
+    chsh -s /usr/bin/zsh || chsh -s /bin/zsh
+fi
 RB_RED=$(printf '\033[38;5;196m')
 RB_ORANGE=$(printf '\033[38;5;202m')
 RB_YELLOW=$(printf '\033[38;5;226m')
@@ -247,8 +251,6 @@ ${CATCAT} <<-'EndOFneko'
 		EndOFneko
 printf "$RESET"
 ###############
-git_clone_oh_my_zsh
-#############
 configure_power_level_10k() {
     echo "Configuring zsh theme 正在配置zsh主题(powerlevel 10k)..."
     echo "github.com/romkatv/powerlevel10k"

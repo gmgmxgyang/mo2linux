@@ -1831,6 +1831,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	        opkg update
 	        opkg install libustream-openssl ca-bundle ca-certificates bash
 	    fi
+		echo "您已成功安装GNU/Linux,之后可以输${YELLOW}debian${RESET}来进入debian system."
 		bash /usr/local/bin/neofetch
 	    bash zsh.sh
 	    # ash -c "$(wget --no-check-certificate -O- 'https://gitee.com/mo2/zsh/raw/master/zsh.sh')"

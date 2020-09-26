@@ -232,7 +232,8 @@ git_clone_tmoe_linux() {
 	######################
 	mkdir -p /usr/share/applications
 	cp ${TMOE_GIT_DIR}/tools/app/lnk/tmoe-linux.desktop /usr/share/applications
-	source /usr/local/bin/debian-i
+	exec zsh &
+	bash /usr/local/bin/debian-i
 	exec zsh -l
 }
 ###################

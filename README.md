@@ -419,8 +419,8 @@ In addition, the **mipsel** architecture is also supported! The developer has te
 Containers other than debian may only support mainstream architectures, not s390x and ppc64el.
 其它系统容器可能只支持主流的 amd64、arm64 等架构，不支持 s390x 和 ppc64el 等冷门架构。
 
-> 下表中的所有系统均支持 x64 和 arm64
-> 表示仅旧版支持
+> 下表中的所有系统均支持 x64 和 arm64  
+> \*表示仅旧版支持
 
 | Distro |    x86    | armhf  | ppc64el |
 | ------ | :-------: | :----: | :-----: |

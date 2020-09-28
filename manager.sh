@@ -2358,11 +2358,11 @@ update_tmoe_linux_manager() {
 	if [ -e "${TMOE_GIT_DIR}/.git" ]; then
 		cd ${TMOE_GIT_DIR}
 		git reset --hard origin/master
-		git pull origin master --allow-unrelated-histories
+		git pull --rebase --stat origin master --allow-unrelated-histories
 		if [ "$?" != '0' ]; then
 			git fetch --all
 			git reset --hard origin/master
-			git pull origin master --allow-unrelated-histories
+			git pull --rebase --stat origin master --allow-unrelated-histories
 		fi
 	fi
 	#echo "${TMOE_GIT_URL}"

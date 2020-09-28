@@ -1320,7 +1320,7 @@ curl -sLo zsh-i.sh 'https://gitee.com/mo2/zsh/raw/master/zsh.sh'
 sed -i 's:#!/data/data/com.termux/files/usr/bin/env bash:#!/usr/bin/env bash:' zsh-i.sh
 curl -Lo zsh.sh 'https://gitee.com/mo2/linux/raw/master/zsh.sh'
 chmod +x zsh.sh zsh-i.sh
-${TMOE_CHROOT_PREFIX} cp zsh-i.sh zsh.sh ${DEBIAN_CHROOT}/root
+${TMOE_CHROOT_PREFIX} mv zsh-i.sh zsh.sh ${DEBIAN_CHROOT}/root
 #chmod u+x ./*
 ###########
 debian_stable_sources_list_and_gpg_key() {

@@ -354,14 +354,16 @@ update_tmoe_completion() {
 #############
 check_tmoe_completion() {
 	TMOE_COMPLETION_FILE="${TMOE_SHARE_DIR}/completion/_tmoe"
-	if grep -q 'zinit ice' ${HOME}/.zshrc; then
-		if ! egrep -q '^[^#]*zinit.*completion/_tmoe' ${HOME}/.zshrc; then
-			printf "%s\n" "zinit ice lucid wait="1" as"completion" && zinit snippet ${TMOE_COMPLETION_FILE}" >>${HOME}/.zshrc
-			update_tmoe_completion
+	if [ -e "${HOME}/.zshrc" ]; then
+		if grep -q 'zinit ice' ${HOME}/.zshrc; then
+			if ! egrep -q '^[^#]*zinit.*completion/_tmoe' ${HOME}/.zshrc; then
+				printf "%s\n" "zinit ice lucid wait="1" as"completion" && zinit snippet ${TMOE_COMPLETION_FILE}" >>${HOME}/.zshrc
+				update_tmoe_completion
+			fi
+			case ${UPDATE_TMOE_COMPLETION} in
+			true) update_tmoe_completion ;;
+			esac
 		fi
-		case ${UPDATE_TMOE_COMPLETION} in
-		true) update_tmoe_completion ;;
-		esac
 	fi
 }
 ################

@@ -535,7 +535,7 @@ tmoe_manager_main_menu() {
 	tmoe_manager_main_menu_en() {
 		TMOE_MANAGER_MAIN_OPTION=$(
 			whiptail --title "Tmoe manager running on ${OSRELEASE}(2020-10)" \
-				--menu "Please use the enter and arrow keys to operate." 0 50 0 \
+				--menu "Please use the touch screen or enter + arrow keys to operate." 0 50 0 \
 				"1" "🍀 proot container(๑•̀ㅂ•́)و✧" \
 				"2" "🌸 chroot container" \
 				"3" "💔 remove tmoe-manager" \
@@ -558,7 +558,7 @@ tmoe_manager_main_menu() {
 						bCzokIzns7vnlJ/niannoJTnqbblkZgK
 					DoYouWantToSeeWhatIsInside
 				)" \
-				--menu "Welcome to tmoe-manager v1.10 beta(公测版)\n请使用方向键和回车键进行操作" 0 50 0 \
+				--menu "Welcome to tmoe-manager v1.10 beta(公测版)\n请使用触摸屏或方向键+回车键进行操作" 0 50 0 \
 				"1" "🍀 proot容器(๑•̀ㅂ•́)و✧" \
 				"2" "🌸 chroot容器${CHROOT_NOTE}" \
 				"3" "💔 remove 移除" \

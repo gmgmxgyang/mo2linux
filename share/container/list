@@ -392,6 +392,8 @@ debootstrap_ubuntu_distro() {
 	custom_ubuntu_version
 	printf "%s\n" "${DISTRO_CODE}"
 	do_you_want_to_continue
+	TMOE_LINUX_CONTAINER_DISTRO="${DISTRO_NAME}-${DISTRO_CODE}"
+	creat_container_edition_txt
 	printf "%s\n" ${DEBIAN_CHROOT}
 	if [ ! -e "${DEBIAN_CHROOT}" ]; then
 		DEB_BOOT_STRAP='true'

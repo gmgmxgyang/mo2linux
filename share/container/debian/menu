@@ -182,6 +182,8 @@ debootstrap_debian_distro() {
 	custom_debian_version
 	printf "%s\n" "${DISTRO_CODE}"
 	do_you_want_to_continue
+	TMOE_LINUX_CONTAINER_DISTRO="${DISTRO_NAME}-${DISTRO_CODE}"
+	creat_container_edition_txt
 	if [ ! -e "${DEBIAN_CHROOT}" ]; then
 		DEB_BOOT_STRAP='true'
 		TMOE_LINUX_CONTAINER_DISTRO="${DISTRO_NAME}-${DISTRO_CODE}"

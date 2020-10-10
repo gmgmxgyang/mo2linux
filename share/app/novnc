@@ -57,7 +57,7 @@ start_web_novnc() {
 		正在为您启动novnc
 		Starting novnc service,please be patient.
 	EOF
-	bash launch.sh --vnc localhost:5901 --listen 6080 &
+	bash launch.sh --vnc localhost:5900 --listen 6080 &
 	if [ "$(uname -o)" = 'Android' ]; then
 		am start -a android.intent.action.VIEW -d "http://localhost:6080/vnc.html"
 	elif [ "${WINDOWS_DISTRO}" = "WSL" ]; then

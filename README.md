@@ -146,7 +146,7 @@ wsl --set-default-version 2
 #### 10.OpenSUSE
 
 ```shell
-    sudo zypper in -y wget
+    sudo zypper in -y curl
     bash -c "$(curl -L https://gitee.com/mo2/linux/raw/2/2)"
 ```
 

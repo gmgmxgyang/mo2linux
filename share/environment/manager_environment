@@ -375,8 +375,8 @@ link_debootstrap_script() {
 	if [ ! -e "${DEBOOT_STRAP_SCRIPT_DIR}/${DISTRO_CODE}" ]; then
 		cd ${DEBOOT_STRAP_SCRIPT_DIR}
 		case ${DISTRO_NAME} in
-		debian) ln -s sid ${DISTRO_CODE} ;;
-		ubuntu) ln -s gutsy ${DISTRO_CODE} ;;
+		debian) ln -sv sid ${DISTRO_CODE} ;;
+		ubuntu) ln -sv gutsy ${DISTRO_CODE} ;;
 		esac
 	fi
 }

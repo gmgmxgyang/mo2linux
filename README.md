@@ -103,7 +103,7 @@ wsl --set-default-version 2
 #### 5.Arch/Manjaro
 
 ```shell
-    sudo pacman -Syu curl
+    [[ $(command -v curl) ]] || sudo pacman -Syu curl
     bash -c "$(curl -L https://gitee.com/mo2/linux/raw/2/2)"
 ```
 
@@ -146,7 +146,7 @@ wsl --set-default-version 2
 #### 10.OpenSUSE
 
 ```shell
-    sudo zypper in -y curl
+    [[ $(command -v curl) ]] || sudo zypper in -y curl
     bash -c "$(curl -L https://gitee.com/mo2/linux/raw/2/2)"
 ```
 

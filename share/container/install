@@ -766,7 +766,6 @@ cat >vnc-autostartup <<-'EndOfFile'
 	    done
 	    unset i
 	    ;;
-	*) vnc_warning ;; 
 	esac
 	##########
 	case ${CURRENT_TMOE_DIR} in

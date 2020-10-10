@@ -81,10 +81,10 @@ start_web_novnc() {
 		非本机（如局域网内的pc）需要输局域网novnc地址，不要忘记端口号后的/vnc.html
 	EOF
 	if [ -d "${DEBIAN_CHROOT}" ]; then
-		${TMOE_PREFIX} touch ${DEBIAN_CHROOT}/root/.vnc/startx11vnc
+		${TMOE_PREFIX} touch ${DEBIAN_CHROOT}/root/.vnc/startvnc
 		${PREFIX}/bin/debian
 	else
-		startx11vnc
+		startvnc
 	fi
 	#注：必须要先启动novnc后，才能接着启动VNC。
 	#否则将导致安卓proot容器提前启动。

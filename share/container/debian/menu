@@ -182,14 +182,13 @@ debootstrap_debian_distro() {
 	custom_debian_version
 	printf "%s\n" "${DISTRO_CODE}"
 	do_you_want_to_continue
-	TMOE_LINUX_CONTAINER_DISTRO="${DISTRO_NAME}-${DISTRO_CODE}"
-	creat_container_edition_txt
 	if [ ! -e "${DEBIAN_CHROOT}" ]; then
 		DEB_BOOT_STRAP='true'
 		TMOE_LINUX_CONTAINER_DISTRO="${DISTRO_NAME}-${DISTRO_CODE}"
 		#此处重复创建并非多余
 		creat_container_edition_txt
 		printf "%s\n" ${DEBIAN_CHROOT}
+		link_debootstrap_script
 		mkdir -p ${DEBIAN_CHROOT}
 		#debootstrap --no-check-gpg --foreign --arch ${ARCH_TYPE} ${DISTRO_CODE} ${DEBIAN_CHROOT} http://mirrors.huaweicloud.com/debian
 		debootstrap --no-check-gpg --arch ${ARCH_TYPE} --variant=minbase --include=apt-utils,curl,ca-certificates,locales,locales-all ${DISTRO_CODE} ${DEBIAN_CHROOT} http://mirrors.huaweicloud.com/debian

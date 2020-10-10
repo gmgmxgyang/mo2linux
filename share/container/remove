@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #######################################
 remove_gnu_linux_container() {
-	case ${DEBIAN_CHROOT} in
+	case ${TMOE_CHROOT} in
 	true) source ${TMOE_SHARE_DIR}/removal/umount ;;
 	esac
 	cd ${HOME}

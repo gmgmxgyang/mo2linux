@@ -1065,7 +1065,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	        cat >>/etc/pacman.d/mirrorlist <<-'EndOfArchMirrors'
 					#Server = https://mirror.archlinuxarm.org/$arch/$repo
 					#Server = https://mirrors.bfsu.edu.cn/archlinuxarm/$arch/$repo
-					Server = https://mirrors.163.com/archlinuxarm/$arch/$repo
+					Server = https://mirrors.bfsu.edu.cn/archlinuxarm/$arch/$repo
 				EndOfArchMirrors
 	    else
 	        cat >>/etc/pacman.d/mirrorlist <<-'EndOfArchMirrors'

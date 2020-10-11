@@ -1486,7 +1486,7 @@ kde_warning() {
   ║ 5 ║Fedora      ║  ✓     ║   ✓    ║   ?     ║
   ║---║------------║--------║--------║---------║
   ║   ║            ║        ║        ║         ║
-  ║ 6 ║Alpine      ║  X     ║   ✓    ║   ✓     ║
+  ║ 6 ║Alpine      ║  X     ║   ✓    ║   ?     ║
 ENDofTable
 
     case "${TMOE_PROOT}" in

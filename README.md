@@ -109,7 +109,7 @@ _**If you do not live in China, please enter**_
 ```
 
 > 3.若您使用的是 manager，则可以使用触摸屏进行点击;若为 tool，则可使用触摸屏进行滑动，回车键进行确认。  
-> When you are using the manager, you can use the touch screen to click.when you are using the tool, you can use the touch screen to slide and press the Enter to confirm.
+> When you are using the manager, you can use the touch screen to click.When you are using the tool, you can use the touch screen to slide and press the Enter to confirm.
 >
 > 4.如需使用 gui,可能还需要安装 VNC apk,您可以前往 Google play 或使用 Tmoe-linux 的 debian-i 来下载。  
 > 注：web 端的 novnc 无需安装 apk,但触控操作体验不佳。

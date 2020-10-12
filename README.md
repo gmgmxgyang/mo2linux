@@ -4,22 +4,42 @@
 . <(curl -L gitee.com/mo2/linux/raw/2/2)
 ```
 
-化繁为简，让 GNU/Linux 的乐趣触手可及。
+> If you do not understand the following readme, please give me an issue to explain the situation,or open [README.en.md](https://github.com/2moe/tmoe-linux/blob/master/README.en.md)  
+> 化繁为简，让 GNU/Linux 的乐趣触手可及。
 
 ## 介绍 Introduction
 
-在 **GNU/Linux**、**Android Termux** 和**Windows10 的 linux 子系统**上配置 **GNU/Linux chroot 或 proot** 容器环境，并配置远程桌面、音频服务和系统。  
+在 **GNU/Linux**、**Android Termux** 和**Windows10 的 linux 子系统**上配置 **GNU/Linux chroot 或 proot** 容器环境，并 configure remote desktop、pulseaudio 音频服务和 system。
+
+> **Support multiple systems and virtualized environments**
+
 ![map](https://images.gitee.com/uploads/images/2020/0807/015255_d4c64165_5617340.png "map.png")
+
+### Preview
+
+#### install alpine arm64 chroot container (Nihongo.ver)
+
+![install alpine arm64 Nihongo.ver](https://images.gitee.com/uploads/images/2020/1012/134622_39d7beb0_5617340.gif)
+
+#### Support multiple architectures
+
+![arch](https://images.gitee.com/uploads/images/2020/1012/135642_01329768_5617340.png "截图_2020-10-12_13-55-33.png")
+
+#### Support multiple languages
+
+![tmoe-linux tool](https://images.gitee.com/uploads/images/2020/1012/135657_70831546_5617340.png "截图_2020-10-12_13-42-37.png")
+
+![main menu English.ver](https://images.gitee.com/uploads/images/2020/1012/135918_eaccc0da_5617340.png "截图_2020-10-12_13-59-00.png")
 
 ### 一.不同平台的安装教程 Installation
 
-**You can run this tool not only on Android, but also on GNU/Linux.**
+**You can run tmoe-linux manager not only on termux, but also on GNU/Linux.**
 
-**您不仅可以在 Android 手机上运行本工具，亦可在 GNU/Linux 上运行。**
+**您不仅可以在 WSL 运行本工具，亦可在 Android 手机上运行。**
 
 #### 1.Windows10
 
-Tutorial（教程）：
+Tutorial：
 
 ##### 第一章 WSL 篇
 
@@ -32,7 +52,7 @@ dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux 
 dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
 ```
 
-After restarting the system, run _powershell_ again as an administrator, then type the following command.  
+After restarting the win10 system, run _powershell_ again as an administrator, then type the following command.  
 重启系统后再次以管理员身份运行 _powershell_ ，然后输
 
 ```powershell
@@ -53,7 +73,7 @@ wsl --set-default-version 2
 ![008](https://gitee.com/mo2/tmoe-linux-comic/raw/master/008.png)
 ![009](https://gitee.com/mo2/tmoe-linux-comic/raw/master/009.png)
 
-**第一章 WSL 篇完结，如需阅览第二章，则请自行寻找彩蛋。**  
+**The first chapter is over. You can find more easter eggs in README.第一章 WSL 篇完结，如需阅览第二章，则请自行寻找彩蛋。**  
 **介绍：本（伪）漫画讲述的是少女们机缘巧合之下卷入了 debian 状的旋涡，最终穿梭时空拯救世界的故事。**
 
 ---
@@ -64,6 +84,12 @@ wsl --set-default-version 2
     sudo apt update
     sudo apt install -y curl
     bash -c "$(curl -L gitee.com/mo2/linux/raw/2/2)"
+```
+
+_**If you do not live in China, please enter**_
+
+```shell
+    bash -c "$(curl -L git.io/linux.sh)"
 ```
 
 若已经为 root 用户，则可以去掉 sudo。
@@ -82,7 +108,10 @@ wsl --set-default-version 2
     . <(curl -L gitee.com/mo2/linux/raw/2/2)
 ```
 
-> 3.如需使用 gui,可能还需要安装 VNC apk,您可以前往 Google play 或使用 Tmoe-linux 的 debian-i 来下载。  
+> 3.若您使用的是 manager，则可以使用触摸屏进行点击;若为 tool，则可使用触摸屏进行滑动，回车键进行确认。  
+> When you are using the manager, you can use the touch screen to click.when you are using the tool, you can use the touch screen to slide and press the Enter to confirm.
+>
+> 4.如需使用 gui,可能还需要安装 VNC apk,您可以前往 Google play 或使用 Tmoe-linux 的 debian-i 来下载。  
 > 注：web 端的 novnc 无需安装 apk,但触控操作体验不佳。
 
 #### 3.Debian/Ubuntu/Mint/Kali
@@ -130,7 +159,7 @@ wsl --set-default-version 2
 #### 8.Void
 
 ```shell
-    sudo xbps-install -Sy wget
+     [[ $(command -v wget) ]] || sudo xbps-install -Sy wget
     bash -c "$(wget -O- https://gitee.com/mo2/linux/raw/2/2)"
 ```
 
@@ -139,7 +168,8 @@ wsl --set-default-version 2
 202010 不再对 gentoo 进行支持和维护。
 
 ```shell
-    emerge -avk net-misc/curl app-admin/sudo
+    [[ $(command -v sudo) ]] || emerge -avk app-admin/sudo
+    [[ $(command -v curl) ]] || emerge -avk net-misc/curl
     bash -c "$(curl -L https://gitee.com/mo2/linux/raw/2/2)"
 ```
 
@@ -150,29 +180,368 @@ wsl --set-default-version 2
     bash -c "$(curl -L https://gitee.com/mo2/linux/raw/2/2)"
 ```
 
-#### 10.其它 system 未测试,以下系统请自行解决依赖关系
+#### 11.Other
 
-例如:**GuixSD**等发行版。
+其它 system 未测试！！！
 
-相关依赖为 `git aria2 pv wget curl grep procps less tar xz newt(whiptail)`
+例如:**GuixSD**等发行版
 
-### 二：容器篇
+若您需手动克隆本仓库，则请自行解决依赖关系。
 
-1.Debian 容器  
-① 在 Android 系统上运行 debian GNU/Linux arm64 应用  
+I think you can resolve dependencies manually.
+
+The dependencies of the old version before 2020-10(v1.10beta) are `git aria2 pv curl grep procps less tar xz(xz-utils) newt(whiptail) sudo`
+
+In addition, the new version has more dependencies, please check the source code yourself to understand the dependencies.  
+**After resolving the dependencies,you can git clone this repo manually**
+
+```bash
+case $(uname -o) in
+Android) TMOE_LINUX_DIR="${HOME}/.local/share/tmoe-linux" ;;
+*) TMOE_LINUX_DIR="/usr/local/etc/tmoe-linux" ;;
+esac
+TMOE_GIT_URL="https://gitee.com/mo2/linux"
+TMOE_GIT_DIR="${TMOE_LINUX_DIR}/git"
+[[ ! -e ${TMOE_GIT_DIR}/.git ]] || mkdir -p ${TMOE_GIT_DIR}
+git clone --depth=1 ${TMOE_GIT_URL} ${TMOE_GIT_DIR}
+```
+
+After cloning the repo, you can type `bash ${TMOE_GIT_DIR}/manager.sh` to start tmoe-linux manager.
+
+### 二：容器 Container 篇
+
+#### 1.debian and startvnc commands
+
+> For the docker container, the command is docker, so I will not repeat it here.  
+> The following will introduce the startup commands of proot and chroot containers.  
+> The startup command of the most recently used container is `debian`
+>
+> 如果容器只有一个，或者您最近使用过那个容器，那么其启动命令为 `debian`  
+> 不管是 kali rolling i386,还是 ubuntu focal arm64，只要您最近使用过它，那就是 `debian`  
+> 在 v1.10 beta 中，加入了新命令 `tmoe`,支持启动特定的 GNU/Linux 容器版本。
+
+You can type `startvnc` to start **tiger** vncserver.  
+If your host system is **Android**,then the vnc viewer will be started at the same time.
+
+在宿主系统下，输`startvnc`将启动容器 + **tiger** vncserver  
+若宿主系统为 **Android**，则将同时启动 **Real** vncviewer  
+在容器环境下，输`startvnc`仅启动 **tiger** vncserver
+
+You can type `startx11vnc` to start **x11** vncserver.
+
+在宿主系统下，输`startx11vnc`将启动容器 + **x11** vncserver  
+在容器环境下，输`startx11vnc`仅启动 **x11** vncserver
+
+You can type `stopvnc` to stop **VNC** server
+
+在容器环境下，输`stopvnc`来停止启动 **VNC** server  
+如需了解更多参数，例如`-non-stop-dbus`(不停止 dbus-daemon)，请输`stopvnc --help`
+
+You can type `startxsdl` to start **X** client & server.
+
+在容器环境下，输`startxsdl`仅启动 **X** client  
+若您的宿主系统为 **win10**，则输入`startxsdl` 将同时启动 **VcXsrv** X server
+
+#### 2.tmoe command
+
+![command](https://images.gitee.com/uploads/images/2020/1012/141624_eb90039d_5617340.png "截图_2020-10-12_14-13-04.png")  
+For different releases and different architectures, the startup commands of the container are different.  
+The complete command is similar to `tmoe chroot kali rolling arm64 x11`  
+完整的启动命令类似于 `tmoe proot debian sid i386 vnc`  
+Next, I will introduce the meaning of each parameter.
+
+```bash
+    The 1st parameter is the container-type.
+    You can type "tmoe p" instead of "tmoe proot"
+    在第一个参数中，chroot可以简化为c;proot可简化为p
+    For example,"tmoe chroot"="tmoe c"
+
+    "$1":
+        "c:chroot"
+        "chroot"
+        "proot"
+        "p:proot"
+-------------
+    The 2nd parameter is the distribution name.
+    在第二个参数中，"arch"可以简化为"a";"debian"可简化为"d";"fedora"可简化为"f";"ubuntu"可简化为"u"
+    例如:"tmoe p debian"="tmoe p d"
+
+    "$2":
+        "a:arch"
+        "arch:simplicity,modernity,pragmatism,user centrality and versatility"
+        "al:alpine"
+        "ap:alpine"
+        "alpine:Small. Simple. Secure. Alpine Linux is a security-oriented, lightweight Linux distribution based on musl libc and busybox"
+        "alt"
+        "apertis"
+        "arm:armbian"
+        "armbian:香蕉派,香橙派,nanopi"
+        "c:centos"
+        "centos:CentOS is a community-driven free software effort focused on delivering a robust open source ecosystem around a Linux platform"
+        "d:debian"
+        "debian:Debian is a distro composed of free and open-source software"
+        "devuan:Devuan is a fork of Debian that uses sysvinit or OpenRC instead of systemd"
+        "f:fedora"
+        "fedora:developed by the community-supported Fedora Project which is sponsored primarily by Red Hat"
+        "ft:funtoo"
+        "funtoo"
+        "g:gentoo"
+        "gentoo:追求极限配置和极高自由"
+        "k:kali"
+        "kali:Kali is a Debian-derived distro designed for digital forensics and penetration testing"
+        "m:manjaro"
+        "manjaro:Free fast and secure Linux based operating system for everyone"
+        "mi:mint"
+        "mint:Elegant, easy to use, up to date and comfortable GNU/Linux desktop distribution."
+        "o:opensuse"
+        "suse:opensuse"
+        "opensuse"
+        "ow:openwrt"
+        "openwrt:OpenWRT is a Linux OS targeting embedded devices"
+        "r:raspios"
+        "raspios:Raspberry Pi OS"
+        "raspbian"
+        "s:slackware"
+        "slackware:Slackware is a distro created by Patrick Volkerding in 1993"
+        "u:ubuntu"
+        "ub:ubuntu"
+        "ubuntu:Ubuntu is the modern, open source OS."
+        "v:void"
+        "void:Void is a general purpose operating system, based on the monolithic Linux kernel"
+-------------
+   The 3rd parameter is the distro version code.
+   在第三个参数中，"sid"可以简化为"s";"无版本代号"既可以简化为"n"，也可以忽略，直接使用第四个参数。
+   Note: The following list does not include all codes. If there is no version code, you can skip it.
+    如果版本代号不为空，且参数列表中没有出现其具体代号名称，那么请手动输入完整代号。
+    例如ubuntu 20.10,您可以用"20.10"来代替"groovy"，至于其他版本，例如"21.04"却不一定可以，故建议第三个参数使用完整的代号。
+    If the linux distro you choose has a version code, then we recommend that you type the complete code.
+    For example, for Debian 12, you should use "tmoe c d bookworm" or "tmoe p d bookworm" instead of "tmoe c d 12".
+
+   "$3":
+        "s:debian sid"
+        "sid"
+        "n:none(Rolling releases like archlinux do not have a version code)"
+        "none:諸如arch之類的發行版無代號"
+        "r:kali rolling"
+        "20.10:ubuntu groovy"
+        "20.04:ubuntu focal"
+        "buster:debian10"
+        "bullseye:debian11"
+        "bookworm:debian12"
+        "18.04:ubuntu bionic"
+        "31:fedora 31"
+        "32:fedora 32"
+        "33:fedora 33"
+        "3.12:alpine 3.12"
+        "3.13:alpine 3.13"
+        "edge:alpine edge"
+        "8-Stream:CentOS 8-Stream"
+        "tumbleweed:OpenSUSE tumbleweed"
+-------------
+    The 4th parameter is the architecture.
+    在第四个参数中，"arm64"可以简化为"a";"amd64"可以简化为"x";"i386"可以简化为"i";"armhf"可以简化为"h"。
+    If you are not using qemu-user for cross-architecture,then you can skip it.
+    例如:"tmoe p arch arm64"="tmoe p a a"
+    若您未选择跨架构运行，且当前架构为"arm64",则可去除 "arm64" 参数,直接输入"tmoe p a" 就能启动"proot archlinux arm64"容器
+
+    "$4":
+        "x:x64/amd64"
+        "amd64:It defines a 64-bit virtual address format, of which the low-order 48 bits are used in current implementations.It defines a 64-bit virtual address format, of which the low-order 48 bits are used in current implementations."
+        "a:aarch64/arm64"
+        "arm64:64-bit extension of the ARM architecture"
+        "h:armhf/arm"
+        "armhf:32-bit arm hard float"
+        "armel:32-bit arm soft float"
+        "i:i386/x86/x32"
+        "i386:x86 is a family of instruction set architectures initially developed by Intel based on the Intel 8086 microprocessor and its 8088 variant"
+        "p:ppc64el"
+        "ppc64el:a pure little-endian mode that has been introduced with the POWER8 as the prime target"
+        "s390x:Linux on IBM Z is not generally appropriate on premises for small businesses that would have fewer than about 10 distributed Linux servers"
+        "m:mipsel:Microprocessor without Interlocked Pipelined Stages little-endian"
+        "riscv64:RISC-V is an open standard instruction set architecture (ISA) based on established reduced instruction set computer (RISC) principlesRISC-V is an open standard instruction set architecture (ISA) based on established reduced instruction set computer (RISC) principles"
+-------------
+        The 5th parameter can start a specific program of the container, such as vnc.
+        If it is empty, then zsh will be started.
+        在第五个参数中，"vnc"可简化为"v"。
+        虽然"xsdl"可以简化为"x"，但是在第四个参数中只能简化为"xs"。
+        例如，启动chroot ubuntu-focal_arm64 tiger vncserver:
+        "tmoe c u focal arm64 vnc"
+        可以简化为"tmoe c u focal a v"
+        若该参数为空，则将启动zsh作为默认登陆shell,并且不会启动远程服务。
+
+    "$5":
+        "v:vnc(startvnc)"
+        "vnc:tight/tiger vnc server"
+        "x11:x11 vnc server"
+        "xs:xserver"
+        "xsdl:xserver"
+        "bash:GNU Bourne-Again SHell"
+        "zsh:z shell(Default)"
+        "ash:command interpreter (shell)"
+-------------
+```
+
+---
+
+#### SUMMARY
+
+**Take the kali-rolling_arm64 chroot container as an example here**  
+Full command:
+
+```bash
+tmoe chroot kali rolling arm64
+```
+
+Simplified command:
+
+```bash
+tmoe c k r a
+```
+
+Start kali-rolling_arm64 + tigervnc server:
+
+```bash
+tmoe c k r a v
+```
+
+Start kali-rolling_arm64 + x11vnc server:
+
+```bash
+tmoe c k r a x11
+```
+
+Start kali-rolling_arm64 + X client & server:
+
+```bash
+tmoe c k r a xs
+```
+
+The default login shell is zsh, if you want to start bash,then type
+
+```bash
+tmoe c k r a bash
+```
+
+Start ash as a login shell：
+
+```bash
+tmoe c k r a ash
+```
+
+---
+
+**此处以 debian-sid_i386 proot 为例**
+启动 debian-sid_i386 proot 容器的完整命令为
+
+```shell
+tmoe proot debian sid i386
+```
+
+精简命令为
+
+```shell
+tmoe p d s i
+```
+
+若您使用的是 tmoe-zsh 配置的环境，则可以进一步简化为
+
+```shell
+t p d s i
+```
+
+同时启动 debian-sid_i386 容器+tigervnc server 的命令为
+
+```shell
+t p d s i v
+```
+
+同时启动 debian-sid_i386 容器+x11vnc server 的命令为
+
+```shell
+t p d s i x11
+```
+
+同时启动 debian-sid_i386 容器+x client + XSDL/VcXsrv 的命令为
+
+```shell
+t p d s i x
+```
+
+容器的默认登陆 SHELL 为 zsh,若您需要使用其它 shell，则请使用以下命令
+临时使用 bash 作为登陆 SHELL：
+
+```shell
+t p d s i bash
+```
+
+临时使用 ash 作为登陆 SHELL：
+
+```shell
+t p d s i ash
+```
+
+---
+
+#### 额外拓展功能
+
+**(补全功能）说明**  
+shell 环境要求：_**zsh**_
+
+The completion function exists separately as a zsh plugin, so bash and other shells are not supported.  
+仅支持 zsh,不支持 bash
+
+tmoe-zsh 会**自动**加载 tmoe 补全插件，其他插件管理器需要手动加载。
+
+zinit 插件管理器**手动**配置补全插件：
+
+If you are using Android system,then type the following command.
+
+```zsh
+[[ $(egrep '^[^#]*zinit.*completion/_tmoe' ${HOME}/.zshrc) ]] || sed -i '$ a\zinit ice lucid wait=1 ascompletion && zinit snippet ${HOME}/.local/share/tmoe-linux/git/share/completion/_tmoe' ${HOME}/.zshrc
+```
+
+If you are using GNU/Linux system,then type the following command.
+
+```zsh
+[[ $(egrep '^[^#]*zinit.*completion/_tmoe' ${HOME}/.zshrc) ]] || sed -i '$ a\zinit ice lucid wait=1 ascompletion && zinit snippet /usr/local/etc/tmoe-linux/git/share/completion/_tmoe' ${HOME}/.zshrc
+```
+
+至于其他插件管理器，例如*oh-my-zsh*，因开发者并未进行测试，故请自行加载插件。
+
+**TIPS OF TMOE COMPLETION PLUGIN**  
+1.在 TMOE-ZSH 配置的环境下,输 `t`,按下空格,再按下 TAB 键 **⇄** 进行补全，输/进行连续补全，在该模式下支持搜索发行版名称。  
+2.在其他插件管理器配置的环境下，输入 `tmoe`,不按回车,按下 TAB 键 **⇄** 进行补全.  
+Type `tmoe`, then don't press enter, press Tab**⇄** to complete.
+
+![zsh plugin](https://images.gitee.com/uploads/images/2020/1012/141644_b724913d_5617340.png "截图_2020-10-12_14-14-43.png")
+
+**gif preview**  
+以 alpine 3.12 arm64 proot 以例
+![tmoe proot alpine 3.12 arm64 ash English.ver](https://images.gitee.com/uploads/images/2020/1012/134835_a575fc2e_5617340.gif)
+
+---
+
+#### 3.Debian Container
+
+① 在 Android 系统上运行 Debian GNU/Linux arm64 应用  
 ![debian arm64](https://images.gitee.com/uploads/images/2020/0721/190834_db02f784_5617340.png "截图_2020-07-15_13-48-40.png")  
 ![debian version](https://images.gitee.com/uploads/images/2020/0725/022931_5b2aa814_7793225.png "Capture+_2020-07-24-12-36-02.png")  
 ② 跨架构支持，在 Qualcomm 高通 arm64 cpu 的手机上借助 qemu-user 来模拟运行 x86(i686)架构的 Debian GNU/Linux，并通过 pulseaudio 来传输音频。
 ![debian i386](https://images.gitee.com/uploads/images/2020/0721/192119_96d0b95d_5617340.png "Screenshot_20200721-173852.png")  
-![arch](https://images.gitee.com/uploads/images/2020/0725/023007_2cb90736_7793225.png "Capture+_2020-07-24-12-40-59.png")  
-2.Ubuntu 容器  
+![arch](https://images.gitee.com/uploads/images/2020/0725/023007_2cb90736_7793225.png "Capture+_2020-07-24-12-40-59.png")
+
+#### 4.Ubuntu Container
+
 ① 在 Android 设备上运行的 Ubuntu 容器，你可以通过 VNC 来连接自己；  
 通过 adb 远程来调试自己(Android)；  
 还能通过 scrcpy+adb 调试来实现自己投屏给自己，将手机中 VNC 的画面投屏给手机中的 VNC。  
 ![ubuntu arm64 scrcpy](https://images.gitee.com/uploads/images/2020/0721/192606_c10e724e_5617340.png "截图_2020-07-18_23-08-59.png")  
-3.美化功能  
-十年 Mint 和 Ubuntu 壁纸包+主题链接解析功能。  
-![wallpaper01](https://images.gitee.com/uploads/images/2020/0721/193421_cb268a12_5617340.png "截图_2020-07-11_08-56-45.png")
+② Desktop beautification
+
+- 1)十年 Mint 和 Ubuntu 壁纸包
+- 2)主题链接解析功能  
+  解析主题链接（gnome-look 和 xfce-look），并根据主题压缩包内容，自动生成删除/卸载的命令。  
+  ![wallpaper01](https://images.gitee.com/uploads/images/2020/0721/193421_cb268a12_5617340.png "截图_2020-07-11_08-56-45.png")
 
 ### 番外篇
 
@@ -324,92 +693,105 @@ In addition, the **mipsel** architecture is also supported! The developer has te
 | Alpine |     ✓     |   ✓    |    ✓    |
 | CentOS |   \*<=7   | \*<=7  |    ✓    |
 
-### 七.使用说明
+### 七.其他说明（旧版）
 
 #### 简易版说明（萌新专用）
 
-- 1.安装 Tmoe GNU/Linux 管理工具的命令(仅支持在原系统内输)
+##### 1.安装 Tmoe GNU/Linux 管理工具的命令
+
+You can use the following command to install Tmoe GNU/Linux manager
 
 ```shell
 bash -c "$(curl -L https://gitee.com/mo2/linux/raw/2/2)"
 ```
 
+~~**(旧版)视频教程**[链接](https://pan.baidu.com/s/1rh7Nkcd0gG9RPx77JyGqZA) 提取码: **debb**~~(已废弃)
+
 > 进入工具后，按方向键和回车键进行操作，基本上所有操作都有提示。
 
 [![Snipaste_2020-03-20_17-10-48.png](https://gitee.com/mo2/pic_api/raw/test/2020/03/20/0W0hSgimlmeXIBjO.png)](https://gitee.com/mo2/pic_api/raw/test/2020/03/20/0W0hSgimlmeXIBjO.png)
 
-- 2.启动命令(仅支持在原系统内输)
+##### 2.启动命令
 
-```shell
-debian
+**如需了解完整命令，请看新版教程。**
+
+- 启动最近使用的容器
+
+```bash
+ debian
 ```
 
-- 3.卸载命令(仅支持在原系统内输)
+If you want to start GNU/Linux next time, you can just type `debian`.
 
-```shell
-debian-rm
+- 启动 tigervnc server  
+  **若宿主机为 Android 设备，则将同时启动 VNC viewer**
+
+  ```bash
+  startvnc
+  ```
+
+- 启动 x11vnc server
+
+  ```bash
+  startx11vnc
+  ```
+
+- 启动 X client & server
+  **若宿主系统为 win10，则将同时启动 VcXsrv**
+
+  ```bash
+  startxsdl
+  ```
+
+##### 3.卸载命令
+
+~~debian-rm~~ #(已废弃)
+
+请在管理菜单中单独选择容器名称及其 `umount & remove` 选项
+
+```bash
+bash ~/容器选择菜单.sh
 ```
 
-- 4.启动工具箱(同时支持，但管理的内容不同)
+> If your locale is not "zh\_.\*UTF-8" or "ja_JP.UTF-8", please type
+
+```bash
+bash ~/TMOE-CONTAINER-MENU.sh
+```
+
+##### 4.启动工具箱(同时支持，但管理的内容不同)
+
+宿主系统将调用 tmoe-linux manager,容器将调用 tool.
 
 ```shell
 debian-i
 ```
 
-- 5.启动 vnc 命令（同时支持）
-
-```shell
-startvnc
-```
-
-- 6.停止 vnc 命令（同时支持）
+##### 5.停止 vnc 命令（同时支持）
 
 ```shell
  stopvnc
 ```
 
----
-
-#### 完整版说明（Full description)
-
-#### Step1. Install GNU/Linux container
-
-##### 1-1. You can use the following command to install Tmoe GNU/Linux tool
-
-安装 Tmoe GNU/Linux 管理工具的命令是
+###### 不停止 x11vnc
 
 ```shell
-apt update
-apt install -y wget
-bash -c "$(wget -O- https://gitee.com/mo2/linux/raw/2/2)"
+ stopvnc -non-stop-x11vnc
 ```
 
-**(旧版)视频教程**[链接](https://pan.baidu.com/s/1rh7Nkcd0gG9RPx77JyGqZA) 提取码: **debb**
+###### 不停止 dbus-daemon
 
-##### 1-2.安装后的步骤
+```shell
+ stopvnc -non-stop-dbus
+```
 
-If you want to start GNU/Linux next time, you can just type `debian`.  
-下次启动 GNU/Linux 的命令是  
-`debian`
-
-##### 关于 GNU/Linux 的重新安装与移除
-
-输`debian-i` 启动工具箱，并自行选择重装和其它选项。
-您也可以手动输`debian-rm`来移除已经安装的 GNU/Linux 容器。
+---
 
 #### Step2.安装图形化桌面环境
 
 ##### 2-1.安装前（关于桌面环境的安装与卸载）
 
-进入 GNU/Linux 容器后，您可以从 _xfce、lxde、mate_ 中选择一种。
-
-##### 2-2.安装中
-
-安装过程会提示选择键盘布局，请直接按回车。
-初次启动 vnc 服务，会提示输 6 至 8 位（**不可见**）的密码，输两遍。
-
-> 当提示 _Would you like to enter a view-only password ？_ 时  
-> 输 **_n_**
+进入 GNU/Linux 容器后，您可以从 _xfce、lxde、mate、lxqt_ 中选择一种。
 
 ##### 2-3.安装后
 
@@ -432,7 +814,7 @@ If you want to start GNU/Linux next time, you can just type `debian`.
 
 在 GNU/Linux 容器内输`debian-i`打开工具箱，然后选择相关选项，需要注意的只有一点，x 为英文小写，不是乘号。
 
-- 1-2.手动修改
+- 1-2.亦可手动修改
 
 ```shell
 apt install -y nano
@@ -441,14 +823,6 @@ nano $(command -v startvnc)
 
 > 将 **1440x720**（竖屏）改成你需要的分辨率，例如 **1920x10780**（横屏)
 > 修改完成后，按`Ctrl+S` 保存，`Ctrl+X`退出。
-
-##### 2.你可以装个浏览器来玩玩
-
-~~输`./firefox.sh`安装 firefox 浏览器,输`./firefox.sh rm`卸载~~
-
-~~chromium 浏览器的启动命令是 `chromium --no-sandbox`~~
-
-相关软件的安装选项已经整合进**debian-i**内
 
 ---
 
@@ -464,12 +838,11 @@ nano $(command -v startvnc)
 
 ##### 11、12 月
 
-旧版脚本部分命令借鉴了 atilo-cn 和 AnLinux，除此之外，大部分都是本人手打的。
-可能会有出错的地方，欢迎指正。
-
-> ~~后期注:Anlinux 的脚本有些地方写得并不好，并且我知道它存在的某些缺陷。反正原作者也看不到，所以我在这里调侃也没事。😹
-> 你去了解更本质的东西就知道哪些地方写得不好了！`(_>﹏<_)′
-> 相比之下，Linux Deploy 的开发者写的东西要比他强很多。~~
+> ~~旧版脚本部分命令借鉴了 atilo-cn 和 AnLinux，除此之外，大部分都是本人手打的。~~ > ~~可能会有出错的地方，欢迎指正。~~
+>
+> ~~后期注:Anlinux 的脚本有些地方写得并不好，并且我知道它存在的某些缺陷。反正原作者也看不到，所以我在这里调侃也没事。😹~~  
+> ~~你去了解更本质的东西就知道哪些地方写得不好了！`(_>﹏<_)′~~  
+> ~~相比之下，Linux Deploy 的开发者写的东西要比他强很多。~~
 
 #### 2020 年
 
@@ -666,7 +1039,7 @@ nano $(command -v startvnc)
 - 其中后者只是在我之前写的 xorg+xrdp 的配置方案的基础上进行了修改而已。
 - 配置完成后，需要先打开 wayland 服务端，点击`start`,然后在容器内输`startw`启动。
 - 注：我仅测试了 xfce4。未测试的桌面可以配置，但可能存在无法连接的问题。
-- 特点：可以打开 X11VNC 无法打开的某些应用，但是 bug 超级多。
+- 特点：可以在 proot 环境下打开 kde 的某些应用（例如下图中的 plasma-discover），但是 bug 超级多。
 - 由于 bug 实在过多，故我已经不想维护了。
   ![Screenshot_20200507-193422_1.png](https://images.gitee.com/uploads/images/2020/0718/103733_f23c0e2d_5617340.png)
   ![Screenshot_20200507-222532.png](https://images.gitee.com/uploads/images/2020/0718/103819_3ded1b74_5617340.png)
@@ -674,6 +1047,8 @@ nano $(command -v startvnc)
   由于目前在 Android 手机上暂时无法使用 gpu 硬件渲染加速，故实际体验非常糟糕！
   不建议配置该服务!  
   等 wayland 完善之后，再来继续优化吧！
+
+  2020-10 注：配置 xwayland 的功能已经被我砍掉了！！！请自行研究配置步骤。
 
 ##### 2020-05-09 至 2020-05-10 更新日志
 
@@ -683,9 +1058,12 @@ nano $(command -v startvnc)
 - 3.修复 Android-Termux 赋予 proot 容器真实 root 权限的功能，原因是 termux 更新了 tsu，将 tsudo 切换至 sudo。
 - 4.deb 系 Linux 现在也可以用 proot 容器啦！
 
+  2020-10 注：第三个功能已经被我砍掉了。请不要先输`tsu`，再输`debian`。
+  如果你要这样做的话，那么请使用`chown`来解决权限问题，再自行解决其他可能存在的问题。
+
 ##### 2020-05-11 更新日志
 
-- 1.支持配置 X11vnc 服务, 比 XSDL 强太多。
+- 1.支持配置 X11vnc 服务。
 - 输`startx11vnc`启动，输`stopvnc`停止。
 - 2.支持安装窗口管理器
   ![Snipaste_2020-05-11_21-36-18.png](https://images.gitee.com/uploads/images/2020/0718/103736_846ae27a_5617340.png)
@@ -789,8 +1167,13 @@ nano $(command -v startvnc)
 
 ##### 10 月 更新日志
 
--1.增加多容器管理
--2.移除功能：xwayland,赋予 proot 容器真实 root 权限等等。
+-1.增加多容器管理  
+-2.移除功能：xwayland,赋予 proot 容器真实 root 权限等等。  
+移除 vscode server 宿主机与容器的联动功能。  
+原功能介绍：在宿主机下执行指定命令将同时启动宿主机的浏览器并打开 code server 的 web 页面+容器的 code server。  
+此外，还有很多功能也被我砍了，此处不一一列举。  
+有些功能维护起来太累了，我不想管了。  
+还有的话，不再对 gentoo 和 openwrt 提供支持。
 
 ---
 

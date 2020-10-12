@@ -202,11 +202,11 @@ Android) TMOE_LINUX_DIR="${HOME}/.local/share/tmoe-linux" ;;
 esac
 TMOE_GIT_URL="https://gitee.com/mo2/linux"
 TMOE_GIT_DIR="${TMOE_LINUX_DIR}/git"
-[[ ! -e ${TMOE_GIT_DIR}/.git ]] || mkdir -p ${TMOE_GIT_DIR}
+[[ -e ${TMOE_GIT_DIR}/.git ]] || mkdir -p ${TMOE_GIT_DIR}
 git clone --depth=1 ${TMOE_GIT_URL} ${TMOE_GIT_DIR}
 ```
 
-After cloning the repo, you can type `bash ${TMOE_GIT_DIR}/manager.sh` to start tmoe-linux manager.
+**After cloning the repo, you can type `bash ${TMOE_GIT_DIR}/manager.sh` to start tmoe-linux manager.**
 
 ### 二：容器 Container 篇
 
@@ -247,7 +247,7 @@ You can type `startxsdl` to start **X** client & server.
 ![command](https://images.gitee.com/uploads/images/2020/1012/141624_eb90039d_5617340.png "截图_2020-10-12_14-13-04.png")  
 For different releases and different architectures, the startup commands of the container are different.  
 The complete command is similar to `tmoe chroot kali rolling arm64 x11`  
-完整的启动命令类似于 `tmoe proot debian sid i386 vnc`  
+完整的启动命令类似于 `tmoe proot debian sid amd64 vnc`  
 Next, I will introduce the meaning of each parameter.
 
 ```bash
@@ -430,7 +430,7 @@ tmoe c k r a ash
 
 ---
 
-**此处以 debian-sid_i386 proot 为例**
+**此处以 debian-sid_i386 proot 为例**  
 启动 debian-sid_i386 proot 容器的完整命令为
 
 ```shell
@@ -467,7 +467,7 @@ t p d s i x11
 t p d s i x
 ```
 
-容器的默认登陆 SHELL 为 zsh,若您需要使用其它 shell，则请使用以下命令
+容器的默认登陆 SHELL 为 zsh,若您需要使用其它 shell，则请使用以下命令  
 临时使用 bash 作为登陆 SHELL：
 
 ```shell

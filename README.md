@@ -1175,6 +1175,8 @@ nano $(command -v startvnc)
 有些功能维护起来太累了，我不想管了。  
 还有的话，不再对 gentoo 和 openwrt 提供支持。
 
+- 3.10-13:增加 vscode arm64/armhf 官方版，此前 arm 只有第三方编译版。
+
 ---
 
 ### README 结尾彩蛋

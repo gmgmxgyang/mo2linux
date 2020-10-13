@@ -384,21 +384,18 @@ install_vscode_official() {
     esac
 
     if [ -e "/usr/share/code/.electron" ]; then
-        printf "%s\n" "检测到您已安装VSCode,请输code --no-sandbox启动"
+        printf "%s\n" "检测到您已安装VSCode,请输${GREEN}code --user-data-dir=${HOME}/.vscode${RESE}启动"
         printf "%s\n" "如需卸载，请手动输${RED}rm -rv${RESET} ${BLUE}/usr/share/zsh/vendor-completions /usr/share/zsh/vendor-completions/_code /usr/share/applications/code.desktop /usr/share/applications/code-url-handler.desktop /usr/share/code /usr/share/appdata/code.appdata.xml /usr/share/mime/packages/code-workspace.xml /usr/share/bash-completion/completions/code /usr/share/pixmaps/com.visualstudio.code.png${RESET}"
-        printf "%s\n" "${YELLOW}按回车键返回。${RESET}"
-        printf "%s\n" "Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
-        read
-        which_vscode_edition
     elif [ -e "/usr/bin/code" ]; then
         printf '%s\n' '检测到您已安装VSCode,请手动输以下命令启动'
         printf '%s\n' 'code --user-data-dir=${HOME}/.vscode'
         printf "%s\n" "如需卸载，请手动输${TMOE_REMOVAL_COMMAND} code"
-        code --version
-        printf "%s\n" "请问您是否需要下载最新版安装包？"
-        printf "%s\n" "Do you want to download the latest vscode?"
-        do_you_want_to_continue
     fi
+    code --version
+    printf "%s\n" "请问您是否需要下载最新版安装包？"
+    printf "%s\n" "Do you want to download the latest vscode?"
+    printf "${YELLOW}%s${RESET}\n" "${CODE_BIN_URL}"
+    do_you_want_to_continue
 
     case ${LINUX_DISTRO} in
     debian)

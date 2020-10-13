@@ -8,6 +8,7 @@ choose_which_gnu_linux_distro() {
 	DEB_BOOT_STRAP='false'
 	TMOE_LINUX_CONTAINER_DISTRO=''
 	check_rootfs_dir
+	[[ ! -e ${CONFIG_FOLDER}/debootstrap_dir.txt ]] || rm -fv ${CONFIG_FOLDER}/debootstrap_dir.txt
 	rm -f ~/.ALPINELINUXDetectionFILE 2>/dev/null
 	choose_which_gnu_linux_distro_ja() {
 		SELECTED_GNU_LINUX=$(whiptail --title "GNU/Linux distros" --menu "GNU/Linuxディストリビューションを選択してください" 0 50 0 \

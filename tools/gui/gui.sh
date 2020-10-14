@@ -1418,22 +1418,32 @@ arch_linux_mate_warning() {
 ###############
 install_mate_desktop() {
     REMOTE_DESKTOP_SESSION_01='mate-session'
-    REMOTE_DESKTOP_SESSION_02='x-window-manager'
+    REMOTE_DESKTOP_SESSION_02='mate-panel'
     printf '%s\n' '即将为您安装思源黑体(中文字体)、tightvncserver、mate-desktop-environment和mate-terminal等软件包'
     DEPENDENCY_01='mate'
     if [ "${LINUX_DISTRO}" = "debian" ]; then
-        #apt-mark hold gvfs
-        apt update
-        apt install -y udisks2 2>/dev/null
-        #if [ "${TMOE_PROOT}" = 'true' ]; then
-        #    printf "%s\n" "" >/var/lib/dpkg/info/udisks2.postinst
-        #fi
-        #apt-mark hold udisks2
         dpkg --configure -a
         auto_select_keyboard_layout
         DEPENDENCY_01='mate-desktop-environment mate-terminal'
         #apt autopurge -y ^libfprint
+        #apt autoclean
+        case ${DEBIAN_DISTRO} in
+        ubuntu)
+            if (whiptail --title "Mate or Ubuntu-MATE-full-desktop" --yes-button "mate" --no-button "ubuntu-mate" --yesno 'The former is more streamlined, and the latter includes some extra software of ubuntu-mate.\n前者为普通mate,后者为ubuntu-mate' 0 0); then
+                printf ""
+            else
+                DEPENDENCY_01="ubuntu-mate-desktop"
+            fi
+            ;;
+        esac
         apt clean
+        #apt-mark hold gvfs
+        #apt update
+        #apt install -y udisks2 2>/dev/null
+        #if [ "${TMOE_PROOT}" = 'true' ]; then
+        #    printf "%s\n" "" >/var/lib/dpkg/info/udisks2.postinst
+        #fi
+        #apt-mark hold udisks2
     elif [ "${LINUX_DISTRO}" = "redhat" ]; then
         DEPENDENCY_01='@mate-desktop'
     elif [ "${LINUX_DISTRO}" = "arch" ]; then
@@ -3628,7 +3638,7 @@ configure_remote_desktop_enviroment() {
     ##########################
     if [ "${BETA_DESKTOP}" == '3' ]; then
         REMOTE_DESKTOP_SESSION_01='mate-session'
-        REMOTE_DESKTOP_SESSION_02='x-windows-manager'
+        REMOTE_DESKTOP_SESSION_02='mate-panel'
         #configure_remote_mate_desktop
     fi
     ##############################
@@ -4040,14 +4050,6 @@ first_configure_startvnc() {
         cd ${HOME}
         sudo -E chown -R ${CURRENT_USER_NAME}:${CURRENT_USER_GROUP} ".ICEauthority" ".Xauthority" ".vnc" ".config/xfce4" || su -c "chown -R ${CURRENT_USER_NAME}:${CURRENT_USER_GROUP} .ICEauthority .Xauthority .vnc" ".config/xfce4"
     fi
-    #仅针对WSL修改语言设定
-    #/etc/default/locale
-    #if [ "${WINDOWS_DISTRO}" = 'WSL' ]; then
-    #	if [ "${LANG}" != 'zh_CN.UTF-8' ]; then
-    #grep -q 'LANG=\"zh_CN' "/etc/profile" || sed -i '$ a\export LANG="zh_CN.UTF-8"' "/etc/profile"
-    #grep -q 'LANG=\"zh_CN' "${HOME}/.zlogin" || printf '%s\n' 'export LANG="zh_CN.UTF-8"' >>"${HOME}/.zlogin"
-    #	fi
-    #fi
     if [ ! -e "${HOME}/.vnc/passwd" ]; then
         set_vnc_passwd
     fi
@@ -4391,7 +4393,7 @@ fix_vnc_dbus_launch() {
         elif grep 'mate-session' ${XSESSION_FILE}; then
             printf "%s\n" "检测您当前的VNC配置为mate，正在将dbus-launch加入至启动脚本中..."
             REMOTE_DESKTOP_SESSION_01='mate-session'
-            REMOTE_DESKTOP_SESSION_02='x-windows-manager'
+            REMOTE_DESKTOP_SESSION_02='mate-panel'
         elif grep 'startplasma' ${XSESSION_FILE}; then
             printf "%s\n" "检测您当前的VNC配置为KDE Plasma5，正在将dbus-launch加入至启动脚本中..."
             REMOTE_DESKTOP_SESSION_01='startkde'

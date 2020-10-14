@@ -92,10 +92,10 @@ check_tmoe_command() {
 		if egrep -q '^[^#]*alias t=tmoe' ~/.zshrc 2>/dev//null; then
 			TMOE_TIPS_02="t t"
 		else
-			TMOE_TIPS_02="tmoe"
+			TMOE_TIPS_02="tmoe t"
 		fi
 	else
-		TMOE_TIPS_02="tmoe"
+		TMOE_TIPS_02="tmoe t"
 	fi
 }
 #########

@@ -1529,8 +1529,8 @@ install_kde_plasma5_desktop() {
     DEPENDENCY_01="plasma-desktop"
     printf '%s\n' '即将为您安装思源黑体(中文字体)、kde-plasma-desktop和tigervnc-standalone-server等软件包。'
     if [ "${LINUX_DISTRO}" = "debian" ]; then
-        printf "默认为最小安装，如需安装kde完整套件，则请手动输${GREEN}apt install${RESET} ${PURPLE}kde-full${RESET}"
-        printf "在配置vnc服务的过程中，当提示tiger/tight时，请选择前者。"
+        #printf "默认为最小安装，如需安装kde完整套件，则请手动输${GREEN}apt install${RESET} ${PURPLE}kde-full${RESET}"
+        #printf "在配置vnc服务的过程中，当提示tiger/tight时，请选择前者。"
         dpkg --configure -a
         auto_select_keyboard_layout
         DEPENDENCY_01="kde-plasma-desktop"

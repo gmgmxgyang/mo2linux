@@ -145,7 +145,7 @@ install_alpha_containers() {
 				"2" "Raspbian樹莓派旧系统 buster(armhf)" \
 				"3" "Devuan (不使用systemd,基于debian)" \
 				"4" "Slackware is a Linux distro created by Patrick Volkerding in 1993(armhf,x64)" \
-				"5" "OpenWRT(常见于路由器等嵌入式设备,arm64,x64)" \
+				"5" "OpenWRT(常见于路由器等嵌入式设备)" \
 				"0" "🌚 返回上级菜单" \
 				3>&1 1>&2 2>&3
 		)

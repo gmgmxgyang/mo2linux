@@ -246,7 +246,7 @@ check_gnu_linux_distro() {
 	esac
 	##############
 	SWITCH_MIRROR='false'
-	if egrep -q 'debian|ubuntu|deepin' "/etc/os-release"; then
+	if egrep -q 'debian|ubuntu|deepin|uos\.com' "/etc/os-release"; then
 		SWITCH_MIRROR='true'
 		LINUX_DISTRO='debian'
 		TMOE_UPDATE_COMMAND='apt update'

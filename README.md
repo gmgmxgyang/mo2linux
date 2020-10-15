@@ -277,8 +277,6 @@ Next, I will introduce the meaning of each parameter.
         "al:alpine"
         "ap:alpine"
         "alpine:Small. Simple. Secure. Alpine Linux is a security-oriented, lightweight Linux distribution based on musl libc and busybox"
-        "alt"
-        "apertis"
         "arm:armbian"
         "armbian:香蕉派,香橙派,nanopi"
         "c:centos"
@@ -1181,6 +1179,8 @@ nano $(command -v startvnc)
 还有的话，不再对 gentoo 和 openwrt 提供支持。
 
 - 3.10-13:增加 vscode arm64/armhf 官方版，此前 arm 只有第三方编译版。
+
+- 4.移除 apertis，alt 发行版。
 
 ---
 

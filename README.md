@@ -1169,13 +1169,13 @@ nano $(command -v startvnc)
 
 ##### 10 月 更新日志
 
--1.增加多容器管理  
--2.移除功能：xwayland,赋予 proot 容器真实 root 权限等等。  
-移除 vscode server 宿主机与容器的联动功能。  
-原功能介绍：在宿主机下执行指定命令将同时启动宿主机的浏览器并打开 code server 的 web 页面+容器的 code server。  
-此外，还有很多功能也被我砍了，此处不一一列举。  
-有些功能维护起来太累了，我不想管了。  
-还有的话，不再对 gentoo 和 openwrt 提供支持。
+- 1.增加多容器管理
+- 2.移除功能：xwayland,赋予 proot 容器真实 root 权限等等。  
+  移除 vscode server 宿主机与容器的联动功能。  
+  原功能介绍：在宿主机下执行指定命令将同时启动宿主机的浏览器并打开 code server 的 web 页面+容器的 code server。  
+  此外，还有很多功能也被我砍了，此处不一一列举。  
+  有些功能维护起来太累了，我不想管了。  
+  还有的话，不再对 gentoo 和 openwrt 提供支持。
 
 - 3.10-13:增加 vscode arm64/armhf 官方版，此前 arm 只有第三方编译版。
 

@@ -169,7 +169,7 @@ install_deepin_linux_distro() {
 	RETURN_TO_WHERE='install_deepin_linux_distro'
 	DISTRO_NAME='deepin'
 	ALPHA_SYSTEM=$(
-		whiptail --title "DEEPIN" --menu "深度操作系统 20正式版（1002）采取统一的设计风格，\n从桌面环境和应用进行重新设计，带来焕然一新的视觉感受" 0 50 0 \
+		whiptail --title "DEEPIN" --menu "deepin20正式版采取统一的设计风格,从桌面环境\n和应用进行重新设计,带来焕然一新的视觉感受" 0 50 0 \
 			"1" "20 apricot(amd64,i386) 大小90MiB" \
 			"2" "15.2 camel(arm64) 大小103MiB" \
 			"0" "🌚 Back 返回" \

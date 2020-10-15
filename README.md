@@ -303,7 +303,6 @@ Next, I will introduce the meaning of each parameter.
         "openwrt:OpenWRT is a Linux OS targeting embedded devices"
         "r:raspios"
         "raspios:Raspberry Pi OS"
-        "raspbian"
         "s:slackware"
         "slackware:Slackware is a distro created by Patrick Volkerding in 1993"
         "u:ubuntu"
@@ -563,7 +562,7 @@ Supported containers:
 - [x] **Alpine edge**
 - [x] **OpenSUSE tumbleweed**
 - [x] **Void**
-- [x] **Raspbian**
+- [x] **Raspios**
 - [x] **Mint**
 - [x] **Devuan**
 - [x] **Slackware**
@@ -1180,7 +1179,7 @@ nano $(command -v startvnc)
 
 - 3.10-13:增加 vscode arm64/armhf 官方版，此前 arm 只有第三方编译版。
 
-- 4.移除 apertis，alt 发行版。
+- 4.移除发行版: apertis，alt 和 raspbian。
 
 ---
 

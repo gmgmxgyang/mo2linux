@@ -1180,6 +1180,7 @@ nano $(command -v startvnc)
 - 3.10-13:增加 vscode arm64/armhf 官方版，此前 arm 只有第三方编译版。
 
 - 4.移除发行版: apertis，alt 和 raspbian。
+- 5.新增 deepin v20 容器
 
 ---
 

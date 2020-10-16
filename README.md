@@ -922,9 +922,11 @@ nano $(command -v startvnc)
 
 ![Snipaste_2020-03-24_05-36-44.png](https://gitee.com/mo2/pic_api/raw/test/2020/03/24/1dc0XmN262GBr9QG.png)
 
-- 2.尝试让 RISC-V 架构的设备能运行 debian 容器，需要宿主机原系统为 deb 系。
-  当检测到设备为 riscv 架构时，将下载 arm64 架构版的容器镜像。
+- 2.尝试让 RISC-V 架构的设备能运行 debian 容器，需要宿主机原系统为 deb 系。  
+  当检测到设备为 riscv 架构时，将下载其他架构的容器镜像。
   调用 qemu+chroot 来实现跨 CPU 架构运行容器，这是一个理论性操作，未实际测试。
+
+  2020-10 注：勿需跨架构，支持直接运行 riscv64 容器。
 
 ##### 2020-03-25 更新日志
 
@@ -1181,6 +1183,8 @@ nano $(command -v startvnc)
 
 - 4.移除发行版: apertis，alt 和 raspbian。
 - 5.新增 deepin v20 容器
+- 6.修复 riscv64 架构容器的配置功能，arm64 可以跨架构运行 risv64。
+- 7.新增 mips64el 架构的容器。
 
 ---
 

@@ -245,11 +245,11 @@ du_sh_gnu_linux_distro() {
 			-o -path="./sys" \
 			-o -path="./system" \) -prune \
 			-type f -print0 2>/dev/null |
-			xargs -0 du |
+			xargs -0 du 2>/dev/null |
 			sort -n |
 			tail -30 |
-			cut -f2 |
-			xargs -I{} du -sh {}
+			cut -f 2 |
+			xargs -I{} du -sh {} 2>/dev/null
 	else
 		printf "${RED}%s${RESET} ${BLUE}%s${RESET}\n" "You did not install" "${DEBIAN_FOLDER}"
 	fi

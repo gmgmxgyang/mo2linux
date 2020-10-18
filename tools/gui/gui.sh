@@ -973,7 +973,7 @@ debian_xfce4_extras() {
             *)
                 REPO_URL='https://mirrors.bfsu.edu.cn/ubuntu/pool/universe/x/xfce4-panel-profiles/'
                 GREP_NAME="xfce4-panel-profiles"
-                THE_LATEST_DEB_VERSION="$(curl -L ${REPO_URL} | grep '.deb' | grep "${GREP_NAME}" | grep -v '1.0.9' | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
+                THE_LATEST_DEB_VERSION="$(curl -L ${REPO_URL} | grep '\.deb' | grep "${GREP_NAME}" | grep -v '1.0.9' | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)"
                 download_deb_comman_model_02
                 ;;
             esac
@@ -4037,10 +4037,44 @@ tiger_vnc_variable() {
 tight_vnc_variable() {
     VNC_SERVER_BIN="tightvnc"
     VNC_SERVER_BIN_NOW="tigervnc-standalone-server"
-    DEPENDENCY_01="tigervnc-viewer xfonts-100dpi xfonts-75dpi"
+    DEPENDENCY_01="tigervnc-viewer xfonts-100dpi xfonts-75dpi xfonts-scalable"
     DEPENDENCY_02="tightvncserver"
 }
 ######
+debian_install_vnc_server() {
+    printf "%s\n" "${RED}apt remove -y ${VNC_SERVER_BIN_NOW}${RESET}"
+    apt remove -y ${VNC_SERVER_BIN_NOW}
+    printf "%s\n" "${BLUE}${TMOE_INSTALLATON_COMMAND} ${DEPENDENCY_02} ${DEPENDENCY_01}${RESET}"
+    ${TMOE_INSTALLATON_COMMAND} ${DEPENDENCY_02}
+    ${TMOE_INSTALLATON_COMMAND} ${DEPENDENCY_01}
+}
+#######
+grep_tiger_vnc_deb_file() {
+    LATEST_DEB_VERSION=$(curl -L "${LATEST_DEB_REPO}" | grep '\.deb' | grep "${ARCH_TYPE}" | grep "${GREP_NAME_01}" | grep "${GREP_NAME_02}" | tail -n 1 | cut -d '=' -f 3 | cut -d '"' -f 2)
+    LATEST_DEB_URL="${LATEST_DEB_REPO}${LATEST_DEB_VERSION}"
+}
+#######
+ubuntu_install_tiger_vnc_server() {
+    debian_install_vnc_server
+    LATEST_DEB_REPO="https://mirrors.bfsu.edu.cn/debian/pool/main/t/tigervnc/"
+    GREP_NAME_01='tigervnc-common'
+    GREP_NAME_02='deb10'
+    TEMP_FOLCER='/tmp/.TIGER_VNC_TEMP_FOLDER'
+    mkdir ${TEMP_FOLCER}
+    cd ${TEMP_FOLCER}
+    grep_tiger_vnc_deb_file
+    aria2c --allow-overwrite=true -s 5 -x 5 -k 1M -o "tigervnc-common_ubuntu-focal.deb" "${LATEST_DEB_URL}"
+    GREP_NAME_01='tigervnc-standalone-server'
+    grep_tiger_vnc_deb_file
+    aria2c --allow-overwrite=true -s 5 -x 5 -k 1M -o "tigervnc-standalone-server_ubuntu-focal.deb" "${LATEST_DEB_URL}"
+    if [ ! -e "/usr/share/doc/libjpeg62" ]; then
+        apt install -y libjpeg62
+    fi
+    dpkg -i --ignore-depends=libjpeg62-turbo ./tigervnc-common_ubuntu-focal.deb ./tigervnc-standalone-server_ubuntu-focal.deb
+    cd ~
+    rm -rv ${TEMP_FOLCER}
+}
+###########
 which_vnc_server_do_you_prefer() {
     case ${REMOTE_DESKTOP_SESSION_01} in
     startplasma* | gnome* | cinnamon* | startdde | ukui* | budgie*)
@@ -4058,13 +4092,24 @@ which_vnc_server_do_you_prefer() {
         fi
         ;;
     esac
-
-    #printf "%s\n" "${RED}${TMOE_REMOVAL_COMMAND} ${VNC_SERVER_BIN_NOW}${RESET}"
-    printf "%s\n" "${RED}apt remove -y ${VNC_SERVER_BIN_NOW}${RESET}"
-    #${TMOE_REMOVAL_COMMAND} ${VNC_SERVER_BIN_NOW}
-    apt remove -y ${VNC_SERVER_BIN_NOW}
-    printf "%s\n" "${BLUE}${TMOE_INSTALLATON_COMMAND} ${DEPENDENCY_02} ${DEPENDENCY_01}${RESET}"
-    ${TMOE_INSTALLATON_COMMAND} ${DEPENDENCY_02} ${DEPENDENCY_01}
+    case ${DEBIAN_DISTRO} in
+    ubuntu)
+        if egrep -q 'Focal Fossa|focal|Eoan Ermine' "/etc/os-release"; then
+            case ${VNC_SERVER_BIN} in
+            tigervnc)
+                case $(apt list --installed 2>&1 | grep 'tigervnc-standalone-server' | awk '{print $2}') in
+                1.9.*) ;;
+                *) ubuntu_install_tiger_vnc_server ;;
+                esac
+                ;;
+            *) debian_install_vnc_server ;;
+            esac
+        else
+            debian_install_vnc_server
+        fi
+        ;;
+    *) debian_install_vnc_server ;;
+    esac
 }
 ###################
 first_configure_startvnc() {
@@ -4092,10 +4137,8 @@ first_configure_startvnc() {
     #else
     case ${LINUX_DISTRO} in
     debian)
-        #|stretch|jessie
-        if ! egrep -q 'Focal Fossa|focal|Eoan Ermine' "/etc/os-release"; then
-            which_vnc_server_do_you_prefer
-        fi
+        #|stretch|jessie    #if ! egrep -q 'Focal Fossa|focal|Eoan Ermine' "/etc/os-release"; then
+        which_vnc_server_do_you_prefer
         ;;
     esac
     #fi

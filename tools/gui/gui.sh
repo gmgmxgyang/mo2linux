@@ -4038,9 +4038,12 @@ tight_vnc_variable() {
     DEPENDENCY_02="tightvncserver"
 }
 ######
-debian_install_vnc_server() {
+debian_remove_vnc_server() {
     printf "%s\n" "${RED}apt remove -y ${VNC_SERVER_BIN_NOW}${RESET}"
     apt remove -y ${VNC_SERVER_BIN_NOW}
+}
+debian_install_vnc_server() {
+    debian_remove_vnc_server
     printf "%s\n" "${BLUE}${TMOE_INSTALLATON_COMMAND} ${DEPENDENCY_02} ${DEPENDENCY_01}${RESET}"
     ${TMOE_INSTALLATON_COMMAND} ${DEPENDENCY_02}
     ${TMOE_INSTALLATON_COMMAND} ${DEPENDENCY_01}
@@ -4102,7 +4105,7 @@ case_debian_distro_and_install_vnc() {
             case ${VNC_SERVER_BIN} in
             tigervnc)
                 case $(apt list --installed 2>&1 | grep 'tigervnc-standalone-server' | awk '{print $2}') in
-                1.9.*) ;;
+                1.9.*) debian_remove_vnc_server ;;
                 *) ubuntu_install_tiger_vnc_server ;;
                 esac
                 ;;

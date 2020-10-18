@@ -4029,7 +4029,7 @@ fix_non_root_permissions() {
 tiger_vnc_variable() {
     VNC_SERVER_BIN="tigervnc"
     VNC_SERVER_BIN_NOW="tightvncserver"
-    DEPENDENCY_01="tigervnc-viewer tigervnc-xorg-extension"
+    DEPENDENCY_01="tigervnc-viewer"
     DEPENDENCY_02="tigervnc-standalone-server"
 }
 #######

@@ -4068,6 +4068,7 @@ ubuntu_install_tiger_vnc_server() {
     GREP_NAME_01='tigervnc-standalone-server'
     grep_tiger_vnc_deb_file
     aria2c --allow-overwrite=true -s 5 -x 5 -k 1M -o "tigervnc-standalone-server_ubuntu-focal.deb" "${LATEST_DEB_URL}"
+    LATEST_DEB_REPO="https://mirrors.bfsu.edu.cn/debian/pool/main/libj/libjpeg-turbo/"
     GREP_NAME_01='libjpeg62-turbo_'
     GREP_NAME_02='deb'
     grep_tiger_vnc_deb_file

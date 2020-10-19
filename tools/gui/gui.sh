@@ -1319,7 +1319,8 @@ modify_the_default_xfce_wallpaper() {
             #if_exists_other_debian_distro_wallpaper
             MINT_CODE="ulyana"
             WALLPAPER_FILE='/usr/share/backgrounds/dmcquade_whitsundays.jpg'
-            mv /usr/share/backgrounds/kali/* /usr/share/backgrounds/
+            #mv /usr/share/backgrounds/kali/* /usr/share/backgrounds/
+            cp -Lv /usr/share/backgrounds/kali-16x9 /usr/share/backgrounds/
         elif [ "${DEBIAN_DISTRO}" = "ubuntu" ]; then
             MINT_CODE="tricia"
             #WALLPAPER_FILE='/usr/share/xfce4/backdrops/Campos_de_Castilla_by_David_Arias_Gutierrez.jpg'

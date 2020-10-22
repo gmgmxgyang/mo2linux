@@ -147,7 +147,6 @@ manually_select_the_file_directory() {
 }
 ###############
 normally_restore_tmoe_container() {
-	cd ${CONTAINER_BACKUP_PATH}
 	if (whiptail --title "RESTORE FILE" --yes-button '最新latest' --no-button 'select manually' --yesno "您是想要还原最新文件，还是手动选择备份文件\nDo you want to restore the latest file or select the file manually?" 9 50); then
 		#RESTORE=$(ls -lth ./*debian*tar* | grep ^- | head -n 1 | cut -d '/' -f 2)
 		RESTORE=$(ls -lth ./*-rootfs_bak.tar* | grep ^- | head -n 1 | awk -F ' ' '$0=$NF')
@@ -178,9 +177,13 @@ restore_gnu_linux_container() {
 	1)
 		check_container_backup_path
 		START_DIR=${BACKUP_PATH}
+		cd ${BACKUP_PATH}
 		normally_restore_tmoe_container
 		;;
-	2) normally_restore_tmoe_container ;;
+	2)
+		cd ${CONTAINER_BACKUP_PATH}
+		normally_restore_tmoe_container
+		;;
 	3)
 		BACKUP_FILE_NAME="*tar*"
 		file_directory_selection

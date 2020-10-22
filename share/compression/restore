@@ -177,6 +177,7 @@ restore_gnu_linux_container() {
 	case ${TMOE_OPTION} in
 	1)
 		check_container_backup_path
+		START_DIR=${BACKUP_PATH}
 		normally_restore_tmoe_container
 		;;
 	2) normally_restore_tmoe_container ;;

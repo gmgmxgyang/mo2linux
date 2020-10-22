@@ -79,7 +79,7 @@ uncompress_tar_file() {
 select_file_manually() {
 	count=0
 	printf '%s\n' '您可以在此列表中选择需要恢复的压缩包'
-	for restore_file in "${START_DIR}"/${BACKUP_FILE_NAME}; do
+	for restore_file in ${START_DIR}/${BACKUP_FILE_NAME}; do
 		restore_file_name[count]=$(printf '%s\n' "${restore_file}" | awk -F'/' '{print $NF}')
 		echo -e "($count) ${restore_file_name[count]}"
 		count=$(($count + 1))

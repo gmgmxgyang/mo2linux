@@ -3889,7 +3889,7 @@ xrdp_pulse_server() {
 xrdp_onekey() {
     RETURN_TO_WHERE='configure_xrdp'
     do_you_want_to_continue
-    if [ $(command -v xrdp-keygen) ]; then
+    if [[ ! $(command -v xrdp-keygen) && ! -e /usr/sbin/xrdp ]]; then
         case "${LINUX_DISTRO}" in
         gentoo)
             emerge -avk layman

@@ -3811,6 +3811,11 @@ configure_xrdp_remote_desktop_session() {
 		exec /etc/X11/xinit/Xsession
 	EnfOfStartWM
     sed -i "s@exec /etc/X11/Xsession@exec ${REMOTE_DESKTOP_SESSION}@g" /etc/xrdp/startwm.sh
+    if [ $(command -v bat) ]; then
+        bat startwm.sh
+    else
+        sed -n p startwm.sh
+    fi
     #sed -i "s@exec /bin/sh /etc/X11/Xsession@exec ${REMOTE_DESKTOP_SESSION}@g" /etc/xrdp/startwm.sh
     printf "%s\n" "修改完成，若无法生效，则请使用强制配置功能[Y/f]"
     printf "%s\n" "输f启用，一般情况下无需启用，因为这可能会造成一些问题。"
@@ -3830,7 +3835,7 @@ configure_xrdp_remote_desktop_session() {
         #beta_features
         ;;
     esac
-    systemctl stop xrdp || service xrdp restart
+    systemctl restart xrdp || service xrdp restart
     check_xrdp_status
 }
 ##############
@@ -3902,6 +3907,7 @@ xrdp_onekey() {
             DEPENDENCY_02='xrdp'
             ;;
         esac
+        printf "Do you want to install xrdp?"
         beta_features_quick_install
     fi
     ##############

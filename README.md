@@ -262,10 +262,12 @@ Next, I will introduce the meaning of each parameter.
     For example,"tmoe chroot"="tmoe c"
 
     "$1":
-        "c:chroot"
-        "chroot"
-        "proot"
-        "p:proot"
+        "c:chroot:A chroot is an operation that changes the apparent root directory for the current running process and their children."
+        "chroot:与宿主机共享相同的内核,硬件,进程空间和网络子系统"
+        "p:proot - mount --bind and binfmt_misc without privilege/setupmount"
+        "proot:在用户空间内运行的程序,I/O性能弱于chroot"
+        "ns:systemd-nspawn:It supports executing systemctl commands in the container."
+        "nspawn:systemd容器,支持执行systemctl"
 -------------
     The 2nd parameter is the distribution name.
     在第二个参数中，"arch"可以简化为"a";"debian"可简化为"d";"fedora"可简化为"f";"ubuntu"可简化为"u"
@@ -382,7 +384,10 @@ Next, I will introduce the meaning of each parameter.
         "ash:command interpreter (shell)"
 -------------
 ```
-
+根据上述参数的用法，可推出debian-sid_amd64 systemd-nspawn容器的启动命令为  
+```bash  
+tmoe ns d s x
+```
 ---
 
 #### SUMMARY

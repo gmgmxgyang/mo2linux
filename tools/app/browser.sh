@@ -36,7 +36,7 @@ ubuntu_ppa_chromium() {
         DOWNLOAD_PPA=$(printf "%s\n" "${CHROMIUM_DEB_LIST}" | sed -E "s@(chromium.*deb)@aria2c --allow-overwrite=true -x 5 -s 5 -k 1M -o \1 ${PPA_REPO_URL}\1@")
         printf "${GREEN}%s${RESET}\n" "${DOWNLOAD_PPA}"
         sh -c "${DOWNLOAD_PPA}"
-        DEB_LIST_02="$(printf "%s\n" ${CHROMIUM_DEB_LIST} | sed "s@^@\"./@g;s@\$@\"@g" | sed ":a;N;s/\n/ /g;ta")"
+        DEB_LIST_02="$(printf "%s\n" ${CHROMIUM_DEB_LIST} | sed "s@^@./@g" | sed ":a;N;s/\n/ /g;ta")"
         unhold_ubuntu_chromium
         dpkg -i ${DEB_LIST_02}
         cd ..

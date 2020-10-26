@@ -42,6 +42,8 @@ ubuntu_ppa_chromium() {
         cd ..
         rm -rvf ${TEMP_FOLDER}
         hold_ubuntu_chromium
+        do_you_want_to_close_the_sandbox_mode
+        read_chromium_sandbox_opt
         ;;
     *)
         printf "%s\n" "对于arm64和amd64架构的系统，本工具将下载deb包，而非从snap商店下载。您当前使用的是${ARCH_TYPE}架构！由于新版Ubuntu调用了snap商店的软件源来安装chromium,故请自行执行apt install chromium-browser"
@@ -125,6 +127,10 @@ install_chromium_browser() {
     esac
     ####################
     do_you_want_to_close_the_sandbox_mode
+    read_chromium_sandbox_opt
+}
+############
+read_chromium_sandbox_opt() {
     read opt
     case $opt in
     y* | Y* | "")
@@ -148,7 +154,7 @@ install_chromium_browser() {
         ;;
     esac
 }
-############
+###############
 install_firefox_esr_browser() {
     printf '%s\n' 'Thank you for choosing me, I will definitely do better than my sister! ╰ (* ° ▽ ° *) ╯'
     printf "%s\n" "${YELLOW} “谢谢您选择了我，我一定会比姐姐向您提供更好的上网服务的！”╰(*°▽°*)╯火狐ESR娘坚定地说道。 ${RESET}"

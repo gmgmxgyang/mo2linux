@@ -384,10 +384,13 @@ Next, I will introduce the meaning of each parameter.
         "ash:command interpreter (shell)"
 -------------
 ```
-根据上述参数的用法，可推出debian-sid_amd64 systemd-nspawn容器的启动命令为  
-```bash  
+
+根据上述参数的用法，可推出 debian-sid_amd64 systemd-nspawn 容器的启动命令为
+
+```bash
 tmoe ns d s x
 ```
+
 ---
 
 #### SUMMARY

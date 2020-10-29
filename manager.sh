@@ -49,7 +49,7 @@ check_tmoe_command() {
 	else
 		TMOE_TIPS_01="tmoe"
 	fi
-	TMOE_TIPS_00="Welcome to tmoe linux manager v1.3399,type ${TMOE_TIPS_01} to start it."
+	TMOE_TIPS_00="Welcome to tmoe linux manager v1.3400,type ${TMOE_TIPS_01} to start it."
 }
 #########################
 tmoe_manager_env() {
@@ -272,8 +272,13 @@ check_gnu_linux_distro() {
 
 	elif egrep -qi "Fedora|CentOS|Red Hat|redhat" '/etc/os-release'; then
 		LINUX_DISTRO='redhat'
-		TMOE_REMOVAL_COMMAND='dnf remove -y'
-		TMOE_INSTALLATION_COMMAND='dnf install -y --skip-broken'
+		if [ $(command -v dnf) ]; then
+			TMOE_REMOVAL_COMMAND='dnf remove -y'
+			TMOE_INSTALLATION_COMMAND='dnf install -y --skip-broken'
+		else
+			TMOE_REMOVAL_COMMAND='yum remove -y'
+			TMOE_INSTALLATION_COMMAND='yum install -y --skip-broken'
+		fi
 		if [ "$(sed -n p /etc/os-release | grep 'ID=' | head -n 1 | cut -d '"' -f 2)" = "centos" ]; then
 			REDHAT_DISTRO='centos'
 		elif grep -q 'Sliverblue' "/etc/os-release"; then

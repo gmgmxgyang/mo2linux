@@ -780,10 +780,14 @@ install_linux_qq() {
 ###################
 install_nds_game_mayomonogatari() {
     DEPENDENCY_01="desmume"
-    case ${LINUX_DISTRO} in
-    debian) DEPENDENCY_02="p7zip-full" ;;
-    *) DEPENDENCY_02="p7zip" ;;
-    esac
+    if [ ! $(command -v 7za) ]; then
+        case ${LINUX_DISTRO} in
+        debian) DEPENDENCY_02="p7zip-full" ;;
+        *) DEPENDENCY_02="p7zip" ;;
+        esac
+    else
+        DEPENDENCY_02=""
+    fi
     beta_features_quick_install
     if [ -e "斯隆与马克贝尔的谜之物语/3782.nds" ]; then
         printf "%s\n" "检测到您已下载游戏文件，路径为${HOME}/斯隆与马克贝尔的谜之物语"

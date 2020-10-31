@@ -4629,7 +4629,7 @@ xfce4_x11vnc_hidpi_settings() {
 }
 ####################
 enable_dbus_launch() {
-    XSTARTUP_LINE=$(cat -n ${XSESSION_FILE} | grep -v 'command' | grep "${REMOTE_DESKTOP_SESSION_01}" | awk -F ' ' '{print $1}')
+    XSTARTUP_LINE=$(cat -n ${XSESSION_FILE} | grep -v 'command' | grep "${REMOTE_DESKTOP_SESSION_01}" | awk -F ' ' '{print $1}' | head -n 1)
     #sed -i "${XSTARTUP_LINE} c\ dbus-launch --exit-with-session ${REMOTE_DESKTOP_SESSION_01}" ${XSESSION_FILE}
     sed -i "${XSTARTUP_LINE} c\  dbus-launch ${REMOTE_DESKTOP_SESSION_01}" ${XSESSION_FILE}
     #################
@@ -4641,7 +4641,10 @@ enable_dbus_launch() {
     #sed -i "${START_XSDL_LINE} c\  dbus-launch ${REMOTE_DESKTOP_SESSION_01}" /usr/local/bin/startxsdl
     #################
     #sed -i "s/.*${REMOTE_DESKTOP_SESSION_02}.*/ dbus-launch ${REMOTE_DESKTOP_SESSION_02} \&/" "/usr/local/bin/startx11vnc"
-    sed -i "s/.*${REMOTE_DESKTOP_SESSION_02}.*/  dbus-launch ${REMOTE_DESKTOP_SESSION_02}/" ${XSESSION_FILE}
+    XSTARTUP_LINE_02=$((${XSTARTUP_LINE} + 2))
+    sed -i "${XSTARTUP_LINE_02} c\  dbus-launch ${REMOTE_DESKTOP_SESSION_02}" ${XSESSION_FILE}
+    #sed -i "s/.*${REMOTE_DESKTOP_SESSION_02}.*/  dbus-launch ${REMOTE_DESKTOP_SESSION_02}/" ${XSESSION_FILE}
+
     #sed -i "s/.*${REMOTE_DESKTOP_SESSION_02}.*/ dbus-launch ${REMOTE_DESKTOP_SESSION_02}/" "/usr/local/bin/startxsdl"
     #if [ "${LINUX_DISTRO}" != "debian" ]; then
     #    sed -i 's@--exit-with-session@@' ${XSESSION_FILE} /usr/local/bin/startxsdl /usr/local/bin/startx11vnc

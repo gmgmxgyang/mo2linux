@@ -643,7 +643,6 @@ check_qemu_install() {
 			else
 				DEPENDENCY_01='qemu qemu-system-x86'
 			fi
-			DEPENDENCY_01='qemu qemu-system-x86'
 			DEPENDENCY_02='qemu-system-gui'
 			;;
 		"alpine")

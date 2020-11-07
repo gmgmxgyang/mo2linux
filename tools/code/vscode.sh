@@ -37,6 +37,7 @@ copy_gnu_lib_xcb_so() {
 }
 ###########
 fix_tightvnc_vscode_lnk() {
+    copy_gnu_lib_xcb_so
     if [ ! -s "${TMOE_LINUX_DIR}/lib/libxcb.so.1" ]; then
         sed -i "s@Exec=/usr/share/code-oss/code-oss@Exec=env LD_LIBRARY_PATH=${TMOE_LINUX_DIR}/lib /usr/share/code-oss/code-oss@g" ${APPS_LNK_DIR}/code-oss.desktop 2>/dev/null
         sed -i "s@Exec=/usr/share/codium/codium@Exec=env LD_LIBRARY_PATH=${TMOE_LINUX_DIR}/lib /usr/share/codium/codium@g" ${APPS_LNK_DIR}/codium.desktop 2>/dev/null

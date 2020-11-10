@@ -333,6 +333,7 @@ Next, I will introduce the meaning of each parameter.
         "buster:debian10"
         "bullseye:debian11"
         "bookworm:debian12"
+        "trixie:debian13"
         "18.04:ubuntu bionic"
         "31:fedora 31"
         "32:fedora 32"

@@ -97,7 +97,7 @@ check_tmoe_command() {
 	else
 		TMOE_TIPS_01="tmoe t"
 	fi
-	TMOE_TIPS_00="Welcome to tmoe linux tool v1.3435,type ${TMOE_TIPS_01} to start this tool."
+	TMOE_TIPS_00="Welcome to tmoe linux tool v1.3436,type ${TMOE_TIPS_01} to start this tool."
 	#勿改00变量
 }
 #########
@@ -207,7 +207,7 @@ check_root() {
 			if [ $(command -v curl) ]; then
 				sudo -E bash -c "$(curl -LfsS https://gitee.com/mo2/linux/raw/master/debian.sh)" || su -c "$(curl -LfsS https://gitee.com/mo2/linux/raw/master/debian.sh)"
 			elif [ $(command -v aria2c) ]; then
-				aria2c --allow-overwrite=true -o /tmp/.tmoe-linux-tool.sh https://gitee.com/mo2/linux/raw/master/tool.sh
+				aria2c --no-conf --allow-overwrite=true -o /tmp/.tmoe-linux-tool.sh https://gitee.com/mo2/linux/raw/master/tool.sh
 				su -c "$(bash /tmp/.tmoe-linux-tool.sh)"
 			else
 				su -c "$(wget -qO- https://gitee.com/mo2/linux/raw/master/debian.sh)"

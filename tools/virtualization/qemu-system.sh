@@ -662,7 +662,7 @@ check_qemu_install() {
 creat_qemu_startup_script() {
 	mkdir -p ${CONFIG_FOLDER}
 	cd ${CONFIG_FOLDER}
-	cat >startqemu_amd64_2020060314 <<-'EndOFqemu'
+	cat >startqemu_amd64_20201118 <<-'EndOFqemu'
 		#!/usr/bin/env bash
 		export DISPLAY=127.0.0.1:0
 		export PULSE_SERVER=127.0.0.1
@@ -701,8 +701,8 @@ creat_qemu_startup_script() {
 			-device usb-tablet \
 			-name "tmoe-linux-qemu"
 	EndOFqemu
-	chmod +x startqemu_amd64_2020060314
-	cp -pf startqemu_amd64_2020060314 /usr/local/bin/startqemu
+	chmod +x startqemu_amd64_20201118
+	cp -pf startqemu_amd64_20201118 /usr/local/bin/startqemu
 }
 ###########
 modify_qemu_machine_accel() {
@@ -1982,7 +1982,7 @@ start_tmoe_qemu_manager() {
 	RETURN_TO_WHERE='start_tmoe_qemu_manager'
 	RETURN_TO_MENU='start_tmoe_qemu_manager'
 	check_qemu_install
-	if [ ! -e "${HOME}/.config/tmoe-linux/startqemu_amd64_2020060314" ]; then
+	if [ ! -e "${HOME}/.config/tmoe-linux/startqemu_amd64_20201118" ]; then
 		printf "%s\n" "启用x86_64虚拟机将重置startqemu为x86_64的配置"
 		rm -fv ${HOME}/.config/tmoe-linux/startqemu*
 		creat_qemu_startup_script

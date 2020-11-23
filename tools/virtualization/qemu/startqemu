@@ -292,7 +292,7 @@ EOF
 dd if=/dev/zero of=/tmp/tmoe_qemu bs=1M
 ls -lh /tmp/tmoe_qemu
 rm -fv /tmp/tmoe_qemu
-接着回到host，使用qemu-img的压缩命令。
+接着回到host，使用qemu-img进行压缩。
 有两种压缩方式。
 1.常规压缩
 qemu-img convert -c -O qcow2 原磁盘.qcow2 压缩后的磁盘.qcow2

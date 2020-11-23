@@ -1196,6 +1196,11 @@ nano $(command -v startvnc)
 - 6.修复 riscv64 架构容器的配置功能，arm64 可以跨架构运行 risv64。
 - 7.新增 mips64el 架构的容器。
 
+##### 11 月 更新日志
+
+- 1.重构 qemu-system-x86_64 配置功能。
+- 2.移除功能：qemu-system-aarch64 所有配置选项,烧录 iso 至 U 盘等。
+
 ---
 
 ### README 结尾彩蛋

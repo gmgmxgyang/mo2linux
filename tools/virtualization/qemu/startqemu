@@ -501,7 +501,7 @@ run_tmoe_qemu_command() {
         printf "%s\n" "检测到您启用了${YELLOW}自动分配内存${RESET}模式。"
         FREE_MEMORY="$(free -m | awk '{print $NF}' | sed -n 2p)"
         TOTAL_MEMORY="$(free -m | awk '{print $2}' | sed -n 2p)"
-        printf "%s\n" "当前宿主机${GREEN}available RAM${RESET}为${PURPLE}${FREE_MEMORY}M${RESET}，${YELLOW}total RAM${RESET}为${BLUE}${FREE_MEMORY}M${RESET}"
+        printf "%s\n" "当前宿主机${GREEN}available RAM${RESET}为${PURPLE}${FREE_MEMORY}M${RESET}，${YELLOW}total RAM${RESET}为${BLUE}${TOTAL_MEMORY}M${RESET}"
         if [[ ${FREE_MEMORY} =~ ^[0-9]+$ ]]; then
             if [[ ${MEMORY_REDUCED} =~ ^[0-9]+$ ]]; then
                 MEMORY_SIZE=$((${FREE_MEMORY} - ${MEMORY_REDUCED}))

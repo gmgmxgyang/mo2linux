@@ -1059,7 +1059,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	    ubuntu_sources_list
 	elif grep -q 'Mint' "/etc/issue"; then
 	    mint_sources_list
-	elif grep -q 'deepin|uos\.com' "/etc/os-release";then
+	elif egrep -q 'deepin|uos\.com' "/etc/os-release";then
 		printf "%s\n" "deb https://mirrors.bfsu.edu.cn/debian/ stable main" > /etc/apt/sources.list.d/debian-stable.list
 	elif grep -q 'OpenWrt' "/etc/os-release"; then
 	    cp /etc/opkg/distfeeds.conf /etc/opkg/distfeeds.conf.bak

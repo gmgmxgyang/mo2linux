@@ -695,15 +695,15 @@ In addition, the **mipsel** architecture is also supported! The developer has te
 > 下表中的所有系统均支持 x64 和 arm64  
 > \*表示仅旧版支持
 
-| Distro |    x86    | armhf  | ppc64el |
-| ------ | :-------: | :----: | :-----: |
-| Debian |     ✓     |   ✓    |    ✓    |
-| Ubuntu | \*<=19.10 |   ✓    |    ✓    |
-| Kali   |     ✓     |   ✓    |    X    |
-| Arch   |     X     |   ✓    |    X    |
-| Fedora |  \*<=29   | \*<=31 |    ✓    |
-| Alpine |     ✓     |   ✓    |    ✓    |
-| CentOS |   \*<=7   | \*<=7  |    ✓    |
+| Distro |    x86    | armhf | ppc64el |
+| ------ | :-------: | :---: | :-----: |
+| Debian |     ✓     |   ✓   |    ✓    |
+| Ubuntu | \*<=19.10 |   ✓   |    ✓    |
+| Kali   |     ✓     |   ✓   |    X    |
+| Arch   |     X     |   ✓   |    X    |
+| Fedora |  \*<=29   |   ✓   |    ✓    |
+| Alpine |     ✓     |   ✓   |    ✓    |
+| CentOS |   \*<=7   | \*<=7 |    ✓    |
 
 ### 七.其他说明（旧版）
 

@@ -166,6 +166,7 @@ install_wps_office() {
             mkfontscale 2>/dev/null
             mkfontdir 2>/dev/null
             fc-cache 2>/dev/null
+            cd /tmp
         fi
 
         if [ ! -e "/usr/share/doc/ttf-mscorefonts-installer/copyright" ]; then

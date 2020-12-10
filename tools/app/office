@@ -162,6 +162,10 @@ install_wps_office() {
             aria2c --no-conf --allow-overwrite=true -s 5 -x 5 -k 1M -d /tmp -o ttf-wps-fonts.tar.xz https://gitee.com/ak2/ttf-wps-fonts/raw/master/ttf-wps-fonts.tar.xz
             tar -Jxvf /tmp/ttf-wps-fonts.tar.xz -C /
             rm -fv /tmp/ttf-wps-fonts.tar.xz
+            cd /usr/share/fonts/truetype/wps-fonts
+            mkfontscale 2>/dev/null
+            mkfontdir 2>/dev/null
+            fc-cache 2>/dev/null
         fi
 
         if [ ! -e "/usr/share/doc/ttf-mscorefonts-installer/copyright" ]; then

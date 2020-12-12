@@ -1144,7 +1144,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	cd ${FAKEROOT_SRC_FILE%.*.*.*}
 	./bootstrap
 	./configure --prefix=/usr --libdir=/usr/lib/libfakeroot --with-ipc=tcp --disable-static
-	make -j4
+	make -j2
 	cd doc
 	po4a -k 0 --rm-backups --variable "srcdir=../doc/" po4a/po4a.cfg
 	cd ..

@@ -1144,6 +1144,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	    pacman -S --noconfirm yay
 	    yay --aururl "https://aur.tuna.tsinghua.edu.cn" --save
 	    pacman -S --noconfirm diffutils iproute gawk
+		[[ $(command -v yay) ]] || pacman -S --noconfirm yay
 	}
 	#################
 	#################

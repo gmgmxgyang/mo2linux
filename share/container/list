@@ -812,7 +812,7 @@ install_centos_linux_distro() {
 		linux_distro_common_model_04
 		;;
 	*)
-		OLD_STABLE_VERSION='8'
+		OLD_STABLE_VERSION='7'
 		check_the_latest_distro_version
 		#DISTRO_CODE='8'
 		#linux_distro_common_model_01

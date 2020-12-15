@@ -1646,7 +1646,7 @@ install_mate_desktop() {
             if (whiptail --title "Mate or Ubuntu-MATE-full-desktop" --yes-button "mate" --no-button "ubuntu-mate" --yesno 'The former is more streamlined, and the latter includes some extra software of ubuntu-mate.\n前者为普通mate,后者为ubuntu-mate' 0 0); then
                 printf ""
             else
-                DEPENDENCY_01="ubuntu-mate-desktop"
+                DEPENDENCY_01="ubuntu-mate-desktop check-language-support"
             fi
             ;;
         esac

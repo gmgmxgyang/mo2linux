@@ -502,10 +502,10 @@ tmoe_fcitx_faq() {
     RETURN_TO_WHERE='tmoe_fcitx_faq'
     TMOE_APP=$(whiptail --title "${TMOE_INPUT_METHOD_FRAMEWORK} FAQ" --menu \
         "你想要对这个小可爱做什么?" 0 50 5 \
-        "1" "${TMOE_INPUT_METHOD_FRAMEWORK}-diagnose:诊断" \
+        "1" "edit /etc/environment(系统环境变量配置)" \
         "2" "im-config:配置${TMOE_INPUT_METHOD_FRAMEWORK}输入法" \
-        "3" "edit /etc/environment(系统环境变量配置文件)" \
-        "4" "edit .pam_environment(用户环境变量配置文件)" \
+        "3" "${TMOE_INPUT_METHOD_FRAMEWORK}-diagnose:诊断" \
+        "4" "edit .pam_environment(用户环境变量配置)" \
         "5" "remove 移除${TMOE_INPUT_METHOD_FRAMEWORK}" \
         "6" "disable autostart 禁止进入桌面后自启动" \
         "0" "🌚 Return to previous menu 返回上级菜单" \
@@ -514,17 +514,17 @@ tmoe_fcitx_faq() {
     case "${TMOE_APP}" in
     0 | "") install_pinyin_input_method ;;
     1)
-        printf '%s\n' '若您无法使用fcitx,则请根据以下诊断信息自行解决'
-        case ${TMOE_INPUT_METHOD_FRAMEWORK} in
-        fcitx) fcitx-diagnoses ;;
-        fcitx5) fcitx5-diagnoses ;;
-        *) printf '%s\n' 'Sorry，诊断功能不支持ibus' ;;
-        esac
+        FCITX_ENV_FILE="/etc/environment"
+        edit_fcitx_env_file
         ;;
     2) input_method_config ;;
     3)
-        FCITX_ENV_FILE="/etc/environment"
-        edit_fcitx_env_file
+        printf '%s\n' '若您无法使用fcitx,则请根据以下诊断信息自行解决'
+        case ${TMOE_INPUT_METHOD_FRAMEWORK} in
+        fcitx) fcitx-diagnoses ;;
+        fcitx5) fcitx5-diagnoses || fcitx-diagnoses ;;
+        *) printf '%s\n' 'Sorry，诊断功能不支持ibus' ;;
+        esac
         ;;
     4)
         FCITX_ENV_FILE="${HOME}/.pam_environment"

@@ -522,7 +522,17 @@ tmoe_fcitx_faq() {
         printf '%s\n' '若您无法使用fcitx,则请根据以下诊断信息自行解决'
         case ${TMOE_INPUT_METHOD_FRAMEWORK} in
         fcitx) fcitx-diagnoses ;;
-        fcitx5) fcitx5-diagnoses || fcitx-diagnoses ;;
+        fcitx5)
+            FCITX_DIAGNOSES='false'
+            for i in fcitx5-diagnoses fcitx-diagnoses; do
+                if [[ $(command -v ${i}) ]]; then
+                    FCITX_DIAGNOSES='true'
+                    ${i}
+                    break
+                fi
+            done
+            [[ ${FCITX_DIAGNOSES} = true ]] || printf "%s\n" "Sorry，您的系统不存在${GREEN}fcitx-diagnoses${RESET}命令。"
+            ;;
         *) printf '%s\n' 'Sorry，诊断功能不支持ibus' ;;
         esac
         ;;

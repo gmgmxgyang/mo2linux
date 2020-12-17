@@ -84,7 +84,7 @@ fcitx4_input_method_menu() {
     DEPENDENCY_02=""
     #17 55 8
     INPUT_METHOD=$(
-        whiptail --title "FCITX4" --menu "fcitx可以通过安装引擎来支持多种输入法" 0 0 0 \
+        whiptail --title "FCITX4" --menu "fcitx可以通过安装引擎来支持多种输入法\n在桌面环境下按Ctrl+空格切换输入法" 0 0 0 \
             "1" "google谷歌拼音(引擎fork自Android版)" \
             "2" "rime中州韻(擊響中文之韻)" \
             "3" "🍁 FAQ:常见问题与疑难诊断" \

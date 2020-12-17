@@ -521,10 +521,10 @@ tmoe_fcitx_faq() {
     3)
         printf '%s\n' '若您无法使用fcitx,则请根据以下诊断信息自行解决'
         case ${TMOE_INPUT_METHOD_FRAMEWORK} in
-        fcitx) fcitx-diagnoses ;;
+        fcitx) fcitx-diagnose ;;
         fcitx5)
             FCITX_DIAGNOSES='false'
-            for i in fcitx5-diagnoses fcitx-diagnoses; do
+            for i in fcitx5-diagnose fcitx-diagnose; do
                 if [[ $(command -v ${i}) ]]; then
                     FCITX_DIAGNOSES='true'
                     ${i}

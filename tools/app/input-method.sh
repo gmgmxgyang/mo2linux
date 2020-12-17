@@ -181,21 +181,22 @@ tmoe_fcitx5_menu() {
     INPUT_METHOD=$(
         whiptail --title "Fcitx5" --menu "Fcitx5 是继 Fcitx 后的新一代输入法框架。\n词库是输入法保存的一些流行词语、常用词语或专业术语等的信息,\n添加流行词库能增加流行候选词的命中率" 0 55 0 \
             "1" "fcitx5安装与卸载" \
-            "2" "🍁 fcitx-FAQ:常见问题与疑难诊断" \
-            "2" "肥猫百万大词库@felixonmars" \
-            "3" "萌娘百科词库@outloudvi" \
-            "4" "beautification输入法美化主题" \
-            "5" "fcitx5-rime" \
+            "2" "🍁 FAQ:常见问题与疑难诊断" \
+            "3" "肥猫百万大词库@felixonmars" \
+            "4" "萌娘百科词库@outloudvi" \
+            "5" "beautification输入法美化主题" \
+            "6" "fcitx5-rime" \
             "0" "🌚 Return to previous menu 返回上级菜单" \
             3>&1 1>&2 2>&3
     )
     case ${INPUT_METHOD} in
     0 | "") install_pinyin_input_method ;;
     1) install_fcitx5 ;;
-    2) felixonmars_fcitx5_wiki_dict ;;
-    3) outloudvi_fcitx5_moegirl_dict ;;
-    4) input_method_beautification ;;
-    5) install_fcitx5_rime ;;
+    2) tmoe_fcitx_faq ;;
+    3) felixonmars_fcitx5_wiki_dict ;;
+    4) outloudvi_fcitx5_moegirl_dict ;;
+    5) input_method_beautification ;;
+    6) install_fcitx5_rime ;;
     esac
     #"5" "Material Design质感主题@hosxy" \
     ###############

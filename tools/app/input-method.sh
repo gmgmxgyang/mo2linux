@@ -8,7 +8,7 @@ install_pinyin_input_method() {
     XDG_AUTOSTART_DIR='/etc/xdg/autostart'
     INPUT_METHOD=$(
         whiptail --title "键盘与输入法" --menu "arch & debian-sid等新版系统可用fcitx5\nubuntu18.04 & debian10等旧版系统可用fcitx4\n为避免冲突,不建议同时安装fcitx和ibus\n若您使用的是容器,则推荐fcitx4;若为虚拟机,则推荐fcitx5" 0 0 0 \
-            "1" "🍁 fcitx4 输入法框架" \
+            "1" "🍁 fcitx4 小企鹅输入法框架" \
             "2" "🍀 fcitx5(软件与词库)" \
             "3" "ibus 输入法框架" \
             "4" "onboard(屏幕虚拟键盘)" \
@@ -84,7 +84,7 @@ fcitx4_input_method_menu() {
     DEPENDENCY_02=""
     #17 55 8
     INPUT_METHOD=$(
-        whiptail --title "FCITX4" --menu "fcitx 为小企鹅输入法框架,可以通过安装引擎来支持多种输入法" 0 0 0 \
+        whiptail --title "FCITX4" --menu "fcitx可以通过安装引擎来支持多种输入法" 0 0 0 \
             "1" "google谷歌拼音(引擎fork自Android版)" \
             "2" "rime中州韻(擊響中文之韻)" \
             "3" "🍁 FAQ:常见问题与疑难诊断" \

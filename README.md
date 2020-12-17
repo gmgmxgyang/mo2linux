@@ -122,7 +122,7 @@ _**If you do not live in China, please enter**_
     bash -c "$(curl -L gitee.com/mo2/linux/raw/2/2)"
 ```
 
-#### 4.RedHat/Fedora/CentOS
+#### 4.Fedora/CentOS Stream
 
 ```shell
     sudo dnf install -y curl || sudo yum install -y curl

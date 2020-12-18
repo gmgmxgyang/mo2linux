@@ -1052,11 +1052,9 @@ nano $(command -v startvnc)
 - 需要先在 termux 进行配置，并安装 wayland 服务端软件，再进入 GNU/Linux 容器内选择需要配置的桌面环境。
 - 其中后者只是在我之前写的 xorg+xrdp 的配置方案的基础上进行了修改而已。
 - 配置完成后，需要先打开 wayland 服务端，点击`start`,然后在容器内输`startw`启动。
-- 注：我仅测试了 xfce4。未测试的桌面可以配置，但可能存在无法连接的问题。
-- 特点：可以在 proot 环境下打开 kde 的某些应用（例如下图中的 plasma-discover），但是 bug 超级多。
+- 特点：可以在 proot 环境下打开 kde 的某些应用（例如 plasma-discover），但是 bug 超级多。
 - 由于 bug 实在过多，故我已经不想维护了。
-  ![Screenshot_20200507-193422_1.png](https://images.gitee.com/uploads/images/2020/0718/103733_f23c0e2d_5617340.png)
-  ![Screenshot_20200507-222532.png](https://images.gitee.com/uploads/images/2020/0718/103819_3ded1b74_5617340.png)
+
   触控操作体验极差！建议使用蓝牙鼠标进行操作！  
   由于目前在 Android 手机上暂时无法使用 gpu 硬件渲染加速，故实际体验非常糟糕！
   不建议配置该服务!  
@@ -1113,10 +1111,7 @@ nano $(command -v startvnc)
 ##### 2020-05-22 更新日志
 
 - 1.修复 Ubuntu20.10 存在的各种问题。
-- 2.修复 arm64 架构上的[Rocket1184/electron-netease-cloud-music](https://github.com/Rocket1184/electron-netease-cloud-music)
-- ![163music](https://images.gitee.com/uploads/images/2020/0522/221902_3490dfd0_5617340.png "截图_2020-05-22_21-43-28.png")
-
-- 3.镜像站支持测延迟+测速，支持强制信任软件源，去除多余行，一键切换 http/https。
+- 2.镜像站支持测延迟+测速，支持强制信任软件源，去除多余行，一键切换 http/https。
 - 除了主要源外，还支持配置额外源。对于不同的发行版，显示的额外源是不同的。对于 debian,显示的是切换为 kali 源。对于 arch，显示的是配置 archlinux-cn 源。对于 centos，显示的是 epel 源。
 
 ##### 2020-05-23 更新日志
@@ -1200,6 +1195,10 @@ nano $(command -v startvnc)
 
 - 1.重构 qemu-system-x86_64 配置功能。
 - 2.移除功能：qemu-system-aarch64 所有配置选项,烧录 iso 至 U 盘等。
+
+##### 12 月 更新日志
+
+- 1.修复容器环境下运行 fcitx/fcitx5/ibus 时，环境变量未正确配置的问题。
 
 ---
 

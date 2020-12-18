@@ -802,4 +802,4 @@ install_iflyime_pinyin() {
 }
 ################
 ####################
-tmoe_pinyin_input_method_main
+tmoe_pinyin_input_method_main "$@"

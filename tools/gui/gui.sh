@@ -4418,11 +4418,11 @@ which_vnc_server_do_you_prefer() {
         fi
         ;;
     *)
-        if (whiptail --title "Which vnc server do you prefer" --yes-button 'tight' --no-button 'tiger' --yesno "您想要选择哪个VNC服务端?(っ °Д °)\ntiger比tight支持更多的特效和选项,例如鼠标指针和背景透明等。\n因tiger的流畅度可能不如tight,故默认情况下为tight。\nAlthough tiger can show more special effects,tight may be smoother" 0 50); then
-            tight_vnc_variable
-        else
+        if (whiptail --title "Which vnc server do you prefer" --yes-button 'tiger' --no-button 'tight' --yesno "您想要选择哪个VNC服务端?(っ °Д °)\n尽管tight可能更加流畅,但是tiger比tight支持更多的特效和选项,例如鼠标指针和背景透明等\nAlthough tiger can show more special effects,tight may be smoother.\nIt is recommended that you use tiger." 0 50); then
             tiger_vnc_variable
             modify_to_xfwm4_breeze_theme
+        else
+            tight_vnc_variable
         fi
         ;;
     esac

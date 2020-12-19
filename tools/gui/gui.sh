@@ -1323,7 +1323,7 @@ install_xfce4_desktop() {
     true)
         case "${LINUX_DISTRO}" in
         "debian") apt autoremove --purge -y ^xfce4-power-manager ;;
-        *) pacman -Rsc --noconfirm xfce4-power-manager-plugins ;;
+        arch) pacman -Rsc --noconfirm xfce4-power-manager ;;
         redhat) dnf remove -y xfce4-power-manager ;;
         esac
         ;;

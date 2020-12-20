@@ -105,6 +105,7 @@ tmp/*'
 	EOF
 	do_you_want_to_continue
 	rm -rv ${CONTAINER_GARBAGE_FILES}
+	rm -fv ${CONTAINER_GARBAGE_FILES_02}
 }
 #############
 backup_gnu_linux_container() {

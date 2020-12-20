@@ -181,7 +181,7 @@ install_wps_office() {
     fi
 
     for i in /tmp ${HOME}/sd/Download; do
-        [[ -d ${i} ]] || DEB_DIR=${i}
+        [[ ! -d ${i} ]] || DEB_DIR=${i}
     done
     cd ${DEB_DIR}
     case "${LINUX_DISTRO}" in

@@ -33,6 +33,7 @@ if ! grep -q '172..*1' "/etc/resolv.conf"; then
 		;;
 	esac
 	printf "%s\n" "您当前使用的可能不是WSL2,部分功能无法正常运行。"
+	/mnt/c/WINDOWS/system32/control.exe /name Microsoft.WindowsUpdate
 	CURRENTwinVersion=$(/mnt/c/WINDOWS/system32/cmd.exe /c "VER" 2>/dev/null | cut -d '.' -f 3 | tail -n 1)
 	printf "%s\n" "您当前的系统版本为${CURRENTwinVersion}"
 	if ((${CURRENTwinVersion} >= 19041)); then
@@ -54,7 +55,6 @@ if ! grep -q '172..*1' "/etc/resolv.conf"; then
 			dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
 			wsl --set-default-version 2
 		EOF
-		/mnt/c/WINDOWS/system32/control.exe /name Microsoft.WindowsUpdate
 		printf "%s\n" "-------------------------------"
 	fi
 fi

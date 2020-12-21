@@ -536,6 +536,12 @@ check_dependencies() {
 		debian) DEPENDENCIES="${DEPENDENCIES} util-linux" ;;
 		esac
 	fi
+	if [ ! $(command -v zstd) ]; then
+		#arch无需额外安装zstd
+		case "${LINUX_DISTRO}" in
+		debian | redhat) DEPENDENCIES="${DEPENDENCIES} zstd" ;;
+		esac
+	fi
 	##############
 	if [ ! -z "${DEPENDENCIES}" ]; then
 		cat <<-EOF

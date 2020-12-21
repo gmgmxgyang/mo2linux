@@ -77,7 +77,8 @@ stop_dbus_daemon() {
         if [ -e "/run/dbus/pid" ]; then
             DBUS_PID=$(sed -n p /run/dbus/pid)
             printf "%s\n" "kill -9 ${DBUS_PID}"
-            sudo kill -9 ${DBUS_PID} || su -c "kill -9 ${DBUS_PID}"
+            sudo kill -9 ${DBUS_PID} || kill -9 ${DBUS_PID}
+            #此处不要用su -c "kill xxx"
             rm_dbus_pid_file
         fi
         ;;

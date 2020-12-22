@@ -4749,7 +4749,7 @@ first_configure_startvnc() {
 do_you_want_to_configure_novnc() {
     printf "%s\n" "You can type ${GREEN}novnc${RESET} to ${YELLOW}start${RESET} ${BLUE}novnc+websockify${RESET}"
     printf '%s\n' '------------------------'
-    printf "%s\n" "配置完成后，您可以输${BOLD}${GREEN}novnc${RESET}来${YELLOW}启动${BLUE}novnc${RESET},在浏览器中输入novnc访问地址进行连接。"
+    printf "%s\n" "配置完成后，您可以输${BOLD}${GREEN}novnc${RESET}来${YELLOW}启动${BLUE}novnc${RESET},在浏览器里输入novnc访问地址进行连接。"
     printf "%s\n" "Do you want to configure novnc?"
     printf "%s\n" "您是否需要配置${BLUE}novnc${RESET}？"
     RETURN_TO_WHERE='software_center'

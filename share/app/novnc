@@ -56,7 +56,7 @@ install_python_web_novnc() {
 			dpkg-deb -X novnc.deb ./ || sudo dpkg-deb -X novnc.deb ./
 		else
 			ar xv novnc.deb
-			tar -Jxvf novnc.deb
+			tar -Jxvf data.tar.xz
 		fi
 		cp -prf ./usr/share/novnc/* ./ || sudo cp -prf ./usr/share/novnc/* ./
 		cp -rf ./usr/share/doc ./ || sudo cp -rf ./usr/share/doc ./

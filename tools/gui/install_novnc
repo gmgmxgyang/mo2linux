@@ -71,7 +71,11 @@ check_python_novnc() {
 				dpkg-deb -X novnc.deb ./ || sudo dpkg-deb -X novnc.deb ./
 			else
 				ar xv novnc.deb
-				tar -Jxvf novnc.deb
+				if [ -e "data.tar.xz" ]; then
+					tar -Jxvf data.tar.xz
+				else
+					tar -xvf data.tar.*
+				fi
 			fi
 			cp -prf ./usr/share/novnc/* ./ || sudo cp -prf ./usr/share/novnc/* ./
 			cp -rf ./usr/share/doc ./ || sudo cp -rf ./usr/share/doc ./

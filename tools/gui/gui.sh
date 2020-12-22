@@ -3553,7 +3553,7 @@ x11vnc_port() {
         printf '%s\n' 'Your current port has been modified.'
         #printf "%s\n" "您当前的分辨率已经修改为$(sed -n p $(command -v startx11vnc) | grep 'TMOE_X11_RESOLUTION=' | head -n 1 | cut -d '=' -f 2)"
         check_x11vnc_port
-        printf "%s\n" "Current port is ${BLUE}}${CURRENT_VAULE}${RESET}"
+        printf "%s\n" "Current port is ${BLUE}${CURRENT_VAULE}${RESET}"
         printf "%s\n" "You can type ${GREEN}startx11vnc${RESET} to restart it."
     fi
 }

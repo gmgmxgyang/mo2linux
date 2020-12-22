@@ -13,7 +13,7 @@ NOVNC_MAIN_DIR="${TMOE_LINUX_DIR}/novnc"
 NOVNC_UTILS_DIR="${NOVNC_MAIN_DIR}/utils"
 NOVNC_STARTUP_SCRIPT="${NOVNC_UTILS_DIR}/launch.sh"
 STARTVNC_COMMAND='startvnc'
-NOVNC_PORT="6080"
+NOVNC_PORT="36080"
 CURRENT_PORT=$(cat $(command -v ${STARTVNC_COMMAND}) | grep '^TMOE_VNC_DISPLAY_NUMBER=' | head -n 1 | awk -F '=' '{print $2}')
 CURRENT_VNC_PORT=$((${CURRENT_PORT} + 5900))
 NOVNC_ADDR="localhost:${CURRENT_VNC_PORT}"
@@ -22,7 +22,7 @@ NOVNC_WEB_ADDR="http://localhost:${NOVNC_PORT}/vnc.html"
 show_novnc_addr() {
 	TMOE_IP_ADDR=$(ip -4 -br -c a | awk '{print $NF}' | cut -d '/' -f 1 | grep -v '127\.0\.0\.1' | sed "s@^@http://@g;s@\$@:${NOVNC_PORT}/vnc.html@")
 	cat <<-EOF
-		${YELLOW}本机${RESET}novnc,${GREEN}浏览器${RESET}访问地址 ${BLUE}localhost${GREEN}:${CURRENT_VNC_PORT}${RESET}
+		${YELLOW}本机${RESET}novnc,${GREEN}浏览器${RESET}访问地址 ${BLUE}${NOVNC_WEB_ADDR}${RESET}
 		The LAN novnc address ${YELLOW}局域网${RESET}地址 ${TMOE_IP_ADDR}
 	EOF
 }

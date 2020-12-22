@@ -4723,8 +4723,8 @@ first_configure_startvnc() {
         /mnt/c/WINDOWS/system32/cmd.exe /c "start ."
         #startxsdl &
     fi
-    printf "%s\n" "若您的宿主机为${YELLOW}Android${RESET},则在${PURPLE}termux原系统${RESET}下输入${GREEN}startvnc${RESET}将同时启动${BLUE}Realvnc viewer${RESET}(客户端)和容器的VNC服务端。注：需手动连接。"
-    printf "%s\n" "若您的宿主机为${YELLOW}Win10${RESET},则在${PURPLE}WSL${RESET}下输入${GREEN}startvnc${RESET}将同时启动${BLUE}Tigervnc viewer win-x64${RESET}(客户端)和tigervnc服务端，并自动连接。"
+    printf "%s\n" "若您的宿主机为${YELLOW}Android${RESET},则在${PURPLE}termux原系统${RESET}下输入${GREEN}startvnc${RESET}将同时启动${BLUE}Realvnc viewer${RESET}客户端和容器的VNC服务端。注：需手动连接。"
+    printf "%s\n" "若您的宿主机为${YELLOW}Win10${RESET},则在${PURPLE}WSL2${RESET}(非容器环境)下输入${GREEN}startvnc${RESET}将同时启动${BLUE}Tigervnc viewer(win_x64)${RESET}客户端和tigervnc服务端，并自动连接。此外，还将启动windows版powershell,并调用pulseaudio(win_x86)音频服务+进程守护脚本。"
     printf '%s\n' '------------------------'
     printf "%s\n" "${GREEN}tightvnc/tigervnc & x window${RESET}配置${BLUE}完成${RESET},将为您配置${GREEN}x11vnc${RESET}"
     printf "%s\n" "按${YELLOW}回车键${RESET}查看x11vnc的${BLUE}启动说明${RESET}"

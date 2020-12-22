@@ -147,8 +147,9 @@ android_6_mirror() {
 		read opt
 		case $opt in
 		y* | Y* | "")
-			if grep -q '^deb.*termux stable main' '/data/data/com.termux/files/usr/etc/apt/sources.list'; then
+			if grep -q 'deb.*termux*stable' '/data/data/com.termux/files/usr/etc/apt/sources.list'; then
 				#sed -i 's@^\(deb.*stable main\)$@#\1\ndeb https://mirrors.ustc.edu.cn/termux stable main@' '/data/data/com.termux/files/usr/etc/apt/sources.list'
+				#官方源deb https://termux.net stable main
 				sed -e 's@^@#&@g' \
 					-e 's@##@#@g' \
 					-e '$ a\deb https://mirrors.ustc.edu.cn/termux stable main' \

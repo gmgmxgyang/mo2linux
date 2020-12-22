@@ -4759,7 +4759,7 @@ do_you_want_to_configure_novnc() {
     [[ ! -e novnc ]] || rm -f novnc 2>/dev/null
     cp -f ${TMOE_TOOL_DIR}/gui/novnc ./
     printf "%s\n" "当前已经配置的命令分别为${GREEN}startvnc, startxsdl, startx11vnc, novnc${RESET} & ${RED}stopvnc${RESET}"
-    printf "%s\n" "Congratulations！配置完成，恭喜您解锁新成就: ${BOLD}${YELLOW}vnc大师${RESET}"
+    printf "%s\n" "Congratulations！恭喜您解锁新成就: ${BOLD}${YELLOW}vnc大师${RESET}"
 }
 ################
 set_vnc_passwd() {

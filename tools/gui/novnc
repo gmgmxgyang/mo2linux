@@ -31,7 +31,7 @@ start_tmoe_novnc() {
 	${STARTVNC_COMMAND}
 	set -- "${@}" "--vnc" "${NOVNC_ADDR}"
 	set -- "${@}" "--listen" "${NOVNC_PORT}"
-	set -- "bash ${NOVNC_STARTUP_SCRIPT}" "${@}"
+	set -- "bash" "${NOVNC_STARTUP_SCRIPT}" "${@}"
 	"${@}" &
 }
 ###############

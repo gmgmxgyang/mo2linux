@@ -56,7 +56,7 @@ check_python_novnc() {
 		pip3 install -i https://mirrors.bfsu.edu.cn/pypi/web/simple -vvv numpy
 	fi
 
-	if [ ! -e "${TMOE_LINUX_DIR}/novnc/cutils/launch.sh" ]; then
+	if [ ! -e "${TMOE_LINUX_DIR}/novnc/utils/launch.sh" ]; then
 		[[ ! -e ${TMOE_LINUX_DIR}/novnc ]] || rm -rfv ${TMOE_LINUX_DIR}/novnc
 		if [ -e "/usr/share/novnc/utils/launch.sh" ]; then
 			ln -svf /usr/share/novnc ${TMOE_LINUX_DIR}

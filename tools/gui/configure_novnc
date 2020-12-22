@@ -38,7 +38,7 @@ remove_novnc() {
 	rm -rfv ${NOVNC_MAIN_DIR} /usr/local/bin/novnc
 }
 check_novnc_port() {
-	CURRENT_VAULE=$(grep '^NOVNC_PORT=' $(command -v novnc) | head -n 1 | awk -F '=' '{print $2}')
+	CURRENT_VAULE=$(grep '^NOVNC_PORT=' $(command -v novnc) | head -n 1 | awk -F '=' '{print $2}' | cut -d '"' -f 2)
 }
 #############
 modify_novnc_port() {

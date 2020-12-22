@@ -3535,7 +3535,7 @@ x11vnc_pulse_server() {
 }
 ##################
 check_x11vnc_port() {
-    CURRENT_VAULE=$(grep '^TCP_PORT_FOR_RFB_PROTOCOL=' $(command -v startx11vnc) | head -n 1 | awk -F '=' '{print $2}')
+    CURRENT_VAULE=$(grep '^TCP_PORT_FOR_RFB_PROTOCOL=' $(command -v startx11vnc) | head -n 1 | awk -F '=' '{print $2}' | cut -d '"' -f 2)
 }
 #############
 x11vnc_port() {

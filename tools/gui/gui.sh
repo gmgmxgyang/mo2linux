@@ -4748,8 +4748,8 @@ first_configure_startvnc() {
 ########################
 do_you_want_to_configure_novnc() {
     printf "%s\n" "You can type ${GREEN}novnc${RESET} to ${YELLOW}start${RESET} ${BLUE}novnc+websockify${RESET}"
-    printf '%s\n' '------------------------'
     printf "%s\n" "配置完成后，您可以输${BOLD}${GREEN}novnc${RESET}来${YELLOW}启动${BLUE}novnc${RESET},在浏览器里输入novnc访问地址进行连接。"
+    printf '%s\n' '------------------------'
     printf "%s\n" "Do you want to configure novnc?"
     printf "%s\n" "您是否需要配置${BLUE}novnc${RESET}？"
     RETURN_TO_WHERE='software_center'
@@ -4758,8 +4758,8 @@ do_you_want_to_configure_novnc() {
     cd /usr/local/bin/
     [[ ! -e novnc ]] || rm -f novnc 2>/dev/null
     cp -f ${TMOE_TOOL_DIR}/gui/novnc ./
-    printf "%s\n" "Congratulations！配置完成，恭喜您解锁新成就: ${BOLD}${YELLOW}vnc大师${RESET}"
     printf "%s\n" "当前已经配置的命令分别为${GREEN}startvnc, startxsdl, startx11vnc, novnc${RESET} & ${RED}stopvnc${RESET}"
+    printf "%s\n" "Congratulations！配置完成，恭喜您解锁新成就: ${BOLD}${YELLOW}vnc大师${RESET}"
 }
 ################
 set_vnc_passwd() {

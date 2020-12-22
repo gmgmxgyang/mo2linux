@@ -12,10 +12,15 @@ TMOE_LINUX_DIR='/usr/local/etc/tmoe-linux'
 NOVNC_MAIN_DIR="${TMOE_LINUX_DIR}/novnc"
 NOVNC_UTILS_DIR="${NOVNC_MAIN_DIR}/utils"
 NOVNC_STARTUP_SCRIPT="${NOVNC_UTILS_DIR}/launch.sh"
-STARTVNC_COMMAND='startvnc'
 NOVNC_PORT="36080"
-CURRENT_PORT=$(cat $(command -v ${STARTVNC_COMMAND}) | grep '^TMOE_VNC_DISPLAY_NUMBER=' | head -n 1 | awk -F '=' '{print $2}')
-CURRENT_VNC_PORT=$((${CURRENT_PORT} + 5900))
+if [[ -n $(command -v Xvnc) || -n $(command -v vncsession) ]]; then
+	STARTVNC_COMMAND='startvnc'
+	CURRENT_PORT=$(cat $(command -v ${STARTVNC_COMMAND}) | grep '^TMOE_VNC_DISPLAY_NUMBER=' | head -n 1 | awk -F '=' '{print $2}')
+	CURRENT_VNC_PORT=$((${CURRENT_PORT} + 5900))
+else
+	STARTVNC_COMMAND='startx11vnc'
+	CURRENT_VNC_PORT=$(cat $(command -v ${TCP_PORT_FOR_RFB_PROTOCOL}) | grep '^TMOE_VNC_DISPLAY_NUMBER=' | head -n 1 | awk -F '=' '{print $2}')
+fi
 NOVNC_ADDR="localhost:${CURRENT_VNC_PORT}"
 NOVNC_WEB_ADDR="http://localhost:${NOVNC_PORT}/vnc.html"
 #######################

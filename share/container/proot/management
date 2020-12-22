@@ -320,6 +320,7 @@ install_web_novnc() {
 	#source ${TMOE_SHARE_DIR}/app/novnc
 	NOVNC_PORT=$(grep '^NOVNC_PORT=' ${DEBIAN_CHROOT}/usr/local/bin/novnc | head -n 1 | awk -F '=' '{print $2}' | cut -d '"' -f 2)
 	NOVNC_ADDR="http://localhost:${NOVNC_PORT}/vnc.html"
+	printf "${YELLOW}%s${RESET}\n" "${NOVNC_ADDR}"
 	if [[ $(command -v am) ]]; then
 		am start -a android.intent.action.VIEW -d "${NOVNC_ADDR}" 2>/dev/null
 	elif [[ $(command -v xdg-open) ]]; then

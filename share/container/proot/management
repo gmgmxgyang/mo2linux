@@ -327,7 +327,7 @@ install_web_novnc() {
 	elif [[ -e /mnt/c/WINDOWS/system32/cmd.exe ]]; then
 		/mnt/c/WINDOWS/system32/cmd.exe "start ${NOVNC_ADDR}"
 	fi
-	${TMOE_PREFIX} touch ${DEBIAN_CHROOT}/root/.vnc/startx11vnc
+	${TMOE_PREFIX} touch ${DEBIAN_CHROOT}/root/.vnc/novnc
 	normally_start_gnu_linux_distro
 }
 install_new_tmoe_gnu_linux_distro() {

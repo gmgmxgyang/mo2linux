@@ -3,6 +3,7 @@
 tmoe_qemu_main() {
 	case "$1" in
 	-m | * | -x64qemu)
+		check_qemu_installation
 		tmoe_qemu_main_menu
 		;;
 	esac
@@ -50,7 +51,6 @@ tmoe_qemu_main_menu() {
 start_tmoe_qemu_manager() {
 	RETURN_TO_WHERE='start_tmoe_qemu_manager'
 	RETURN_TO_MENU='start_tmoe_qemu_manager'
-	check_qemu_installation
 	TMOE_VIRTUALIZATION=$(
 		whiptail --title "输startqemu启动${QEMU_VM_NAME}" --menu "${QEMU_VM_NAME} virtual machine tmoe manager" 0 50 0 \
 			"1" "🍹 Start 启动${QEMU_VM_NAME}" \

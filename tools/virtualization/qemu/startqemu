@@ -97,7 +97,7 @@ CPUID FLAGS示例02:'ss=on,vmx=on,pdcm=on,hypervisor=on,tsc-adjust=on,clflushopt
 EOF
 #02-2.CPU变量值修改区域
 CPU_MODEL='max'
-CPU_ID_FLAGS='hle=off,rtm=off,acpi=off'
+CPU_ID_FLAGS='hle=off,rtm=off'
 #CPU_MODEL为CPU型号，例如'Icelake-Client'和'Skylake-Client-IBRS'。默认为'max',即启用加速器支持的所有可用功能。
 #CPU_ID_FLAGS为cpu的属性和功能，可以留空。默认为'hle=off,rtm=off'
 ###########

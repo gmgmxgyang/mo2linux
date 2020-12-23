@@ -468,7 +468,7 @@ run_tmoe_qemu_i440fx_machine() {
     *) MACHINE_ATTACH='' ;;
     esac
     #本工具不支持给i440fx(1996)配置uefi，请将机器类型修改为q35。
-    set -- "${@}" "-machine" "q35,accel=${MACHINE_ACCEL},usb=off,vmport=off,dump-guest-core=off${MACHINE_ATTACH}"
+    set -- "${@}" "-machine" "pc,accel=${MACHINE_ACCEL},usb=off,vmport=off,dump-guest-core=off${MACHINE_ATTACH}"
     #MACHINE_ATTACH=',memory-backend=pc.ram' #set -- "${@}" "-object" "memory-backend-ram,id=pc.ram,size=1073741824"
     set -- "${@}" "-global" "PIIX4_PM.disable_s3=1"
     set -- "${@}" "-global" "PIIX4_PM.disable_s4=1"

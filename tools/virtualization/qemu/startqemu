@@ -674,16 +674,16 @@ run_tmoe_qemu_i440fx_machine() {
             ;;
         DISABLED) ;; #禁用声卡
         'AC97' | 'ES1370')
-            set -- "${@}" "-device ${SOUND_CARD},id=sound0,bus=pci.0,addr=0x4"
-            : <<\EOF
-            若需要双声卡，则取消注释。
-            set -- "${@}" "-device" "ich9-intel-hda,id=sound1,bus=pci.0,addr=0xb"
-            set -- "${@}" "-device" "hda-duplex,id=sound1-codec0,bus=sound1.0,cad=0"
-EOF
+            set -- "${@}" "-device" "${SOUND_CARD},id=sound0,bus=pci.0,addr=0x4"
             ;;
         esac
         ;;
     esac
+    : <<\EOF
+            若需要双声卡，则取消注释。
+            set -- "${@}" "-device" "ich9-intel-hda,id=sound1,bus=pci.0,addr=0xb"
+            set -- "${@}" "-device" "hda-duplex,id=sound1-codec0,bus=sound1.0,cad=0"
+EOF
 
     case ${CONNECTION_TYPE} in
     x11* | wayland*)
@@ -1087,7 +1087,7 @@ EOF
             ;;
         DISABLED) ;; #禁用声卡
         'AC97' | 'ES1370')
-            set -- "${@}" "-device ${SOUND_CARD},id=sound0,bus=pci.10,addr=0x2"
+            set -- "${@}" "-device" "${SOUND_CARD},id=sound0,bus=pci.10,addr=0x2"
             ;;
         esac
         ;;

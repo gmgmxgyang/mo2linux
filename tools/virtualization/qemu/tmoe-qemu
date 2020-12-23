@@ -212,7 +212,7 @@ choose_qemu_connection_type() {
 tmoe_qemu_vnc_menu() {
 	TMOE_OPTION=$(whiptail --title "CONFIGURE VNC" --menu "You can modify the VNC configuration here" 0 50 0 \
 		"1" "port端口" \
-		"2" "LAN/localhost(局域网访问)" \
+		"2" "localhost/LAN(本机/局域网访问)" \
 		"0" "🌚 back 返回" \
 		3>&1 1>&2 2>&3)
 	##############🧺
@@ -225,7 +225,7 @@ tmoe_qemu_vnc_menu() {
 ###################
 tmoe_qemu_vnc_localhost() {
 	CURRENT_VALUE=$(grep '^VNC_LOCALHOST=' ${QEMU_FILE} | head -n 1 | cut -d '=' -f 2)
-	if (whiptail --title "VNC LAN access" --yes-button 'true' --no-button 'false' --yesno "是否仅允许本机访问?默认为true,当前为${CURRENT_VALUE}\nDo you only allow localhost to access vnc?" 9 50); then
+	if (whiptail --title "localhost vnc" --yes-button 'true' --no-button 'false' --yesno "是否仅允许本机访问?默认为true,当前为${CURRENT_VALUE}\nDo you only allow localhost to access vnc?" 9 50); then
 		VNC_LOCALHOST='true'
 	else
 		VNC_LOCALHOST='false'

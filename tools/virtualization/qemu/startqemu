@@ -63,6 +63,9 @@ MACHINE_TYPE='q35'
 QEMU_NAME='tmoe-qemu'
 #自定义qemu名称
 
+RTC_BASE=localtime
+#默认localtime,若guest为linux,则可修改为utc
+
 #01-3.UEFI开关
 UEFI_ENABLED='false'
 
@@ -523,7 +526,7 @@ run_tmoe_qemu_i440fx_machine() {
     set -- "${@}" "-monitor" "stdio"
     set -- "${@}" "-no-user-config"
     set -- "${@}" "-nodefaults"
-    set -- "${@}" "-rtc" "base=utc,driftfix=slew"
+    set -- "${@}" "-rtc" "base=${RTC_BASE},driftfix=slew"
     set -- "${@}" "-no-hpet"
     set -- "${@}" "-name" "guest=${QEMU_NAME},debug-threads=on"
     ############
@@ -957,7 +960,7 @@ run_tmoe_qemu_command() {
     set -- "${@}" "-monitor" "stdio"
     set -- "${@}" "-no-user-config"
     set -- "${@}" "-nodefaults"
-    set -- "${@}" "-rtc" "base=utc,driftfix=slew"
+    set -- "${@}" "-rtc" "base=${RTC_BASE},driftfix=slew"
     set -- "${@}" "-no-hpet"
     set -- "${@}" "-name" "guest=${QEMU_NAME},debug-threads=on"
     ############

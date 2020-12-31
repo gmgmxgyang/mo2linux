@@ -396,7 +396,6 @@ tmoe_electron_music_app() {
         "4" "cocomusic(第三方QQ音乐)" \
         "5" "iease-music(界面华丽的云音乐客户端)" \
         "6" "petal(第三方豆瓣FM客户端)" \
-        "7" "chord(支持虾米、云音乐、qq音乐多平台)" \
         "0" "🌚 Return to previous menu 返回上级菜单" \
         3>&1 1>&2 2>&3)
     ##############
@@ -408,9 +407,10 @@ tmoe_electron_music_app() {
     4) install_coco_music ;;
     5) install_iease_music ;;
     6) install_electron_petal ;;
-    7) install_electron_chord ;;
     esac
     ##########################
+    #      "7" "chord(支持虾米、云音乐、qq音乐多平台)" \
+    #    7) install_electron_chord ;;
     #"7" "feeluown(x64,支持网易云、虾米)" \
     case ${DEBIAN_INSTALLATION_MENU} in
     00) ;;

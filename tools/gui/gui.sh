@@ -1234,11 +1234,16 @@ git_clone_kali_themes_common() {
 }
 ##########
 do_you_want_to_install_electron_apps() {
-    if [[ ! -n $(command -v electron) ]]; then
-        if (whiptail --title "Electron apps" --yes-button "YES" --no-button "NO" --yesno '请问您是否需要安装开发者推荐的electron软件包合集?\n该合集包含electron-netease-cloud-music,bilibili-web,listen1,\nlx-music-desktop,cocomusic,petal和zy-player\n您可以选择NO跳过,之后可以单独安装electron app.' 0 0); then
-            AUTO_INSTALL_ELECTRON_APPS='true'
+    case ${LINUX_DISTRO} in
+    alpine) ;;
+    *)
+        if [[ ! -n $(command -v electron) ]]; then
+            if (whiptail --title "Electron apps" --yes-button "YES" --no-button "NO" --yesno '请问您是否需要安装开发者推荐的electron软件包合集?\n该合集包含electron-netease-cloud-music,bilibili-web,listen1,\nlx-music-desktop,cocomusic,petal和zy-player\n您可以选择NO跳过,之后可以单独安装electron app.' 0 0); then
+                AUTO_INSTALL_ELECTRON_APPS='true'
+            fi
         fi
-    fi
+        ;;
+    esac
 }
 #########
 do_you_want_to_install_fcitx4() {

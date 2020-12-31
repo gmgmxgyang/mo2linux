@@ -9,6 +9,7 @@ electron_apps_main_menu() {
         printf "%s\n" "您可以通过本脚本${PURPLE}手动检测${RESET}更新。"
         printf "%s\n" "要求:${YELLOW}gnu libc${RESET}, 支持${BLUE}arch/manjaro,debian/ubuntu,fedora,opensuse,void(非musl版)等${RESET}"
         printf "%s\n" "暂不支持alpine(musl libc)"
+        press_enter_to_continue
     fi
     cd ${APPS_LNK_DIR}
     #16 50 7

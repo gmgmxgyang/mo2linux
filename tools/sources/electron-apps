@@ -73,7 +73,7 @@ tmoe_electron_install_or_remove_02() {
 }
 ################
 check_tmoe_electron_app_version() {
-    THE_LATEST_DEB_FILE=$(curl -Lv "${GIT_AK2}/${DEPENDENCY_01}_build/raw/build/version.txt")
+    THE_LATEST_DEB_FILE=$(curl -L "${GIT_AK2}/${DEPENDENCY_01}_build/raw/build/version.txt")
 }
 ###############
 download_tmoe_electron_app() {

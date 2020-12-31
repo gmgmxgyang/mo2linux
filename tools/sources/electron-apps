@@ -4,7 +4,7 @@ electron_apps_main_menu() {
     RETURN_TO_WHERE='electron_apps_main_menu'
     RETURN_TO_MENU='electron_apps_main_menu'
     DEPENDENCY_02=""
-    if [ ! $(command -v electron) ]; then
+    if [ ! -e /opt/electron/electron ]; then
         printf "%s\n" "本electron仓库由2moe进行维护，感谢各个项目的原开发者。"
         printf "%s\n" "您可以通过本脚本${PURPLE}手动检测${RESET}更新。"
         printf "%s\n" "要求:${YELLOW}gnu libc${RESET}, 支持${BLUE}arch/manjaro,debian/ubuntu,fedora,opensuse,void(非musl版)等${RESET}"

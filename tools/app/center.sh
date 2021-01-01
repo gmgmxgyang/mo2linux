@@ -219,6 +219,7 @@ Section: net
 Priority: optional
 Description: 微信
 EOF
+    do_you_want_to_continue
     case ${TMOE_PROOT} in
     false) ;;
     true | no)

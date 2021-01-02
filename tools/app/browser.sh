@@ -186,7 +186,7 @@ install_firefox_esr_browser() {
             zh_CN.UTF-8) DEPENDENCY_02="ffmpeg firefox-esr-locale-zh-hans" ;;
             zh_*.UTF-8) DEPENDENCY_02="ffmpeg firefox-esr-locale-zh-hant" ;;
             ja_JP.UTF-8) DEPENDENCY_02="ffmpeg firefox-esr-locale-ja" ;;
-            en_*.UTF-8) DEPENDENCY_02="ffmpeg firefox-esr-locale-en" ;;
+            en_*.UTF-8) DEPENDENCY_02="ffmpeg ^firefox-esr-locale-en" ;;
             *) DEPENDENCY_02="ffmpeg ^firefox-esr-locale-" ;;
             esac
             #libavcodec58
@@ -244,7 +244,7 @@ install_firefox_browser() {
             zh_CN.UTF-8) DEPENDENCY_02="ffmpeg firefox-locale-zh-hans" ;;
             zh_*.UTF-8) DEPENDENCY_02="ffmpeg firefox-locale-zh-hant" ;;
             ja_JP.UTF-8) DEPENDENCY_02="ffmpeg firefox-locale-ja" ;;
-            en_*.UTF-8) DEPENDENCY_02="ffmpeg firefox-locale-en" ;;
+            en_*.UTF-8) DEPENDENCY_02="ffmpeg ^firefox-locale-en" ;;
             *) DEPENDENCY_02="ffmpeg ^firefox-locale-" ;;
             esac
             ;;

@@ -161,7 +161,7 @@ tmoe_social_network_service() {
         whiptail --title "SNS" --menu \
             "Which software do you want to install?" 0 50 0 \
             "1" "LinuxQQ(腾讯开发的IM软件,从心出发,趣无止境)" \
-            "2" "Wechat(arm64)" \
+            "2" "Wechat(arm64,x64)" \
             "3" "Thunderbird(雷鸟是Mozilla开发的email客户端)" \
             "4" "Kmail(KDE邮件客户端)" \
             "5" "Evolution(GNOME邮件客户端)" \
@@ -209,7 +209,7 @@ install_wechat_arm64() {
     cat <<-EOF
 Package: com.qq.weixin
 Version: 2.0.0-2
-Architecture: arm64
+Architecture: arm64,amd64
 Maintainer: arminchen
 Installed-Size: 118814
 Depends: libgtk2.0-0, libnotify4, libnss3, libxss1, libxtst6, xdg-utils, libgconf-2-4 | libgconf2-4, kde-cli-tools | kde-runtime | trash-cli | libglib2.0-bin | gvfs-bin
@@ -228,23 +228,34 @@ EOF
         tmoe_social_network_service
         ;;
     esac
+
+    case ${LINUX_DISTRO} in
+    debian) ;;
+    arch)
+        printf "%s\n" "Sorry,自动安装wechat的功能仅支持deb系发行版。"
+        printf "%s\n" "您可以用普通用户身份来手动执行${GREEN}yay -S ${BLUE}wechat-uos${RESET}"
+        non_debian_function
+        ;;
+    *) non_debian_function ;;
+    esac
+    DEPENDENCY_01='com.qq.weixin'
     case ${ARCH_TYPE} in
-    arm64) ;;
+    arm64) download_tmoe_electron_app ;;
+    amd64)
+        DEPENDENCY_01='wechat-electron'
+        download_tmoe_electron_app
+        DEPENDENCY_01='com.qq.weixin'
+        cd /opt/${DEPENDENCY_01}
+        pwd
+        cp -vf .${APPS_LNK_DIR}/${DEPENDENCY_01}.desktop ${APPS_LNK_DIR}
+        ;;
     *)
-        printf "%s\n" "Sorry,暂仅适配arm64架构。如需安装其他架构的版本，请前往uos或其他商店在线安装。"
+        printf "%s\n" "Sorry,暂仅支持arm64和amd64架构。如需安装其他架构的版本，请前往uos商店或其他商店在线安装。"
         press_enter_to_return
         tmoe_social_network_service
         ;;
     esac
-
-    case ${LINUX_DISTRO} in
-    debian) ;;
-    *) non_debian_function ;;
-    esac
-
-    DEPENDENCY_01='com.qq.weixin'
-    download_tmoe_electron_app
-    cp -rfv /opt/com.qq.weixin/usr/lib/license /usr/lib
+    cp -rfv /opt/${DEPENDENCY_01}/usr/lib/license /usr/lib
     unset DEPENDENCY_01
     if [ ! $(command -v bwrap) ]; then
         DEPENDENCY_01='bubblewrap'

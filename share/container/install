@@ -1474,6 +1474,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	       emerge --sync
 		   emerge emerge-webrsync
 		fi 
+		mv -f .profile.bak .profile 2>/dev/null
 	    emerge-webrsync
 	    emerge --config sys-libs/timezone-data 2>/dev/null
 	    eselect profile list
@@ -1488,7 +1489,6 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	    emerge eix 2>/dev/null
 	    printf '%s\n' '检测到您当前的系统为Gentoo GNU/Linux,将不会为您继续配置任何优化步骤！'
 	    #rm -f vnc* zsh* .profile
-	    mv -f .profile.bak .profile 2>/dev/null
 	    chmod +x /usr/local/bin/neofetch
 	    neofetch
 	}

@@ -838,11 +838,10 @@ install_gentoo_linux_distro() {
 		TTIME=$(curl -L "${TUNA_LXC_IMAGE_MIRROR_REPO}/" | grep date | sed -E 's@<a (href)@\n\1@g' | awk -F 'href=' '{print $2}' | cut -d '"' -f 2 | egrep -v 'systemd|DIGESTS|CONTENTS.gz' | grep 'tar' | tail -n 1)
 		bash -c "$(sed -n p ${TMOE_SHARE_DIR}/container/install |
 			sed "s@\${TUNA_LXC_IMAGE_MIRROR_REPO}.*rootfs.tar.xz@${TUNA_LXC_IMAGE_MIRROR_REPO}/${TTIME}@g" |
-			sed 's/debian system/manjaro system/g' |
-			sed 's:debian-sid:manjaro-stable:g' |
-			sed 's:debian/sid:manjaro/stable:g' |
-			sed 's:rootfs.tar.xz:rootfs.tar.gz:g' |
-			sed 's:Debian GNU/Linux:Manjaro GNU/Linux:g')"
+			sed 's/debian system/Gentoo system/g' |
+			sed 's:debian-sid:gentoo-current:g' |
+			sed 's:debian/sid:gentoo/current:g' |
+			sed 's:Debian GNU/Linux:Gentoo GNU/Linux:g')"
 		;;
 	*)
 		creat_container_edition_txt

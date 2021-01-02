@@ -1458,6 +1458,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	       printf '%s\n%s\n%s\n%s\n%s\n%s\n%s\n' 'ACCEPT_LICENSE="*"' 'MAKEOPTS="-j8"' 'PORTDIR="/usr/portage"' 'DISTDIR="${PORTDIR}/distfiles"' 'PKGDIR="${PORTDIR}/packages"' 'EMERGE_DEFAULT_OPTS="--ask --verbose=y --keep-going --with-bdeps=y --load-average"' 'FEATURES="${FEATURES} -userpriv -usersandbox -sandbox"' >> /etc/portage/make.conf
 	   ;;
 	   esac
+	   cat /etc/portage/make.conf
 	    source /etc/portage/make.conf 2>/dev/null
 	    mkdir -pv /etc/portage/repos.conf/
 	    cat >/etc/portage/repos.conf/gentoo.conf <<-'EndofgentooConf'

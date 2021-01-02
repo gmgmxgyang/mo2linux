@@ -205,7 +205,8 @@ tmoe_social_network_service() {
 install_wechat_arm64() {
     printf "%s\n" "若安装失败，则请前往uos商店在线安装。"
     printf "%s\n" "注：当前版本v2.0.0-2不支持proot容器。"
-    printf "%s\n" "如需卸载，请手动执行${RED}rm -rv ${BLUE}/opt/com.qq.weixin ${APPS_LNK_DIR}/com.qq.weixin.desktop /usr/lib/license/libuosdevicea.so${RESET}"
+    printf "%s\n" "执行${GREEN}wechat${RESET}命令启动com.qq.weixin"
+    printf "%s\n" "如需卸载，请手动执行${RED}rm -rv ${BLUE}/opt/com.qq.weixin ${APPS_LNK_DIR}/com.qq.weixin.desktop /usr/lib/license/libuosdevicea.so /usr/local/bin/wechat${RESET}"
     cat <<-EOF
 Package: com.qq.weixin
 Version: 2.0.0-2
@@ -256,6 +257,7 @@ EOF
         ;;
     esac
     cp -rfv /opt/${DEPENDENCY_01}/usr/lib/license /usr/lib
+    ln -svf /opt/${DEPENDENCY_01}/usr/bin/${DEPENDENCY_01} /usr/local/bin/wechat
     unset DEPENDENCY_01
     if [ ! $(command -v bwrap) ]; then
         DEPENDENCY_01='bubblewrap'

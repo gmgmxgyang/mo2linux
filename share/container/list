@@ -825,7 +825,7 @@ install_gentoo_linux_distro() {
 	TMOE_LINUX_CONTAINER_DISTRO='gentoo'
 	case "${ARCH_TYPE}" in
 	'arm64')
-		printf "%s\n" "检测到您当前使用的是arm64架构，将临时识别为armhf"
+		#printf "%s\n" "检测到您当前使用的是arm64架构，将临时识别为armhf"
 		#NEW_TMOE_ARCH='armhf'
 		#TMOE_QEMU_ARCH=""
 		#ARCH_TYPE='armhf'

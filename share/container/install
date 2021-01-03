@@ -1390,7 +1390,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	   apt install -y ^language-pack-${TMOE_LANG_QUATER} 2>/dev/null
 	fi
 	case ${TMOE_LANG} in
-	zh*UTF-8)
+	zh_*UTF-8)
 	printf "%s\n" "您已成功安装Container,之后可以输${YELLOW}debian${RESET}来进入debian system."
 	printf "%s\n" "Congratulations on your successful installation of GNU/Linux container. After that, you can type debian to enter the container."
 	printf '%s\n' '正在执行优化步骤，请勿退出!'
@@ -1744,7 +1744,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 		cp -a /etc/yum.repos.d/epel.repo /etc/yum.repos.d/epel.repo.backup
 		cp -a /etc/yum.repos.d/epel-testing.repo /etc/yum.repos.d/epel-testing.repo.backup
 		case ${TMOE_LANG} in
-		zh*UTF-8)
+		zh_*UTF-8)
 		sed -e 's!^metalink=!#metalink=!g' \
 			-e 's!^#baseurl=!baseurl=!g' \
 			-e 's!//download\.fedoraproject\.org/pub!//mirrors.bfsu.edu.cn!g' \
@@ -1784,7 +1784,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	fi
 	note_of_non_debian() {
 		case ${TMOE_LANG} in
-		zh*UTF-8) printf "%s\n" "您可以输${GREEN}debian-i${RESET}或${YELLOW}tmoe t${RESET}来打开软件安装工具" ;;
+		zh_*UTF-8) printf "%s\n" "您可以输${GREEN}debian-i${RESET}或${YELLOW}tmoe t${RESET}来打开软件安装工具" ;;
 		*) ;;
 		esac
 		printf "%s\n" "You can type ${GREEN}debian-i${RESET} or ${YELLOW}tmoe t${RESET} to start ${BLUE}tmoe-linux tool.${RESET}"

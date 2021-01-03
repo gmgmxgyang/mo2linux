@@ -92,8 +92,8 @@ do_you_want_to_configure_tmoe_zsh() {
 }
 ##################
 auto_configure_tmoe_tools() {
-	[[ ${CONFIGURE_ZSH} != true ]] || configure_tmoe_zsh
 	[[ ${CONFIGURE_FACE_ICON} != true ]] || auto_check_face_icon
+	[[ ${CONFIGURE_ZSH} != true ]] || configure_tmoe_zsh
 	[[ ${DELETE_ZSH_SCRIPT} != true ]] || rm -fv ~/zsh.sh ~/zsh-i.sh
 }
 ################

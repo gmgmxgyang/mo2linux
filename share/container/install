@@ -1160,7 +1160,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	EndOfFile
 	[[ ! -s /tmp/resolv.conf ]] || cp -f /tmp/resolv.conf /etc
 	cat /etc/resolv.conf
-	printf ""
+	printf "%s\n" ""
 	######################
 	###################
 	arch_linux_mirror_list() {

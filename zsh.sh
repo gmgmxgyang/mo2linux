@@ -75,7 +75,15 @@ auto_configure_tmoe_tools() {
 }
 ################
 auto_configure_tmoe_tool_02() {
-	[[ ${CONFIGURE_TMOE_LINUX_TOOL} != true ]] || git_clone_tmoe_linux
+	if [[ ${CONFIGURE_TMOE_LINUX_TOOL} = true ]]; then
+		git_clone_tmoe_linux
+	else
+		for i in zsh bash ash; do
+			if [ $(command -v ${i}) ]; then
+				exec ${i} -l
+			fi
+		done
+	fi
 }
 auto_check_face_icon() {
 	FACE_ICON_FILE_NAME=$(ls -t ${FACE_ICON_DIR} | egrep 'jpg|png' | head -n 1)

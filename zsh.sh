@@ -36,7 +36,7 @@ do_you_want_to_configure_tmoe_zsh() {
 	FACE_ICON_DIR="/storage/emulated/0/Android/data/com.tencent.mobileqq/Tencent/MobileQQ/head/_SSOhd"
 	case ${LANG} in
 	zh_*UTF-8)
-		if (whiptail --title "zsh" --yes-button "YES" --no-button "NO" --yesno '是否需要配置zsh?\nDo you want to configure zsh?' 0 0); then
+		if (whiptail --title "zsh" --yes-button "YES" --no-button "NO" --yesno '是否需要配置zsh?\nDo you need to configure zsh?' 0 0); then
 			CONFIGURE_ZSH=true
 			do_you_want_to_delete_the_zsh_script_file
 		fi

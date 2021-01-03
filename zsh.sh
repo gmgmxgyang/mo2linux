@@ -81,6 +81,7 @@ auto_configure_tmoe_tool_02() {
 		for i in zsh bash ash; do
 			if [ $(command -v ${i}) ]; then
 				exec ${i} -l
+				break
 			fi
 		done
 	fi

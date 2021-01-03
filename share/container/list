@@ -958,6 +958,7 @@ install_manjaro_linux_distro() {
 		if [ ! -e "${MANJARO_ROOTFS_FILE_NAME}" ]; then
 			TEMP_DIR=".MANJARO_AMD64-TEMP_FOLDER"
 			[[ ! -e ${TEMP_DIR} ]] || rm -rfv ${TEMP_DIR}
+			pwd
 			git clone --depth=1 ${AK2_GIT_URL}/${DISTRO_NAME}-stable_${ARCH_TYPE}.git ${TEMP_DIR}
 			cd ${TEMP_DIR}
 			cat .container_linux_* >${MANJARO_ROOTFS_FILE_NAME}

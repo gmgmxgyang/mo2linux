@@ -47,7 +47,7 @@ do_you_want_to_configure_tmoe_zsh() {
 				CONFIGURE_FACE_ICON=false
 			fi
 		fi
-		if (whiptail --title "TMOE-LINUX-TOOL" --yes-button "YES" --no-button "NO" --yesno '是否需要启动tmoe-linux tool?\nDo you want to start tmoe-linux tool?' 0 0); then
+		if (whiptail --title "TMOE-LINUX-TOOL" --yes-button "YES" --no-button "NO" --yesno '是否需要启动tmoe-linux tool?\nDo you need to start tmoe-linux tool?' 0 0); then
 			CONFIGURE_TMOE_LINUX_TOOL=true
 		fi
 		;;

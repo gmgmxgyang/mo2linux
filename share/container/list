@@ -367,7 +367,7 @@ install_amazon_linux_distro() {
 	esac
 }
 install_oracle_linux_distro() {
-	DISTRO_NAME='orcale'
+	DISTRO_NAME='oracle'
 	DISTRO_CODE=8
 	TMOE_LINUX_CONTAINER_DISTRO="${DISTRO_NAME}-${DISTRO_CODE}"
 	case "${ARCH_TYPE}" in

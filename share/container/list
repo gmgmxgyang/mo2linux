@@ -213,12 +213,12 @@ install_alpha_containers() {
 				"2" "ラズベリーパイ OS buster" \
 				"3" "Gentoo(arm64,armhf,x86,x64)" \
 				"4" "DevuanはDebian から派生したLinuxディストリビューションである" \
-				"5" "Intel clear linux(x64)" \
+				"5" "Puppy linux(x64)" \
 				"6" "Huawei euler OS(arm64,x64)" \
 				"7" "Amazon(arm64,x64)" \
 				"8" "Orcale(arm64,x64)" \
 				"9" "VMware photon OS(arm64,x64,optimized for cloud-native apps)" \
-				"10" "Puppy linux(x64)" \
+				"10" "Intel clear linux(x64)" \
 				"11" "Slackware(armhf,x64,created by Patrick Volkerding in 1993" \
 				"12" "SteamOS(x64,Valve steam os,based on Debian GNU/Linux)" \
 				"0" "🌚 戻る" \
@@ -232,12 +232,12 @@ install_alpha_containers() {
 				"2" "Raspberry Pi OS 樹莓派 buster" \
 				"3" "Gentoo(arm64,armhf,x86,x64,追求极限配置和极高自由)" \
 				"4" "Devuan(不使用systemd,基于debian)" \
-				"5" "Intel clear linux(x64,专注于服务器的性能优化,应用于云环境)" \
+				"5" "Puppy linux(x64)" \
 				"6" "Huawei euler OS(arm64,x64,华为欧拉,服务器系统)" \
 				"7" "Amazon(arm64,x64,亚马逊云服务器系统)" \
 				"8" "Orcale(arm64,x64,甲骨文云服务器系统)" \
 				"9" "VMware photon OS(arm64,x64,optimized for cloud-native apps)" \
-				"10" "Puppy linux(x64)" \
+				"10" "Intel clear linux(x64,专注于服务器的性能优化,应用于云环境)" \
 				"11" "Slackware(armhf,x64,created by Patrick Volkerding in 1993" \
 				"12" "SteamOS(x64,蒸汽平台开发商Valve发行的游戏系统,基于debian)" \
 				"0" "🌚 返回上级菜单" \
@@ -251,12 +251,12 @@ install_alpha_containers() {
 				"2" "Raspberry Pi OS buster" \
 				"3" "Gentoo(arm64,armhf,x86,x64)" \
 				"4" "Devuan is a fork of Debian that uses sysvinit or OpenRC instead of systemd" \
-				"5" "Intel clear linux(x64)" \
+				"5" "Puppy linux(arm64,x64)" \
 				"6" "Huawei euler OS(arm64,x64)" \
 				"7" "Amazon(arm64,x64)" \
 				"8" "Orcale(arm64,x64)" \
 				"9" "VMware photon OS(arm64,x64,optimized for cloud-native apps)" \
-				"10" "Puppy linux(arm64,x64)" \
+				"10" "Intel clear linux(x64)" \
 				"11" "Slackware(armhf,x64,created by Patrick Volkerding in 1993" \
 				"12" "SteamOS(x64,Valve steam os,based on Debian GNU/Linux)" \
 				"0" "🌚 Return to previous menu" \

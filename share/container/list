@@ -216,7 +216,7 @@ install_alpha_containers() {
 				"5" "Puppy linux(x64)" \
 				"6" "Huawei euler OS(arm64,x64)" \
 				"7" "Amazon(arm64,x64)" \
-				"8" "Orcale(arm64,x64)" \
+				"8" "Oracle(arm64,x64)" \
 				"9" "VMware photon OS(arm64,x64,optimized for cloud-native apps)" \
 				"10" "Intel clear linux(x64)" \
 				"11" "Slackware(armhf,x64,created by Patrick Volkerding in 1993" \
@@ -235,7 +235,7 @@ install_alpha_containers() {
 				"5" "Puppy linux(x64)" \
 				"6" "Huawei euler OS(arm64,x64,华为欧拉,服务器系统)" \
 				"7" "Amazon(arm64,x64,亚马逊云服务器系统)" \
-				"8" "Orcale(arm64,x64,甲骨文云服务器系统)" \
+				"8" "Oracle(arm64,x64,甲骨文云服务器系统)" \
 				"9" "VMware photon OS(arm64,x64,optimized for cloud-native apps)" \
 				"10" "Intel clear linux(x64,专注于服务器的性能优化,应用于云环境)" \
 				"11" "Slackware(armhf,x64,created by Patrick Volkerding in 1993" \
@@ -254,7 +254,7 @@ install_alpha_containers() {
 				"5" "Puppy linux(arm64,x64)" \
 				"6" "Huawei euler OS(arm64,x64)" \
 				"7" "Amazon(arm64,x64)" \
-				"8" "Orcale(arm64,x64)" \
+				"8" "Oracle(arm64,x64)" \
 				"9" "VMware photon OS(arm64,x64,optimized for cloud-native apps)" \
 				"10" "Intel clear linux(x64)" \
 				"11" "Slackware(armhf,x64,created by Patrick Volkerding in 1993" \

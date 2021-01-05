@@ -1182,7 +1182,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 		for i in zsh bash sh su;do
 			[[ ! -n $(command -v ${i}) ]] || exec ${i}
 			exit 0 
-		fi
+		done
 	fi
 	######################
 	###################

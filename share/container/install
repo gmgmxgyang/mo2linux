@@ -249,14 +249,11 @@ cat <<-EOF
 			-------------------
 			You can type ${GREEN}startvnc${RESET} to start ${BLUE}tight/tigervnc server${RESET},type ${RED}stopvnc${RESET} to stop it.
 			-------------------
-
 	${BOLD}小提示06${RESET}:
-
 			在${BOLD}${DEBIAN_FOLDER}${RESET}容器内输${GREEN}tmoe t${RESET}启动软件安装及远程桌面配置${BLUE}管理工具${RESET}。
 			You can type ${GREEN}tmoe t${RESET} to start ${BLUE}tmoe-linux tool.${RESET}
 			-------------------
 	${BOLD}小提示07${RESET}:
-
 			在宿主机的终端里输${GREEN}debian${RESET}单独启动${BLUE}${BOLD}${DEBIAN_FOLDER}${RESET}容器${RESET}，此时将不会自动启动远程桌面服务。
 			You can type ${GREEN}debian${RESET} to start ${BLUE}${BOLD}${DEBIAN_FOLDER}${RESET} container.${RESET}
 			在v1.10beta及其之后的版本中，${GREEN}debian${RESET}命令实际上调用了${GREEN}tmoe${RESET}。
@@ -908,8 +905,8 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 		ff02::2 ip6-allrouters
 	EOF
 	fi
-	[[ -e /etc/hostname ]] || cat /etc/hostname
-	[[ -e /etc/hosts ]] || cat /etc/hosts
+	[[ ! -e /etc/hostname ]] || cat /etc/hostname
+	[[ ! -e /etc/hosts ]] || cat /etc/hosts
 	if [[ "${TMOE_CHROOT}" = 'true' && $(command -v groupadd) ]]; then
 		groupadd aid_system -g 1000 || groupadd aid_system -g 1074
 		groupadd aid_radio -g 1001

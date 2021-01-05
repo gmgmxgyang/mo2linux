@@ -395,7 +395,7 @@ git_clone_linux_distro_rootfs_01() {
 		TEMP_DIR=".${TMOE_LINUX_CONTAINER_DISTRO}-TEMP_FOLDER"
 		[[ ! -e ${TEMP_DIR} ]] || rm -rfv ${TEMP_DIR}
 		pwd
-		git clone --depth=1 ${AK2_GIT_URL}/${TMOE_LINUX_CONTAINER_DISTRO}.git ${TEMP_DIR}
+		git clone --depth=1 ${AK2_GIT_URL}/${TMOE_LINUX_CONTAINER_DISTRO}_${ARCH_TYPE}.git ${TEMP_DIR}
 		cd ${TEMP_DIR}
 		cat .container_linux_* >${ROOTFS_FILE_NAME}
 		mv -fv ${ROOTFS_FILE_NAME} ../

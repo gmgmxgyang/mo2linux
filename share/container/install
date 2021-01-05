@@ -1302,7 +1302,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 		fi
 		;;
 	esac
-	if egrep -q 'puppy_linux|clear-linux-os|EulerOS|amazon_linux|oracle_linux' /etc/os-release 2>/dev/null;then
+	if egrep -q 'puppy_linux|clear-linux-os|EulerOS|amazon_linux|Oracle Linux|VMware Photon OS|SteamOS GNU' /etc/os-release 2>/dev/null;then
 		cd ~
 		rm -f ~/.profile vnc-autostartup zsh.sh zsh-i.sh 2>/dev/null
 		[[ ! -e ~/.profile.bak ]] || mv -f ~/.profile.bak ~/.profile 2>/dev/null

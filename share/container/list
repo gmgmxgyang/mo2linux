@@ -278,12 +278,12 @@ install_alpha_containers() {
 	2) install_raspios_linux_distro ;;
 	3) install_gentoo_linux_distro ;;
 	4) install_devuan_linux_distro ;;
-	5) install_clear_linux_distro ;;
+	5) install_puppy_linux_distro ;;
 	6) install_euler_linux_distro ;;
 	7) install_amazon_linux_distro ;;
 	8) install_oracle_linux_distro ;;
 	9) install_photon_linux_distro ;;
-	10) install_puppy_linux_distro ;;
+	10) install_clear_linux_distro ;;
 	11) install_slackware_linux_distro ;;
 	12) install_steam_linux_distro ;;
 	esac

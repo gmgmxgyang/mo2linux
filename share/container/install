@@ -1219,6 +1219,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 					#Server = https://mirror.archlinuxarm.org/$arch/$repo
 					#Server = https://mirrors.bfsu.edu.cn/archlinuxarm/$arch/$repo
 					#Server = https://mirrors.huaweicloud.com/manjaro/arm-stable/$repo/$arch
+					## Manjaro linux arm
 					## Country : Netherlands
 					#Server = https://manjaro.mirrors.lavatech.top/arm-stable/$repo/$arch
 					## Country : France

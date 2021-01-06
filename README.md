@@ -122,12 +122,16 @@ _**If you do not live in China, please enter**_
     bash -c "$(curl -L gitee.com/mo2/linux/raw/2/2)"
 ```
 
+不兼容 debian 8 jessie 及更低版本
+
 #### 4.Fedora/CentOS Stream
 
 ```shell
     sudo dnf install -y curl || sudo yum install -y curl
     bash -c "$(curl -L https://gitee.com/mo2/linux/raw/2/2)"
 ```
+
+不兼容 CentOS 7/RHEL 7 及更低版本
 
 #### 5.Arch/Manjaro
 

@@ -899,7 +899,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	if [ -s "/tmp/hostname" ]; then
 		NEW_HOST_NAME=$(head -n 1 /tmp/hostname)
 		cp -f /tmp/hostname /etc
-		[[ ! -n $(command -v hostname) ]] || hostname ${NEW_HOST_NAME} 2>/dev/null
+		#[[ ! -n $(command -v hostname) ]] || hostname ${NEW_HOST_NAME} 2>/dev/null
 		#sed -i "1s@LXC_NAME@${NEW_HOST_NAME}@" /etc/hosts 2>/dev/null
 		if ! grep -q "${NEW_HOST_NAME}" /etc/hosts 2>/dev/null;then
 			printf "%s\n" "127.0.0.1 ${NEW_HOST_NAME}" >>/etc/hosts

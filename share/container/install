@@ -915,7 +915,7 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	fi
 	if [[ -n $(command -v hostname) ]];then
 		if ! grep -q "$(hostname)" /etc/hosts 2>/dev/null;then
-			printf "%s\n" "127.0.0.1 $(hostname)" >>/etc/hosts
+			printf "%s\n%s\n" "127.0.0.1 $(hostname) $(hostname -f)" "::1 $(hostname) $(hostname -f)" >>/etc/hosts
 		fi
 	fi
 	[[ ! -e /etc/hostname ]] || cat /etc/hostname

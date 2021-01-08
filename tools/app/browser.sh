@@ -142,7 +142,6 @@ if_you_can_not_start_chromium() {
     if (whiptail --title "SANDBOX" --yes-button "OK" --no-button "YES" --yesno "If you can not start this app,try using chromium--no-sandbox" 8 50); then
         printf ""
     fi
-    cp -f ${TMOE_TOOL_DIR}/app/lnk/chromium-browser-no-sandbox.desktop ${APPS_LNK_DIR}
     cp -f ${TMOE_TOOL_DIR}/app/lnk/bin/chromium--no-sandbox /usr/local/bin
     #do_you_want_to_close_the_sandbox_mode
     cp -vf ${TMOE_TOOL_DIR}/app/lnk/chromium-browser-no-sandbox.desktop ${APPS_LNK_DIR}

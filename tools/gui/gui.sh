@@ -1396,16 +1396,26 @@ do_you_want_to_install_fcitx4() {
     do_you_want_to_install_kali_tools
 }
 #########
+do_you_want_to_install_chromium_00() {
+    if (whiptail --title "CHROMIUM-BROWSER" --yes-button "YES" --no-button "NO" --yesno 'Do you want to install Google Chromium browser?' 0 0); then
+        AUTO_INSTALL_CHROMIUM=true
+    fi
+}
 do_you_want_to_install_chromium() {
     if [[ ! -n $(command -v chromium) && ! -n $(command -v chromium-browser) && ! -n $(command -v google-chrome) ]]; then
-        #case "${DEBIAN_DISTRO}" in
-        #ubuntu) ;;
-        #\*)
-        if (whiptail --title "CHROMIUM-BROWSER" --yes-button "YES" --no-button "NO" --yesno 'Do you want to install Google Chromium browser?' 0 0); then
-            AUTO_INSTALL_CHROMIUM=true
-        fi
-        #   ;;
-        #esac
+        case "${DEBIAN_DISTRO}" in
+        ubuntu)
+            case ${TMOE_MENU_LANG} in
+            zh_*UTF-8)
+                if egrep -q 'Focal|Bionic|Eoan Ermine' /etc/os-release; then
+                    do_you_want_to_install_chromium_00
+                fi
+                ;;
+            *) do_you_want_to_install_chromium_00 ;;
+            esac
+            ;;
+        *) do_you_want_to_install_chromium_00 ;;
+        esac
     fi
 }
 ########

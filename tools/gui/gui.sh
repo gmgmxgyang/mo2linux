@@ -56,6 +56,7 @@ EOF
     AUTO_INSTALL_FCITX4=true
     AUTO_INSTALL_KALI_TOOLS=false
     AUTO_INSTALL_ELECTRON_APPS=true
+    AUTO_INSTALL_CHROMIUM=true
     UBUNTU_DESKTOP=true
     mkdir -p ~/.vnc
     printf "please delete the invalid passwd file" >passwd
@@ -1397,14 +1398,14 @@ do_you_want_to_install_fcitx4() {
 #########
 do_you_want_to_install_chromium() {
     if [[ ! -n $(command -v chromium) && ! -n $(command -v chromium-browser) && ! -n $(command -v google-chrome) ]]; then
-        case "${DEBIAN_DISTRO}" in
-        ubuntu) ;;
-        *)
-            if (whiptail --title "CHROMIUM-BROWSER" --yes-button "YES" --no-button "NO" --yesno 'Do you want to install Google Chromium browser?' 0 0); then
-                AUTO_INSTALL_CHROMIUM=true
-            fi
-            ;;
-        esac
+        #case "${DEBIAN_DISTRO}" in
+        #ubuntu) ;;
+        #\*)
+        if (whiptail --title "CHROMIUM-BROWSER" --yes-button "YES" --no-button "NO" --yesno 'Do you want to install Google Chromium browser?' 0 0); then
+            AUTO_INSTALL_CHROMIUM=true
+        fi
+        #   ;;
+        #esac
     fi
 }
 ########

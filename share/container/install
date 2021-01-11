@@ -413,7 +413,7 @@ mkdir -pv ${DEBIAN_CHROOT}/tmp
 case ${LOCALFONT} in
 ${REMOTEP10KFONT} | ${IOSEVKA_FONT} | ${MESLO_FONT} | ${MESLO_BOLD_FONT} | ${IOSEVKA_FONT_02} | ${INVONSOLATA_FONT}) cp -f ~/.termux/font.ttf ${DEBIAN_CHROOT}/tmp 2>/dev/null ;;
 *)
-	MESLO_FONT_DIR="${HOME}/.config/tmoe-zsh/fonts/fonts/Meslo/Meslo LG M Regular Nerd Font Complete Mono Windows Compatible.ttf"
+	MESLO_FONT_DIR="${HOME}/.config/tmoe-zsh/fonts/fonts/Meslo"
 	if [ -e "${MESLO_FONT_DIR}" ]; then
 		cd ${MESLO_FONT_DIR}
 		${TMOE_CHROOT_PREFIX} cp -f 'Meslo LG M Regular Nerd Font Complete Mono Windows Compatible.ttf' ${DEBIAN_CHROOT}/tmp/font.ttf

@@ -1397,8 +1397,9 @@ do_you_want_to_install_fcitx4() {
 #########
 do_you_want_to_install_chromium() {
     if [[ ! -n $(command -v chromium) && ! -n $(command -v chromium-browser) && ! -n $(command -v google-chrome) ]]; then
-        case "${LINUX_DISTRO}" in
-        "debian")
+        case "${DEBIAN_DISTRO}" in
+        ubuntu) ;;
+        *)
             if (whiptail --title "CHROMIUM-BROWSER" --yes-button "YES" --no-button "NO" --yesno 'Do you want to install Google Chromium browser?' 0 0); then
                 AUTO_INSTALL_CHROMIUM=true
             fi

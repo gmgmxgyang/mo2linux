@@ -91,7 +91,7 @@ check_tmoe_command() {
 	else
 		TMOE_TIPS_01="tmoe t"
 	fi
-	TMOE_TIPS_00="Welcome to tmoe linux tool v1.3983,type ${TMOE_TIPS_01} to start this tool."
+	TMOE_TIPS_00="Welcome to tmoe linux tool v1.3984,type ${TMOE_TIPS_01} to start this tool."
 	#勿改00变量
 }
 #########
@@ -852,7 +852,7 @@ tmoe_linux_tool_upgrade() {
 	if [ -e "/usr/local/bin/aria2-i" ]; then
 		cp "${TMOE_TOOL_DIR}/downloader/aria2.sh" /usr/local/bin
 	fi
-	if [ ! $(command -v tmoe) ]; then
+	if [ ! -h $(command -v tmoe) ]; then
 		ln -sfv ${TMOE_GIT_DIR}/share/app/tmoe /usr/local/bin
 	fi
 	#printf "%s\n" "${TMOE_GIT_URL}"

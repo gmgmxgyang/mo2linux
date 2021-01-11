@@ -289,7 +289,7 @@ download_iosevka_ttf_font() {
         if [ -e "font.ttf" ]; then
             mv -f font.ttf "${IOSEVKA_TTF_FILE}"
         else
-            curl -Lo 'Iosevka.tar.xz' "https://gitee.com/ak2/iosevka-bold/raw/master/Iosevka.tar.xz"
+            curl -Lo 'Iosevka.tar.xz' "https://gitee.com/ak2/inconsolata-go-font/raw/master/iosevka.tar.xz"
             tar -Jxvf 'Iosevka.tar.xz'
             rm -f 'Iosevka.tar.xz'
             mv -f Iosevka.ttf "${IOSEVKA_TTF_FILE}"

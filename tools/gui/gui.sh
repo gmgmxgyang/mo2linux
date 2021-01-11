@@ -248,7 +248,7 @@ catimg_preview_lxde_mate_xfce_02() {
     fi
 }
 install_gui() {
-    IOSEVKA_TTF_FILE="/usr/share/fonts/truetype/iosevka/Iosevka.ttf"
+    IOSEVKA_TTF_FILE="/usr/share/fonts/truetype/iosevka/Iosevka-Term-Mono.ttf"
     [[ "${WINDOWS_DISTRO}" != 'WSL' ]] || source ${TMOE_TOOL_DIR}/gui/wsl
     [[ ! -s "${IOSEVKA_TTF_FILE}" ]] || standand_desktop_installation #该字体检测两次
     check_zstd
@@ -289,10 +289,10 @@ download_iosevka_ttf_font() {
         if [ -e "font.ttf" ]; then
             mv -f font.ttf "${IOSEVKA_TTF_FILE}"
         else
-            curl -Lo 'Iosevka.tar.xz' "https://gitee.com/ak2/inconsolata-go-font/raw/master/iosevka.tar.xz"
+            curl -Lo 'Iosevka.tar.xz' "https://gitee.com/ak2/inconsolata-go-font/raw/master/Iosevka-Term-Mono.tar.xz"
             tar -Jxvf 'Iosevka.tar.xz'
-            rm -f 'Iosevka.tar.xz'
-            mv -f Iosevka.ttf "${IOSEVKA_TTF_FILE}"
+            rm -vf 'Iosevka.tar.xz'
+            mv -vf Iosevka.ttf "${IOSEVKA_TTF_FILE}"
         fi
         cd /usr/share/fonts/truetype/iosevka/
         mkfontscale 2>/dev/null

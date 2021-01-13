@@ -179,7 +179,7 @@ tmoe_container_timezone() {
     ####################
     press_enter_to_return
     case ${RETURN_TO_MENU} in
-    "") tmoe_container_dns ;;
+    "") tmoe_container_timezone ;;
     *) ${RETURN_TO_MENU} ;;
     esac
 }

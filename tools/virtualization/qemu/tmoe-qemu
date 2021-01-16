@@ -166,7 +166,7 @@ choose_qemu_machine_type() {
 	grep --color=auto "^MACHINE_TYPE=" ${QEMU_FILE}
 }
 choose_uefi_or_bios() {
-	if (whiptail --title "请选择引导类型" --yes-button 'legacy bios' --no-button 'uefi' --yesno "If your guest is win95/winxp,then choose legacy bios.\n默认为legacy bios,若您的虚拟机非老旧系统,\n例如debian sid或win10,则可选择uefi\n若TianoCore UEFI无法引导系统,则请切换回bios\n若你使用的是未包含efi引导的镜像,则请使用legacy" 11 50); then
+	if (whiptail --title "请选择引导类型" --yes-button 'legacy bios' --no-button 'uefi' --yesno "If your guest is win95/winxp,then choose legacy bios.\n默认为legacy bios,若您的虚拟机非老旧系统,\n例如debian sid或win10,则可选择uefi\n若TianoCore UEFI无法引导系统,则请切换回bios\n若你使用的是未包含efi引导的镜像,则请使用legacy" 14 50); then
 		UEFI_ENABLED='false'
 	else
 		UEFI_ENABLED='true'

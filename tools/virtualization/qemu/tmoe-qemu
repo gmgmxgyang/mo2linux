@@ -1330,7 +1330,7 @@ modify_qemu_tmoe_network_card() {
 	1)
 		sed -E -i "s@^(${NET_DEVICE}_ENABLED=).*@\1false@g" ${QEMU_FILE}
 		sed -E -i "s@^(${NET_DEVICE}=).*@\1DISABLED@g" ${QEMU_FILE}
-		printf "%s\n" "您已将禁用${NET_DEVICE}"
+		printf "%s\n" "您已禁用${NET_DEVICE}"
 		;;
 	*)
 		sed -E -i "s@^(${NET_DEVICE}=).*@\1"${TMOE_QEMU_NETWORK_CARD}"@g;s@^(${NET_DEVICE}_ENABLED=).*@\1true@g" ${QEMU_FILE}

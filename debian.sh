@@ -76,7 +76,7 @@ tmoe_locale_gen() {
 if [ $(command -v curl) ]; then
 	curl -Lvo .tmoe-linux.sh https://gitee.com/mo2/linux/raw/master/manager.sh
 elif [ $(command -v aria2c) ]; then
-	aria2c --no-conf --allow-overwrite=true -o .tmoe-linux.sh https://gitee.com/mo2/linux/raw/master/manager.sh
+	aria2c --console-log-level=warn --no-conf --allow-overwrite=true -o .tmoe-linux.sh https://gitee.com/mo2/linux/raw/master/manager.sh
 elif [ $(command -v wget) ]; then
 	wget -O .tmoe-linux.sh https://gitee.com/mo2/linux/raw/master/manager.sh
 else

@@ -348,10 +348,14 @@ upgrade_video_download_tool() {
             ${TMOE_INSTALLATION_COMMAND} ${DEPENDENCY_01} ${DEPENDENCY_02}
         fi
         cd /tmp
+        [[ ! -s get-pip.py ]] || rm -fv get-pip.py
         curl -LO https://gitee.com/mo2/get-pip/raw/master/.get-pip.tar.gz.00
         curl -LO https://gitee.com/mo2/get-pip/raw/master/.get-pip.tar.gz.01
         cat .get-pip.tar.gz.* >.get-pip.tar.gz
         tar -zxvf .get-pip.tar.gz
+        if [[ ! -s get-pip.py ]]; then
+            aria2c --console-log-level=info --no-conf --allow-overwrite=true -s 6 -x 6 -k 1M -o get-pip.py "https://bootstrap.pypa.io/get-pip.py" || curl -LO https://bootstrap.pypa.io/get-pip.py
+        fi
         python3 get-pip.py -i https://mirrors.bfsu.edu.cn/pypi/web/simple
         rm -f .get-pip.tar.gz* get-pip.py
     fi

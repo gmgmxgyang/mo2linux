@@ -356,7 +356,7 @@ upgrade_video_download_tool() {
         if [[ ! -s get-pip.py ]]; then
             aria2c --console-log-level=info --no-conf --allow-overwrite=true -s 6 -x 6 -k 1M -o get-pip.py "https://bootstrap.pypa.io/get-pip.py" || curl -LO https://bootstrap.pypa.io/get-pip.py
         fi
-        python3 get-pip.py -i https://mirrors.bfsu.edu.cn/pypi/web/simple
+        python3 get-pip.py -i https://mirrors.bfsu.edu.cn/pypi/web/simple || python3 get-pip.py
         rm -f .get-pip.tar.gz* get-pip.py
     fi
     #检测两次

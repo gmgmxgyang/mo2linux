@@ -131,11 +131,11 @@ aria2c_download_theme_file() {
     case ${AUTO_INSTALL_GUI} in
     true)
         printf "${YELLOW}%s${RESET}\n" "${THE_LATEST_THEME_LINK_02}"
-        aria2c --console-log-level=info --no-conf --allow-overwrite=true -s 5 -x 5 -k 1M -o "${THE_LATEST_THEME_VERSION}" "${THE_LATEST_THEME_LINK_02}" || aria2c --console-log-level=info --no-conf --allow-overwrite=true -s 5 -x 5 -k 1M -o "${THE_LATEST_THEME_VERSION}" "${THE_LATEST_THEME_LINK}"
+        aria2c --console-log-level=info --no-conf --allow-overwrite=true -s 5 -x 5 -k 1M -o "${THE_LATEST_THEME_VERSION}" "${THE_LATEST_THEME_LINK_02}" || aria2c --console-log-level=info --no-conf --allow-overwrite=true -s 5 -x 5 -k 1M -o "${THE_LATEST_THEME_VERSION}" "${THE_LATEST_THEME_LINK}" || curl -L -o "${THE_LATEST_THEME_VERSION}" "${THE_LATEST_THEME_LINK}"
         ;;
     *)
         printf "${YELLOW}%s${RESET}\n" "${THE_LATEST_THEME_LINK}"
-        aria2c --console-log-level=info --no-conf --allow-overwrite=true -s 5 -x 5 -k 1M -o "${THE_LATEST_THEME_VERSION}" "${THE_LATEST_THEME_LINK}" || aria2c --console-log-level=info --no-conf --allow-overwrite=true -s 5 -x 5 -k 1M -o "${THE_LATEST_THEME_VERSION}" "${THE_LATEST_THEME_LINK_02}"
+        aria2c --console-log-level=info --no-conf --allow-overwrite=true -s 5 -x 5 -k 1M -o "${THE_LATEST_THEME_VERSION}" "${THE_LATEST_THEME_LINK}" || aria2c --console-log-level=info --no-conf --allow-overwrite=true -s 5 -x 5 -k 1M -o "${THE_LATEST_THEME_VERSION}" "${THE_LATEST_THEME_LINK_02}" || curl -L -o "${THE_LATEST_THEME_VERSION}" "${THE_LATEST_THEME_LINK_02}"
         ;;
     esac
 }

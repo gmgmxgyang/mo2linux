@@ -127,7 +127,7 @@ grep_theme_model_01() {
 ###############
 aria2c_download_theme_file() {
     THE_LATEST_THEME_LINK="${THEME_URL}${THE_LATEST_THEME_VERSION}"
-    [[ -z ${THE_LATEST_THEME_VERSION_02} ]] || THE_LATEST_THEME_LINK_02="${THEME_URL_02}${THE_LATEST_THEME_VERSION}"
+    THE_LATEST_THEME_LINK_02="${THEME_URL_02}${THE_LATEST_THEME_VERSION}"
     case ${AUTO_INSTALL_GUI} in
     true)
         printf "${YELLOW}%s${RESET}\n" "${THE_LATEST_THEME_LINK_02}"

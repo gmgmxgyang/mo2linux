@@ -569,8 +569,8 @@ Supported containers:
 - [x] **Ubuntu LTS+dev**
 - [x] **Kali rolling**
 - [x] **Arch**
-- [x] **Fedora**
-- [x] **CentOS**
+- [x] **Fedora rawhide**
+- [x] **CentOS stream**
 - [x] **Gentoo**
 - [x] **Alpine edge**
 - [x] **OpenSUSE tumbleweed**
@@ -1203,6 +1203,11 @@ nano $(command -v startvnc)
 - 1.修复容器环境下运行 fcitx/fcitx5/ibus 时，环境变量未正确配置的问题。
 
 ---
+
+##### 2021 年 1 月 更新日志
+
+- 1.增加 Dockerfile ,并为部分发行版+桌面提供每周自动构建镜像。
+- 您现在可以直接下载包含 GUI 的容器镜像。
 
 ### README 结尾彩蛋
 

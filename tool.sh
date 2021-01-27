@@ -379,6 +379,9 @@ check_dependencies() {
 			DEPENDENCIES="${DEPENDENCIES} aptitude"
 		fi
 		if [ ! $(command -v eatmydata) ]; then
+			printf "%s\n" "${GREEN}apt ${YELLOW}install -y ${BLUE}eatmydata${RESET}"
+			apt update 2>/dev/null
+			apt install -y eatmydata
 			DEPENDENCIES="${DEPENDENCIES} eatmydata"
 		fi
 		;;

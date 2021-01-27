@@ -573,7 +573,7 @@ check_dependencies() {
 		case "${LINUX_DISTRO}" in
 		debian)
 			${TMOE_UPDATE_COMMAND} || ${TMOE_UPDATE_COMMAND}
-			${TMOE_INSTALLATION_COMMAND} ${DEPENDENCIES} || ${TMOE_INSTALLATION_COMMAND} git wget curl whiptail aria2 xz-utils nano aptitude sudo less binutils || ${TMOE_INSTALLATION_COMMAND} ${DEPENDENCIES}
+			${TMOE_INSTALLATION_COMMAND} ${DEPENDENCIES} || ${TMOE_INSTALLATION_COMMAND} git wget curl whiptail aria2 xz-utils nano aptitude sudo less binutils || ${TMOE_INSTALLATION_COMMAND} ${DEPENDENCIES} || apt install ${DEPENDENCIES}
 			#创建文件夹防止aptitude报错
 			mkdir -pv /run/lock /var/lib/aptitude
 			touch /var/lib/aptitude/pkgstates

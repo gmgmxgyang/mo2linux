@@ -92,7 +92,7 @@ check_tmoe_command() {
 	else
 		TMOE_TIPS_01="tmoe t"
 	fi
-	TMOE_TIPS_00="Welcome to tmoe linux tool v1.4223,type ${TMOE_TIPS_01} to start this tool."
+	TMOE_TIPS_00="Welcome to tmoe linux tool v1.4226,type ${TMOE_TIPS_01} to start this tool."
 	#勿改00变量
 }
 #########
@@ -573,7 +573,7 @@ check_dependencies() {
 		case "${LINUX_DISTRO}" in
 		debian)
 			${TMOE_UPDATE_COMMAND} || ${TMOE_UPDATE_COMMAND}
-			${TMOE_INSTALLATION_COMMAND} ${DEPENDENCIES} || ${TMOE_INSTALLATION_COMMAND} git wget curl whiptail aria2 xz-utils nano aptitude sudo less binutils || ${TMOE_INSTALLATION_COMMAND} ${DEPENDENCIES} || apt install ${DEPENDENCIES}
+			${TMOE_INSTALLATION_COMMAND} ${DEPENDENCIES} || ${TMOE_INSTALLATION_COMMAND} git wget curl whiptail aria2 xz-utils nano aptitude sudo less binutils || ${TMOE_INSTALLATION_COMMAND} ${DEPENDENCIES} || apt install -y ${DEPENDENCIES}
 			#创建文件夹防止aptitude报错
 			mkdir -pv /run/lock /var/lib/aptitude
 			touch /var/lib/aptitude/pkgstates

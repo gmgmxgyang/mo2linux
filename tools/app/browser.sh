@@ -69,6 +69,7 @@ ubuntu_ppa_chromium() {
         cd ..
         rm -rvf ${TEMP_FOLDER}
         hold_ubuntu_chromium
+        aptitude install -f -y
         #do_you_want_to_close_the_sandbox_mode
         #read_chromium_sandbox_opt
         if_you_can_not_start_chromium

@@ -223,25 +223,25 @@ A:Type `startvnc` to start vncserver,type `stopvnc` to stop it.
 
 > Q:启动 VNC 的命令有点复杂，我记不住 🤣，欺负老年人么？st...什么来着 😨
 
-A:完整命令是 startvnc，您只需记住 st，然后就能借助 zsh 的自动补全插件来解决。
-输完 st 后，您可以按下 TAB 键(⇆),即可生成补全内容。
+A:完整命令是 startvnc，您只需记住 st，然后就能借助 zsh 的自动补全插件来解决。  
+输完 st 后，您可以按下 TAB 键(⇆),即可生成补全内容。  
 您也可以直接按方向键 → 或者是 ↑，此操作亦能自动补全。😋
 
 ---
 
 > Q:我可以在 Linux Deploy 上使用这个脚本吗?
 
-A:可以哒！ヾ(≧▽≦\*)o 您可以在其它主流的 GNU/Linux 发行版，包括但不限于容器、虚拟机和实体机上使用这个脚本。
-注：截止 2020 年 7 月份,LinuxDeploy 配置的 archlinux 容器存在某个问题,导致 libnewt 无法被正确配置，进而导致本脚本无法在上面正常运行。
-解决方法很简单，删掉某个文件夹再重新配置就可以了。因为本工具开发者已经很久没用过 LinuxDeploy 了，所以忘记是哪个啦！
+A:可以哒！ヾ(≧▽≦\*)o 您可以在其它主流的 GNU/Linux 发行版，包括但不限于容器、虚拟机和实体机上使用这个脚本。  
+注：截止 2020 年 7 月份,LinuxDeploy 配置的 archlinux 容器存在某个问题,导致 libnewt 无法被正确配置，进而导致本脚本无法在上面正常运行。  
+解决方法很简单，删掉某个文件夹再重新配置就可以了。因为本工具开发者已经很久没用过 LinuxDeploy 了，所以忘记是哪个啦！  
 如果您在使用过程中出现问题，那么建议您在 github 或 gitee 上提交 issue,开发者很乐意帮您解决问题。
 
 ---
 
 > Q:我觉得 tmoe-linux tool/manager 的依赖有点多
 
-A: 对于必要依赖，在安装时会显示安装信息，并将依赖关系记录至 tmoe-linux 目录 **/usr/local/etc/tmoe-linux/** 下的 **MANAGER_DEPENDENCIES.txt** 和 **TOOL_DEPENDENCIES.txt** 。对于 Android 系统，tmoe-linux 目录为 **~/.local/share/tmoe-linux** 。
-对于非必要依赖，请留意安装过程中出现的提示。
+A: 对于必要依赖，在安装时会显示安装信息，并将依赖关系记录至 tmoe-linux 目录 **/usr/local/etc/tmoe-linux/** 下的 **MANAGER_DEPENDENCIES.txt** 和 **TOOL_DEPENDENCIES.txt** 。对于 Android 系统，tmoe-linux 目录为 **~/.local/share/tmoe-linux** 。  
+对于非必要依赖，请留意安装过程中出现的提示。  
 开发者花费了大量的时间和精力去维护脚本、软件和镜像仓库，就算是您要喷开发者，也希望您能够轻喷。
 
 ### 二：容器 Container 篇

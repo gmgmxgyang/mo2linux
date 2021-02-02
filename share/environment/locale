@@ -89,7 +89,7 @@ tmoe_locale_menu() {
 			"57" "es_ES.UTF-8 Spanish_Spain(International)" \
 			"58" "sv_SE.UTF-8 Swedish_Sweden" \
 			"59" "tl_PH.UTF-8 Philippines" \
-			"60" "ta_IN.UTF-8 English_Australia" \
+			"60" "ta_IN.UTF-8 Tamil_India" \
 			"61" "th_TH.UTF-8 Thai_Thailand" \
 			"62" "tr_TR.UTF-8 Turkish_Turkey" \
 			"63" "uk_UA.UTF-8 Ukrainian_Ukraine" \

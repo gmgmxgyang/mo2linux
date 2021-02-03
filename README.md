@@ -108,6 +108,13 @@ _**If you do not live in China, please enter**_
     . <(curl -L gitee.com/mo2/linux/raw/2/2)
 ```
 
+If you are using fish,then type the following commands.
+
+```bash
+  curl -Lo manager.sh gitee.com/mo2/linux/raw/2/2
+  bash manager.sh
+```
+
 > 3.若您使用的是 manager，则可以使用触摸屏进行点击;若为 tool，则可使用触摸屏进行滑动，回车键进行确认。  
 > When you are using the manager, you can use the touch screen to click.When you are using the tool, you can use the touch screen to slide and press the Enter to confirm.
 >

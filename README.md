@@ -111,6 +111,8 @@ _**If you do not live in China, please enter**_
 If you are using fish,then type the following commands.
 
 ```bash
+  apt update
+  apt install -y curl
   curl -Lo manager.sh gitee.com/mo2/linux/raw/2/2
   bash manager.sh
 ```

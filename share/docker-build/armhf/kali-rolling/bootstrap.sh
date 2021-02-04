@@ -5,8 +5,8 @@ CUR=$(pwd)
 unset DISTRO_CODE
 DEBIAN_CHROOT="kali"
 ARCH_TYPE=armhf
-UBUNTU_URL="http://http.kali.org/kali/"
-UBUNTU_URL_02="https://mirrors.ustc.edu.cn/kali/"
+KALI_URL="http://http.kali.org/kali/"
+KALI_URL_02="https://mirrors.ustc.edu.cn/kali/"
 DISTRO_CODE="kali-rolling"
 #$echo ${DISTRO_CODE}
 ###################
@@ -27,7 +27,7 @@ else
     cd ${HOME}/.cache/tmp
 fi
 
-sudo debootstrap --no-check-gpg --arch ${ARCH_TYPE} --components=main,non-free,contrib --variant=minbase --include=init,locales,ca-certificates,openssl,curl ${DISTRO_CODE} ${DEBIAN_CHROOT} ${UBUNTU_URL} || sudo debootstrap --no-check-gpg --arch ${ARCH_TYPE} --components=main,non-free,contrib --variant=minbase --include=init,locales,ca-certificates,openssl,curl ${DISTRO_CODE} ${DEBIAN_CHROOT} ${UBUNTU_URL_02}
+sudo debootstrap --no-check-gpg --arch ${ARCH_TYPE} --components=main,non-free,contrib --variant=minbase --include=init,locales,ca-certificates,openssl,curl ${DISTRO_CODE} ${DEBIAN_CHROOT} ${KALI_URL} || sudo debootstrap --no-check-gpg --arch ${ARCH_TYPE} --components=main,non-free,contrib --variant=minbase --include=init,locales,ca-certificates,openssl,curl ${DISTRO_CODE} ${DEBIAN_CHROOT} ${KALI_URL_02}
 
 sudo mkdir -pv ${DEBIAN_CHROOT}/run/systemd
 sudo su -c "echo 'docker' >${DEBIAN_CHROOT}/run/systemd/container"

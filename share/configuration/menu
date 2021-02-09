@@ -285,9 +285,7 @@ install_fortunes_mod() {
             zh_TW.UTF-8) cd zh_TW ;;
             esac
         fi
-        for i in $(readlink ./*); do
-            cp -vf ${i} ${PREFIX}/share/games/fortunes
-        done
+        [[ ! -e debian-hints ]] || cp -vf ${PWD}/debian-hints ${PREFIX}/share/games/fortunes
         cd ${CURRENT_DIR} || cd ${HOME}
         rm -rv ${TEMP_FOLDER}
         ;;

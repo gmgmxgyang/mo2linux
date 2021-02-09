@@ -243,7 +243,7 @@ install_fortunes() {
         "") ;;
         *)
             FORTUNES_MOD_02="debian-hints"
-            THE_LATEST_DEB_REPO_HINTS='https://mirrors.bfsu.edu.cn/debian/pool/main/f/debian-hints/'
+            THE_LATEST_DEB_REPO_HINTS='https://mirrors.bfsu.edu.cn/debian/pool/main/f/fortunes-debian-hints/'
             ${TMOE_INSTALLATION_COMMAND} fortunes-${FORTUNES_MOD} 2>/dev/null
             ${TMOE_INSTALLATION_COMMAND} fortunes-${FORTUNES_MOD_02} 2>/dev/null
             case ${TMOE_LANG} in

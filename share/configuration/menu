@@ -261,7 +261,7 @@ install_fortunes_mod() {
     case ${LINUX_DISTRO} in
     Android)
         THE_LATEST_DEB_VERSION="$(curl -L ${THE_LATEST_DEB_REPO} | egrep -v '\.dsc|\.tar\.xz' | grep 'deb' | awk -F '<a href=' '{print $2}' | grep deb | tail -n 1 | cut -d '"' -f 2)"
-        THE_LATEST_DEB_VERSION_HINTS="$(curl -L ${THE_LATEST_DEB_REPO_HINTS} | egrep -v '\.dsc|\.tar\.xz' | grep 'deb' | awk -F '<a href=' '{print $2}' | grep deb | tail -n 1 | cut -d '"' -f 2)"
+        THE_LATEST_DEB_VERSION_HINTS="$(curl -L ${THE_LATEST_DEB_REPO_HINTS} | egrep -v '\.dsc|\.tar\.xz' | grep 'deb' | awk -F '<a href=' '{print $2}' | grep deb | cut -d '"' -f 2 | sort -n -k 2 -t . | tail -n 1)"
         THE_LATEST_ISO_LINK="${THE_LATEST_DEB_REPO}${THE_LATEST_DEB_VERSION}"
         THE_LATEST_ISO_LINK_HINTS="${THE_LATEST_DEB_REPO_HINTS}${THE_LATEST_DEB_VERSION_HINTS}"
 

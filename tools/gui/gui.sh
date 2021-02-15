@@ -150,14 +150,17 @@ nano_tigervnc_default_config_manually() {
 switch_tight_or_tiger_vncserver() {
     DEPENDENCY_01=''
     #NON_DEBIAN='true'
-    non_debian_function
-    #优先检测tiger
-    if [ $(command -v Xtigervnc) ]; then
-        tight_vnc_variable
-    elif [ $(command -v Xtightvnc) ]; then
-        tiger_vnc_variable
-        #检测到tight,询问是否需要切换为tiger
+    #non_debian_function
+    if [ $(command -v startvnc) ]; then
+        if grep -q '^VNC_SERVER=' $(command -v startvnc); then
+            VNC_SERVER_BIN_NOW=$(grep '^VNC_SERVER=' $(command -v startvnc) | awk -F '=' '{print $2}' | cut -d '"' -f 2)
+        fi
     fi
+    #优先检测tiger
+    case ${VNC_SERVER_BIN_NOW} in
+    tiger*) tight_vnc_variable ;;
+    *) tiger_vnc_variable ;;
+    esac
     VNC_SERVER_BIN_STATUS="检测到您当前使用的是${VNC_SERVER_BIN_NOW}"
     if (whiptail --title "您想要对这个小可爱做什么呢 " --yes-button "Back返回" --no-button "${VNC_SERVER_BIN}" --yesno "${VNC_SERVER_BIN_STATUS}\n请问您是否需要切换为${VNC_SERVER_BIN}♪(^∇^*)\nDo you want to switch to ${VNC_SERVER_BIN}?" 0 0); then
         modify_other_vnc_conf
@@ -166,7 +169,7 @@ switch_tight_or_tiger_vncserver() {
         #printf "%s\n" "${RED}apt remove -y ${VNC_SERVER_BIN_NOW}${RESET}"
         #apt remove -y ${VNC_SERVER_BIN_NOW}
         #beta_features_quick_install
-        apt update
+        #apt update
         case_debian_distro_and_install_vnc
     fi
 }

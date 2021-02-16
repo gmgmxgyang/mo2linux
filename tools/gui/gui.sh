@@ -107,35 +107,41 @@ EOF
 ############################
 modify_other_vnc_conf() {
     #15 60 7
-    MODIFYOTHERVNCCONF=$(whiptail --title "Modify vnc server conf" --menu "Type startvnc to start vncserver,输入startvnc启动vnc服务" 0 0 0 \
-        "1" "Pulseaudio server address音频地址" \
-        "2" "VNC password密码" \
-        "3" "switch tiger/tightvnc切换服务端" \
-        "4" "Edit xsession 编辑xsession" \
-        "5" "Edit startvnc 编辑vnc启动脚本" \
-        "6" "Edit tigervnc-config 编辑tigervnc配置" \
-        "7" "fix vnc crash修复VNC闪退" \
-        "8" "window scaling factor调整屏幕缩放比例(仅支持xfce)" \
-        "9" "display port显示端口" \
-        "10" "WSL pulseaudio(only for windows)" \
-        "0" "🌚 Return to previous menu 返回上级菜单" \
-        3>&1 1>&2 2>&3)
+    MODIFYOTHERVNCCONF=$(
+        whiptail --title "Modify vnc server conf" --menu "Type startvnc to start vncserver,输入startvnc启动vnc服务" 0 0 0 \
+            "1" "Edit startvnc 编辑vnc启动脚本" \
+            "2" "Vnc password密码" \
+            "3" "Switch tiger/tightvnc切换服务端" \
+            "4" "Pulseaudio address音频地址" \
+            "5" "Edit xsession 编辑xsession" \
+            "6" "Edit tigervnc-config 编辑tigervnc配置" \
+            "7" "Zlib level 压缩级别" \
+            "8" "Pixel depth 色彩/像素深度" \
+            "9" "Fix vnc crash修复VNC闪退" \
+            "10" "Window scaling factor窗口缩放比例(仅支持xfwm)" \
+            "11" "Display port显示端口" \
+            "12" "WSL pulseaudio(only for windows)" \
+            "0" "🌚 Return to previous menu 返回上级菜单" \
+            3>&1 1>&2 2>&3
+    )
     ###########
     case "${MODIFYOTHERVNCCONF}" in
     0 | "") modify_remote_desktop_config ;;
-    1) modify_vnc_pulse_audio ;;
+    1) nano_startvnc_manually ;;
     2) set_vnc_passwd ;;
     3) switch_tight_or_tiger_vncserver ;;
-    4)
+    4) modify_vnc_pulse_audio ;;
+    5)
         nano ${XSESSION_FILE}
         stopvnc 2>/dev/null
         ;;
-    5) nano_startvnc_manually ;;
     6) nano_tigervnc_default_config_manually ;;
-    7) fix_vnc_dbus_launch ;;
-    8) modify_xfce_window_scaling_factor ;;
-    9) modify_tightvnc_display_port ;;
-    10) nano ${TMOE_LINUX_DIR}/wsl_pulse_audio ;;
+    7) modify_tigervnc_zlib_level ;;
+    8) modify_tigervnc_pixel_depth ;;
+    9) fix_vnc_dbus_launch ;;
+    10) modify_xfce_window_scaling_factor ;;
+    11) modify_tightvnc_display_port ;;
+    12) nano ${TMOE_LINUX_DIR}/wsl_pulse_audio ;;
     esac
     #########
     press_enter_to_return
@@ -143,6 +149,48 @@ modify_other_vnc_conf() {
     ##########
 }
 ##############
+modify_tigervnc_zlib_level() {
+    CURRENT_VALUE=$(grep '^ZLIB_LEVEL=' $(command -v startvnc) | awk -F '=' '{print $2}' | cut -d '"' -f 2)
+    ZLIB_LEVEL=$(
+        whiptail --title "Acceptable values are between 0 and 9" --menu "Zlib compression level for ZRLE encoding,\ncurrent value is ${CURRENT_VALUE}" 0 0 0 \
+            "0" "0" \
+            "1" "1" \
+            "2" "2" \
+            "3" "3" \
+            "4" "4" \
+            "5" "5" \
+            "6" "6" \
+            "7" "7" \
+            "8" "8" \
+            "9" "9" \
+            "00" "🌚 Back" \
+            3>&1 1>&2 2>&3
+    )
+    ###########
+    case "${ZLIB_LEVEL}" in
+    00 | "") modify_other_vnc_conf ;;
+    esac
+    sed -i -E "s@^(ZLIB_LEVEL=).*@\1${ZLIB_LEVEL}@g" $(command -v startvnc)
+    grep --color=auto '^ZLIB_LEVEL=' $(command -v startvnc)
+}
+######################
+modify_tigervnc_pixel_depth() {
+    if [ $(command -v startvnc) ]; then
+        if grep -q '^PIXEL_DEPTH=' $(command -v startvnc); then
+            CURRENT_VALUE=$(grep '^PIXEL_DEPTH=' $(command -v startvnc) | awk -F '=' '{print $2}' | cut -d '"' -f 2)
+        fi
+    else
+        CURRENT_VALUE="ERROR！startvnc文件不存在."
+    fi
+    if (whiptail --title "Which pixel-depth do you prefer?" --yes-button "24" --no-button "16" --yesno "Current pixel-depth is ${CURRENT_VALUE}" 0 0); then
+        PIXEL_DEPTH=24
+    else
+        PIXEL_DEPTH=16
+    fi
+    sed -i -E "s@^(PIXEL_DEPTH=).*@\1${PIXEL_DEPTH}@g" $(command -v startvnc)
+    grep --color=auto '^PIXEL_DEPTH=' $(command -v startvnc)
+}
+#######################
 nano_tigervnc_default_config_manually() {
     nano /etc/tigervnc/vncserver-config-defaults
 }
@@ -166,9 +214,6 @@ switch_tight_or_tiger_vncserver() {
         modify_other_vnc_conf
     else
         non_debian_function
-        #printf "%s\n" "${RED}apt remove -y ${VNC_SERVER_BIN_NOW}${RESET}"
-        #apt remove -y ${VNC_SERVER_BIN_NOW}
-        #beta_features_quick_install
         #apt update
         case_debian_distro_and_install_vnc
     fi

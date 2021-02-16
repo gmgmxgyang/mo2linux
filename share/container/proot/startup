@@ -36,9 +36,9 @@ cat >${TMOE_STARTUP_SCRIPT} <<-ENDOFPROOT
 			PROOT_HOME=/root
 		 ;;
 		*)
-			PROOT_UID=$(grep "^\${PROOT_USER}:" ${DEBIAN_CHROOT}/etc/passwd | awk -F ':' '{print \$3}')
-			PROOT_GID=$(grep "^\${PROOT_USER}:" ${DEBIAN_CHROOT}/etc/passwd | awk -F ':' '{print \$4}')
-			PROOT_HOME=$(grep "^\${PROOT_USER}:" ${DEBIAN_CHROOT}/etc/passwd | awk -F ':' '{print \$6}')
+			PROOT_UID=\$(grep "^\${PROOT_USER}:" ${DEBIAN_CHROOT}/etc/passwd | awk -F ':' '{print \$3}')
+			PROOT_GID=\$(grep "^\${PROOT_USER}:" ${DEBIAN_CHROOT}/etc/passwd | awk -F ':' '{print \$4}')
+			PROOT_HOME=\$(grep "^\${PROOT_USER}:" ${DEBIAN_CHROOT}/etc/passwd | awk -F ':' '{print \$6}')
 		;;
 		esac
 

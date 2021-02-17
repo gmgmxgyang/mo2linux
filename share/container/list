@@ -176,6 +176,7 @@ request_weekly_build_version() {
 set_debian_sid_env() {
 	DISTRO_NAME='debian'
 	DISTRO_CODE="sid-${DESKTOP}"
+	DISTRO_NAME_02=debian-sid
 	NODE02_ENABLED=true
 	TMOE_LINUX_CONTAINER_DISTRO="${DISTRO_NAME}-${DISTRO_CODE}"
 	creat_container_edition_txt
@@ -184,6 +185,7 @@ set_debian_sid_env() {
 set_kali_rolling_env() {
 	DISTRO_NAME='kali'
 	DISTRO_CODE="rolling-${DESKTOP}"
+	DISTRO_NAME_02=kali-rolling
 	NODE02_ENABLED=true
 	TMOE_LINUX_CONTAINER_DISTRO="${DISTRO_NAME}-${DISTRO_CODE}"
 	creat_container_edition_txt
@@ -192,6 +194,7 @@ set_kali_rolling_env() {
 set_ubuntu_dev_env() {
 	DISTRO_NAME='ubuntu'
 	DISTRO_CODE="dev-${DESKTOP}"
+	DISTRO_NAME_02=ubuntu-dev
 	NODE02_ENABLED=true
 	TMOE_LINUX_CONTAINER_DISTRO="${DISTRO_NAME}-${DISTRO_CODE}"
 	creat_container_edition_txt
@@ -200,6 +203,7 @@ set_ubuntu_dev_env() {
 set_mint_tricia_env() {
 	DISTRO_NAME='mint'
 	DISTRO_CODE="tricia-${DESKTOP}"
+	DISTRO_NAME_02=mint-tricia
 	NODE02_ENABLED=true
 	TMOE_LINUX_CONTAINER_DISTRO="${DISTRO_NAME}-${DISTRO_CODE}"
 	creat_container_edition_txt
@@ -208,6 +212,7 @@ set_mint_tricia_env() {
 set_mint_ulyssa_env() {
 	DISTRO_NAME='mint'
 	DISTRO_CODE="ulyssa-${DESKTOP}"
+	DISTRO_NAME_02=mint-ulyssa
 	NODE02_ENABLED=true
 	TMOE_LINUX_CONTAINER_DISTRO="${DISTRO_NAME}-${DISTRO_CODE}"
 	creat_container_edition_txt
@@ -216,6 +221,7 @@ set_mint_ulyssa_env() {
 set_alpine_edge_env() {
 	DISTRO_NAME='alpine'
 	DISTRO_CODE="edge-${DESKTOP}"
+	DISTRO_NAME_02=alpine-edge
 	NODE02_ENABLED=false
 	TMOE_LINUX_CONTAINER_DISTRO="${DISTRO_NAME}-${DISTRO_CODE}"
 	creat_container_edition_txt
@@ -224,6 +230,7 @@ set_alpine_edge_env() {
 set_fedora_rawhide_env() {
 	DISTRO_NAME='fedora'
 	DISTRO_CODE="rawhide-${DESKTOP}"
+	DISTRO_NAME_02=fedora-rawhide
 	NODE02_ENABLED=false
 	TMOE_LINUX_CONTAINER_DISTRO="${DISTRO_NAME}-${DISTRO_CODE}"
 	creat_container_edition_txt
@@ -232,6 +239,7 @@ set_fedora_rawhide_env() {
 set_ubuntu_bionic_env() {
 	DISTRO_NAME='ubuntu'
 	DISTRO_CODE="bionic-${DESKTOP}"
+	DISTRO_NAME_02=ubuntu-bionic
 	NODE02_ENABLED=true
 	TMOE_LINUX_CONTAINER_DISTRO="${DISTRO_NAME}-${DISTRO_CODE}"
 	creat_container_edition_txt
@@ -240,6 +248,7 @@ set_ubuntu_bionic_env() {
 set_arch_latest_env() {
 	DISTRO_NAME='arch'
 	DISTRO_CODE="${DESKTOP}"
+	DISTRO_NAME_02=arch
 	NODE02_ENABLED=true
 	#TMOE_LINUX_CONTAINER_DISTRO="${DISTRO_NAME}"
 	TMOE_LINUX_CONTAINER_DISTRO="${DISTRO_NAME}-${DISTRO_CODE}"
@@ -249,6 +258,7 @@ set_arch_latest_env() {
 set_manjaro_stable_env() {
 	DISTRO_NAME='manjaro'
 	DISTRO_CODE="stable-${DESKTOP}"
+	DISTRO_NAME_02=manjaro-stable
 	NODE02_ENABLED=true
 	TMOE_LINUX_CONTAINER_DISTRO="${DISTRO_NAME}-${DISTRO_CODE}"
 	creat_container_edition_txt

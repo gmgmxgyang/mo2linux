@@ -2194,25 +2194,43 @@ arch_linux_mate_warning() {
     DEPENDENCY_01='mate mate-extra'
 }
 ###############
+choose_debian_mate_core_or_lite() {
+    if (whiptail --title "MATE-CORE or MATE-LITE" --yes-button "core" --no-button "lite" --yesno 'The former is the normal edition of mate,and the latter is more streamlined.\n前者为普通mate,后者为精简版mate' 0 0); then
+        do_you_want_to_install_fcitx4
+    else
+        UBUNTU_DESKTOP=false
+        DEPENDENCY_01="--no-install-recommends mate-session-manager mate-settings-daemon marco mate-panel"
+        #caja
+    fi
+}
 choose_mate_or_ubuntu_mate() {
     case ${DEBIAN_DISTRO} in
     ubuntu)
         if (whiptail --title "Mate or Ubuntu-MATE-full-desktop" --yes-button "mate" --no-button "ubuntu-mate" --yesno 'The former is more streamlined, and the latter includes some extra software of ubuntu-mate.\n前者为普通mate,后者为ubuntu-mate' 0 0); then
-            printf ""
+            #printf ""
+            choose_debian_mate_core_or_lite
         else
             UBUNTU_DESKTOP=true
+            do_you_want_to_install_fcitx4
             DEPENDENCY_01="ubuntu-mate-desktop"
         fi
         ;;
     esac
 }
 install_mate_desktop() {
+    if [ $(command -v apt-cache) ]; then
+        printf "%s\n" "${GREEN}apt ${YELLOW}show ${BLUE}lxqt-core${RESET}"
+        apt-cache show lxqt-core
+    fi
     REMOTE_DESKTOP_SESSION_01='mate-session'
     REMOTE_DESKTOP_SESSION_02='mate-panel'
     printf '%s\n' '即将为您安装fonts-noto-cjk（思源黑体）、fonts-noto-color-emoji、tightvncserver、mate-desktop-environment和mate-terminal等软件包'
     if [[ ${AUTO_INSTALL_GUI} != true ]]; then
         do_you_want_to_continue
-        do_you_want_to_install_fcitx4
+        case "${LINUX_DISTRO}" in
+        "debian") ;;
+        *) do_you_want_to_install_fcitx4 ;;
+        esac
     fi
     DEPENDENCY_01='mate'
     case "${LINUX_DISTRO}" in
@@ -2271,6 +2289,7 @@ choose_lxqt_or_lubuntu() {
             choose_debian_lxqt_core_or_lite
         else
             UBUNTU_DESKTOP=true
+            do_you_want_to_install_fcitx4
             DEPENDENCY_01="lubuntu-desktop"
         fi
         ;;
@@ -2279,11 +2298,12 @@ choose_lxqt_or_lubuntu() {
 }
 ######################
 choose_debian_lxqt_core_or_lite() {
-    if (whiptail --title "LXQT-CORE or LXQT-LITE" --yes-button "core" --no-button "lite" --yesno 'The former includes some extra software of lxqt,and the latter is more streamlined.\n前者为普通lxqt,后者为精简版lxqt' 0 0); then
+    if (whiptail --title "LXQT-CORE or LXQT-LITE" --yes-button "core" --no-button "lite" --yesno 'The former is the normal edition of lxqt,and the latter is more streamlined.\n前者为普通lxqt,后者为精简版lxqt' 0 0); then
         do_you_want_to_install_fcitx4
     else
         UBUNTU_DESKTOP=false
-        DEPENDENCY_01="--no-install-recommends pcmanfm-qt pcmanfm-qt-l10n qterminal qterminal-l10n lxqt-panel lxqt-config lxqt-session-l10n lxqt-session"
+        DEPENDENCY_01="--no-install-recommends pcmanfm-qt pcmanfm-qt-l10n qterminal qterminal-l10n xfwm4 xfwm4-theme-breeze breeze-icon-theme lxqt-panel lxqt-config lxqt-session-l10n lxqt-session"
+        #+ openbox
     fi
 }
 #########################

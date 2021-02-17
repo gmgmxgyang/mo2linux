@@ -1975,6 +1975,9 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 		mv -f ~/yum.repos.d-backup.tar.gz /etc/yum.repos.d
 		FEDORA_VERSION="$(grep 'VERSION_ID' /etc/os-release | cut -d '=' -f 2)"
 		sed -i -E "s@(enabled)=1@\1=0@" /etc/yum.repos.d/fedora-updates-testing-modular.repo /etc/yum.repos.d/fedora-updates-testing.repo
+		if grep -q '=rawhide' /etc/os-release;then
+			sed -i -E 's@^(gpgcheck)=.*@\1=0@g' /etc/yum.repos.d/*.repo
+		fi
 		if [[ ${TMOE_GITHUB} != true ]]; then
 			case ${TMOE_LANG} in
 			zh_*UTF-8)
@@ -1987,8 +1990,6 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 					fi
 					fedora_3x_repos
 				fi
-			else
-				sed -i -E 's@^(gpgcheck)=.*@\1=0@g' /etc/yum.repos.d/*.repo 
 			fi
 				;;
 			esac

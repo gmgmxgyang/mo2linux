@@ -1987,6 +1987,8 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 					fi
 					fedora_3x_repos
 				fi
+			else
+				sed -i -E 's@^(gpgcheck)=.*@\1=0@g' /etc/yum.repos.d/*.repo 
 			fi
 				;;
 			esac

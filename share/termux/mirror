@@ -442,7 +442,7 @@ apt_dist_upgrade() {
 }
 ######################
 gnu_linux_mirror_source_manager() {
-	TMOE_LOCALE_URL="https://${TMOE_GIT_URL}/raw/master/tool.sh"
+	TMOE_LOCALE_URL="https://cdn.jsdelivr.net/gh/2moe/tmoe-linux@master/.mirror/tool"
 	TMOE_LOCALE_TMP_FILE=/tmp/.tmoe-linux-tool.sh
 	if [ $(command -v aria2c) ]; then
 		aria2c --console-log-level=warn --no-conf --allow-overwrite=true -d /tmp -o '.tmoe-linux-tool.sh' "${TMOE_LOCALE_URL}"
@@ -459,9 +459,9 @@ gnu_linux_mirror_source_manager() {
 gnu_linux_sources_list() {
 	if [ "${LINUX_DISTRO}" != "alpine" ]; then
 		if [ ! $(command -v curl) ]; then
-			wget -O /tmp/.tmoe-linux-tool.sh 'https://gitee.com/mo2/linux/raw/master/tool.sh'
+			wget -O /tmp/.tmoe-linux-tool.sh 'https://cdn.jsdelivr.net/gh/2moe/tmoe-linux@master/.mirror/tool'
 		else
-			curl -Lo /tmp/.tmoe-linux-tool.sh 'https://gitee.com/mo2/linux/raw/master/tool.sh'
+			curl -Lo /tmp/.tmoe-linux-tool.sh 'https://cdn.jsdelivr.net/gh/2moe/tmoe-linux@master/.mirror/tool'
 		fi
 		bash /tmp/.tmoe-linux-tool.sh -tuna
 	else

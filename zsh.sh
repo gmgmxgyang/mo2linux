@@ -283,9 +283,9 @@ auto_check_face_icon() {
 check_tmoe_linux_tool() {
 	if [ ! $(command -v debian-i) ]; then
 		if [ -e "/usr/bin/curl" ]; then
-			curl -Lo /usr/local/bin/debian-i 'https://gitee.com/mo2/linux/raw/master/tool.sh'
+			curl -Lo /usr/local/bin/debian-i 'https://cdn.jsdelivr.net/gh/2moe/tmoe-linux@master/.mirror/tool'
 		else
-			wget -qO /usr/local/bin/debian-i 'https://gitee.com/mo2/linux/raw/master/tool.sh'
+			wget -qO /usr/local/bin/debian-i 'https://cdn.jsdelivr.net/gh/2moe/tmoe-linux@master/.mirror/tool'
 		fi
 	fi
 	chmod 777 /usr/local/bin/debian-i

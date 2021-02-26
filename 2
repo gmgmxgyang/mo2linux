@@ -20,15 +20,15 @@ install_dependency() {
 }
 #########
 if [ $(command -v curl) ]; then
-	curl -Lvo .tmoe-linux.sh https://gitee.com/mo2/linux/raw/master/manager.sh
+	curl -Lvo .tmoe-linux.sh https://cdn.jsdelivr.net/gh/2moe/tmoe-linux@master/.mirror/manager
 elif [ $(command -v aria2c) ]; then
-	aria2c --allow-overwrite=true -o .tmoe-linux.sh https://gitee.com/mo2/linux/raw/master/manager.sh
+	aria2c --allow-overwrite=true -o .tmoe-linux.sh https://cdn.jsdelivr.net/gh/2moe/tmoe-linux@master/.mirror/manager
 elif [ $(command -v wget) ]; then
-	wget -O .tmoe-linux.sh https://gitee.com/mo2/linux/raw/master/manager.sh
+	wget -O .tmoe-linux.sh https://cdn.jsdelivr.net/gh/2moe/tmoe-linux@master/.mirror/manager
 else
 	DEPENDENCY_01='wget'
 	install_dependency
-	wget -O .tmoe-linux.sh https://gitee.com/mo2/linux/raw/master/manager.sh
+	wget -O .tmoe-linux.sh https://cdn.jsdelivr.net/gh/2moe/tmoe-linux@master/.mirror/manager
 fi
 
 if [ $(command -v bash) ]; then

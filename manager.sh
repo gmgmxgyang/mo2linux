@@ -49,7 +49,7 @@ check_tmoe_command() {
 	else
 		TMOE_TIPS_01="tmoe"
 	fi
-	TMOE_TIPS_00="Welcome to tmoe linux manager v1.4437,type ${TMOE_TIPS_01} to start it."
+	TMOE_TIPS_00="Welcome to tmoe linux manager v1.4439,type ${TMOE_TIPS_01} to start it."
 }
 #########################
 tmoe_manager_env() {
@@ -266,7 +266,7 @@ check_gnu_linux_distro() {
 			DEBIAN_DISTRO='ubuntu'
 		elif [ "$(cut -c 1-4 /etc/issue)" = "Kali" ]; then
 			DEBIAN_DISTRO='kali'
-		elif egrep -q 'deepin|uos' /etc/os-release; then
+		elif egrep -q 'deepin|uos\.com' /etc/os-release; then
 			SWITCH_MIRROR='false'
 			DEBIAN_DISTRO='deepin'
 		fi

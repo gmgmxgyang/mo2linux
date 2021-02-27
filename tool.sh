@@ -92,7 +92,7 @@ check_tmoe_command() {
 	else
 		TMOE_TIPS_01="tmoe t"
 	fi
-	TMOE_TIPS_00="Welcome to tmoe linux tool v1.4437,type ${TMOE_TIPS_01} to start this tool."
+	TMOE_TIPS_00="Welcome to tmoe linux tool v1.4439,type ${TMOE_TIPS_01} to start this tool."
 	#勿改00变量
 }
 #########
@@ -298,7 +298,7 @@ check_linux_distro() {
 			DEBIAN_DISTRO='ubuntu'
 		elif [ "$(cut -c 1-4 /etc/issue)" = "Kali" ]; then
 			DEBIAN_DISTRO='kali'
-		elif egrep -q 'deepin|uos' /etc/os-release; then
+		elif egrep -q 'deepin|uos\.com' /etc/os-release; then
 			DEBIAN_DISTRO='deepin'
 		fi
 		###################

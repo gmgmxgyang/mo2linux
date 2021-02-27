@@ -358,7 +358,10 @@ check_gnu_linux_distro() {
 			PREFIX=/usr
 		fi
 		;;
-	*) PREFIX='/usr/local' ;;
+	*)
+		PREFIX='/usr/local'
+		[[ -d ${PREFIX} ]] || PREFIX='/usr'
+		;;
 	esac
 	################
 	check_tmoe_menu_locale_file

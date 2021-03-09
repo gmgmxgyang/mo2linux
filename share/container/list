@@ -802,7 +802,7 @@ install_alpha_containers() {
 				"0" "🌚 返回上级菜单" \
 				3>&1 1>&2 2>&3
 		)
-		#				"5" "Huawei euler OS(arm64,x64,华为欧拉,服务器系统)" \
+		#"5" "Huawei euler OS(arm64,x64,华为欧拉,服务器系统)" \
 	}
 	install_alpha_containers_en() {
 		ALPHA_SYSTEM=$(

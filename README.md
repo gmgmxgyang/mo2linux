@@ -103,6 +103,8 @@ _**If you do not live in China, please enter**_
 > 1.安装安卓版[Termux](https://apk.tmoe.me/termux) 和[Termux:api](https://apk.tmoe.me/termux-api)  
 > 2.打开 termux，输入以下命令
 
+If you are using bash/zsh,then type
+
 ```shell
     . <(curl -L gitee.com/mo2/linux/raw/2/2)
 ```

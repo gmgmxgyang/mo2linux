@@ -4090,7 +4090,8 @@ x11vnc_warning() {
 			${BOLD}${YELLOW}流畅程度（Zlib compression level为最高时）:${RESET}
 			${BLUE}tight > x11vnc > tiger${RESET}
 
-			注：${GREEN}过高${RESET}的压缩级别将增大${BLUE}CPU负担${RESET}，并${PURPLE}严重拖慢${RESET}渲染速度。
+			注：在本地连接的情况下,${GREEN}过高${RESET}的压缩级别将增大${BLUE}CPU负担${RESET},并${PURPLE}严重拖慢${RESET}渲染速度。
+            在非本地连接的情况下,建议您适当调高压缩级别,以减少传输流量。
 			以上为${PURPLE}主观数据${RESET}，影响流畅度的因素不止压缩算法、级别和硬件加速，请以${GREEN}实际体验${RESET}为准。
 			------------------------
 			配置完x11vnc后，您可以在容器里输${GREEN}startx11vnc${RESET}${BLUE}启动${RESET},输${GREEN}stopvnc${RESET}${RED}停止${RESET}

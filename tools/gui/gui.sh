@@ -4076,8 +4076,7 @@ x11vnc_warning() {
 			注：x11vnc和tightvnc是有${RED}区别${RESET}的！
 			x11vnc可以运行tightvnc无法打开的某些应用，在WSL2/Linux实体机上的体验优于tightvnc，但在Android设备上运行的流畅度可能不如tightvnc
 			
-			若您已安装了${GREEN}tight${RESET},但未安装${PURPLE}tiger${RESET},则可使用${BLUE}x11vnc${RESET};
-			若您已安装了${GREEN}tiger${RESET},则建议使用${YELLOW}tiger${RESET},而不是${PURPLE}x11vnc${RESET}。
+			若您的tiger/tightvnc服务不稳定,则可换用${BLUE}x11vnc${RESET}
 
 			${BOLD}${YELLOW}vnc服务端推荐程度：${RESET}
 			${BLUE}tiger > x11vnc > tight${RESET}
@@ -4086,7 +4085,7 @@ x11vnc_warning() {
 			${BLUE}tight > tiger > x11vnc${RESET}
 			
 			${BOLD}${YELLOW}流畅程度（Zlib compression level为最低,且支持加速渲染时）:${RESET}
-			${BLUE}tiger > tight ? x11vnc${RESET}
+			${BLUE}tiger > x11vnc ? tight ${RESET}
 
 			${BOLD}${YELLOW}流畅程度（Zlib compression level为最高时）:${RESET}
 			${BLUE}tight > x11vnc > tiger${RESET}

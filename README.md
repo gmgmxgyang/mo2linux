@@ -1249,3 +1249,11 @@ nano $(command -v startvnc)
 
 - 1.增加 Dockerfile ,并为部分发行版+桌面提供每周自动构建镜像。
 - 您现在可以直接下载包含 GUI 的容器镜像。
+
+- ##### 3月 更新日志
+
+- 1.移除uos,euleros等容器
+
+- ##### 4月 更新日志
+
+- 1.移除ubuntu-devel (arm64|amd64) * (xfce|kde|mate) weekly builds版容器

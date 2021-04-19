@@ -72,10 +72,10 @@ check_container_name() {
 export_tmoe_env() {
 	mkdir -p ${ENV_DIR}
 	if [ -d /tmp/profile ]; then
-		cp /tmp/profile/login ${ENV_DIR}
+		mv /tmp/profile/login ${ENV_DIR}
 		chmod a+x -R ${ENV_DIR}
 		source /tmp/profile/export_env
-		cp -vf /tmp/profile/proot_systemctl /tmp/profile/ps /etc/profile.d/permanent/
+		cp -vf /tmp/profile/* /etc/profile.d/permanent/
 		rm -rfv /tmp/profile
 	fi
 }

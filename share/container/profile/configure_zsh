@@ -62,7 +62,7 @@ set_tmoe_zsh_env() {
 	ENV_DIR="${TMOE_LINUX_DIR}/environment"
 }
 check_container_name() {
-	CONTAINER_NAME=$(cat ${CONTAINER_TXT} | awk -F '=' '{print $2}')
+	CONTAINER_NAME=$(grep CONTAINER_NAME ${CONTAINER_TXT} | awk -F '=' '{print $2}')
 	case ${CONTAINER_NAME} in
 	*nogui*zsh) AUTO_CONFIGURE=true ;;
 	*nogui* | code_web-*) AUTO_CONFIGURE=false ;;

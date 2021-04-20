@@ -136,7 +136,7 @@ tmoe_main() {
 	m | mips | mipsel) ARCH_TYPE='mipsel' ;;
 	m64 | mips64 | mips64el) ARCH_TYPE='mips64el' ;;
 	risc*) ARCH_TYPE='riscv64' ;;
-	v*) EXEC_PROGRAM='startvnc' ;;
+	v | vnc) EXEC_PROGRAM='startvnc' ;;
 	xs | xsdl | xserver) EXEC_PROGRAM='startxsdl' ;;
 	x11 | x11vnc) EXEC_PROGRAM='startx11vnc' ;;
 	no | novnc) EXEC_PROGRAM='novnc' ;;
@@ -146,7 +146,7 @@ tmoe_main() {
 	*) EXEC_PROGRAM="${4}" ;;
 	esac
 	case "$5" in
-	v*) EXEC_PROGRAM='startvnc' ;;
+	v | vnc) EXEC_PROGRAM='startvnc' ;;
 	x | xs | xsdl | xserver) EXEC_PROGRAM='startxsdl' ;;
 	x11 | x11vnc) EXEC_PROGRAM='startx11vnc' ;;
 	no | novnc) EXEC_PROGRAM='novnc' ;;
@@ -254,10 +254,10 @@ start_tmoe_container() {
 	true) [[ ! ${TMOE_LANG} =~ zh_.*UTF-8 ]] || get_hitokito_cn ;;
 	esac
 
-	if [[ -n ${EXEC_PROGRAM} && -z ${TEMPORARY_SCRIPT_FILE} ]]; then
+	if [[ -n ${EXEC_PROGRAM} ]]; then
 		case ${EXEC_PROGRAM} in
 		startx11vnc | startvnc) [[ ! $(command -v am) ]] || am start -n com.realvnc.viewer.android/com.realvnc.viewer.android.app.ConnectionChooserActivity 2>/dev/null ;;
-		no | novnc)
+		novnc)
 			NOVNC_PORT=$(grep '^NOVNC_PORT=' ${DEBIAN_CHROOT}/usr/local/bin/novnc | head -n 1 | awk -F '=' '{print $2}' | cut -d '"' -f 2)
 			[[ -n ${NOVNC_PORT} ]] || NOVNC_PORT=36080
 			NOVNC_ADDR="http://localhost:${NOVNC_PORT}/vnc.html"

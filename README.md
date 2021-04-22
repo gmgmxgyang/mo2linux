@@ -439,8 +439,8 @@ Next, I will introduce the meaning of each parameter.
 tmoe ns d s x
 ```
 
-假设您安装了一个kali-rolling容器，并自定义容器名称为z。  
-当您输入`t p k z`时，发现启动的是proot kali zsh容器，而不是proot kali z。  
+假设您安装了一个名称为**z**的kali-rolling容器。  
+当您输入`t p k z`时，发现启动的是**proot kali zsh**容器，而不是**proot kali z**。  
 在这种情况下，您需要输入完整的容器名称: `t p kali-z` , 而不能输入`t p k-z`  
 
 `tmoe`的第四和第五个参数可以让容器在启动时，直接执行本地脚本/二进制文件，详见 _share/container_ 目录下的README  

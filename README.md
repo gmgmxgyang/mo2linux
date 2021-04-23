@@ -1263,4 +1263,6 @@ nano $(command -v startvnc)
 
 - ##### 4月 更新日志
 
-- 1.移除ubuntu-devel (arm64|amd64) * (xfce|kde|mate) weekly builds版容器
+- 1.移除ubuntu-devel (arm64|amd64) * (xfce|kde|mate) weekly builds版容器。  
+- 2.加入服务型容器。  
+- 3.增加更多容器配置选项。  

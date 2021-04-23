@@ -47,7 +47,7 @@ cat >${TMP_FILE} <<-ENDOFTMOECHROOT
 	    Android) ;;
 	    *)
 	        case \$(id -u) in
-	        0)  MOUNT_SYSFS=false ;;
+	        0) ;;
 	        *)
 	            if [ \$(command -v sudo) ]; then
 	                sudo su -c "bash ${DEBIAN_CHROOT}/usr/local/etc/tmoe-linux/container/tmoe-linux-container"

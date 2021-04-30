@@ -7,7 +7,11 @@
 > If you do not understand the following readme, please give me an issue to explain the situation,or open [README.en.md](https://github.com/2moe/tmoe-linux/blob/master/README.en.md)  
 > 化繁为简，让 GNU/Linux 的乐趣触手可及。
 
-如需反馈 bug,请前往[github](https://github.com/2moe/tmoe-linux/issues)
+如需反馈 bug,请前往[github](https://github.com/2moe/tmoe-linux/issues)  
+
+注：新版很有可能用rust重写。  
+之后开发者可能只维护github上的仓库了。  
+咕咕咕，等到2022年应该就能完成了吧？  
 
 ## 介绍 Introduction
 

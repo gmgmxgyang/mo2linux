@@ -1,1 +1,1 @@
-./share/app/manager
+src/old-version/share/app/manager

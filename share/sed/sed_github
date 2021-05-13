@@ -14,6 +14,7 @@ for i in ${ALL_SHARE_FILE}; do
         SHARE_FILE="${SHARE_FILE} ${i}"
     fi
 done
+SHARE_FILE="${SHARE_FILE} ./tools/app/tool ./tools/virtualization/qemu/startqemu"
 printf "%s\n" "$SHARE_FILE"
 INSTALLATION_FILE=./share/container/install
 

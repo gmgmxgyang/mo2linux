@@ -92,7 +92,7 @@ check_tmoe_command() {
 	else
 		TMOE_TIPS_01="tmoe t"
 	fi
-	TMOE_TIPS_00="Welcome to tmoe linux tool v1.4677,type ${TMOE_TIPS_01} to start this tool."
+	TMOE_TIPS_00="Welcome to tmoe linux tool v1.4678,type ${TMOE_TIPS_01} to start this tool."
 	#勿改00变量
 }
 #########
@@ -115,7 +115,7 @@ gnu_linux_env() {
 	fi
 	TMOE_GIT_DIR="${TMOE_LINUX_DIR}/git"
 	TMOE_ICON_DIR="${TMOE_LINUX_DIR}/icons"
-	TMOE_TOOL_DIR="${TMOE_GIT_DIR}/tools"
+	TMOE_TOOL_DIR="${TMOE_GIT_DIR}/share/old-version/tools"
 	TMOE_OPT_BIN_DIR="${TMOE_TOOL_DIR}/sources/opt-bin"
 	TMOE_GIT_URL="gitee.com/mo2/linux"
 	APPS_LNK_DIR='/usr/share/applications'

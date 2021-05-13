@@ -591,7 +591,7 @@ check_tmoe_linux_desktop_link() {
 create_tmoe_linux_desktop_icon() {
     if [ ! $(command -v debian-i) ]; then
         cd /usr/local/bin
-        curl -Lv -o debian-i 'https://cdn.jsdelivr.net/gh/2moe/tmoe-linux@master/.mirror/tool'
+        curl -Lv -o debian-i 'https://gitee.com/mo2/linux/raw/master/share/old-version/tools/app/tool'
         chmod a+rx debian-i
     fi
     cp ${TMOE_TOOL_DIR}/app/lnk/tmoe-linux.desktop ${APPS_LNK_DIR}/tmoe-linux.desktop

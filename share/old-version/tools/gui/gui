@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 ############################################
 gui_main() {
     IOSEVKA_TTF_FILE="/usr/share/fonts/truetype/iosevka/Iosevka-Term-Mono.ttf"
@@ -48,7 +47,7 @@ docker_auto_install_gui_env() {
     check_linux_distro
     check_architecture
     gnu_linux_env
-    source ${TMOE_TOOL_DIR}/environment.sh 2>/dev/null
+    source ${TMOE_TOOL_DIR}/environment/global_env 2>/dev/null
     check_current_user_name_and_group 2>/dev/null
 EOF
     check_tmoe_linux_desktop_link

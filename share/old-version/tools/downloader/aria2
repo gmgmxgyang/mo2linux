@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 ########################################################################
 main() {
     tmoe_aria2_env
@@ -82,7 +81,7 @@ press_enter_to_return() {
 ################
 upgrade_tmoe_aria2_tool() {
     cd /usr/local/bin
-    curl -Lv -o aria2-i 'https://gitee.com/mo2/linux/raw/master/share/old-version/tools/downloader/aria2.sh'
+    curl -Lv -o aria2-i 'https://gitee.com/mo2/linux/raw/master/share/old-version/tools/downloader/aria2'
     printf "%s\n" "Update ${YELLOW}completed${RESET}, Press ${GREEN}enter${RESET} to ${BLUE}return.${RESET}"
     printf "%s\n" "${YELLOW}更新完成，按回车键返回。${RESET}"
     chmod a+rx aria2-i

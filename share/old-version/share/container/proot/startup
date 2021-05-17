@@ -596,7 +596,7 @@ cat >${TMOE_STARTUP_SCRIPT} <<-ENDOFPROOT
 	    esac
 	    if [[ -n \${PROOT_LOADER} && -z \${LD_LIBRARY_PATH} ]]; then
 	        set -- "env" "PROOT_LOADER=\${PROOT_LOADER}" "\${@}"
-	        elif [[ -z \${PROOT_LOADER} && -n \${LD_LIBRARY_PATH} ]]; then
+	    elif [[ -z \${PROOT_LOADER} && -n \${LD_LIBRARY_PATH} ]]; then
 	        set -- "env" "LD_LIBRARY_PATH=\${LD_LIBRARY_PATH}" "\${@}"
 	    else
 	        set -- "PROOT_LOADER=\${PROOT_LOADER}" "\${@}"

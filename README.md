@@ -895,8 +895,8 @@ nano $(command -v startvnc)
 ### 八.相关项目
 
 [termux/proot-distro](https://github.com/termux/proot-distro)  
-[mo2/tmoe-zsh](https://gitee.com/mo2/zsh)  
-[coslyk/debianopt-repo](https://github.com/coslyk/debianopt-repo)
+[2cd/zsh](https://github.com/2cd/zsh)  
+[coslyk/debianopt-repo](https://github.com/coslyk/debianopt-repo)  
 
 ### 九.更新日志 logs
 

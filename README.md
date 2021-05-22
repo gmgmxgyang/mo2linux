@@ -8,6 +8,7 @@
 > 化繁为简，让 GNU/Linux 的乐趣触手可及。
 
 如需反馈 bug,请前往[github](https://github.com/2moe/tmoe-linux/issues)  
+如需了解tmoe配置的容器环境的扩展用法，那就阅读此[文档](https://github.com/2moe/tmoe-linux/blob/master/share/old-version/share/container/README.md)吧！  
 
 注：新版很有可能用rust重写。  
 之后开发者可能只维护github上的仓库了。  

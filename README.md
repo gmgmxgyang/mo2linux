@@ -123,7 +123,7 @@ If you are using fish,then type the following commands.
   bash manager.sh
 ```
 
-> 3.若您使用的是 manager，则可以使用触摸屏进行点击;若为 tool，则可使用触摸屏进行滑动，回车键进行确认。  
+> 3.您若使用的是 manager，则可使用触摸屏进行点击;若为 tool，则可使用触摸屏进行滑动，回车键进行确认。  
 > When you are using the manager, you can use the touch screen to click.When you are using the tool, you can use the touch screen to slide and press the Enter to confirm.
 >
 > 4.如需使用 gui,可能还需要安装 VNC apk,您可以前往 Google play 或使用 Tmoe-linux 的 debian-i 来下载。  
@@ -398,7 +398,7 @@ Next, I will introduce the meaning of each parameter.
     在第四个参数中，"arm64"可以简化为"a";"amd64"可以简化为"x";"i386"可以简化为"i";"armhf"可以简化为"h"。
     If you are not using qemu-user for cross-architecture,then you can skip it.
     例如:"tmoe p arch arm64"="tmoe p a a"
-    若您未选择跨架构运行，且当前架构为"arm64",则可去除 "arm64" 参数,直接输入"tmoe p a" 就能启动"proot archlinux arm64"容器
+    若您的宿主机架构为"arm64",则可去除 "arm64" 参数,直接输入"tmoe p a" 就能启动"proot arch arm64"容器
 
     "$4":
         "x:x64/amd64"
@@ -512,7 +512,7 @@ tmoe proot debian sid i386
 tmoe p d s i
 ```
 
-若您使用的是 tmoe-zsh 配置的环境，则可以进一步简化为
+您若使用的是 tmoe-zsh 配置的环境，则可以将其进一步简化为
 
 ```shell
 t p d s i
@@ -675,7 +675,7 @@ qemu 虚拟机管理
 Support one-key graphical user interface installation.
 ![de&wm](https://images.gitee.com/uploads/images/2020/0721/202944_b98d0e7b_5617340.png "Capture+_2020-07-21-20-09-40.png")
 
-2.TUI 式界面，便捷配置
+2.TUI，便捷配置
 ![remote desktop configuration](https://images.gitee.com/uploads/images/2020/0722/143751_d5f4d9c4_5617340.png "Capture+_2020-07-22-14-36-25.png")  
 ![分辨率](https://images.gitee.com/uploads/images/2020/0721/203215_9823fc25_5617340.png "Capture+_2020-07-11-10-05-41.png")
 
@@ -888,7 +888,7 @@ apt install -y micro
 micro $(command -v startvnc)
 ```
 
-> 将 **1440x720**（竖屏）改成你需要的分辨率，例如 **1920x1080**（横屏)
+> 将 **1440x720**（竖屏）改成您需要的分辨率，例如 **1920x1080**（横屏)
 > 修改完成后，按`Ctrl+S` 保存，`Ctrl+Q`退出。
 
 ---

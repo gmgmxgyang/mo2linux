@@ -123,7 +123,7 @@ If you are using fish,then type the following commands.
   bash manager.sh
 ```
 
-> 3.您若使用的是 manager，则可使用触摸屏进行点击;若为 tool，则可使用触摸屏进行滑动，回车键进行确认。  
+> 3.若为 manager，则您可使用触摸屏进行点击; 若为 tool，则您可使用触摸屏进行滑动，回车键进行确认。  
 > When you are using the manager, you can use the touch screen to click.When you are using the tool, you can use the touch screen to slide and press the Enter to confirm.
 >
 > 4.如需使用 gui,可能还需要安装 VNC apk,您可以前往 Google play 或使用 Tmoe-linux 的 debian-i 来下载。  
@@ -512,7 +512,7 @@ tmoe proot debian sid i386
 tmoe p d s i
 ```
 
-您若使用的是 tmoe-zsh 配置的环境，则可以将其进一步简化为
+您若使用了 tmoe-zsh 配置的环境，则可以将其进一步简化为
 
 ```shell
 t p d s i

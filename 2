@@ -85,6 +85,9 @@ check_system_version() {
 				sed -e 's@^[^#]@#&@g' \
 					-e '$ a\deb https://mirrors.ustc.edu.cn/termux stable main' \
 					-i '/data/data/com.termux/files/usr/etc/apt/sources.list'
+				apt update
+				apt upgrade
+				apt dist-upgrade
 				;;
 			n) ;;
 			esac

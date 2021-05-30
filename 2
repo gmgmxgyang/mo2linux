@@ -11,7 +11,7 @@ show_package_info() {
 		Section: admin
 		Maintainer: 2moe <25324935+2moe@users.noreply.github.com>
 		Depends: aria2 (>= 1.30.0), binutils (>= 2.28-5), coreutils (>= 8.26-3), curl (>= 7.52.1-5), findutils (>= 4.6.0), git (>= 1:2.11.0-3), grep, lsof (>= 4.89), micro (>= 2.0.6-2) | nano (>= 2.7.4-1), proot (>= 5.1.0), procps (>= 2:3.3.12), sed, sudo (>= 1.8.19p1-2.1), tar (>= 1.29b-1.1),  util-linux (>= 2.29.2-1), whiptail (>= 0.52.19), xz-utils (>= 5.2.2), zstd (>= 1.1.2)${EXTRA_DEPS}
-		Recommends: bat, debootstrap, eatmydata, gzip, less, lz4, pulseaudio, pv, qemu-user-static, systemd-container
+		Recommends: bat, busybox, debootstrap, eatmydata, gzip, less, lz4, pulseaudio, pv, qemu-user-static, systemd-container
 		Suggests: lolcat, zsh
 		Homepage: https://github.com/2moe/linux
 		Tag: interface::TODO, interface::text-mode, system::cloud, system::virtual, role::program, works-with::archive, works-with::software:package, works-with::text
@@ -21,9 +21,9 @@ show_package_info() {
 #############
 set_env() {
 	TMOE_MANAGER="share/old-version/share/app/manager"
-	# TMOE_URL="https://gitee.com/mo2/linux/raw/master/${TMOE_MANAGER}"
-	TMOE_URL="https://cdn.jsdelivr.net/gh/2moe/archive@master/tmoe/${TMOE_MANAGER}"
-	TMOE_URL_02="https://raw.fastgit.org/2moe/archive/master/tmoe/${TMOE_MANAGER}"
+	TMOE_URL="https://gitee.com/mo2/linux/raw/master/${TMOE_MANAGER}"
+	# TMOE_URL="https://cdn.jsdelivr.net/gh/2moe/archive@master/tmoe/${TMOE_MANAGER}"
+	TMOE_URL_02="https://cdn.jsdelivr.net/gh/2moe/tmoe-linux@master/${TMOE_MANAGER}"
 	TMOE_GIT_DIR="${HOME}/.local/share/tmoe-linux/git"
 	TMOE_GIT_DIR_02="/usr/local/etc/tmoe-linux/git"
 	if [ -z ${TMPDIR} ]; then
@@ -39,10 +39,12 @@ set_env() {
 	PURPLE=$(printf '\033[35m')
 	CYAN=$(printf '\033[36m')
 	RESET=$(printf '\033[m')
+	BOLD=$(printf '\033[1m')
 }
 show_info_and_run_the_temp_file() {
 	show_package_info
 	do_you_want_to_continue
+	check_system_version
 	check_downloader
 	download_temp_file
 	exec_temp_file
@@ -59,10 +61,36 @@ do_you_want_to_continue() {
 		exit 1
 		;;
 	*)
-		printf "%s\n" "${RED}Invalid ${CYAN}choice${RESET}. skipped."
+		printf "%s\n" "${RED}Invalid ${CYAN}choice${RESET}, skipped."
 		exit 1
 		;;
 	esac
+}
+check_system_version() {
+	if [ -e /system/bin/getprop ] && [ $(uname -m) = "Android" ]; then
+		ANDROID_VERSION=$(getprop ro.build.version.release 2>/dev/null | cut -d '.' -f 1)
+		case ${ANDROID_VERSION} in
+		5 | 6)
+			printf "%s\n" "${BLUE}ANDROID_VERSION:${PURPLE}${ANDROID_VERSION}${RESET}"
+			printf "%s\n" "${YELLOW}Are you using ${BLUE}Android 5/6${RED}(old version)?${PURPLE}[Y/n]${RESET}"
+			read opt
+			case $opt in
+			y* | Y* | "")
+				printf "%s\n" "Do you want to switch the source to ${BLUE}USTC?${PURPLE}[Y/n]${RESET}"
+				printf "%s\n" "${YELLOW}${PREFIX}/etc/apt/sources.list${RESET}"
+				do_you_want_to_continue
+				if [[ ! -e /data/data/com.termux/files/usr/etc/apt/sources.list ]]; then
+					printf "%s\n" >>/data/data/com.termux/files/usr/etc/apt/sources.list
+				fi
+				sed -e 's@^[^#]@#&@g' \
+					-e '$ a\deb https://mirrors.ustc.edu.cn/termux stable main' \
+					-i '/data/data/com.termux/files/usr/etc/apt/sources.list'
+				;;
+			n) ;;
+			esac
+			;;
+		esac
+	fi
 }
 check_manager_file() {
 	unset MANAGER_FILE
@@ -92,15 +120,10 @@ download_temp_file() {
 	aria2c) aria2c --connect-timeout=7 --console-log-level=info --no-conf --allow-overwrite=true -o ${TEMP_FILE} ${TMOE_URL} || aria2c --connect-timeout=20 --console-log-level=debug --no-conf --allow-overwrite=true -o ${TEMP_FILE} ${TMOE_URL_02} ;;
 	curl) curl --connect-timeout 7 -Lvo ${TEMP_FILE} ${TMOE_URL} || curl --connect-timeout 20 -Lvo ${TEMP_FILE} ${TMOE_URL_02} ;;
 	wget) wget --connect-timeout=7 -O ${TEMP_FILE} ${TMOE_URL} || wget --connect-timeout=20 -O ${TEMP_FILE} ${TMOE_URL_02} ;;
-	"")
+	*)
 		printf "%s\n" "${RED}${BOLD}ERROR${RESET}, ${CYAN}please install ${GREEN}curl${RESET} first"
 		sleep 2
 		exit 127
-		;;
-	*)
-		printf "%s\n" "${RED}${BOLD}ERROR${RESET}"
-		sleep 2
-		exit 1
 		;;
 	esac
 }

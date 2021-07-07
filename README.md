@@ -1,18 +1,18 @@
 # 🍭Tmoe-linux
 
 ```shell
-. <(curl -L gitee.com/mo2/linux/raw/2/2)
+  curl -L gitee.com/mo2/linux/raw/2/2 | sh
 ```
 
 > If you do not understand the following readme, please give me an issue to explain the situation,or open [README.en.md](https://github.com/2moe/tmoe-linux/blob/master/README.en.md)  
 > 化繁为简，让 GNU/Linux 的乐趣触手可及。
 
 如需反馈 bug,请前往[github](https://github.com/2moe/tmoe-linux/issues)  
-如需了解tmoe配置的容器环境的扩展用法，那就阅读此[文档](https://github.com/2moe/tmoe-linux/blob/master/share/old-version/share/container/README.md)吧！  
+如需了解 tmoe 配置的容器环境的扩展用法，那就阅读此[文档](https://github.com/2moe/tmoe-linux/blob/master/share/old-version/share/container/README.md)吧！
 
-注：新版很有可能用rust重写。  
-之后开发者可能只维护github上的仓库了。  
-咕咕咕，等到2022年应该就能完成了吧？  
+注：新版很有可能用 rust 重写。  
+之后开发者可能只维护 github 上的仓库了。  
+咕咕咕，等到 2022 年应该就能完成了吧？
 
 ## 介绍 Introduction
 
@@ -248,7 +248,7 @@ A:完整命令是 startvnc，您只需记住 st，然后就能借助 zsh 的自�
 
 A:可以哒！ヾ(≧▽≦\*)o 您可以在其它主流的 GNU/Linux 发行版，包括但不限于容器、虚拟机和实体机上使用这个脚本。  
 注：截止 2020 年 7 月份,LinuxDeploy 配置的 archlinux 容器存在某个问题,导致 libnewt 无法被正确配置，进而导致本脚本无法在上面正常运行。  
-解决方法很简单，删掉某个文件夹再重新配置就可以了。因为本工具开发者已经很久没用过 LinuxDeploy 了，所以忘记是哪个啦！  
+解决方法很简单，删掉某个文件夹再重新配置就可以了。因为本工具开发者已经很久没用过 LinuxDeploy 了，所以忘记是哪个啦！
 
 ---
 
@@ -443,12 +443,12 @@ Next, I will introduce the meaning of each parameter.
 tmoe ns d s x
 ```
 
-假设您安装了一个名称为**z**的kali-rolling容器。  
+假设您安装了一个名称为**z**的 kali-rolling 容器。  
 当您输入`t p k z`时，发现启动的是**proot kali zsh**容器，而不是**proot kali z**。  
-在这种情况下，您需要输入完整的容器名称: `t p kali-z` , 而不能输入`t p k-z`  
+在这种情况下，您需要输入完整的容器名称: `t p kali-z` , 而不能输入`t p k-z`
 
-`tmoe`的第四和第五个参数可以让容器在启动时，直接执行本地脚本/二进制文件，详见 _share/container_ 目录下的README  
-注：本地文件的优先级要高于容器内部。  
+`tmoe`的第四和第五个参数可以让容器在启动时，直接执行本地脚本/二进制文件，详见 _share/container_ 目录下的 README  
+注：本地文件的优先级要高于容器内部。
 
 ---
 
@@ -897,7 +897,7 @@ micro $(command -v startvnc)
 
 [termux/proot-distro](https://github.com/termux/proot-distro)  
 [2cd/zsh](https://github.com/2cd/zsh)  
-[coslyk/debianopt-repo](https://github.com/coslyk/debianopt-repo)  
+[coslyk/debianopt-repo](https://github.com/coslyk/debianopt-repo)
 
 ### 九.更新日志 logs
 
@@ -1261,12 +1261,12 @@ micro $(command -v startvnc)
 - 1.增加 Dockerfile ,并为部分发行版+桌面提供每周自动构建镜像。
 - 您现在可以直接下载包含 GUI 的容器镜像。
 
-- ##### 3月 更新日志
+- ##### 3 月 更新日志
 
-- 1.移除uos,euleros等容器
+- 1.移除 uos,euleros 等容器
 
-- ##### 4月 更新日志
+- ##### 4 月 更新日志
 
-- 1.移除ubuntu-devel (arm64|amd64) * (xfce|kde|mate) weekly builds版容器。  
-- 2.加入服务型容器。  
-- 3.增加更多容器配置选项。  
+- 1.移除 ubuntu-devel (arm64|amd64) \* (xfce|kde|mate) weekly builds 版容器。
+- 2.加入服务型容器。
+- 3.增加更多容器配置选项。

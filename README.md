@@ -1,7 +1,7 @@
 # 🍭Tmoe-linux
 
 ```shell
-  curl -L gitee.com/mo2/linux/raw/2/2 | sh
+  . <(curl -L gitee.com/mo2/linux/raw/2/2)
 ```
 
 > If you do not understand the following readme, please give me an issue to explain the situation,or open [README.en.md](https://github.com/2moe/tmoe-linux/blob/master/README.en.md)  

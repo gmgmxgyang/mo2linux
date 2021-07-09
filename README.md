@@ -398,7 +398,7 @@ Next, I will introduce the meaning of each parameter.
     在第四个参数中，"arm64"可以简化为"a";"amd64"可以简化为"x";"i386"可以简化为"i";"armhf"可以简化为"h"。
     If you are not using qemu-user for cross-architecture,then you can skip it.
     例如:"tmoe p arch arm64"="tmoe p a a"
-    若您的宿主机架构为"arm64",则可去除 "arm64" 参数,直接输入"tmoe p a" 就能启动"proot arch arm64"容器
+    若当前宿主机架构为"arm64",则您可去除 "arm64" 参数,直接输入"tmoe p a" 就能启动"proot arch arm64"容器
 
     "$4":
         "x:x64/amd64"

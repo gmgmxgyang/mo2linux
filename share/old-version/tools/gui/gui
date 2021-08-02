@@ -495,7 +495,7 @@ standand_desktop_installation() {
     standand_desktop_installation_zh() {
         INSTALLDESKTOP=$(whiptail --title "GUI" --menu \
             "Desktop environment(简称DE)是一种多功能和多样化的图形界面。\n若当前环境为容器，则您只需选择第一或者第二项。\nIf you are using a container,then choose proot_DE or WM.\n若当前环境为虚拟机，则您可以任意挑选项目。" 0 0 0 \
-            "1" "🍰 proot_DE(proot容器可运行:xfce,mate,lxde)" \
+            "1" "🍰 proot_DE(proot容器可运行:xfce,phosh,mate,lxqt)" \
             "2" "🍙 window manager窗口管理器(ice,fvwm)" \
             "3" "🍔 chroot/docker_DE(kde,dde)" \
             "4" "🍱 VM_DE(虚拟机/systemd容器可运行:gnome,cinnamon)" \
@@ -587,6 +587,7 @@ tmoe_container_desktop() {
             "3" "🐦 lxqt(lxde原团队基于QT开发的桌面)" \
             "4" "🕊️ lxde(轻量化桌面,资源占用低)" \
             "5" "🌿 mate(GNOME2的延续,让用户体验更舒适的环境)" \
+            "6" "phosh(based on GNOME/GTK)" \
             "0" "🌚 none我一个都不要 =￣ω￣=" \
             3>&1 1>&2 2>&3)
     }
@@ -598,6 +599,7 @@ tmoe_container_desktop() {
             "3" "🐦 lxqt" \
             "4" "🕊️ lxde(lightweight)" \
             "5" "🌿 mate(the continuation of GNOME 2)" \
+            "6" "phosh(Pure Wayland shell for mobile devices)" \
             "0" "🌚 back =￣ω￣=" \
             3>&1 1>&2 2>&3)
     }
@@ -625,6 +627,11 @@ tmoe_container_desktop() {
         install_lxde_desktop
         ;;
     5) install_mate_desktop ;;
+    6)
+        printf "%s\n" "Sorry, 此功能正在测试中..."
+        press_enter_to_return
+        tmoe_container_desktop
+        ;;
     esac
     ##########################
     press_enter_to_return

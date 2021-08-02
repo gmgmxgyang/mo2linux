@@ -2736,7 +2736,7 @@ install_gnome3_desktop() {
         ;;
     "arch")
         if (whiptail --title "gnome or gnome-extra" --yes-button "gnome" --no-button "gnome-extra" --yesno 'The former is more streamlined, and the latter\n includes some extra software of gnome.\n前者为gnome基础桌面，后者包含gnome全家桶' 0 0); then
-            DEPENDENCY_01='gnome'
+            DEPENDENCY_01='gnome gnome-flashback'
         else
             DEPENDENCY_01='gnome-extra gnome'
         fi
@@ -2799,25 +2799,34 @@ get_ubuntu_desktop_language_pack() {
     esac
 }
 ################
-ln_s_gnome_flashback_metacity() {
-    GNOME_SESSION="/usr/local/bin/gnome-flashback-metacity"
-    for i in /usr/lib/gnome-flashback/gnome-flashback-metacity /usr/lib/gnome-session-flashback/gnome-flashback-metacity /usr/libexec/gnome-flashback-metacity; do
-        if [[ -e ${i} ]]; then
-            ln -svf ${i} ${GNOME_SESSION}
-            break
-        fi
-    done
-
+cat_gnome_flashback_session() {
     if [[ ! -e ${GNOME_SESSION} ]]; then
         cat >${GNOME_SESSION} <<-'EOF'
-        #!/bin/sh
+            #!/bin/sh
 
-        if [ -z $XDG_CURRENT_DESKTOP ]; then
-            export XDG_CURRENT_DESKTOP="GNOME-Flashback:GNOME"
-        fi
-        exec gnome-session --session=gnome-flashback-metacity --disable-acceleration-check "$@"
+            if [ -z $XDG_CURRENT_DESKTOP ]; then
+                export XDG_CURRENT_DESKTOP="GNOME-Flashback:GNOME"
+            fi
+            exec gnome-session --builtin --session=gnome-flashback-metacity --disable-acceleration-check "$@"
 EOF
         chmod a+rx ${GNOME_SESSION}
+    fi
+}
+ln_s_gnome_flashback_metacity() {
+    GNOME_SESSION="/usr/local/bin/gnome-flashback-metacity"
+    GNOME_SESSION_FLASHBACK="/usr/lib/gnome-flashback/gnome-flashback-metacity"
+    # for i in /usr/lib/gnome-flashback/gnome-flashback-metacity /usr/lib/gnome-session-flashback/gnome-flashback-metacity /usr/libexec/gnome-flashback-metacity; do
+    #     if [[ -e ${i} ]]; then
+    #         ln -svf ${i} ${GNOME_SESSION}
+    #         break
+    #     fi
+    # done
+    if [[ -e /usr/lib/gnome-flashback/gnome-flashback-metacity ]]; then
+        ln -svf ${GNOME_SESSION_FLASHBACK} ${GNOME_SESSION}
+    else
+        if [[ -e /usr/sbin/service ]]; then
+            cat_gnome_flashback_session
+        fi
     fi
 }
 cinnamon_warning() {

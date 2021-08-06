@@ -38,6 +38,11 @@
 
 ![main menu English.ver](https://images.gitee.com/uploads/images/2020/1012/135918_eaccc0da_5617340.png "截图_2020-10-12_13-59-00.png")
 
+#### Enjoy gnome40 on arm64 device
+
+![gnome40_p1](https://images.gitee.com/uploads/images/2021/0806/224412_07b5cd5b_5617340.png "Screenshot_20210806-221622.png")
+![gnome40_p2](https://images.gitee.com/uploads/images/2021/0806/224423_fa8285a5_5617340.png "Screenshot_20210806-222714.png")
+
 ### 一.不同平台的安装教程 Installation
 
 **You can run tmoe-linux manager not only on termux, but also on GNU/Linux.**

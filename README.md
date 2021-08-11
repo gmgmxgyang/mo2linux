@@ -4,15 +4,16 @@
   . <(curl -L gitee.com/mo2/linux/raw/2/2)
 ```
 
-> If you do not understand the following readme, please give me an issue to explain the situation,or open [README.en.md](https://github.com/2moe/tmoe-linux/blob/master/README.en.md)  
+> If you do not understand the following readme, please submit an [issue](https://github.com/2moe/tmoe-linux/issues/new), or open [README.en.md](https://github.com/2moe/tmoe-linux/blob/master/README.en.md)  
 > 化繁为简，让 GNU/Linux 的乐趣触手可及。
 
 如需反馈 bug,请前往[github](https://github.com/2moe/tmoe-linux/issues)  
 如需了解 tmoe 配置的容器环境的扩展用法，那就阅读此[文档](https://github.com/2moe/tmoe-linux/blob/master/share/old-version/share/container/README.md)吧！
 
-注：新版很有可能用 rust 重写。  
+~~注：新版很有可能用 rust 重写。  
 之后开发者可能只维护 github 上的仓库了。  
-咕咕咕，等到 2022 年应该就能完成了吧？
+咕咕咕，等到 2022 年应该就能完成了吧？  
+旧版的功能有点太多了，重写将会很花时间，开发者已经不想动了，甚至想要一直咕下去｡ﾟ・ (>﹏<) ・ﾟ｡~~
 
 ## 介绍 Introduction
 
@@ -24,7 +25,7 @@
 
 ### Preview
 
-#### install alpine arm64 chroot container (Nihongo.ver)
+#### install alpine arm64 chroot container (Nihongo ver.)
 
 ![install alpine arm64 Nihongo.ver](https://images.gitee.com/uploads/images/2020/1012/134622_39d7beb0_5617340.gif)
 
@@ -43,47 +44,26 @@
 ![gnome40_p1](https://images.gitee.com/uploads/images/2021/0806/224412_07b5cd5b_5617340.png "Screenshot_20210806-221622.png")
 ![gnome40_p2](https://images.gitee.com/uploads/images/2021/0806/224423_fa8285a5_5617340.png "Screenshot_20210806-222714.png")
 
-### 一.不同平台的安装教程 Installation
+### 一.Installation
 
 **You can run tmoe-linux manager not only on termux, but also on GNU/Linux.**
 
 **您不仅可以在 WSL 运行本工具，亦可在 Android 手机上运行。**
 
-#### 1.Windows10
+#### 1.Windows 10/11
 
 Tutorial：
 
 ##### 第一章 WSL 篇
 
-![001](https://gitee.com/mo2/tmoe-linux-comic/raw/master/001.png)
 ![002](https://gitee.com/mo2/tmoe-linux-comic/raw/master/002.png)
-![003](https://gitee.com/mo2/tmoe-linux-comic/raw/master/003.png)
 
-```powershell
-dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
-dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
-```
+Read this [doc](https://docs.microsoft.com/windows/wsl/install-win10), and then install wsl2.
 
-After restarting the win10 system, run _powershell_ again as an administrator, then type the following command.  
-重启系统后再次以管理员身份运行 _powershell_ ，然后输
+您需要先安装 WSL。  
+关于 WSL2 的安装，您可以阅读 [此文档](https://docs.microsoft.com/windows/wsl/install-win10)。
 
-```powershell
-wsl --set-default-version 2
-```
-
-[![enable](https://images.gitee.com/uploads/images/2020/0718/103733_306b06df_5617340.png)](https://sm.ms/image/I9zdphVgMc5Zky3)  
-![store](https://gitee.com/mo2/pic_api/raw/test/2020/04/03/FLpQu0i7LbIP2K9L.png)  
-若无法连接*Microsoft Store*,那么也可以手动安装。  
-[Debian](https://aka.ms/wsl-debian-gnulinux)  
-[Kali](https://aka.ms/wsl-kali-linux-new)  
-[Ubuntu](https://aka.ms/wsl-ubuntu-1804)
-
-![004](https://gitee.com/mo2/tmoe-linux-comic/raw/master/004.png)
-![005](https://gitee.com/mo2/tmoe-linux-comic/raw/master/005.png)
-![006](https://gitee.com/mo2/tmoe-linux-comic/raw/master/006.png)
-![007](https://gitee.com/mo2/tmoe-linux-comic/raw/master/007.png)
-![008](https://gitee.com/mo2/tmoe-linux-comic/raw/master/008.png)
-![009](https://gitee.com/mo2/tmoe-linux-comic/raw/master/009.png)
+[![enable](https://images.gitee.com/uploads/images/2020/0718/103733_306b06df_5617340.png)](https://sm.ms/image/I9zdphVgMc5Zky3)
 
 ---
 
@@ -101,12 +81,10 @@ _**If you do not live in China, please enter**_
     bash -c "$(curl -L git.io/linux.sh)"
 ```
 
-若已经为 root 用户，则可以去掉 sudo。
-
-最后按方向键和回车键进行操作。
-
-> 注：WSL 请选择安装工具  
-> 后期注：建议 WSL 用户直接安装 gui ，不要在里面先套娃安装 chroot 容器，再装 gui，因为这将导致 windows 程序调用失败。
+> 您如果在使用过程中，遇到了部分字符显示异常的问题，那么可以试一下 [windows terminal](https://www.microsoft.com/en-us/p/windows-terminal/9n0dx20hk701)。  
+> 注：当提示 tool or manager 时，请选择 tool。  
+> 建议 WSL 用户直接安装 gui ，不要在里面先套娃安装 chroot 容器，再装 gui，因为这将导致 windows 程序调用失败。  
+> 虽然 WSL 支持自定义导入 rootfs, 但是 tmoe 没有适配这个功能。~~(咕，后期可能会支持)~~
 
 #### 2.Android-Termux
 
@@ -129,7 +107,7 @@ If you are using fish,then type the following commands.
 ```
 
 > 3.若为 manager，则您可使用触摸屏进行点击; 若为 tool，则您可使用触摸屏进行滑动，回车键进行确认。  
-> When you are using the manager, you can use the touch screen to click.When you are using the tool, you can use the touch screen to slide and press the Enter to confirm.
+> When you are using the manager, you can use the touch screen to click. When you are using the tool, you can use the touch screen to slide and press the Enter to confirm.
 >
 > 4.如需使用 gui,可能还需要安装 VNC apk,您可以前往 Google play 或使用 Tmoe-linux 的 debian-i 来下载。  
 > 注：web 端的 novnc 无需安装 apk,但触控操作体验不佳。
@@ -236,7 +214,7 @@ git clone -b master --depth=1 ${TMOE_GIT_URL} ${TMOE_GIT_DIR}
 
 > Q:I don't know how to use it?
 
-A:Type `startvnc` to start vncserver,type `stopvnc` to stop it.  
+A:Type `startvnc` to start vncserver, type `stopvnc` to stop it.  
  You can also type `startxsdl` to startx.
 
 ---
@@ -568,13 +546,13 @@ tmoe-zsh 会**自动**加载 tmoe 补全插件，其他插件管理器需要手�
 
 zinit 插件管理器**手动**配置补全插件：
 
-If you are using Android system,then type the following command.
+If you are using Android system, then type the following command.
 
 ```zsh
 [[ $(egrep '^[^#]*zinit.*completion/_tmoe' ${HOME}/.zshrc) ]] || sed -i '$ a\zinit ice lucid wait=1 as"completion" && zinit snippet ${HOME}/.local/share/tmoe-linux/git/share/completion/_tmoe' ${HOME}/.zshrc
 ```
 
-If you are using GNU/Linux system,then type the following command.
+If you are using GNU/Linux system, then type the following command.
 
 ```zsh
 [[ $(egrep '^[^#]*zinit.*completion/_tmoe' ${HOME}/.zshrc) ]] || sed -i '$ a\zinit ice lucid wait=1 as"completion" && zinit snippet /usr/local/etc/tmoe-linux/git/share/completion/_tmoe' ${HOME}/.zshrc
@@ -702,7 +680,7 @@ Support one-key graphical user interface installation.
 - [x] **xfce4**
 - [x] **lxde**
 - [x] **mate**
-- [ ] **lxqt**
+- [x] **lxqt**
 - [ ] **kde plasma 5**
 - [ ] **cinnamon**
 - [ ] **gnome 3**

@@ -4,7 +4,7 @@
   . <(curl -L gitee.com/mo2/linux/raw/2/2)
 ```
 
-> If you do not understand the following readme, please submit an [issue](https://github.com/2moe/tmoe-linux/issues/new), or open [README.en.md](https://github.com/2moe/tmoe-linux/blob/master/README.en.md)  
+> If you do not understand the following readme, please report an [issue](https://github.com/2moe/tmoe-linux/issues/new), or open [README.en.md](https://github.com/2moe/tmoe-linux/blob/master/README.en.md)  
 > 化繁为简，让 GNU/Linux 的乐趣触手可及。
 
 如需反馈 bug,请前往[github](https://github.com/2moe/tmoe-linux/issues)  
@@ -13,7 +13,7 @@
 ~~注：新版很有可能用 rust 重写。  
 之后开发者可能只维护 github 上的仓库了。  
 咕咕咕，等到 2022 年应该就能完成了吧？  
-旧版的功能有点太多了，重写将会很花时间，开发者已经不想动了，甚至想要一直咕下去｡ﾟ・ (>﹏<) ・ﾟ｡~~
+旧版的功能有点多，重写将会很花时间。开发者已经不想动了，甚至想要一直咕下去｡ﾟ・ (>﹏<) ・ﾟ｡~~
 
 ## 介绍 Introduction
 
@@ -67,7 +67,9 @@ Read this [doc](https://docs.microsoft.com/windows/wsl/install-win10), and then 
 
 ---
 
-打开子系统，然后根据提示更新 WSL2 的 linux 内核。更新完成后，重新打开子系统，然后输
+打开子系统，然后根据提示更新 WSL2 的 linux 内核。更新完成后，重新打开子系统。
+
+> It is recommend to use [windows terminal](https://www.microsoft.com/en-us/p/windows-terminal/9n0dx20hk701).
 
 ```shell
     sudo apt update
@@ -584,7 +586,7 @@ Type `tmoe`, then don't press enter, press Tab**⇄** to complete.
 
 #### 4.Ubuntu Container
 
-① 在 Android 设备上运行的 Ubuntu 容器，你可以通过 VNC 来连接自己；  
+① 在 Android 设备上运行的 Ubuntu 容器，您可以通过 VNC 来连接自己；  
 通过 adb 远程来调试自己(Android)；  
 还能通过 scrcpy+adb 调试来实现自己投屏给自己，将手机中 VNC 的画面投屏给手机中的 VNC。  
 ![ubuntu arm64 scrcpy](https://images.gitee.com/uploads/images/2020/0721/192606_c10e724e_5617340.png "截图_2020-07-18_23-08-59.png")  
@@ -711,7 +713,7 @@ Support one-key graphical user interface installation.
 
 1.提供了某些官方软件源中不包含的软件包，例如 vscode
 ![截图_2020-02-01_08-53-21.jpg](https://gitee.com/mo2/pic_api/raw/test/2020/02/16/yMgxSkGh0Tx4IJz0.jpg)
-你可以在手机的容器里安装 vscode。  
+您可以在手机的容器里安装 vscode。  
 2.对于部分工具提供了配置管理功能，例如 arm64 的 vscode-server。  
 3.对于特定虚拟化环境下运行报错的应用执行打补丁操作。  
 4.对 aria2 上百个参数进行配置管理。
@@ -891,7 +893,7 @@ micro $(command -v startvnc)
 > ~~旧版脚本部分命令借鉴了 atilo-cn 和 AnLinux，除此之外，大部分都是本人手打的。可能会有出错的地方，欢迎指正。~~
 >
 > ~~后期注:Anlinux 的脚本有些地方写得并不好，并且我知道它存在的某些缺陷。反正原作者也看不到，所以我在这里调侃也没事。😹~~  
-> ~~你去了解更本质的东西就知道哪些地方写得不好了！`(_>﹏<_)′~~  
+> ~~您去了解更本质的东西就知道哪些地方写得不好了！`(_>﹏<_)′~~  
 > ~~相比之下，Linux Deploy 的开发者写的东西要比他强很多。~~
 
 #### 2020 年
@@ -932,7 +934,7 @@ micro $(command -v startvnc)
 
 - ​ 12.修复启动 vnc 后，debian 无法正常关闭的 bug ,(请在 termux 原系统内输 `stopvnc`)
 
-- ​ 13.简化启动流程，你可以在 termux 原系统里输 startvnc 来启动 debian+vnc 客户端
+- ​ 13.简化启动流程，您可以在 termux 原系统里输 startvnc 来启动 debian+vnc 客户端
 
 - ​ 14.vnc 支持自动获取本机局域网 ip，地址格式类似于 `192.168.123.3:5902`
 
@@ -1020,7 +1022,7 @@ micro $(command -v startvnc)
 - 3.支持修复 vnc 闪退。
 - 注 1：由于在这几天的更新中给所有的桌面都加入了 dbus-launch，故在部分安卓设备的 Proot 容器上出现了兼容性问题，容易造成不稳定的状况。
 - 注 2：该操作在 linux 虚拟机及 win10 子系统上没有任何问题
-- 注 3：在最新更新的版本（容器安装方式）中已加入检测功能，理论上不会再出现此问题。你也可以在更新 debian-i 后，单独进行修复。
+- 注 3：在最新更新的版本（容器安装方式）中已加入检测功能，理论上不会再出现此问题。您也可以在更新 debian-i 后，单独进行修复。
 
 ##### 2020-04-12 更新日志
 
@@ -1037,7 +1039,7 @@ micro $(command -v startvnc)
 - 1.支持安装其它版本的 VSCode,包括 VS Codium,VS Code OSS,以及官方版的 VScode。
 - 自动识别除 i\*86 外的主流架构，自动获取最新链接，对 deb 系和红帽系进行分别适配，其它发行版以 tar 压缩包形式进行安装，解压至/usr/local/bin 目录。
 - 2.在服务器上实现了自动构建(获取最新版+重新打包配置) VSCode Server (web 版)。  
-  每隔一两周，当检测到新版时，远程服务器就会自动更新，完成后将自动同步至国内的 gitee 仓库。因此远程始终都是新版，但是本地的话，得要根据你下载的时间而定，不会自动更新。
+  每隔一两周，当检测到新版时，远程服务器就会自动更新，完成后将自动同步至国内的 gitee 仓库。因此远程始终都是新版，但是本地的话，得要根据您下载的时间而定，不会自动更新。
 
 ##### 2020-04-22 更新日志
 
@@ -1101,14 +1103,14 @@ micro $(command -v startvnc)
 
 ##### 2020-05-09 至 2020-05-10 更新日志
 
-- 1.全面升级备份与还原功能，支持自定义备份文件名称。自动检测备份文件路径，也可以手动选择路径，然后会自动将备份文件排成一个列表，你只需输选项数字并按回车即可恢复所选文件。
+- 1.全面升级备份与还原功能，支持自定义备份文件名称。自动检测备份文件路径，也可以手动选择路径，然后会自动将备份文件排成一个列表，您只需输选项数字并按回车即可恢复所选文件。
 - 2.优化 cookie 文件选择功能，支持图形化文件浏览。
   因为改了太多内容了，也没有继续做兼容性测试，所以不确定路由器等嵌入式设备还能不能继续兼容。
 - 3.修复 Android-Termux 赋予 proot 容器真实 root 权限的功能，原因是 termux 更新了 tsu，将 tsudo 切换至 sudo。
 - 4.deb 系 Linux 现在也可以用 proot 容器啦！
 
   2020-10 注：第三个功能已经被我砍掉了。请不要先输`tsu`，再输`debian`。
-  如果你要这样做的话，那么请使用`chown`来解决权限问题，再自行解决其他可能存在的问题。
+  如果您要这样做的话，那么请使用`chown`来解决权限问题，再自行解决其他可能存在的问题。
 
 ##### 2020-05-11 更新日志
 
@@ -1189,7 +1191,7 @@ micro $(command -v startvnc)
 - 1.增加更多系统配置选项，例如配置时间同步服务，开机自启脚本和管理 sudo 用户组等。
 - 2.增加 Debian 配置 Ubuntu ppa 软件源的功能。Debian 使用原版的 add-apt-repository 存在某些问题，例如添加 gpg 密钥失败，而此功能的目的就是解决这些问题。
 - 填写完 ppa 源名称后，会自动检测 launchpad 中该软件描述页面的 gpg 密钥，并添加。接着，需要指定 ubuntu 版本代号，完成后会自动修改软件源列表。
-- 此功能对于 ubuntu 同样有效，经测试部分 ppa 软件源不包含 ubuntu 20.10 groovy 的仓库，此功能可以帮你解决手动修改/etc/apt/sources.list.d/中相关软件源列表的烦恼。
+- 此功能对于 ubuntu 同样有效，经测试部分 ppa 软件源不包含 ubuntu 20.10 groovy 的仓库，此功能可以帮您解决手动修改/etc/apt/sources.list.d/中相关软件源列表的烦恼。
 
 ##### 2020 年 07 月 更新日志
 

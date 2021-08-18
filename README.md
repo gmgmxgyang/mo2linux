@@ -240,8 +240,7 @@ A:可以哒！ヾ(≧▽≦\*)o 您可以在其它主流的 GNU/Linux 发行版�
 > Q:我觉得 tmoe-linux tool/manager 的依赖有点多
 
 A: 对于必要依赖，在安装时会显示安装信息，并将依赖关系记录至 tmoe-linux 目录 **/usr/local/etc/tmoe-linux/** 下的 **MANAGER_DEPENDENCIES.txt** 和 **TOOL_DEPENDENCIES.txt** 。对于 Android 系统，tmoe-linux 目录为 **~/.local/share/tmoe-linux** 。  
-对于非必要依赖，请留意安装过程中出现的提示。  
-开发者花费了大量的时间和精力去维护脚本、软件和镜像仓库，就算是您要喷开发者，也希望您能够轻喷，谢谢。
+对于非必要依赖，请留意安装过程中出现的提示。
 
 ### 二：容器 Container 篇
 

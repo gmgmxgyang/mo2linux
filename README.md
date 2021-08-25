@@ -35,7 +35,7 @@
 
 #### Support multiple languages
 
-![tmoe-linux tool](https://images.gitee.com/uploads/images/2020/1012/135657_70831546_5617340.png "截图_2020-10-12_13-42-37.png")
+![tmoe-linux tools](https://images.gitee.com/uploads/images/2020/1012/135657_70831546_5617340.png "截图_2020-10-12_13-42-37.png")
 
 ![main menu English.ver](https://images.gitee.com/uploads/images/2020/1012/135918_eaccc0da_5617340.png "截图_2020-10-12_13-59-00.png")
 
@@ -84,7 +84,7 @@ _**If you do not live in China, please enter**_
 ```
 
 > 您如果在使用过程中，遇到了部分字符显示异常的问题，那么可以试一下 [windows terminal](https://www.microsoft.com/en-us/p/windows-terminal/9n0dx20hk701)。  
-> 注：当提示 tool or manager 时，请选择 tool。  
+> 注：当提示 tools or manager 时，请选择 tools。  
 > 建议 WSL 用户直接安装 gui ，不要在里面先套娃安装 chroot 容器，再装 gui，因为这将导致 windows 程序调用失败。  
 > 虽然 WSL 支持自定义导入 rootfs, 但是 tmoe 没有适配这个功能。~~(咕，后期可能会支持)~~
 
@@ -109,7 +109,7 @@ If you are using fish,then type the following commands.
 ```
 
 > 3.若为 manager，则您可使用触摸屏进行点击; 若为 tool，则您可使用触摸屏进行滑动，回车键进行确认。  
-> When you are using the manager, you can use the touch screen to click. When you are using the tool, you can use the touch screen to slide and press the Enter to confirm.
+> When you are using the manager, you can use the touch screen to click. When you are using the tools, you can use the touch screen to swipe and press the Enter to confirm.
 >
 > 4.如需使用 gui,可能还需要安装 VNC apk,您可以前往 Google play 或使用 Tmoe-linux 的 debian-i 来下载。  
 > 注：web 端的 novnc 无需安装 apk,但触控操作体验不佳。
@@ -237,7 +237,7 @@ A:可以哒！ヾ(≧▽≦\*)o 您可以在其它主流的 GNU/Linux 发行版�
 
 ---
 
-> Q:我觉得 tmoe-linux tool/manager 的依赖有点多
+> Q:我觉得 tmoe-linux tools/manager 的依赖有点多
 
 A: 对于必要依赖，在安装时会显示安装信息，并将依赖关系记录至 tmoe-linux 目录 **/usr/local/etc/tmoe-linux/** 下的 **MANAGER_DEPENDENCIES.txt** 和 **TOOL_DEPENDENCIES.txt** 。对于 Android 系统，tmoe-linux 目录为 **~/.local/share/tmoe-linux** 。  
 对于非必要依赖，请留意安装过程中出现的提示。
@@ -812,7 +812,7 @@ bash ~/TMOE-CONTAINER-MENU.sh
 
 ##### 4.启动工具箱(同时支持，但管理的内容不同)
 
-宿主系统将调用 tmoe-linux manager,容器将调用 tool.
+宿主系统将调用 tmoe-linux manager,容器将调用 tools.
 
 ```shell
 debian-i

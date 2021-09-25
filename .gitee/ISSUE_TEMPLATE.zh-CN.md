@@ -1,17 +1,12 @@
-### 您当前使用的GNU/Linux容器系统版本
+### 您当前使用的架构与系统版本
 
-
-
-#### 您当前使用的Termux版本和宿主机（原系统）版本，非Android可忽略前者
-
-
+| key       | value            |
+| --------- | ---------------- |
+| container | ubuntu-dev_arm64 |
+| host      | android-12       |
+| arch      | arm64            |
+| tmoe      | latest           |
 
 ### 该问题是怎么引起的
 
-
-
 ### 报错信息或截图
-
-
-
-

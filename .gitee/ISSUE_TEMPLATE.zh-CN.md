@@ -9,13 +9,12 @@
 
 ---
 
-| host     | value          |
-| -------- | -------------- |
-| distro   | android-12     |
-| arch     | arm64          |
-| type     | chroot/unshare |
-| terminal | ?              |
-| tmoe     | latest         |
+| host     | value      |
+| -------- | ---------- |
+| distro   | android-12 |
+| arch     | arm64      |
+| terminal | ?          |
+| tmoe     | latest     |
 
 ### 该问题是怎么引起的
 

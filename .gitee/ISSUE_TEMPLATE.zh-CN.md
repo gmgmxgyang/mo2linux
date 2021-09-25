@@ -1,12 +1,21 @@
 ### 架构与系统版本
 
-| key            | value            |
-| -------------- | ---------------- |
-| container.info | ubuntu-dev_arm64 |
-| container.type | chroot/unshare   |
-| host.version   | android-12       |
-| host.arch      | arm64            |
-| tmoe.version   | latest           |
+| container | value          |
+| --------- | -------------- |
+| distro    | ubuntu-devel   |
+| arch      | arm64          |
+| type      | chroot/unshare |
+| desktop   | gnome-41       |
+
+---
+
+| host     | value          |
+| -------- | -------------- |
+| distro   | android-12     |
+| arch     | arm64          |
+| type     | chroot/unshare |
+| terminal | ?              |
+| tmoe     | latest         |
 
 ### 该问题是怎么引起的
 

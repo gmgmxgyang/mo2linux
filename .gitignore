@@ -1,5 +1,6 @@
 /.vscode
-/target
+target
+tests
 /recycle_bin
 test.xml
 aria2.session

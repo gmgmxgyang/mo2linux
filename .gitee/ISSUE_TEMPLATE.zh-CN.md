@@ -2,16 +2,16 @@
 
 | container | value          |
 | --------- | -------------- |
-| distro    | ubuntu-devel   |
+| os        | ubuntu devel   |
 | arch      | arm64          |
 | type      | chroot/unshare |
-| desktop   | gnome-41       |
+| desktop   | gnome 41       |
 
 ---
 
 | host     | value      |
 | -------- | ---------- |
-| distro   | android-12 |
+| os       | android 12 |
 | arch     | arm64      |
 | terminal | ?          |
 | tmoe     | latest     |

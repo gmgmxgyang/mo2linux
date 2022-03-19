@@ -1,11 +1,10 @@
 ### 架构与系统版本
 
-| container | value          |
-| --------- | -------------- |
-| os        | ubuntu devel   |
-| arch      | arm64          |
-| type      | chroot/unshare |
-| desktop   | gnome 41       |
+| container | value      |
+| --------- | ---------- |
+| os        | ubuntu dev |
+| arch      | arm64      |
+| type      | chroot     |
 
 ---
 

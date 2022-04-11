@@ -348,7 +348,7 @@ Pin-Priority: 900
 EOF
     chmod a+r -v $Apt_conf_file
     case ${TMOE_CHROOT} in
-    true) mv -v $Apt_Packagekit ${Apt_Packagekit}.bak ;;
+    true) [[ -s $Apt_Packagekit ]] && mv -v $Apt_Packagekit ${Apt_Packagekit}.bak 2>/dev/null ;;
     esac
 }
 set_ubuntu_firefox_next_deps() {

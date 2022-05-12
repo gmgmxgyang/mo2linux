@@ -275,9 +275,9 @@ If you can't, or don't want to use docker, then you can install it locally.
 
 ## 3. have issue?
 
-Please report an [issue](https://github.com/2moe/tmoe-linux/issues/new/choose).  
+Please report an [issue](https://github.com/2moe/tmoe/issues/new/choose).  
 You can use čeština, Deutsch, español, français, português, ру́сский & 中文, etc.  
-If you want to discuss topics unrelated to this project, then please go to github [discussions](https://github.com/2moe/tmoe-linux/discussions).
+If you want to discuss topics unrelated to this project, then please go to github [discussions](https://github.com/2moe/tmoe/discussions).
 
 ## 4. what can I do?
 

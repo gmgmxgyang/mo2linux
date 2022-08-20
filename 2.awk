@@ -241,9 +241,9 @@ function parse_os_name(uname_cmd, os_name, os, _, os_lower, release, release_fil
 function get_os_language(_, cmd, full, language) {
     cmd = "getprop"
 
-    # Default locale: en_US
+    # Default locale: en_us
     I18N["lang"] = "en"
-    I18N["region"] = "US"
+    I18N["region"] = "us"
 
     # `lang` from user incoming data
     # awk -f a.awk -v lang=en_us

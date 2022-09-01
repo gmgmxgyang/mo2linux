@@ -1405,8 +1405,9 @@ cat >'.profile' <<-'ENDOFbashPROFILE'
 	#勿删上面那条注释
 	###tmoe-github [[ -e /etc/apt/sources.list ]] && sed -i 's/^deb/# &/g;s/^##deb/deb/g' /etc/apt/sources.list 2>/dev/null
 	##dns
-	[[ ! -e /etc/apt/sources.list ]] || grep -v proposed /etc/apt/sources.list
-	rm -f /etc/resolv.conf
+	[[ -e /etc/apt/sources.list ]] && apt-get autoremove --purge -y systemd-resolved 2>/dev/null
+
+	rm -f /etc/resolv.conf 2>/dev/null
 	cat >/etc/resolv.conf <<-'EndOfFile'
 		nameserver 114.114.114.114
 		nameserver 114.114.115.115

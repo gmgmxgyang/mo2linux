@@ -1416,16 +1416,16 @@ install_ubuntu_gnu_linux_distro() {
     RETURN_TO_WHERE='install_ubuntu_gnu_linux_distro'
     COMPATIBILITY_MODE=false
     TITLE="Which version do you want to install?"
-    OPT_1="🐐 22.10(dev) Kinetic Kudu"
-    OPT_2="22.04(LTS,stable) Jammy Jellyfish"
+    OPT_1="🐐 22.10 Kinetic Kudu"
+    OPT_2="22.04(LTS) Jammy Jellyfish"
     # OPT_3="🐒 21.10(oldstable) Impish Indri"
     # OPT_3="🦛 21.04 Hirsute Hippo"
     OPT_5="18.04(LTS) Bionic Beaver"
     OPT_6="🐿️ 16.04(LTS) Xenial Xerus"
     install_ubuntu_gnu_linux_distro_zh() {
         MENU="2022至2027年的长期支持版为jammy 22.04(2022年4月正式发布)\n设x=当前年份,若x>=2024,则请手动输入版本代号"
-        OPT_1="🐐 22.10(dev) 動力羚羊 Kinetic Kudu"
-        OPT_2="22.04(LTS,stable) 果酱水母 Jammy Jellyfish"
+        OPT_1="🐐 22.10 動力羚羊 Kinetic Kudu"
+        OPT_2="22.04(LTS) 果酱水母 Jammy Jellyfish"
         # OPT_3="🐒 21.10(oldstable) 頑皮大狐猴 Impish Indri"
         # OPT_3="🦛 21.04 多毛河馬 Hirsute Hippo"
         OPT_4="🐱 20.04(LTS)焦點馬島長尾狸貓 Focal Fossa"
@@ -1450,7 +1450,7 @@ install_ubuntu_gnu_linux_distro() {
     }
     install_ubuntu_gnu_linux_distro_en() {
         MENU="The long-term support version between 2022 and 2027 is jammy(22.04).\nLet x = current year, if x>=2024,then customize the version code"
-        OPT_4="🐱 20.04(LTS)Focal Fossa"
+        OPT_4="🐱 20.04(LTS) Focal Fossa"
         OPT_7="Compatibility mode"
         OPT_8="Manually build"
         OPT_9="Latest"

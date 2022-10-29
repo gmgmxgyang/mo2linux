@@ -81,6 +81,7 @@ tmoe_global_env() {
         TUI_BIN=$TMOE_TUI_BIN
     }
     if [[ $(uname -o) = 'Android' ]]; then
+        [[ -z $TMOE_TUI_BIN ]] && TUI_BIN=dialog
         LINUX_DISTRO='Android'
     elif [ "$(uname -r | cut -d '-' -f 3)" = "Microsoft" ] || [ "$(uname -r | cut -d '-' -f 2)" = "microsoft" ]; then
         WINDOWS_DISTRO='WSL'

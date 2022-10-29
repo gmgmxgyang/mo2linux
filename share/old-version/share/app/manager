@@ -141,6 +141,7 @@ auto_check() {
 
     case "$(uname -o)" in
     Android)
+        [[ -z $TMOE_TUI_BIN ]] && TUI_BIN=dialog
         LINUX_DISTRO='Android'
         TERMUX_STORAGE=true
         tmoe_manager_android_env

@@ -135,7 +135,7 @@ press_enter_to_continue() {
 ###################################
 get_android_libpopt() {
     [[ -e $LIB_POPT ]] && return 0
-    local uri file
+    local uri file bin_dir exe_file
     uri="https://packages.tmoe.me/patch/termux/libp/libpopt0_1.18_$(uname -m).tar.gz"
     file=libpopt.tar.gz
     curl -Lo $file "$uri"
@@ -143,7 +143,13 @@ get_android_libpopt() {
     rm $file
     [[ -e $LIB_POPT ]] || {
         TUI_BIN=dialog
+        return 1
     }
+    bin_dir="$TMOE_LINUX_DIR/usr/bin"
+    exe_file="$bin_dir/whiptail-wrapper"
+    mkdir -p "$bin_dir"
+    echo "env LD_PRELOAD=$LIB_POPT whiptail \"\$@\"" >"$exe_file"
+    chmod -v +x "$exe_file"
 }
 
 auto_check() {
@@ -163,7 +169,7 @@ auto_check() {
             case $is_libnewt_0_52_21 in
             true)
                 LIB_POPT="$TMOE_LINUX_DIR/usr/lib/popt0/0.so"
-                TUI_BIN="env LD_PRELOAD=$LIB_POPT whiptail"
+                TUI_BIN="$TMOE_LINUX_DIR/usr/bin/whiptail-wrapper"
                 get_android_libpopt
                 ;;
             false) TUI_BIN=dialog ;;

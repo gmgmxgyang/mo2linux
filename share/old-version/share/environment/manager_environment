@@ -85,9 +85,8 @@ tmoe_global_env() {
             is_libnewt_0_52_21=$(LANG=C dpkg-query -W libnewt 2>/dev/null | awk '{b = match($2, /0\.52\.21([+\-.~]+)?$/)} END{print (b)?"true":"false"}' 2>/dev/null)
             case $is_libnewt_0_52_21 in
             true)
-                LIB_POPT="$TMOE_LINUX_DIR/usr/lib/popt0/so.0"
-                TUI_BIN="env LD_PRELOAD=$LIB_POPT whiptail"
-                [[ -e $LIB_POPT ]] || TUI_BIN=dialog
+                TUI_BIN="$TMOE_LINUX_DIR/usr/bin/whiptail-wrapper"
+                [[ -e $TUI_BIN ]] || TUI_BIN=dialog
                 ;;
             false) TUI_BIN=dialog ;;
             esac

@@ -133,6 +133,19 @@ press_enter_to_continue() {
     read
 }
 ###################################
+get_android_libpopt() {
+    [[ -e $LIB_POPT ]] && return 0
+    local uri file
+    uri="https://packages.tmoe.me/patch/termux/libp/libpopt0_1.18_$(uname -m).tar.gz"
+    file=libpopt.tar.gz
+    curl -Lo $file "$uri"
+    tar -zxvf $file -C "$TMOE_LINUX_DIR"
+    rm $file
+    [[ -e $LIB_POPT ]] || {
+        TUI_BIN=dialog
+    }
+}
+
 auto_check() {
     TUI_BIN="whiptail"
     [[ -n $TMOE_TUI_BIN ]] && {
@@ -141,11 +154,21 @@ auto_check() {
 
     case "$(uname -o)" in
     Android)
-        [[ -z $TMOE_TUI_BIN ]] && TUI_BIN=dialog
         LINUX_DISTRO='Android'
         TERMUX_STORAGE=true
         tmoe_manager_android_env
         check_android_tui_bin
+        [[ -z $TMOE_TUI_BIN ]] && {
+            is_libnewt_0_52_21=$(LANG=C dpkg-query -W libnewt 2>/dev/null | awk '{b = match($2, /0\.52\.21([+\-.~]+)?$/)} END{print (b)?"true":"false"}' 2>/dev/null)
+            case $is_libnewt_0_52_21 in
+            true)
+                LIB_POPT="$TMOE_LINUX_DIR/usr/lib/popt0/so.0"
+                TUI_BIN="env LD_PRELOAD=$LIB_POPT whiptail"
+                get_android_libpopt
+                ;;
+            false) TUI_BIN=dialog ;;
+            esac
+        }
         ;;
     *)
         tmoe_manager_gnu_linux_env

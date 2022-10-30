@@ -162,7 +162,7 @@ auto_check() {
             is_libnewt_0_52_21=$(LANG=C dpkg-query -W libnewt 2>/dev/null | awk '{b = match($2, /0\.52\.21([+\-.~]+)?$/)} END{print (b)?"true":"false"}' 2>/dev/null)
             case $is_libnewt_0_52_21 in
             true)
-                LIB_POPT="$TMOE_LINUX_DIR/usr/lib/popt0/so.0"
+                LIB_POPT="$TMOE_LINUX_DIR/usr/lib/popt0/0.so"
                 TUI_BIN="env LD_PRELOAD=$LIB_POPT whiptail"
                 get_android_libpopt
                 ;;

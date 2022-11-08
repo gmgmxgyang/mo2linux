@@ -44,7 +44,7 @@ But this is an important issue for debian, and it affects the configuration pack
 
 Although we are free to choose the front end of `debconf`, it is by default the TUI front end.
 
-note: For tmoe's container environment, it will apply the patch automatically.  
+For tmoe's container environment, it will apply the patch automatically.  
 If you are using a virtual machine, then you will need to fix it manually.
 
 You can use `dpkg-query -W libnewt0.52 libpopt0` to check the version.  
